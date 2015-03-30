@@ -8,6 +8,9 @@
 'use strict';
 var d3 = window.d3;
 
+var events = require('events');
+var extend = require('extend');
+
 var Const = require('./lib/constants');
 var Tip = require('./lib/tip');
 var utils = require('./lib/utils');
@@ -20,7 +23,7 @@ module.exports = function (options) {
   var domain = options.domain || {};
 
   var limit = 10;
-  var margin = 30;
+  var margin = 20;
   var width = (options.width || 800) - 2 * margin;
   var height = (options.height || 400) - 2 * margin;
 
@@ -51,12 +54,23 @@ module.exports = function (options) {
     .x(function (d) { return xScale(d[0]); })
     .y(function (d) { return yScale(d[1]); });
 
+  var root;
+  var content;
+
   function chart(selection) {
-    selection.each(function (data) {
-      var rect;
-      var root = d3.select(this).append('svg')
+    selection.each(function () {
+      var data = options.data;
+      root = d3.select(this)
+        .datum(data)
+        .append('svg')
         .attr('width', width + 2 * margin)
         .attr('height', height + 2 * margin);
+
+      root.append('text')
+        .attr('class', 'top-right-legend')
+        .attr('y', margin / 2)
+        .attr('x', width + margin)
+        .attr('text-anchor', 'end');
 
       var svg = root.append('g')
         .attr('transform', 'translate(' + margin + ',' + margin + ')')
@@ -77,7 +91,7 @@ module.exports = function (options) {
         .call(yAxis);
 
       // content
-      var content = svg.append('g')
+      content = svg.append('g')
         .attr('class', 'content');
 
       // origin line x = 0
@@ -103,8 +117,8 @@ module.exports = function (options) {
       }
 
       var types = {
-        line: linePlot().owner(chart),
-        scatter: scatterPlot().owner(chart)
+        line: linePlot,
+        scatter: scatterPlot
       };
 
       // content construction
@@ -113,8 +127,13 @@ module.exports = function (options) {
       .enter()
         .append('g')
         .each(function (data, index) {
+          var options = extend({
+            owner: chart,
+            index: index
+          }, data.graphOptions);
+          var type = options.type || 'line';
           d3.select(this)
-            .call(types[data.type || 'line'], index);
+            .call(types[type](options));
         });
 
       // helper to detect the closest fn to the mouse position
@@ -123,7 +142,7 @@ module.exports = function (options) {
       svg.call(tip);
 
       // dummy rect (detects the zoom + drag)
-      rect = svg.append('rect')
+      svg.append('rect')
         .attr('width', width)
         .attr('height', height)
         .style('fill', 'none')
@@ -141,6 +160,8 @@ module.exports = function (options) {
     });
   }
 
+  extend(chart, events.prototype);
+
   // public api
   chart.xScale = function (_) {
     if (!arguments.length) {
@@ -149,6 +170,7 @@ module.exports = function (options) {
     xScale = _;
     return chart;
   };
+
   chart.yScale = function (_) {
     if (!arguments.length) {
       return yScale;
@@ -156,6 +178,31 @@ module.exports = function (options) {
     yScale = _;
     return chart;
   };
+
+  chart.root = function () {
+    return root;
+  };
+
+  chart.content = function () {
+    return content;
+  };
+
+  chart.on('tip:update', function (x, y, index) {
+    var meta = root.datum()[index];
+    var title = meta.title || '';
+    var format = meta.renderer || function (x, y) {
+        return x.toFixed(3) + ', ' + y.toFixed(3);
+      };
+
+    var text = [];
+    title && text.push(title);
+    text.push(format(x, y));
+
+    root.select('.top-right-legend')
+      .attr('fill', Const.COLORS[index])
+      //.text(x.toFixed(3) + ', ' + y.toFixed(3));
+      .text(text.join(' '));
+  });
 
   return chart;
 };
