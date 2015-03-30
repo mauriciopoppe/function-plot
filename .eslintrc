@@ -1,0 +1,55 @@
+//
+// ESLint Configuration for generator-node-npm
+//
+// author: @iMauricio
+// date: 3/18/2015
+//
+// Helpful resources:
+//
+// - rules: http://eslint.org/docs/rules/
+// - configuration: http://eslint.org/docs/configuring/
+//
+// temporarily disable warnings
+// /*eslint-disable */
+// ...
+// /*eslint-enable */
+{
+    // check http://eslint.org/docs/configuring/#specifying-language-options
+    "ecmaFeatures": {
+      "generators": false
+    },
+    "parser": "espree",
+    "env": {
+        "node": true,
+        "mocha": true,
+        "browser": false                // true in the case it's module which will be bundled
+    },
+
+    // if the module needs globals set them here
+    "globals": {
+        "window": true
+    },
+
+    // 0 - turn the rule off
+    // 1 - turn the rule on as a warning (doesn't affect exit code)
+    // 2 - turn the rule on as an error (exit code is 1 when triggered)
+    "rules": {
+        "no-console": 0,                // disallow use of console (off by default in the node environment)
+        "no-trailing-spaces": 0,        // disable throwing errors for trailing spaces
+        "quotes": [2, "single"],        // specify whether double or single quotes should be used
+        "strict": [2, "global"],        // controls location of Use Strict Directives
+        "no-unused-vars": [1, {
+            "vars": "all",
+            "args": "after-used"
+        }],
+        "no-shadow": 0,                 // disallow declaration of variables already declared in the outer scope
+        "eol-last": 0,                  // enforce newline at the end of file, with no multiple empty lines
+        "indent": [2, 2],               // this option sets a specific tab width for your code
+        "space-before-function-parentheses": [
+            2, {
+                "anonymous": "always",
+                "named": "never"
+            }
+        ]
+    }
+}
