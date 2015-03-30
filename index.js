@@ -91,7 +91,7 @@ module.exports = function (options) {
         .call(d3.behavior.zoom()
           .x(xScale)
           .y(yScale)
-          .scaleExtent([0.5, 32])
+          .scaleExtent([0.1, 3])
           .on('zoom', zoomed)
         );
 
@@ -103,11 +103,11 @@ module.exports = function (options) {
           .attr('width', width)
           .attr('height', height);
 
+      // axis
       svg.append('g')
         .attr('class', 'x axis')
         .attr('transform', 'translate(0,' + height + ')')
         .call(xAxis);
-
       svg.append('g')
         .attr('class', 'y axis')
         .call(yAxis);
