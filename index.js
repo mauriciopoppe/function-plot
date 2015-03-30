@@ -23,9 +23,9 @@ module.exports = function (options) {
   var domain = options.domain || {};
 
   var limit = 10;
-  var margin = 20;
-  var width = (options.width || 800) - 2 * margin;
-  var height = (options.height || 400) - 2 * margin;
+  var margin = {left: 20, right: 20, top: 20, bottom: 20};
+  var width = (options.width || 800) - margin.left - margin.right;
+  var height = (options.height || 400) - margin.top - margin.bottom;
 
   domain.x = domain.x || [-limit / 2, limit / 2];
   domain.y = domain.y || [-limit / 2, limit / 2];
@@ -60,26 +60,48 @@ module.exports = function (options) {
   function chart(selection) {
     selection.each(function () {
       var data = options.data;
+
+      if (options.title) {
+        margin.top = 40;
+      }
+
       root = d3.select(this)
         .datum(data)
         .append('svg')
-        .attr('width', width + 2 * margin)
-        .attr('height', height + 2 * margin);
+        .attr('width', width + margin.left + margin.right)
+        .attr('height', height + margin.top + margin.bottom);
+
+      root.append('text')
+        .attr('class', 'title')
+        .attr('y', margin.top / 2)
+        .attr('x', margin.left + width / 2)
+        .attr('font-size', 25)
+        .attr('text-anchor', 'middle')
+        .attr('alignment-baseline', 'middle')
+        .text(options.title);
 
       root.append('text')
         .attr('class', 'top-right-legend')
-        .attr('y', margin / 2)
-        .attr('x', width + margin)
+        .attr('y', margin.top / 2)
+        .attr('x', width + margin.left)
         .attr('text-anchor', 'end');
 
       var svg = root.append('g')
-        .attr('transform', 'translate(' + margin + ',' + margin + ')')
+        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
         .call(d3.behavior.zoom()
           .x(xScale)
           .y(yScale)
           .scaleExtent([0.5, 32])
           .on('zoom', zoomed)
         );
+
+      // clip
+      var clip = svg.append('defs')
+        .append('clipPath')
+          .attr('id', 'clip')
+        .append('rect')
+          .attr('width', width)
+          .attr('height', height);
 
       svg.append('g')
         .attr('class', 'x axis')
@@ -92,6 +114,7 @@ module.exports = function (options) {
 
       // content
       content = svg.append('g')
+        .attr('clip-path', 'url(#clip)')
         .attr('class', 'content');
 
       // origin line x = 0
@@ -111,9 +134,14 @@ module.exports = function (options) {
         .attr('d', line);
 
       function zoomed() {
+        var t = d3.event.translate;
+        var s = d3.event.scale;
         svg.select('.x.axis').call(xAxis);
         svg.select('.y.axis').call(yAxis);
-        content.attr('transform', 'translate(' + d3.event.translate + ')scale(' + d3.event.scale + ')');
+        clip.attr('transform', 'scale(' + 1 / s + ')')
+          .attr('x', -t[0])
+          .attr('y', -t[1]);
+        content.attr('transform', 'translate(' + t + ')scale(' + s + ')');
       }
 
       var types = {
