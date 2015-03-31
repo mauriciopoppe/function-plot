@@ -1,6 +1,6 @@
 {
   "name": "simple-function-plot",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "A simple 2d function plotter powered by d3 and used on maurizzzio.com",
   "bugs": "https://github.com/maurizzzio/simple-function-plot/issues",
   "license": "MIT",
