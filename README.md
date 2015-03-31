@@ -17,6 +17,11 @@ var simpleFunctionPlot = require('simple-function-plot');
 simpleFunctionPlot('Rainbow');
 ```
 
+## TODO
+
+- [ ] baselines (parallel to the X axis) http://metricsgraphicsjs.org/examples.htm
+- [ ] annotations (parallel to the Y axis)
+- [ ] 
 
 ## API
 

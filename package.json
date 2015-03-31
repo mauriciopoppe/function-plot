@@ -36,6 +36,6 @@
     "lint": "eslint index.js lib test",
     "test": "mocha -R spec test/",
     "test:watch": "nodemon --watch lib --watch test --watch index.js --exec 'npm test'",
-    "start": "npm run test:watch"
+    "start": "./node_modules/.bin/beefy public/index.js:bundle.js 5001"
   }
 }

@@ -18,11 +18,11 @@ var instance = functionPlot({
   data: [{
     title: 'f(x)',
     fn: function (x) {
-      return x * x;
+      return -x * x;
     },
     graphOptions: {
-      type: 'line',
-      closed: true
+      type: 'line'
+      //closed: true
     },
     range: [-5, 5]
   }, {
@@ -35,7 +35,7 @@ var instance = functionPlot({
     range: [-5, 5]
   }, {
     fn: function (x) {
-      return x * x * x;
+      return Math.abs(x);
     },
     graphOptions: {
       //closed: true

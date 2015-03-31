@@ -91,7 +91,7 @@ module.exports = function (options) {
         .call(d3.behavior.zoom()
           .x(xScale)
           .y(yScale)
-          .scaleExtent([0.1, 3])
+          .scaleExtent([0.1, 16])
           .on('zoom', zoomed)
         );
 
@@ -215,6 +215,7 @@ module.exports = function (options) {
     return content;
   };
 
+  // change the title on the top on tip:update
   chart.on('tip:update', function (x, y, index) {
     var meta = root.datum()[index];
     var title = meta.title || '';
