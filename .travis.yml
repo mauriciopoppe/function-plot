@@ -8,5 +8,5 @@ node_js:
 install:
   - npm install
 
-scripts:
+script:
   - npm run lint
