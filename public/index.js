@@ -37,11 +37,17 @@ var instance = functionPlot({
     fn: function (x) {
       return Math.abs(x);
     },
-    graphOptions: {
-      //closed: true
-    },
     range: [-5, 5]
-  //}, {
+  }, {
+    title: 'point',
+    fn: function () {
+      return 3;
+    },
+    graphOptions: {
+      type: 'scatter'
+    },
+    range: [1, 1]
+    //}, {
   //  fn: function (x) {
   //    return x * x * x * x;
   //  },
