@@ -104,7 +104,7 @@ Open `localhost:5555` and that's it! Local development server powered [beefy](ht
 
 [npm-image]: https://nodei.co/npm/simple-function-plot.png?downloads=true
 [npm-url]: https://npmjs.org/package/simple-function-plot
-[travis-image]: https://travis-ci.org//simple-function-plot.svg?branch=master
-[travis-url]: https://travis-ci.org//simple-function-plot
-[coveralls-image]: https://coveralls.io/repos//simple-function-plot/badge.svg
-[coveralls-url]: https://coveralls.io/r//simple-function-plot
+[travis-image]: https://travis-ci.org/maurizzzio/simple-function-plot.svg?branch=master
+[travis-url]: https://travis-ci.org/maurizzzio/simple-function-plot
+[coveralls-image]: https://coveralls.io/repos/maurizzzio/simple-function-plot/badge.svg
+[coveralls-url]: https://coveralls.io/r/maurizzzio/simple-function-plot
