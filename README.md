@@ -25,6 +25,31 @@ d3.select(' selector of the parent container for the chart ')
 
 See `public/index.js`
 
+```javascript
+'use strict';
+var d3 = window.d3;
+var simpleFunctionPlot = require('../');
+var instance = simpleFunctionPlot({
+  data: [{
+    title: 'f(x)',
+    fn: function (x) {
+      return -x * x;
+    },
+    range: [-5, 5]
+  }, {
+    fn: function (x) {
+      return Math.sqrt(x);
+    },
+    graphOptions: {
+      type: 'scatter'
+    },
+    range: [-5, 5]
+  }]
+});
+d3.select('#canvas')
+  .call(instance);
+```
+
 Screenshot:
 
 ![screen shot 2015-03-31 at 3 04 07 am](https://cloud.githubusercontent.com/assets/1616682/6913963/11013696-d754-11e4-8bf1-8008f36cd670.gif)

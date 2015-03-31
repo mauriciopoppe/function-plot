@@ -17,7 +17,7 @@
   },
   "keywords": [
     "simple-function-plot",
-    "function plot visualization 2d"
+    "function", "plot", "visualization", "2d"
   ],
   "dependencies": {
     "extend": "^2.0.0"
