@@ -9,4 +9,4 @@ install:
   - npm install
 
 test:
-  - npm lint
+  - npm run lint
