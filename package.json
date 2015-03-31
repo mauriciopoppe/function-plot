@@ -1,6 +1,6 @@
 {
   "name": "simple-function-plot",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A simple 2d function plotter powered by d3 and used on maurizzzio.com",
   "bugs": "https://github.com/maurizzzio/simple-function-plot/issues",
   "license": "MIT",
@@ -17,7 +17,10 @@
   },
   "keywords": [
     "simple-function-plot",
-    "function", "plot", "visualization", "2d"
+    "function",
+    "plot",
+    "visualization",
+    "2d"
   ],
   "dependencies": {
     "extend": "^2.0.0"
