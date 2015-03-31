@@ -35,7 +35,7 @@
   },
   "scripts": {
     "istanbul": "istanbul cover _mocha --report lcovonly 2> /dev/null -- -R spec test/",
-    "lint": "eslint index.js lib test",
+    "lint": "eslint index.js lib",
     "test": "mocha -R spec test/",
     "test:watch": "nodemon --watch lib --watch test --watch index.js --exec 'npm test'",
     "start": "./node_modules/.bin/beefy public/index.js:bundle.js 5555"

@@ -12,7 +12,7 @@ var events = require('events');
 var extend = require('extend');
 
 var Const = require('./lib/constants');
-var Tip = require('./lib/tip');
+var mousetip = require('./lib/tip');
 var utils = require('./lib/utils');
 var linePlot = require('./lib/type/line');
 var scatterPlot = require('./lib/type/scatter');
@@ -59,6 +59,7 @@ module.exports = function (options) {
 
   function chart(selection) {
     selection.each(function () {
+      var clip;
       var data = options.data;
 
       if (options.title) {
@@ -92,16 +93,29 @@ module.exports = function (options) {
           .x(xScale)
           .y(yScale)
           .scaleExtent([0.1, 16])
-          .on('zoom', zoomed)
+          .on('zoom',
+          // zoom behavior
+          // - updates the position of the axes
+          // - updates the position/scale of the clipping rectangle
+          function zoomed() {
+            var t = d3.event.translate;
+            var s = d3.event.scale;
+            svg.select('.x.axis').call(xAxis);
+            svg.select('.y.axis').call(yAxis);
+            clip.attr('transform', 'scale(' + 1 / s + ')')
+              .attr('x', -t[0])
+              .attr('y', -t[1]);
+            content.attr('transform', 'translate(' + t + ')scale(' + s + ')');
+          })
         );
 
       // clip (so that the functions don't overflow on zoom or drag)
-      var clip = svg.append('defs')
+      clip = svg.append('defs')
         .append('clipPath')
-          .attr('id', 'clip')
+        .attr('id', 'clip')
         .append('rect')
-          .attr('width', width)
-          .attr('height', height);
+        .attr('width', width)
+        .attr('height', height);
 
       // axis creation
       svg.append('g')
@@ -133,20 +147,6 @@ module.exports = function (options) {
         .attr('stroke', 'black')
         .attr('d', line);
 
-      // zoom behavior
-      // - updates the position of the axes
-      // - updates the position/scale of the clipping rectangle
-      function zoomed() {
-        var t = d3.event.translate;
-        var s = d3.event.scale;
-        svg.select('.x.axis').call(xAxis);
-        svg.select('.y.axis').call(yAxis);
-        clip.attr('transform', 'scale(' + 1 / s + ')')
-          .attr('x', -t[0])
-          .attr('y', -t[1]);
-        content.attr('transform', 'translate(' + t + ')scale(' + s + ')');
-      }
-
       var types = {
         line: linePlot,
         scatter: scatterPlot
@@ -168,7 +168,7 @@ module.exports = function (options) {
         });
 
       // helper to detect the closest fn to the mouse position
-      var tip = Tip(options.tip)
+      var tip = mousetip(options.tip)
         .owner(chart);
       svg.call(tip);
 
