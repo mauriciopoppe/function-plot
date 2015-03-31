@@ -95,7 +95,7 @@ module.exports = function (options) {
           .on('zoom', zoomed)
         );
 
-      // clip
+      // clip (so that the functions don't overflow on zoom or drag)
       var clip = svg.append('defs')
         .append('clipPath')
           .attr('id', 'clip')
@@ -103,7 +103,7 @@ module.exports = function (options) {
           .attr('width', width)
           .attr('height', height);
 
-      // axis
+      // axis creation
       svg.append('g')
         .attr('class', 'x axis')
         .attr('transform', 'translate(0,' + height + ')')
@@ -133,6 +133,9 @@ module.exports = function (options) {
         .attr('stroke', 'black')
         .attr('d', line);
 
+      // zoom behavior
+      // - updates the position of the axes
+      // - updates the position/scale of the clipping rectangle
       function zoomed() {
         var t = d3.event.translate;
         var s = d3.event.scale;
@@ -149,7 +152,7 @@ module.exports = function (options) {
         scatter: scatterPlot
       };
 
-      // content construction
+      // content construction (based on graphOptions.type)
       content.selectAll('g')
         .data(data)
       .enter()

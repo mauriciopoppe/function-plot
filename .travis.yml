@@ -10,4 +10,3 @@ install:
 
 test:
   - npm lint
-  - npm run istanbul && cat ./coverage/lcov.info | coveralls

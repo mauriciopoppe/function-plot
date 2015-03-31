@@ -3,14 +3,13 @@
  */
 'use strict';
 var d3 = window.d3;
-var functionPlot = require('../');
-var instance = functionPlot({
-  title: 'test',
-  //description: 'hello world',
-  //domain: {
-  //  x: [-10, 10],
-  //  y: [-10, 10]
-  //},
+var simpleFunctionPlot = require('../');
+var instance = simpleFunctionPlot({
+  title: 'A title!',
+  domain: {
+    x: [-5, 5],
+    y: [-5, 5]
+  },
   tip: {
     xLine: true,
     yLine: true
