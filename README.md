@@ -50,7 +50,7 @@ d3.select('#canvas')
   .call(instance);
 ```
 
-Screenshot:
+Screenshot (for the example located at `public/index.js`):
 
 ![screen shot 2015-03-31 at 3 04 07 am](https://cloud.githubusercontent.com/assets/1616682/6913963/11013696-d754-11e4-8bf1-8008f36cd670.gif)
 

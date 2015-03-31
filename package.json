@@ -34,6 +34,10 @@
     "mocha-lcov-reporter": "^0.0.2",
     "nodemon": "^1.3.7"
   },
+  "files": [
+    "/*",
+    "!/public/"
+  ],
   "scripts": {
     "istanbul": "istanbul cover _mocha --report lcovonly 2> /dev/null -- -R spec test/",
     "lint": "eslint index.js lib test",
