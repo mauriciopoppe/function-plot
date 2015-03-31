@@ -57,6 +57,11 @@ module.exports = function (options) {
   var root;
   var content;
 
+  function updateBounds() {
+    width = (options.width || 800) - margin.left - margin.right;
+    height = (options.height || 420) - margin.top - margin.bottom;
+  }
+
   function chart(selection) {
     selection.each(function () {
       var clip;
@@ -65,6 +70,7 @@ module.exports = function (options) {
       if (options.title) {
         margin.top = 40;
       }
+      updateBounds();
 
       root = d3.select(this)
         .datum(data)
