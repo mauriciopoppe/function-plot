@@ -63,6 +63,8 @@ module.exports = function (options) {
   }
 
   function chart(selection) {
+    chart.id = Math.random().toString(16).substr(2);
+
     selection.each(function () {
       var clip;
       var data = options.data;
@@ -118,7 +120,7 @@ module.exports = function (options) {
       // clip (so that the functions don't overflow on zoom or drag)
       clip = svg.append('defs')
         .append('clipPath')
-        .attr('id', 'clip')
+        .attr('id', 'simple-function-plot-clip-' + chart.id)
         .append('rect')
         .attr('width', width)
         .attr('height', height);
@@ -134,7 +136,7 @@ module.exports = function (options) {
 
       // content
       content = svg.append('g')
-        .attr('clip-path', 'url(#clip)')
+        .attr('clip-path', 'url(#simple-function-plot-clip-' + chart.id + ')')
         .attr('class', 'content');
 
       // origin line x = 0
