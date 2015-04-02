@@ -46,14 +46,14 @@ var instance = simpleFunctionPlot({
       type: 'scatter'
     },
     range: [1, 1]
-    //}, {
-  //  fn: function (x) {
-  //    return x * x * x * x;
-  //  },
-  //  graphOptions: {
-  //    closed: true
-  //  },
-  //  range: [-5, 5]
+  }, {
+    fn: function (x) {
+      return 1 / x;
+    },
+    graphOptions: {
+      split: [0]
+    },
+    range: [-5, 5]
   }]
 });
 
