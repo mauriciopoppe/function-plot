@@ -66,7 +66,7 @@ module.exports = function (options) {
     chart.id = Math.random().toString(16).substr(2);
 
     selection.each(function () {
-      var clip;
+      var dynamicClip;
       var data = options.data;
 
       if (options.title) {
@@ -110,7 +110,7 @@ module.exports = function (options) {
             var s = d3.event.scale;
             svg.select('.x.axis').call(xAxis);
             svg.select('.y.axis').call(yAxis);
-            clip.attr('transform', 'scale(' + 1 / s + ')')
+            dynamicClip.attr('transform', 'scale(' + 1 / s + ')')
               .attr('x', -t[0])
               .attr('y', -t[1]);
             content.attr('transform', 'translate(' + t + ')scale(' + s + ')');
@@ -118,12 +118,19 @@ module.exports = function (options) {
         );
 
       // clip (so that the functions don't overflow on zoom or drag)
-      clip = svg.append('defs')
-        .append('clipPath')
-        .attr('id', 'simple-function-plot-clip-' + chart.id)
+      var defs = svg.append('defs');
+      dynamicClip = defs.append('clipPath')
+          .attr('id', 'simple-function-plot-clip-dynamic-' + chart.id)
         .append('rect')
-        .attr('width', width)
-        .attr('height', height);
+          .attr('width', width)
+          .attr('height', height);
+
+      // static clip on the content
+      defs.append('clipPath')
+          .attr('id', 'simple-function-plot-clip-' + chart.id)
+        .append('rect')
+          .attr('width', width)
+          .attr('height', height);
 
       // axis creation
       svg.append('g')
@@ -136,7 +143,7 @@ module.exports = function (options) {
 
       // content
       content = svg.append('g')
-        .attr('clip-path', 'url(#simple-function-plot-clip-' + chart.id + ')')
+        .attr('clip-path', 'url(#simple-function-plot-clip-dynamic-' + chart.id + ')')
         .attr('class', 'content');
 
       // origin line x = 0
@@ -176,8 +183,7 @@ module.exports = function (options) {
         });
 
       // helper to detect the closest fn to the mouse position
-      var tip = mousetip(options.tip)
-        .owner(chart);
+      var tip = mousetip(extend(options.tip, { owner: chart }));
       svg.call(tip);
 
       // dummy rect (detects the zoom + drag)
@@ -224,6 +230,14 @@ module.exports = function (options) {
 
   chart.content = function () {
     return content;
+  };
+
+  chart.width = function () {
+    return width;
+  };
+
+  chart.height = function () {
+    return height;
   };
 
   // change the title on the top on tip:update
