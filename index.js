@@ -24,31 +24,34 @@ module.exports = function (options) {
 
   var limit = 10;
   var margin = {left: 20, right: 20, top: 20, bottom: 20};
-  var width = (options.width || 800) - margin.left - margin.right;
-  var height = (options.height || 400) - margin.top - margin.bottom;
+  var width;
+  var height;
+  var xScale, yScale;
+  var xAxis, yAxis;
+  function updateBounds() {
+    width = (options.width || 800) - margin.left - margin.right;
+    height = (options.height || 400) - margin.top - margin.bottom;
+    xScale = d3.scale.linear()
+      .domain(domain.x)
+      .range([0, width]);
+    yScale = d3.scale.linear()
+      .domain(domain.y)
+      .range([height, 0]);
+    xAxis = d3.svg.axis()
+      .scale(xScale)
+      .orient('bottom')
+      .tickSize(-height);
+    yAxis = d3.svg.axis()
+      .scale(yScale)
+      .orient('left')
+      .tickSize(-width);
+  }
+  updateBounds();
 
   domain.x = domain.x || [-limit / 2, limit / 2];
   domain.y = domain.y || [-limit / 2, limit / 2];
   assert(domain.x[0] < domain.x[1]);
   assert(domain.y[0] < domain.y[1]);
-
-  var xScale = d3.scale.linear()
-    .domain(domain.x)
-    .range([0, width]);
-
-  var yScale = d3.scale.linear()
-    .domain(domain.y)
-    .range([height, 0]);
-
-  var xAxis = d3.svg.axis()
-    .scale(xScale)
-    .orient('bottom')
-    .tickSize(-height);
-
-  var yAxis = d3.svg.axis()
-    .scale(yScale)
-    .orient('left')
-    .tickSize(-width);
 
   var line = d3.svg.line()
     .x(function (d) { return xScale(d[0]); })
@@ -56,11 +59,6 @@ module.exports = function (options) {
 
   var root;
   var content;
-
-  function updateBounds() {
-    width = (options.width || 800) - margin.left - margin.right;
-    height = (options.height || 420) - margin.top - margin.bottom;
-  }
 
   function chart(selection) {
     chart.id = Math.random().toString(16).substr(2);
@@ -71,8 +69,8 @@ module.exports = function (options) {
 
       if (options.title) {
         margin.top = 40;
+        updateBounds();
       }
-      updateBounds();
 
       root = d3.select(this)
         .datum(data)
