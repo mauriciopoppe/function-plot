@@ -34,16 +34,22 @@ var instance = simpleFunctionPlot({
     title: 'f(x)',
     fn: function (x) {
       return -x * x;
-    },
-    range: [-5, 5]
+    }
   }, {
     fn: function (x) {
       return Math.sqrt(x);
     },
     graphOptions: {
       type: 'scatter'
+    }
+  }, {
+    fn: function (x) {
+      return 1 / x;
     },
-    range: [-5, 5]
+    graphOptions: {
+      limits: [0],
+      interpolate: 'linear'
+    }
   }]
 });
 d3.select('#canvas')
@@ -66,9 +72,10 @@ var simpleFunctionPlot = require('simple-function-plot');
 
 * `options`
   * `options.title` {string} If set the chart will have it as a title on the top
-  * `options.domain` {object} configuration used as the domain of the scales (e.g. `d3.scale.linear().domain(domain.x)`)
-    * `options.domain.x` {array} 
-    * `options.domain.y` {array} 
+  * `options.domainX` {array} domain of the linear scale (used in the x axis) 
+  * `options.domainY` {array} domain of the linear scale (used in the y axis)
+  * `options.labelX` {string} x axis label 
+  * `options.labelY` {string} y axis label
   * `options.tip` {object} configuration passed to `lib/tip`, it's the helper shown on mouseover on the closest
   function to the current mose position
     * `options.tip.xLine` {boolean} true to show a line parallel to the X axis on mouseover
@@ -78,11 +85,28 @@ var simpleFunctionPlot = require('simple-function-plot');
   * `options.data` {array} *required* An array defining the functions to be rendered
     * `options.data[i].title` {string} title of the function
     * `options.data[i].fn` {function} the function itself, called with an independent value defined in `range`, it
-    * `options.data[i].range` {array} An array with the range of values which `fn` is evaluated with, e.g.
-    `[min, max, increment]`, in case increment is not passed it default to `(max - min) / 100`
+    * `options.data[i].increment` {number} the increment used in each iteration to reach the width of the chart i.e.
+    this quantity is added k times to the x scale's min x value until it surpasses the x scale's max value,
+    defaults to `(max - min) / 100`
     * `options.data[i].graphOptions` {Object} options passed to the the files located in `lib/type/`, the most useful
     property of this object is `type` which is used to determine the type of graph to be rendered for a function
-   
+      * `options.data[i].graphOptions.type` {string} the type of graph to render for the function
+
+### Single Graph Options
+
+Common options:
+
+* `options`
+  * `options.limits` {number[]} x values which make the function undefined, e.g. in `1/x` the value 0 makes the 
+  function invalid
+
+Depending on the type of graph:
+
+#### `line`
+
+* `options`
+  * `options.interpolate` {string} passed to `d3.svg.line().interpolate( ... )`  
+  
 ## Development
 
 After cloning the repo and running `npm install`
@@ -97,6 +121,7 @@ Open `localhost:5555` and that's it! Local development server powered [beefy](ht
 
 - [ ] baselines (parallel to the X axis) http://metricsgraphicsjs.org/examples.htm
 - [ ] annotations (parallel to the Y axis)
+- [X] axis labeling
 
 ## License
 

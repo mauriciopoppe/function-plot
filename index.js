@@ -20,61 +20,62 @@ var assert = utils.assert;
 
 module.exports = function (options) {
   options = options || {};
-  var domain = options.domain || {};
 
-  var limit = 10;
-  var margin = {left: 30, right: 30, top: 20, bottom: 20};
+  var root;
+  var content;
+  var domainX, domainY;
   var width;
   var height;
   var xScale, yScale;
   var xZoomScale, yZoomScale;
   var xAxis, yAxis;
-  function updateBounds() {
-    width = (options.width || Const.DEFAULT_WIDTH) - margin.left - margin.right;
-    height = (options.height || Const.DEFAULT_HEIGHT) - margin.top - margin.bottom;
-    xZoomScale = d3.scale.linear()
-      .domain(domain.x)
-      .range([0, width]);
-    yZoomScale = d3.scale.linear()
-      .domain(domain.y)
-      .range([height, 0]);
-    xAxis = d3.svg.axis()
-      .scale(xZoomScale)
-      .orient('bottom')
-      .tickSize(-height);
-    yAxis = d3.svg.axis()
-      .scale(yZoomScale)
-      .orient('left')
-      .tickSize(-width);
 
-    xScale = d3.scale.linear()
-      .domain(domain.x)
-      .range([0, width]);
-    yScale = d3.scale.linear()
-      .domain(domain.y)
-      .range([height, 0]);
-  }
-  updateBounds();
-
-  domain.x = domain.x || [-limit / 2, limit / 2];
-  domain.y = domain.y || [-limit / 2, limit / 2];
-  assert(domain.x[0] < domain.x[1]);
-  assert(domain.y[0] < domain.y[1]);
-
+  var limit = 10;
+  var margin = {left: 30, right: 30, top: 20, bottom: 20};
   var line = d3.svg.line()
     .x(function (d) { return xScale(d[0]); })
     .y(function (d) { return yScale(d[1]); });
 
-  var root;
-  var content;
+  function updateBounds() {
+    width = (options.width || Const.DEFAULT_WIDTH) - margin.left - margin.right;
+    height = (options.height || Const.DEFAULT_HEIGHT) - margin.top - margin.bottom;
+    xZoomScale = d3.scale.linear()
+      .domain(domainX)
+      .range([0, width]);
+    yZoomScale = d3.scale.linear()
+      .domain(domainY)
+      .range([height, 0]);
+    xAxis = d3.svg.axis()
+      .scale(xZoomScale)
+      .orient('bottom');
+      //.tickSize(-height);
+    yAxis = d3.svg.axis()
+      .scale(yZoomScale)
+      .orient('left');
+      //.tickSize(-width);
+
+    xScale = d3.scale.linear()
+      .domain(domainX)
+      .range([0, width]);
+    yScale = d3.scale.linear()
+      .domain(domainY)
+      .range([height, 0]);
+  }
+  domainX = options.domainX || [-limit / 2, limit / 2];
+  domainY = options.domainY || [-limit / 2, limit / 2];
+  assert(domainX[0] < domainX[1]);
+  assert(domainY[0] < domainY[1]);
+  updateBounds();
 
   function chart(selection) {
     chart.id = Math.random().toString(16).substr(2);
 
     selection.each(function () {
       var dynamicClip;
+      var zoomDragHelper;
       var data = options.data;
       var types;
+      var tip;
 
       if (options.title) {
         margin.top = 40;
@@ -133,7 +134,7 @@ module.exports = function (options) {
               .attr('x', -t[0])
               .attr('y', -t[1]);
             content.attr('transform', 'translate(' + t + ')scale(' + s + ')');
-
+            tip.move( d3.mouse(zoomDragHelper.node()) );
             // content redraw
             redraw();
           })
@@ -162,26 +163,38 @@ module.exports = function (options) {
       svg.append('g')
         .attr('class', 'y axis')
         .call(yAxis);
+      // axis labeling
+      options.labelX && svg.append('text')
+        .attr('class', 'x label')
+        .attr('text-anchor', 'end')
+        .attr('x', width)
+        .attr('y', height - 6)
+        .text(options.labelX);
+      options.labelY && svg.append('text')
+        .attr('class', 'y label')
+        .attr('text-anchor', 'end')
+        .attr('y', 6)
+        .attr('dy', '.75em')
+        .attr('transform', 'rotate(-90)')
+        .text(options.labelY);
 
       // content
       content = svg.append('g')
         .attr('clip-path', 'url(#simple-function-plot-clip-dynamic-' + chart.id + ')')
         .attr('class', 'content');
 
-      // origin line x = 0
+      // helper line, x = 0
       content.append('path')
         .datum([[0, Const.LIMIT], [0, -Const.LIMIT]])
         .attr('class', 'y origin')
-        .attr('stroke-width', 0.5)
-        .attr('stroke', 'black')
+        .attr('stroke', '#eee')
         .attr('d', line);
 
-      // origin line y = 0
+      // helper line y = 0
       content.append('path')
         .datum([[-Const.LIMIT, 0], [Const.LIMIT, 0]])
         .attr('class', 'x origin')
-        .attr('stroke-width', 0.5)
-        .attr('stroke', 'black')
+        .attr('stroke', '#eee')
         .attr('d', line);
 
       types = {
@@ -197,11 +210,11 @@ module.exports = function (options) {
       redraw();
 
       // helper to detect the closest fn to the mouse position
-      var tip = mousetip(extend(options.tip, { owner: chart }));
+      tip = mousetip(extend(options.tip, { owner: chart }));
       svg.call(tip);
 
       // dummy rect (detects the zoom + drag)
-      svg.append('rect')
+      zoomDragHelper = svg.append('rect')
         .attr('width', width)
         .attr('height', height)
         .style('fill', 'none')
@@ -214,7 +227,7 @@ module.exports = function (options) {
         })
         .on('mousemove', function () {
           var mouse = d3.mouse(this);
-          //tip.move(mouse);
+          tip.move(mouse);
         });
     });
   }
@@ -240,6 +253,10 @@ module.exports = function (options) {
 
   chart.xZoomScale = function () {
     return xZoomScale;
+  };
+
+  chart.yZoomScale = function () {
+    return yZoomScale;
   };
 
   chart.root = function () {

@@ -5,10 +5,14 @@
 var d3 = window.d3;
 var simpleFunctionPlot = require('../');
 var instance = simpleFunctionPlot({
-  title: 'A title!',
-  domain: {
-    x: [-5, 5],
-    y: [-5, 5]
+  //title: 'A title!',
+  domainX: [-5, 5],
+  domainY: [-5, 5],
+  labelX: 'x',
+  labelY: 'y',
+  tip: {
+    xLine: true,
+    yLine: true
   },
   data: [{
     title: 'f(x)',
@@ -33,6 +37,10 @@ var instance = simpleFunctionPlot({
     },
     graphOptions: {
       type: 'scatter'
+    }
+  }, {
+    fn: function (x) {
+      return x * x;
     }
   }]
 });
