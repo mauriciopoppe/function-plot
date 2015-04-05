@@ -295,3 +295,5 @@ module.exports = function (options) {
 
   return chart;
 };
+
+module.exports.types = require('./lib/type/');
