@@ -207,7 +207,8 @@ module.exports = function (options) {
         .enter()
           .append('g')
           .attr('class', 'graph');
-      redraw();
+      content.redraw = redraw;
+      content.redraw();
 
       // helper to detect the closest fn to the mouse position
       tip = mousetip(extend(options.tip, { owner: chart }));
