@@ -10,50 +10,30 @@ var instance = simpleFunctionPlot({
     x: [-5, 5],
     y: [-5, 5]
   },
-  tip: {
-    xLine: true,
-    yLine: true
-  },
   data: [{
     title: 'f(x)',
     fn: function (x) {
-      return -x * x;
+      return x;
+    }
+  }, {
+    fn: function (x) {
+      return 1 / x;
     },
     graphOptions: {
-      type: 'line'
-      //closed: true
-    },
-    range: [-5, 5]
+      limits: [0],
+      interpolate: 'linear'
+    }
+  }, {
+    fn: function (x) {
+      return Math.abs(x);
+    }
   }, {
     fn: function (x) {
       return Math.sqrt(x);
     },
     graphOptions: {
       type: 'scatter'
-    },
-    range: [-5, 5]
-  }, {
-    fn: function (x) {
-      return Math.abs(x);
-    },
-    range: [-5, 5]
-  }, {
-    title: 'point',
-    fn: function () {
-      return 3;
-    },
-    graphOptions: {
-      type: 'scatter'
-    },
-    range: [1, 1]
-  }, {
-    fn: function (x) {
-      return 1 / x;
-    },
-    graphOptions: {
-      split: [0]
-    },
-    range: [-5, 5]
+    }
   }]
 });
 

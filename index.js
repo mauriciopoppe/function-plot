@@ -23,28 +23,36 @@ module.exports = function (options) {
   var domain = options.domain || {};
 
   var limit = 10;
-  var margin = {left: 20, right: 20, top: 20, bottom: 20};
+  var margin = {left: 30, right: 30, top: 20, bottom: 20};
   var width;
   var height;
   var xScale, yScale;
+  var xZoomScale, yZoomScale;
   var xAxis, yAxis;
   function updateBounds() {
-    width = (options.width || 800) - margin.left - margin.right;
-    height = (options.height || 400) - margin.top - margin.bottom;
+    width = (options.width || Const.DEFAULT_WIDTH) - margin.left - margin.right;
+    height = (options.height || Const.DEFAULT_HEIGHT) - margin.top - margin.bottom;
+    xZoomScale = d3.scale.linear()
+      .domain(domain.x)
+      .range([0, width]);
+    yZoomScale = d3.scale.linear()
+      .domain(domain.y)
+      .range([height, 0]);
+    xAxis = d3.svg.axis()
+      .scale(xZoomScale)
+      .orient('bottom')
+      .tickSize(-height);
+    yAxis = d3.svg.axis()
+      .scale(yZoomScale)
+      .orient('left')
+      .tickSize(-width);
+
     xScale = d3.scale.linear()
       .domain(domain.x)
       .range([0, width]);
     yScale = d3.scale.linear()
       .domain(domain.y)
       .range([height, 0]);
-    xAxis = d3.svg.axis()
-      .scale(xScale)
-      .orient('bottom')
-      .tickSize(-height);
-    yAxis = d3.svg.axis()
-      .scale(yScale)
-      .orient('left')
-      .tickSize(-width);
   }
   updateBounds();
 
@@ -66,6 +74,7 @@ module.exports = function (options) {
     selection.each(function () {
       var dynamicClip;
       var data = options.data;
+      var types;
 
       if (options.title) {
         margin.top = 40;
@@ -93,17 +102,29 @@ module.exports = function (options) {
         .attr('x', width + margin.left)
         .attr('text-anchor', 'end');
 
+      function redraw() {
+        // content construction (based on graphOptions.type)
+        content.selectAll('g.graph')
+          .each(function (data, index) {
+            var options = extend({
+              owner: chart,
+              index: index
+            }, data.graphOptions);
+            var type = options.type || 'line';
+            d3.select(this)
+              .call(types[type](options));
+          });
+      }
+
       var svg = root.append('g')
         .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
         .call(d3.behavior.zoom()
-          .x(xScale)
-          .y(yScale)
+          .x(xZoomScale)
+          .y(yZoomScale)
           .scaleExtent([0.1, 16])
-          .on('zoom',
-          // zoom behavior
-          // - updates the position of the axes
-          // - updates the position/scale of the clipping rectangle
-          function zoomed() {
+          .on('zoom', function onZoom() {
+            // - updates the position of the axes
+            // - updates the position/scale of the clipping rectangle
             var t = d3.event.translate;
             var s = d3.event.scale;
             svg.select('.x.axis').call(xAxis);
@@ -112,6 +133,9 @@ module.exports = function (options) {
               .attr('x', -t[0])
               .attr('y', -t[1]);
             content.attr('transform', 'translate(' + t + ')scale(' + s + ')');
+
+            // content redraw
+            redraw();
           })
         );
 
@@ -160,25 +184,17 @@ module.exports = function (options) {
         .attr('stroke', 'black')
         .attr('d', line);
 
-      var types = {
+      types = {
         line: linePlot,
         scatter: scatterPlot
       };
 
       // content construction (based on graphOptions.type)
-      content.selectAll('g')
-        .data(data)
-      .enter()
-        .append('g')
-        .each(function (data, index) {
-          var options = extend({
-            owner: chart,
-            index: index
-          }, data.graphOptions);
-          var type = options.type || 'line';
-          d3.select(this)
-            .call(types[type](options));
-        });
+      content.selectAll('g').data(data)
+        .enter()
+          .append('g')
+          .attr('class', 'graph');
+      redraw();
 
       // helper to detect the closest fn to the mouse position
       var tip = mousetip(extend(options.tip, { owner: chart }));
@@ -198,7 +214,7 @@ module.exports = function (options) {
         })
         .on('mousemove', function () {
           var mouse = d3.mouse(this);
-          tip.move(mouse);
+          //tip.move(mouse);
         });
     });
   }
@@ -220,6 +236,10 @@ module.exports = function (options) {
     }
     yScale = _;
     return chart;
+  };
+
+  chart.xZoomScale = function () {
+    return xZoomScale;
   };
 
   chart.root = function () {
