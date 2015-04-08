@@ -3,23 +3,42 @@
  */
 'use strict';
 var d3 = window.d3;
+//var width = 400, height = 300;
+var width = 740, height = 450;
 var simpleFunctionPlot = require('../');
-var instance = simpleFunctionPlot({
-  //title: 'A title!',
-  domainX: [-5, 5],
-  domainY: [-5, 5],
-  labelX: 'x',
-  labelY: 'y',
-  tip: {
-    xLine: true,
-    yLine: true
-  },
+var graphs = {};
+
+graphs.linear = simpleFunctionPlot({
+  title: 'linear',
+  width: width,
+  height: height,
   data: [{
-    title: 'f(x)',
+    title: 'f(x) = x',
     fn: function (x) {
       return x;
     }
-  }, {
+  }]
+});
+
+graphs.multiple = simpleFunctionPlot({
+  title: 'multiple',
+  width: width,
+  height: height,
+  data: [
+    { fn: function (x) { return x; }},
+    { fn: function (x) { return -x; }},
+    { fn: function (x) { return x * x; }},
+    { fn: function (x) { return x * x * x; }},
+    { fn: function (x) { return x * x * x * x; }}
+  ]
+});
+
+graphs.withLimits = simpleFunctionPlot({
+  title: 'With limits',
+  width: width,
+  height: height,
+  data: [{
+    title: 'f(x) = 1/x',
     fn: function (x) {
       return 1 / x;
     },
@@ -27,23 +46,61 @@ var instance = simpleFunctionPlot({
       limits: [0],
       interpolate: 'linear'
     }
-  }, {
-    fn: function (x) {
-      return Math.abs(x);
-    }
-  }, {
+  }]
+});
+
+// scatter
+graphs.scatter = simpleFunctionPlot({
+  title: 'scatter',
+  width: width,
+  height: height,
+  domainY: [-1, 7],
+  data: [{
     fn: function (x) {
       return Math.sqrt(x);
     },
     graphOptions: {
       type: 'scatter'
     }
-  }, {
+  }]
+});
+
+// tip option
+graphs.tip = simpleFunctionPlot({
+  title: 'tip',
+  width: width,
+  height: height,
+  tip: {
+    xLine: true,
+    yLine: true
+  },
+  domainY: [-1, 7],
+  data: [
+    { fn: function (x) { return x * x; }}
+  ]
+});
+
+// derivative option
+graphs.derivative = simpleFunctionPlot({
+  title: 'derivative',
+  width: width,
+  height: height,
+  domainY: [-1, 7],
+  data: [{
     fn: function (x) {
       return x * x;
+    },
+    derivative: {
+      fn: function (x) {
+        return 2 * x;
+      },
+      x0: 2,
+      updateOnMouseOver: true
     }
   }]
 });
 
-d3.select('#canvas')
-  .call(instance);
+Object.keys(graphs).forEach(function (graph) {
+  d3.select('#' + graph)
+    .call(graphs[graph]);
+});

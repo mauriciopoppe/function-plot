@@ -16,6 +16,9 @@ var mousetip = require('./lib/tip');
 var utils = require('./lib/utils');
 var linePlot = require('./lib/type/line');
 var scatterPlot = require('./lib/type/scatter');
+
+var helper = require('./lib/helper/');
+
 var assert = utils.assert;
 
 module.exports = function (options) {
@@ -74,8 +77,11 @@ module.exports = function (options) {
       var dynamicClip;
       var zoomDragHelper;
       var data = options.data;
-      var types;
-      var tip;
+      var tip = mousetip(extend(options.tip, { owner: chart }));
+      var types = {
+        line: linePlot,
+        scatter: scatterPlot
+      };
 
       if (options.title) {
         margin.top = 40;
@@ -114,6 +120,9 @@ module.exports = function (options) {
             var type = options.type || 'line';
             d3.select(this)
               .call(types[type](options));
+
+            d3.select(this)
+              .call(helper(options));
           });
       }
 
@@ -197,13 +206,8 @@ module.exports = function (options) {
         .attr('stroke', '#eee')
         .attr('d', line);
 
-      types = {
-        line: linePlot,
-        scatter: scatterPlot
-      };
-
       // content construction (based on graphOptions.type)
-      content.selectAll('g').data(data)
+      content.selectAll('g.graph').data(data)
         .enter()
           .append('g')
           .attr('class', 'graph');
@@ -211,7 +215,6 @@ module.exports = function (options) {
       content.redraw();
 
       // helper to detect the closest fn to the mouse position
-      tip = mousetip(extend(options.tip, { owner: chart }));
       svg.call(tip);
 
       // dummy rect (detects the zoom + drag)

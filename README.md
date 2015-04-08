@@ -15,7 +15,7 @@ $ npm install --save simple-function-plot
 ```js
 var simpleFunctionPlot = require('simple-function-plot');
 var instance = simpleFunctionPlot({
-  // see the API below
+  // options below
 })
 d3.select(' selector of the parent container for the chart ')
   .call(instance)
