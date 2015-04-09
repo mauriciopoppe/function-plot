@@ -86,7 +86,10 @@ var simpleFunctionPlot = require('simple-function-plot');
   * `options.data` {array} *required* An array defining the functions to be rendered
     * `options.data[i].title` {string} title of the function
     * `options.data[i].skipTip` {boolean} true to avoid this function from being a target of the tip
-    * `options.data[i].fn` {function} the function itself, called with an independent value defined in `range`, it
+    * `options.data[i].fn` {function} the function that represents the curve, this function is evaluated 
+    with values which are in `range` limiting the values to the screen min/max coordinates for `x`, i.e.
+    at any given time the graph min/max x coordinates will limit the range of values to be plotted
+    * `options.data[i].range` {number[]} if given the function will only be evaluated with multiple values from this range
     * `options.data[i].increment` {number} the increment used in each iteration to reach the width of the chart i.e.
     this quantity is added k times to the x scale's min x value until it surpasses the x scale's max value,
     defaults to `(max - min) / 100`
