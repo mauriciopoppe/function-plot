@@ -105,27 +105,10 @@ module.exports = function (options) {
         .attr('x', width + margin.left)
         .attr('text-anchor', 'end');
 
-      function redraw() {
-        // content construction (based on graphOptions.type)
-        content.selectAll('g.graph')
-          .each(function (data, index) {
-            var options = extend({
-              owner: chart,
-              index: index
-            }, data.graphOptions);
-            var type = options.type || 'line';
-            d3.select(this)
-              .call(types[type](options));
-
-            d3.select(this)
-              .call(helper(options));
-          });
-      }
-
       zoomBehavior = d3.behavior.zoom()
         .x(xZoomScale)
         .y(yZoomScale)
-        .scaleExtent([0.1, 16])
+        .scaleExtent([0.05, 16])
         .on('zoom', function onZoom() {
           chart.emit('all:zoom', xZoomScale, yZoomScale);
         });
@@ -198,8 +181,7 @@ module.exports = function (options) {
         .enter()
           .append('g')
           .attr('class', 'graph');
-      content.redraw = redraw;
-      content.redraw();
+      chart.emit('redraw');
 
       // helper to detect the closest fn to the mouse position
       wrap.call(tip);
@@ -356,12 +338,12 @@ module.exports = function (options) {
             .attr('x', -t[0])
             .attr('y', -t[1]);
           graph.content().attr('transform', 'translate(' + t + ')scale(' + s + ')');
-
-          // content redraw
-          graph.emit('redraw');
           if (i) {
             graph.emit('zoom:scaleUpdate', xZoomScale, yZoomScale);
           }
+
+          // content redraw
+          graph.emit('redraw');
         });
 
         linkedGraphs[0].emit('all:mousemove');

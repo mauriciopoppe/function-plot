@@ -118,6 +118,34 @@ graphs.derivativeLive = simpleFunctionPlot({
   }]
 });
 
+// derivative autoupdate multiple
+graphs.derivativeLiveMulti = simpleFunctionPlot({
+  title: 'multi - derivative autoupdate',
+  width: width,
+  height: height,
+  data: [{
+    fn: function (x) {
+      return x * x;
+    },
+    derivative: {
+      fn: function (x) {
+        return 2 * x;
+      },
+      updateOnMouseOver: true
+    }
+  }, {
+    fn: function (x) {
+      return x * x * x;
+    },
+    derivative: {
+      fn: function (x) {
+        return 3 * x * x;
+      },
+      updateOnMouseOver: true
+    }
+  }]
+});
+
 // derivative live option
 graphs.linkedA = simpleFunctionPlot({
   title: 'A',
