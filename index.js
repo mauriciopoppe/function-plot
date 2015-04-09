@@ -14,9 +14,7 @@ var extend = require('extend');
 var Const = require('./lib/constants');
 var mousetip = require('./lib/tip');
 var utils = require('./lib/utils');
-var linePlot = require('./lib/type/line');
-var scatterPlot = require('./lib/type/scatter');
-
+var types = require('./lib/types/');
 var helper = require('./lib/helper/');
 
 var assert = utils.assert;
@@ -31,13 +29,18 @@ module.exports = function (options) {
   var height;
   var xScale, yScale;
   var xZoomScale, yZoomScale;
+  var zoomBehavior;
   var xAxis, yAxis;
+
+  // graphs that will do stuff when an event happens (including this)
+  var linkedGraphs = [chart];
 
   var limit = 10;
   var margin = {left: 30, right: 30, top: 20, bottom: 20};
   var line = d3.svg.line()
     .x(function (d) { return xScale(d[0]); })
     .y(function (d) { return yScale(d[1]); });
+  var tip = mousetip(extend(options.tip, { owner: chart }));
 
   function updateBounds() {
     width = (options.width || Const.DEFAULT_WIDTH) - margin.left - margin.right;
@@ -74,14 +77,7 @@ module.exports = function (options) {
     chart.id = Math.random().toString(16).substr(2);
 
     selection.each(function () {
-      var dynamicClip;
-      var zoomDragHelper;
       var data = options.data;
-      var tip = mousetip(extend(options.tip, { owner: chart }));
-      var types = {
-        line: linePlot,
-        scatter: scatterPlot
-      };
 
       if (options.title) {
         margin.top = 40;
@@ -126,34 +122,24 @@ module.exports = function (options) {
           });
       }
 
-      var svg = root.append('g')
+      zoomBehavior = d3.behavior.zoom()
+        .x(xZoomScale)
+        .y(yZoomScale)
+        .scaleExtent([0.1, 16])
+        .on('zoom', function onZoom() {
+          chart.emit('all:zoom', xZoomScale, yZoomScale);
+        });
+      var wrap = root.append('g')
+        .attr('class', 'transform-helper')
         .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
-        .call(d3.behavior.zoom()
-          .x(xZoomScale)
-          .y(yZoomScale)
-          .scaleExtent([0.1, 16])
-          .on('zoom', function onZoom() {
-            // - updates the position of the axes
-            // - updates the position/scale of the clipping rectangle
-            var t = d3.event.translate;
-            var s = d3.event.scale;
-            svg.select('.x.axis').call(xAxis);
-            svg.select('.y.axis').call(yAxis);
-            dynamicClip.attr('transform', 'scale(' + 1 / s + ')')
-              .attr('x', -t[0])
-              .attr('y', -t[1]);
-            content.attr('transform', 'translate(' + t + ')scale(' + s + ')');
-            tip.move( d3.mouse(zoomDragHelper.node()) );
-            // content redraw
-            redraw();
-          })
-        );
+        .call(zoomBehavior);
 
       // clip (so that the functions don't overflow on zoom or drag)
-      var defs = svg.append('defs');
-      dynamicClip = defs.append('clipPath')
+      var defs = wrap.append('defs');
+      defs.append('clipPath')
           .attr('id', 'simple-function-plot-clip-dynamic-' + chart.id)
         .append('rect')
+          .attr('class', 'dynamic-clip')
           .attr('width', width)
           .attr('height', height);
 
@@ -161,25 +147,26 @@ module.exports = function (options) {
       defs.append('clipPath')
           .attr('id', 'simple-function-plot-clip-' + chart.id)
         .append('rect')
+          .attr('class', 'static-clip')
           .attr('width', width)
           .attr('height', height);
 
       // axis creation
-      svg.append('g')
+      wrap.append('g')
         .attr('class', 'x axis')
         .attr('transform', 'translate(0,' + height + ')')
         .call(xAxis);
-      svg.append('g')
+      wrap.append('g')
         .attr('class', 'y axis')
         .call(yAxis);
       // axis labeling
-      options.labelX && svg.append('text')
+      options.labelX && wrap.append('text')
         .attr('class', 'x label')
         .attr('text-anchor', 'end')
         .attr('x', width)
         .attr('y', height - 6)
         .text(options.labelX);
-      options.labelY && svg.append('text')
+      options.labelY && wrap.append('text')
         .attr('class', 'y label')
         .attr('text-anchor', 'end')
         .attr('y', 6)
@@ -188,7 +175,7 @@ module.exports = function (options) {
         .text(options.labelY);
 
       // content
-      content = svg.append('g')
+      content = wrap.append('g')
         .attr('clip-path', 'url(#simple-function-plot-clip-dynamic-' + chart.id + ')')
         .attr('class', 'content');
 
@@ -215,23 +202,24 @@ module.exports = function (options) {
       content.redraw();
 
       // helper to detect the closest fn to the mouse position
-      svg.call(tip);
+      wrap.call(tip);
 
       // dummy rect (detects the zoom + drag)
-      zoomDragHelper = svg.append('rect')
+      wrap.append('rect')
+        .attr('class', 'zoom-and-drag')
         .attr('width', width)
         .attr('height', height)
+        .style('display', options.disableZoom ? 'none' : null)
         .style('fill', 'none')
         .style('pointer-events', 'all')
         .on('mouseover', function () {
-          tip.show();
+          chart.emit('all:mouseover');
         })
         .on('mouseout', function () {
-          tip.hide();
+          chart.emit('all:mouseout');
         })
         .on('mousemove', function () {
-          var mouse = d3.mouse(this);
-          tip.move(mouse);
+          chart.emit('all:mousemove');
         });
     });
   }
@@ -267,8 +255,16 @@ module.exports = function (options) {
     return root;
   };
 
+  chart.getScale = function () {
+    return (d3.event && d3.event.scale) || zoomBehavior.scale() || 1;
+  };
+
   chart.content = function () {
     return content;
+  };
+
+  chart.tip = function () {
+    return tip;
   };
 
   chart.width = function () {
@@ -279,25 +275,121 @@ module.exports = function (options) {
     return height;
   };
 
-  // change the title on the top on tip:update
-  chart.on('tip:update', function (x, y, index) {
-    var meta = root.datum()[index];
-    var title = meta.title || '';
-    var format = meta.renderer || function (x, y) {
-        return x.toFixed(3) + ', ' + y.toFixed(3);
-      };
+  chart.addLink = function (link) {
+    linkedGraphs.push(link);
+  };
 
-    var text = [];
-    title && text.push(title);
-    text.push(format(x, y));
+  function setUpEventListeners() {
+    var events = {
+      mousemove: function (x, y) {
+        tip.move(x, y);
+      },
+      mouseover: function () {
+        tip.show();
+      },
+      mouseout: function () {
+        tip.hide();
+      },
+      redraw: function () {
+        // update the stroke width of the origin lines
+        content.selectAll('.origin')
+          .attr('stroke-width', 1 / ((d3.event && d3.event.scale) || 1));
 
-    root.select('.top-right-legend')
-      .attr('fill', Const.COLORS[index])
-      //.text(x.toFixed(3) + ', ' + y.toFixed(3));
-      .text(text.join(' '));
-  });
+        // content construction (based on graphOptions.type)
+        content.selectAll('g.graph')
+          .each(function (data, index) {
+            var options = extend({
+              owner: chart,
+              index: index
+            }, data.graphOptions);
+            var type = options.type || 'line';
+            d3.select(this)
+              .call(types[type](options));
+            d3.select(this)
+              .call(helper(options));
+          });
+      },
+      'zoom:scaleUpdate': function (xOther, yOther) {
+        zoomBehavior
+          .x(xZoomScale.domain( xOther.domain() ))
+          .y(yZoomScale.domain( yOther.domain() ));
+      },
+      'tip:update': function (x, y, index) {
+        var meta = root.datum()[index];
+        var title = meta.title || '';
+        var format = meta.renderer || function (x, y) {
+            return x.toFixed(3) + ', ' + y.toFixed(3);
+          };
+
+        var text = [];
+        title && text.push(title);
+        text.push(format(x, y));
+
+        root.select('.top-right-legend')
+          .attr('fill', Const.COLORS[index])
+          //.text(x.toFixed(3) + ', ' + y.toFixed(3));
+          .text(text.join(' '));
+      }
+    };
+
+    var all = {
+      mousemove: function () {
+        var mouse = d3.mouse(root.select('rect.zoom-and-drag').node());
+        var x = xZoomScale.invert(mouse[0]);
+        var y = yZoomScale.invert(mouse[1]);
+        linkedGraphs.forEach(function (graph) {
+          graph.emit('mousemove', x, y);
+        });
+      },
+
+      zoom: function (xZoomScale, yZoomScale) {
+        linkedGraphs.forEach(function (graph, i) {
+          // - updates the position of the axes
+          // - updates the position/scale of the clipping rectangle
+          var t = d3.event.translate;
+          var s = d3.event.scale;
+          var wrap = graph.root().select('g.transform-helper');
+          wrap.select('.x.axis').call(xAxis);
+          wrap.select('.y.axis').call(yAxis);
+          graph.root().select('.dynamic-clip')
+            .attr('transform', 'scale(' + 1 / s + ')')
+            .attr('x', -t[0])
+            .attr('y', -t[1]);
+          graph.content().attr('transform', 'translate(' + t + ')scale(' + s + ')');
+
+          // content redraw
+          graph.emit('redraw');
+          if (i) {
+            graph.emit('zoom:scaleUpdate', xZoomScale, yZoomScale);
+          }
+        });
+
+        linkedGraphs[0].emit('all:mousemove');
+      }
+    };
+
+    Object.keys(events).forEach(function (e) {
+      chart.on(e, events[e]);
+      // create an event for each event existing on `events` in the form 'all:' event
+      // e.g. all:mouseover all:mouseout
+      // the objective is that all the linked graphs receive the same event as the current graph
+      !all[e] && chart.on('all:' + e, function () {
+        var args = Array.prototype.slice.call(arguments);
+        linkedGraphs.forEach(function (graph) {
+          var localArgs = args.slice();
+          localArgs.unshift(e);
+          graph.emit.apply(graph, localArgs);
+        });
+      });
+    });
+
+    Object.keys(all).forEach(function (e) {
+      chart.on('all:' + e, all[e]);
+    });
+  }
+  setUpEventListeners();
 
   return chart;
 };
 
-module.exports.types = require('./lib/type/');
+module.exports.types = types;

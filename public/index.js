@@ -3,8 +3,8 @@
  */
 'use strict';
 var d3 = window.d3;
-//var width = 400, height = 300;
-var width = 740, height = 450;
+var width = 450, height = 300;
+//var width = 740, height = 450;
 var simpleFunctionPlot = require('../');
 var graphs = {};
 
@@ -54,7 +54,7 @@ graphs.scatter = simpleFunctionPlot({
   title: 'scatter',
   width: width,
   height: height,
-  domainY: [-1, 7],
+  domainY: [-1, 9],
   data: [{
     fn: function (x) {
       return Math.sqrt(x);
@@ -74,7 +74,7 @@ graphs.tip = simpleFunctionPlot({
     xLine: true,
     yLine: true
   },
-  domainY: [-1, 7],
+  domainY: [-1, 9],
   data: [
     { fn: function (x) { return x * x; }}
   ]
@@ -85,7 +85,7 @@ graphs.derivative = simpleFunctionPlot({
   title: 'derivative',
   width: width,
   height: height,
-  domainY: [-1, 7],
+  domainY: [-1, 9],
   data: [{
     fn: function (x) {
       return x * x;
@@ -94,11 +94,45 @@ graphs.derivative = simpleFunctionPlot({
       fn: function (x) {
         return 2 * x;
       },
-      x0: 2,
+      x0: 2
+    }
+  }]
+});
+
+// derivative autoupdate
+graphs.derivativeLive = simpleFunctionPlot({
+  title: 'derivative autoupdate',
+  width: width,
+  height: height,
+  domainY: [-1, 9],
+  data: [{
+    fn: function (x) {
+      return x * x;
+    },
+    derivative: {
+      fn: function (x) {
+        return 2 * x;
+      },
       updateOnMouseOver: true
     }
   }]
 });
+
+// derivative live option
+graphs.linkedA = simpleFunctionPlot({
+  title: 'A',
+  width: width,
+  height: height,
+  data: [{ fn: function (x) { return x; } }]
+});
+graphs.linkedB = simpleFunctionPlot({
+  title: 'B',
+  width: width,
+  height: height,
+  disableZoom: true,
+  data: [{ fn: function (x) { return -x; } }]
+});
+graphs.linkedA.addLink(graphs.linkedB);
 
 Object.keys(graphs).forEach(function (graph) {
   d3.select('#' + graph)
