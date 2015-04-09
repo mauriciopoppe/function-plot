@@ -20,6 +20,24 @@ graphs.linear = simpleFunctionPlot({
   }]
 });
 
+graphs.closed = simpleFunctionPlot({
+  title: 'area',
+  width: width,
+  height: height,
+  labelX: 'x - axis',
+  labelY: 'y - axis',
+  data: [{
+    title: 'f(x) = x',
+    fn: function (x) {
+      return x;
+    },
+    graphOptions: {
+      closed: true
+    },
+    range: [2, 6]
+  }]
+});
+
 graphs.multiple = simpleFunctionPlot({
   title: 'multiple',
   width: width,
@@ -80,9 +98,23 @@ graphs.tip = simpleFunctionPlot({
   ]
 });
 
+// tip option
+graphs.noTitle = simpleFunctionPlot({
+  width: width,
+  height: height,
+  domainY: [-1, 9],
+  tip: {
+    renderer: function () { return ''; }
+  },
+  data: [
+    { fn: function (x) { return x * x; }}
+  ]
+});
+
+
 // derivative option
 graphs.derivative = simpleFunctionPlot({
-  title: 'derivative',
+  title: 'derivative x0=2',
   width: width,
   height: height,
   domainY: [-1, 9],

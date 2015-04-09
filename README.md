@@ -76,6 +76,7 @@ var simpleFunctionPlot = require('simple-function-plot');
   * `options.domainY` {array} domain of the linear scale (used in the y axis)
   * `options.labelX` {string} x axis label 
   * `options.labelY` {string} y axis label
+  * `options.disableZoom` {boolean} true to disable drag and zoom on the graph
   * `options.tip` {object} configuration passed to `lib/tip`, it's the helper shown on mouseover on the closest
   function to the current mose position
     * `options.tip.xLine` {boolean} true to show a line parallel to the X axis on mouseover
@@ -89,6 +90,14 @@ var simpleFunctionPlot = require('simple-function-plot');
     * `options.data[i].increment` {number} the increment used in each iteration to reach the width of the chart i.e.
     this quantity is added k times to the x scale's min x value until it surpasses the x scale's max value,
     defaults to `(max - min) / 100`
+    * `options.data[i].derivative` {Object} Info of the instantaneous rate of change of y with respect to x
+      * `options.data[i].derivative.fn` {Function} The derivative of `options.data[i].fn`
+      * `options.data[i].derivative.x0` {number} The abscissa of the point which belongs to the curve
+      represented by `options.data[i].fn` whose tangent will be computed (i.e. the tangent line to the point
+      `x0, fn(x0)`)
+      * `options.data[i].derivative.updateOnMouseOver` {boolean} True to compute the tangent line by evaluating
+      `options.data[i].derivative.fn` with the current mouse position (i.e. let `x0` be the abscissa of the
+      mouse position transformed to local coordinates, the tangent line to the point `x0, fn(x0)`)
     * `options.data[i].graphOptions` {Object} options passed to the the files located in `lib/type/`, the most useful
     property of this object is `type` which is used to determine the type of graph to be rendered for a function
       * `options.data[i].graphOptions.type` {string} the type of graph to render for the function
