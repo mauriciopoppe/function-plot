@@ -28,32 +28,31 @@ See `public/index.js`
 ```javascript
 'use strict';
 var d3 = window.d3;
-var simpleFunctionPlot = require('../');
-var instance = simpleFunctionPlot({
-  data: [{
-    title: 'f(x)',
-    fn: function (x) {
-      return -x * x;
-    }
-  }, {
-    fn: function (x) {
-      return Math.sqrt(x);
-    },
-    graphOptions: {
-      type: 'scatter'
-    }
-  }, {
-    fn: function (x) {
-      return 1 / x;
-    },
-    graphOptions: {
-      limits: [0],
-      interpolate: 'linear'
-    }
-  }]
-});
+var simpleFunctionPlot = window.simpleFunctionPlot;
 d3.select('#canvas')
-  .call(instance);
+  .call(simpleFunctionPlot({
+    data: [{
+      title: 'f(x)',
+      fn: function (x) {
+        return -x * x;
+      }
+    }, {
+      fn: function (x) {
+        return Math.sqrt(x);
+      },
+      graphOptions: {
+        type: 'scatter'
+      }
+    }, {
+      fn: function (x) {
+        return 1 / x;
+      },
+      graphOptions: {
+        limits: [0],
+        interpolate: 'linear'
+      }
+    }]
+  }));
 ```
 
 Screenshot (for the example located at `public/index.js`):
@@ -103,7 +102,8 @@ var simpleFunctionPlot = require('simple-function-plot');
       mouse position transformed to local coordinates, the tangent line to the point `x0, fn(x0)`)
     * `options.data[i].graphOptions` {Object} options passed to the the files located in `lib/type/`, the most useful
     property of this object is `type` which is used to determine the type of graph to be rendered for a function
-      * `options.data[i].graphOptions.type` {string} the type of graph to render for the function
+      * `options.data[i].graphOptions.type` {string} the type of graph to render for the function (possible values: 
+      'line', 'scatter')
 
 ### Single Graph Options
 

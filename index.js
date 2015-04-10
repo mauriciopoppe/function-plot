@@ -11,15 +11,16 @@ var d3 = window.d3;
 var events = require('events');
 var extend = require('extend');
 
-var Const = require('./lib/constants');
 var mousetip = require('./lib/tip');
 var utils = require('./lib/utils');
-var types = require('./lib/types/');
 var helper = require('./lib/helper/');
 
 var assert = utils.assert;
 
 module.exports = function (options) {
+  var Const = module.exports.constants = require('./lib/constants');
+  var types = module.exports.types = require('./lib/types/');
+
   options = options || {};
 
   var root;
@@ -87,6 +88,7 @@ module.exports = function (options) {
       root = d3.select(this)
         .datum(data)
         .append('svg')
+        .attr('class', 'simple-function-plot')
         .attr('width', width + margin.left + margin.right)
         .attr('height', height + margin.top + margin.bottom);
 
@@ -373,5 +375,3 @@ module.exports = function (options) {
 
   return chart;
 };
-
-module.exports.types = types;

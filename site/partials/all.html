@@ -1,42 +1,48 @@
-/**
- * Created by mauricio on 3/28/15.
- */
-'use strict';
-var d3 = window.d3;
-var width = 450, height = 300;
-//var width = 740, height = 450;
-var simpleFunctionPlot = require('../');
-var graphs = {};
 
-graphs.linear = simpleFunctionPlot({
-  title: 'linear',
-  width: width,
-  height: height,
+ <div class="example row">
+   <div class="col-md-6">
+     <div id="linear"></div>
+   </div>
+   <div class="col-md-6">
+     <div class="comment"><h2>Plotting a curve</h2>
+<p>The shortest example, the curve y = x^2 is evaluated with values inside the range<br />defined by the canvas size (default dimensions are <code>600x400</code>), whenever the canvas size<br />is modified (because of a translate/scale operation) the function is evaluated<br />again with the new bounds</p></div>
+     <div class="code"><pre><code>instance = simpleFunctionPlot({
   data: [{
-    title: 'f(x) = x',
     fn: function (x) {
-      return x;
+      return Math.sin(x);
     }
   }]
 });
+d3.select('#linear').call(instance);</code></pre></div>
+   </div>
+ </div>
 
-graphs.closed = simpleFunctionPlot({
+ <div class="example row">
+   <div class="col-md-6">
+     <div id="closed"></div>
+   </div>
+   <div class="col-md-6">
+     <div class="comment"><h2>Additional options</h2>
+<p>The shortest example, the curve y = x^2 is evaluated with values inside the range<br />defined by the canvas size (default dimensions are <code>600x400</code>), whenever the canvas size<br />is modified (because of a translate/scale operation) the function is evaluated<br />again with the new bounds</p></div>
+     <div class="code"><pre><code>instance = simpleFunctionPlot({
   title: 'area',
   width: width,
   height: height,
   labelX: 'x - axis',
   labelY: 'y - axis',
+  domainX: [0, 10],
   data: [{
     title: 'f(x) = x',
     fn: function (x) {
-      return x;
+      return Math.sin(x);
     },
     graphOptions: {
       closed: true
     },
-    range: [2, 6]
+    range: [0, 10]
   }]
 });
+d3.select('#closed').call(instance);
 
 graphs.multiple = simpleFunctionPlot({
   title: 'multiple',
@@ -183,18 +189,21 @@ graphs.linkedA = simpleFunctionPlot({
   title: 'A',
   width: width,
   height: height,
-  data: [{ fn: function (x) { return x; } }]
+  data: [{ fn: function (x) { return x * x; } }]
 });
 graphs.linkedB = simpleFunctionPlot({
   title: 'B',
   width: width,
   height: height,
   disableZoom: true,
-  data: [{ fn: function (x) { return -x; } }]
+  data: [{ fn: function (x) { return 2 * x; } }]
 });
 graphs.linkedA.addLink(graphs.linkedB);
-
-Object.keys(graphs).forEach(function (graph) {
-  d3.select('#' + graph)
-    .call(graphs[graph]);
 });
+
+
+$('#content').load('partials/all.html', function () {
+$(document).trigger('markupLoaded');
+});</code></pre></div>
+   </div>
+ </div>
