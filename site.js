@@ -1,6 +1,7 @@
 /**
  * Created by mauricio on 4/9/15.
  */
+'use strict';
 var fs = require('fs');
 var dox = require('dox');
 var _ = require('lodash');
@@ -14,7 +15,9 @@ var exampleTemplate = [
   '<% _.forEach(comments, function (c) { %>',
   ' <div class="example row">',
   '   <div class="col-md-6">',
-  '     <div id="<%= c.id %>"></div>',
+  '     <% _.forEach(c.ids, function (id) { %>',
+  '     <div id="<%= id %>"></div>',
+  '     <% }) %>',
   '   </div>',
   '   <div class="col-md-6">',
   '     <div class="comment"><%= c.comment %></div>',
@@ -25,14 +28,21 @@ var exampleTemplate = [
 ].join('\n');
 
 var parsed = comments.map(function (c) {
-  var id = c.code.match(/d3.select\('(.*?)'\)/)[1];
+  var ids = c.code.match(/select\('.*'\)/g);
+  if (ids) {
+    ids = ids
+      .map(function (str) {
+        return /#[0-9a-zA-Z\-]*/.exec(str)[0].substr(1);
+      });
+  }
   var comment = c.description.full;
-
   return {
     comment: comment,
     code: c.code,
-    id: id.substr(1)
+    ids: ids
   };
+}).filter(function (entry) {
+  return entry.ids;
 });
 
 output.write(_.template(exampleTemplate)({

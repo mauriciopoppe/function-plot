@@ -17,21 +17,22 @@ var helper = require('./lib/helper/');
 
 var assert = utils.assert;
 
-module.exports = function (options) {
-  var Const = module.exports.constants = require('./lib/constants');
-  var types = module.exports.types = require('./lib/types/');
+var Const;
+var types;
 
+module.exports = function (options) {
   options = options || {};
+  options.data = options.data || [];
 
   var root;
-  var content;
-  var domainX, domainY;
+  var xDomain, yDomain;
   var width;
   var height;
   var xScale, yScale;
   var xZoomScale, yZoomScale;
-  var zoomBehavior;
+  var zoomBehavior = d3.behavior.zoom();
   var xAxis, yAxis;
+  var id = Math.random().toString(16).substr(2);
 
   // graphs that will do stuff when an event happens (including this)
   var linkedGraphs = [chart];
@@ -47,10 +48,10 @@ module.exports = function (options) {
     width = (options.width || Const.DEFAULT_WIDTH) - margin.left - margin.right;
     height = (options.height || Const.DEFAULT_HEIGHT) - margin.top - margin.bottom;
     xZoomScale = d3.scale.linear()
-      .domain(domainX)
+      .domain(xDomain)
       .range([0, width]);
     yZoomScale = d3.scale.linear()
-      .domain(domainY)
+      .domain(yDomain)
       .range([height, 0]);
     xAxis = d3.svg.axis()
       .scale(xZoomScale)
@@ -62,155 +63,212 @@ module.exports = function (options) {
       //.tickSize(-width);
 
     xScale = d3.scale.linear()
-      .domain(domainX)
+      .domain(xDomain)
       .range([0, width]);
     yScale = d3.scale.linear()
-      .domain(domainY)
+      .domain(yDomain)
       .range([height, 0]);
   }
-  domainX = options.domainX || [-limit / 2, limit / 2];
-  domainY = options.domainY || [-limit / 2, limit / 2];
-  assert(domainX[0] < domainX[1]);
-  assert(domainY[0] < domainY[1]);
+  xDomain = options.xDomain || [-limit / 2, limit / 2];
+  yDomain = options.yDomain || [-limit / 2, limit / 2];
+  assert(xDomain[0] < xDomain[1]);
+  assert(yDomain[0] < yDomain[1]);
   updateBounds();
 
-  function chart(selection) {
-    chart.id = Math.random().toString(16).substr(2);
+  function getCanvas() {
+    return root.select('#canvas');
+  }
 
-    selection.each(function () {
-      var data = options.data;
+  function buildTitle() {
+    var selection = root.selectAll('text.title')
+      .data([options.title].filter(Boolean));
 
-      if (options.title) {
-        margin.top = 40;
-        updateBounds();
-      }
+    selection
+      .enter().append('text')
+      .attr('class', 'title')
+      .attr('y', margin.top / 2)
+      .attr('x', margin.left + width / 2)
+      .attr('font-size', 25)
+      .attr('text-anchor', 'middle')
+      .attr('alignment-baseline', 'middle')
+      .text(options.title);
 
-      root = d3.select(this)
-        .datum(data)
-        .append('svg')
-        .attr('class', 'simple-function-plot')
-        .attr('width', width + margin.left + margin.right)
-        .attr('height', height + margin.top + margin.bottom);
+    selection.exit().remove();
+  }
 
-      root.append('text')
-        .attr('class', 'title')
-        .attr('y', margin.top / 2)
-        .attr('x', margin.left + width / 2)
-        .attr('font-size', 25)
-        .attr('text-anchor', 'middle')
-        .attr('alignment-baseline', 'middle')
-        .text(options.title);
+  function buildAxisLabel() {
+    // axis labeling
+    var xLabel, yLabel;
+    var canvas = getCanvas();
 
-      root.append('text')
-        .attr('class', 'top-right-legend')
-        .attr('y', margin.top / 2)
-        .attr('x', width + margin.left)
-        .attr('text-anchor', 'end');
+    xLabel = canvas.selectAll('text.x.label')
+      .data([options.xLabel].filter(Boolean));
+    xLabel.enter()
+      .append('text')
+      .attr('class', 'x label')
+      .attr('text-anchor', 'end');
+    xLabel
+      .attr('x', width)
+      .attr('y', height - 6)
+      .text(function (d) { return d; });
+    xLabel.exit().remove();
 
-      zoomBehavior = d3.behavior.zoom()
-        .x(xZoomScale)
-        .y(yZoomScale)
-        .scaleExtent([0.05, 16])
-        .on('zoom', function onZoom() {
-          chart.emit('all:zoom', xZoomScale, yZoomScale);
-        });
-      var wrap = root.append('g')
-        .attr('class', 'transform-helper')
-        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
-        .call(zoomBehavior);
+    yLabel = canvas.selectAll('text.y.label')
+      .data([options.yLabel].filter(Boolean));
+    yLabel.enter()
+      .append('text')
+      .attr('class', 'y label')
+      .attr('y', 6)
+      .attr('dy', '.75em')
+      .attr('text-anchor', 'end')
+      .attr('transform', 'rotate(-90)');
+    yLabel
+      .text(function (d) { return d; });
+    yLabel.exit().remove();
+  }
 
-      // clip (so that the functions don't overflow on zoom or drag)
-      var defs = wrap.append('defs');
-      defs.append('clipPath')
-          .attr('id', 'simple-function-plot-clip-dynamic-' + chart.id)
-        .append('rect')
-          .attr('class', 'dynamic-clip')
-          .attr('width', width)
-          .attr('height', height);
+  function buildContent() {
+    var canvas = getCanvas();
+    // content
+    var content = canvas.selectAll('g#content')
+      .data(function (d) { return [d]; });
 
-      // static clip on the content
-      defs.append('clipPath')
-          .attr('id', 'simple-function-plot-clip-' + chart.id)
-        .append('rect')
-          .attr('class', 'static-clip')
-          .attr('width', width)
-          .attr('height', height);
+    var contentEnter = content.enter()
+      .append('g')
+      .attr('clip-path', 'url(#simple-function-plot-clip-dynamic-' + id + ')')
+      .attr('id', 'content');
 
-      // axis creation
-      wrap.append('g')
-        .attr('class', 'x axis')
-        .attr('transform', 'translate(0,' + height + ')')
-        .call(xAxis);
-      wrap.append('g')
-        .attr('class', 'y axis')
-        .call(yAxis);
-      // axis labeling
-      options.labelX && wrap.append('text')
-        .attr('class', 'x label')
-        .attr('text-anchor', 'end')
-        .attr('x', width)
-        .attr('y', height - 6)
-        .text(options.labelX);
-      options.labelY && wrap.append('text')
-        .attr('class', 'y label')
-        .attr('text-anchor', 'end')
-        .attr('y', 6)
-        .attr('dy', '.75em')
-        .attr('transform', 'rotate(-90)')
-        .text(options.labelY);
+    // helper line, x = 0
+    contentEnter.append('path')
+      .datum([[0, Const.LIMIT], [0, -Const.LIMIT]])
+      .attr('class', 'y origin')
+      .attr('stroke', '#eee')
+      .attr('d', line);
 
-      // content
-      content = wrap.append('g')
-        .attr('clip-path', 'url(#simple-function-plot-clip-dynamic-' + chart.id + ')')
-        .attr('class', 'content');
+    // helper line y = 0
+    contentEnter.append('path')
+      .datum([[-Const.LIMIT, 0], [Const.LIMIT, 0]])
+      .attr('class', 'x origin')
+      .attr('stroke', '#eee')
+      .attr('d', line);
 
-      // helper line, x = 0
-      content.append('path')
-        .datum([[0, Const.LIMIT], [0, -Const.LIMIT]])
-        .attr('class', 'y origin')
-        .attr('stroke', '#eee')
-        .attr('d', line);
+    // content construction (based on graphOptions.type)
+    content.selectAll('g.graph').data(function (d) { return d.data; })
+      .enter()
+        .append('g').attr('class', 'graph');
+  }
 
-      // helper line y = 0
-      content.append('path')
-        .datum([[-Const.LIMIT, 0], [Const.LIMIT, 0]])
-        .attr('class', 'x origin')
-        .attr('stroke', '#eee')
-        .attr('d', line);
+  function buildCanvas() {
+    root = d3.select(options.target).selectAll('svg')
+      .data([options]);
 
-      // content construction (based on graphOptions.type)
-      content.selectAll('g.graph').data(data)
-        .enter()
-          .append('g')
-          .attr('class', 'graph');
-      chart.emit('redraw');
+    // enter
+    var rootEnter = root.enter()
+      .append('svg')
+      .attr('class', 'simple-function-plot');
 
-      // helper to detect the closest fn to the mouse position
-      wrap.call(tip);
+    buildTitle();
+    rootEnter.append('text')
+      .attr('class', 'top-right-legend')
+      .attr('text-anchor', 'end');
 
-      // dummy rect (detects the zoom + drag)
-      wrap.append('rect')
-        .attr('class', 'zoom-and-drag')
-        .attr('width', width)
-        .attr('height', height)
-        .style('display', options.disableZoom ? 'none' : null)
-        .style('fill', 'none')
-        .style('pointer-events', 'all')
-        .on('mouseover', function () {
-          chart.emit('all:mouseover');
-        })
-        .on('mouseout', function () {
-          chart.emit('all:mouseout');
-        })
-        .on('mousemove', function () {
-          chart.emit('all:mousemove');
-        });
-    });
+    root
+      .attr('width', width + margin.left + margin.right)
+      .attr('height', height + margin.top + margin.bottom);
+    root.select('.top-right-legend')
+      .attr('y', margin.top / 2)
+      .attr('x', width + margin.left);
+
+    zoomBehavior
+      .x(xZoomScale)
+      .y(yZoomScale)
+      .scaleExtent([0.1, 16])
+      .on('zoom', function onZoom() {
+        chart.emit('all:zoom', xZoomScale, yZoomScale);
+      });
+    var canvasEnter = rootEnter.append('g')
+      .attr('id', 'canvas');
+    var canvas = getCanvas();
+    canvas
+      .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+      .call(zoomBehavior)
+      .each(function () {
+        var el = d3.select(this);
+        if (options.disableZoom) {
+          // https://github.com/mbostock/d3/issues/894
+          el.on('.zoom', null);
+        }
+      });
+
+    // clips (so that the functions don't overflow on zoom or drag)
+    var defs = canvasEnter.append('defs');
+    defs.append('clipPath')
+        .attr('id', 'simple-function-plot-clip-dynamic-' + id)
+      .append('rect')
+        .attr('class', 'clip dynamic-clip');
+    defs.append('clipPath')
+        .attr('id', 'simple-function-plot-clip-' + id)
+      .append('rect')
+        .attr('class', 'clip static-clip');
+    canvas.selectAll('.clip')
+      .attr('width', width)
+      .attr('height', height);
+
+    // axis creation
+    canvasEnter.append('g')
+      .attr('class', 'x axis')
+      .call(xAxis);
+    canvasEnter.append('g')
+      .attr('class', 'y axis')
+      .call(yAxis);
+    // update
+    canvas.select('.x.axis')
+      .attr('transform', 'translate(0,' + height + ')');
+    canvas.select('.y.axis');
+
+    buildAxisLabel();
+
+    buildContent();
+
+    // helper to detect the closest fn to the mouse position
+    canvasEnter.call(tip);
+
+    // dummy rect (detects the zoom + drag)
+    canvasEnter.append('rect')
+      .attr('class', 'zoom-and-drag')
+      .style('fill', 'none')
+      .style('pointer-events', 'all')
+      .on('mouseover', function () {
+        chart.emit('all:mouseover');
+      })
+      .on('mouseout', function () {
+        chart.emit('all:mouseout');
+      })
+      .on('mousemove', function () {
+        chart.emit('all:mousemove');
+      });
+    canvas.select('.zoom-and-drag')
+      .attr('width', width)
+      .attr('height', height);
+
+    chart.emit('redraw');
+  }
+
+  function chart() {
+    if (options.title) {
+      margin.top = 40;
+      updateBounds();
+    }
+    buildCanvas();
+    return chart;
   }
 
   extend(chart, events.prototype);
 
-  // public api
+  chart.id = function () {
+    return id;
+  };
+
   chart.xScale = function (_) {
     if (!arguments.length) {
       return xScale;
@@ -243,10 +301,6 @@ module.exports = function (options) {
     return (d3.event && d3.event.scale) || zoomBehavior.scale() || 1;
   };
 
-  chart.content = function () {
-    return content;
-  };
-
   chart.tip = function () {
     return tip;
   };
@@ -263,6 +317,8 @@ module.exports = function (options) {
     linkedGraphs.push(link);
   };
 
+  chart.canvas = getCanvas;
+
   function setUpEventListeners() {
     var events = {
       mousemove: function (x, y) {
@@ -276,11 +332,12 @@ module.exports = function (options) {
       },
       redraw: function () {
         // update the stroke width of the origin lines
-        content.selectAll('.origin')
+        var canvas = getCanvas();
+        canvas.selectAll('.origin')
           .attr('stroke-width', 1 / ((d3.event && d3.event.scale) || 1));
 
         // content construction (based on graphOptions.type)
-        content.selectAll('g.graph')
+        canvas.selectAll('g.graph')
           .each(function (data, index) {
             var options = extend({
               owner: chart,
@@ -299,7 +356,7 @@ module.exports = function (options) {
           .y(yZoomScale.domain( yOther.domain() ));
       },
       'tip:update': function (x, y, index) {
-        var meta = root.datum()[index];
+        var meta = root.datum().data[index];
         var title = meta.title || '';
         var format = meta.renderer || function (x, y) {
             return x.toFixed(3) + ', ' + y.toFixed(3);
@@ -332,14 +389,15 @@ module.exports = function (options) {
           // - updates the position/scale of the clipping rectangle
           var t = d3.event.translate;
           var s = d3.event.scale;
-          var wrap = graph.root().select('g.transform-helper');
-          wrap.select('.x.axis').call(xAxis);
-          wrap.select('.y.axis').call(yAxis);
+          var canvas = graph.canvas();
           graph.root().select('.dynamic-clip')
             .attr('transform', 'scale(' + 1 / s + ')')
             .attr('x', -t[0])
             .attr('y', -t[1]);
-          graph.content().attr('transform', 'translate(' + t + ')scale(' + s + ')');
+          canvas.select('.x.axis').call(xAxis);
+          canvas.select('.y.axis').call(yAxis);
+          canvas.select('#content')
+            .attr('transform', 'translate(' + t + ')scale(' + s + ')');
           if (i) {
             graph.emit('zoom:scaleUpdate', xZoomScale, yZoomScale);
           }
@@ -373,5 +431,7 @@ module.exports = function (options) {
   }
   setUpEventListeners();
 
-  return chart;
+  return chart();
 };
+Const = module.exports.constants = require('./lib/constants');
+types = module.exports.types = require('./lib/types/');

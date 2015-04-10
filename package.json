@@ -1,24 +1,25 @@
 {
-  "name": "simple-function-plot",
-  "version": "0.3.3",
+  "name": "function-plot",
+  "version": "0.1.0",
   "description": "A simple 2d function plotter powered by d3 and used on maurizzzio.com",
-  "bugs": "https://github.com/maurizzzio/simple-function-plot/issues",
+  "bugs": "https://github.com/maurizzzio/function-plot/issues",
   "license": "MIT",
   "main": "index.js",
   "author": "Mauricio Poppe <mauricio.poppe@gmail.com>",
   "files": [
     "/*",
-    "!/public/"
+    "!/site/"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/maurizzzio/simple-function-plot"
+    "url": "https://github.com/maurizzzio/function-plot"
   },
   "keywords": [
-    "simple-function-plot",
+    "function-plot",
     "function",
     "plot",
     "visualization",
+    "derivative",
     "2d"
   ],
   "dependencies": {
@@ -29,17 +30,29 @@
     "coveralls": "^2.11.2",
     "dox": "^0.7.1",
     "eslint": "^0.17.1",
+    "gh-pages-deploy": "^0.3.0",
     "istanbul": "^0.3.8",
     "lodash": "^3.6.0",
     "mocha": "^2.2.1",
     "mocha-lcov-reporter": "^0.0.2",
-    "nodemon": "^1.3.7"
+    "nodemon": "^1.3.7",
+    "uglify-js": "~2.4.12"
   },
   "scripts": {
     "istanbul": "istanbul cover _mocha --report lcovonly 2> /dev/null -- -R spec test/",
     "lint": "eslint index.js lib",
     "test": "echo 'no tests!'",
     "test:watch": "nodemon --watch lib --watch test --watch index.js --exec 'npm test'",
-    "start": "./node_modules/.bin/beefy index.js:js/bundle.js 5555 --cwd site/ -- --standalone simpleFunctionPlot"
+    "start": "./node_modules/.bin/beefy index.js:js/bundle.js 5555 --cwd site/ -- --standalone functionPlot",
+    "build": "browserify index.js -o site/js/bundle.js --standalone functionPlot",
+    "minify": "cat site/js/bundle.js | uglifyjs -o site/js/bundle.js",
+    "deploy": "npm run lint && gh-pages-deploy"
+  },
+  "gh-pages-deploy": {
+    "prep": [
+      "build",
+      "minify"
+    ],
+    "staticpath": "site"
   }
 }

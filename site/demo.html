@@ -2,7 +2,7 @@
 <html>
 <head lang="en">
 	<meta charset="UTF-8">
-	<title></title>
+	<title>demo</title>
   <style>
     body {
       font: 10px sans-serif;
@@ -19,14 +19,15 @@
   </style>
 </head>
 <body>
-  <span id="linear"></span>
+  <span id="linear"></span><!--<button id="update">update</button>-->
+  <span id="linear-with-options"></span>
+  <span id="domain"></span>
   <span id="closed"></span>
   <span id="multiple"></span>
   <span id="withLimits"></span>
   <span id="scatter"></span>
   <div></div>
   <span id="tip"></span>
-  <span id="noTitle"></span>
   <div></div>
   <span id="derivative"></span>
   <span id="derivativeLive"></span>
@@ -35,7 +36,10 @@
   <span id="linkedA"></span>
   <span id="linkedB"></span>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.js"></script>
-  <script src="bundle.js"></script>
+  <script src="js/vendor/jquery-1.11.2.min.js"></script>
+  <script src="js/vendor/d3.js"></script>
+  <script src="js/bundle.js"></script>
+  <script src="js/index.js"></script>
+  <script>  $(document).trigger('markupLoaded'); </script>
 </body>
 </html>

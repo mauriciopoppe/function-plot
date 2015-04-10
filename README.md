@@ -1,4 +1,4 @@
-# simple-function-plot [![Build Status][travis-image]][travis-url]
+# function-plot [![Build Status][travis-image]][travis-url]
 
 [![NPM][npm-image]][npm-url]
 
@@ -7,14 +7,15 @@
 ## Install
 
 ```sh
-$ npm install --save simple-function-plot
+$ npm install --save function-plot
 ```
 
 ## Usage
 
 ```js
-var simpleFunctionPlot = require('simple-function-plot');
-var instance = simpleFunctionPlot({
+var d3 = window.d3
+var functionPlot = require('function-plot');
+var instance = functionPlot({
   // options below
 })
 d3.select(' selector of the parent container for the chart ')
@@ -28,9 +29,9 @@ See `public/index.js`
 ```javascript
 'use strict';
 var d3 = window.d3;
-var simpleFunctionPlot = window.simpleFunctionPlot;
+var functionPlot = window.functionPlot;
 d3.select('#canvas')
-  .call(simpleFunctionPlot({
+  .call(functionPlot({
     data: [{
       title: 'f(x)',
       fn: function (x) {
@@ -62,19 +63,19 @@ Screenshot (for the example located at `public/index.js`):
 ## API
 
 ```
-var simpleFunctionPlot = require('simple-function-plot');
+var functionPlot = require('function-plot');
 ```
 
-### `simpleFunctionPlot(options)`
+### `functionPlot(options)`
 
 **params, All the params are optional unless otherwise stated**
 
 * `options`
   * `options.title` {string} If set the chart will have it as a title on the top
-  * `options.domainX` {array} domain of the linear scale (used in the x axis) 
-  * `options.domainY` {array} domain of the linear scale (used in the y axis)
-  * `options.labelX` {string} x axis label 
-  * `options.labelY` {string} y axis label
+  * `options.xDomain` {array} domain of the linear scale (used in the x axis) 
+  * `options.yDomain` {array} domain of the linear scale (used in the y axis)
+  * `options.xLabel` {string} x axis label 
+  * `options.yLabel` {string} y axis label
   * `options.disableZoom` {boolean} true to disable drag and zoom on the graph
   * `options.tip` {object} configuration passed to `lib/tip`, it's the helper shown on mouseover on the closest
   function to the current mose position
@@ -140,7 +141,7 @@ Open `localhost:5555` and that's it! Local development server powered [beefy](ht
 
 2015 MIT © Mauricio Poppe
 
-[npm-image]: https://nodei.co/npm/simple-function-plot.png?downloads=true
-[npm-url]: https://npmjs.org/package/simple-function-plot
-[travis-image]: https://travis-ci.org/maurizzzio/simple-function-plot.svg?branch=master
-[travis-url]: https://travis-ci.org/maurizzzio/simple-function-plot
+[npm-image]: https://nodei.co/npm/function-plot.png?downloads=true
+[npm-url]: https://npmjs.org/package/function-plot
+[travis-image]: https://travis-ci.org/maurizzzio/function-plot.svg?branch=master
+[travis-url]: https://travis-ci.org/maurizzzio/function-plot
