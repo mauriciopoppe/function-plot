@@ -312,20 +312,61 @@
    </div>
    <div class="col-md-6">
      <div class="comment"><h2>Linked graphs</h2>
-<p>Multiple graphs can be linked, when the tip&#39;s position, graph scale or<br />graph translate properties are modified on the original graph the linked<br />graphs are signaled with the same events</p></div>
-     <div class="code"><pre><code>var instanceA = functionPlot({
+<p>Multiple graphs can be linked, when the tip&#39;s position, graph scale or<br />graph translate properties are modified on the original graph the linked<br />graphs are signaled with the same events, in the following example <code>a</code><br />also fires the internal <code>all:zoom</code> event, the <code>zoom</code> operation is performed<br />on <code>a</code> and <code>b</code>, but when <code>b</code> fires the <code>all:zoom</code> event the zoom operation is only<br />performed on <code>b</code></p></div>
+     <div class="code"><pre><code>a = functionPlot({
   target: '#linkedA',
   height: 250,
   xDomain: [-10, 10],
   data: [{ fn: function (x) { return x * x; } }]
 });
-var instanceB = functionPlot({
+b = functionPlot({
   target: '#linkedB',
   height: 250,
   xDomain: [-10, 10],
-  disableZoom: true,
   data: [{ fn: function (x) { return 2 * x; } }]
 });
-instanceA.addLink(instanceB);</code></pre></div>
+a.addLink(b);</code></pre></div>
+   </div>
+ </div>
+
+ <div class="example row">
+   <div class="col-md-6">
+     
+     <span class="graph" id="linkedAMultiple"></span>
+     
+     <span class="graph" id="linkedBMultiple"></span>
+     
+     <span class="graph" id="linkedCMultiple"></span>
+     
+   </div>
+   <div class="col-md-6">
+     <div class="comment"><h2>Linked graphs 2</h2>
+<p>Since the <code>zoom</code> event is dispatched to all the linked graphs as well, one can<br />set as many linked graphs as wanted and all of them will perform the same<br />zoom operation, in the following example these functions are plotted:</p><ul>
+<li>$y = x^2$</li>
+<li>$y&#39; = 2x$</li>
+<li>$y&#39;&#39; = 2$</li>
+</ul>
+</div>
+     <div class="code"><pre><code>a = functionPlot({
+  target: '#linkedAMultiple',
+  height: 250,
+  xDomain: [-10, 10],
+  data: [{ fn: function (x) { return x * x; } }]
+});
+b = functionPlot({
+  target: '#linkedBMultiple',
+  height: 250,
+  xDomain: [-10, 10],
+  data: [{ fn: function (x) { return 2 * x; } }]
+});
+c = functionPlot({
+  target: '#linkedCMultiple',
+  height: 250,
+  xDomain: [-10, 10],
+  data: [{ fn: function (x) { return 2; } }]
+});
+a.addLink(b, c);
+b.addLink(a, c);
+c.addLink(a, b);</code></pre></div>
    </div>
  </div>

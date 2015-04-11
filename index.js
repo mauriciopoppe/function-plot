@@ -1,5 +1,5 @@
 /*
- * simple-function-plot
+ * function-plot
  *
  * Copyright (c) 2015 Mauricio Poppe
  * Licensed under the MIT license.
@@ -28,6 +28,10 @@ module.exports = function (options) {
   var width, height;
   var margin;
   var zoomBehavior;
+  var xScale, yScale;
+  var line = d3.svg.line()
+    .x(function (d) { return xScale(d[0]); })
+    .y(function (d) { return yScale(d[1]); });
 
   function Chart() {
     if (!(this instanceof Chart)) {
@@ -38,9 +42,8 @@ module.exports = function (options) {
     this.linkedGraphs = [this];
 
     this.setVars();
-    this.build();
     setUpEventListeners(this);
-    this.emit('draw');
+    this.build();
   }
 
   Chart.prototype = Object.create(events.prototype);
@@ -54,27 +57,20 @@ module.exports = function (options) {
     var xDomain = this.meta.xDomain;
     var yDomain = this.meta.yDomain;
 
-    this.meta.xZoomScale = d3.scale.linear()
+    xScale = this.meta.xScale = d3.scale.linear()
       .domain(xDomain)
       .range([0, width]);
-    this.meta.yZoomScale = d3.scale.linear()
+    yScale = this.meta.yScale = d3.scale.linear()
       .domain(yDomain)
       .range([height, 0]);
     this.meta.xAxis = d3.svg.axis()
-      .scale(this.meta.xZoomScale)
+      .scale(xScale)
       .orient('bottom');
     //.tickSize(-height);
     this.meta.yAxis = d3.svg.axis()
-      .scale(this.meta.yZoomScale)
+      .scale(yScale)
       .orient('left');
     //.tickSize(-width);
-
-    this.meta.xScale = d3.scale.linear()
-      .domain(xDomain)
-      .range([0, width]);
-    this.meta.yScale = d3.scale.linear()
-      .domain(yDomain)
-      .range([height, 0]);
   };
 
   Chart.prototype.setVars = function () {
@@ -104,7 +100,7 @@ module.exports = function (options) {
     // enter
     this.root.enter = root.enter()
       .append('svg')
-        .attr('class', 'simple-function-plot')
+        .attr('class', 'function-plot')
         .attr('font-size', this.getFontSize());
 
     // merge
@@ -167,15 +163,13 @@ module.exports = function (options) {
 
   Chart.prototype.buildCanvas = function () {
     var self = this;
-    var xZoomScale = this.meta.xZoomScale;
-    var yZoomScale = this.meta.yZoomScale;
 
     this.meta.zoomBehavior
-      .x(xZoomScale)
-      .y(yZoomScale)
+      .x(xScale)
+      .y(yScale)
       .scaleExtent([0.1, 16])
       .on('zoom', function onZoom() {
-        self.emit('all:zoom', xZoomScale, yZoomScale);
+        self.emit('all:zoom', xScale, yScale);
       });
 
     // enter
@@ -201,16 +195,11 @@ module.exports = function (options) {
   };
 
   Chart.prototype.buildClip = function () {
-    // clips (so that the functions don't overflow on zoom or drag)
-    // enter
+    // (so that the functions don't overflow on zoom or drag)
     var id = this.id;
     var defs = this.canvas.enter.append('defs');
     defs.append('clipPath')
-      .attr('id', 'simple-function-plot-clip-dynamic-' + id)
-      .append('rect')
-      .attr('class', 'clip dynamic-clip');
-    defs.append('clipPath')
-      .attr('id', 'simple-function-plot-clip-' + id)
+      .attr('id', 'function-plot-clip-' + id)
       .append('rect')
       .attr('class', 'clip static-clip');
 
@@ -274,36 +263,56 @@ module.exports = function (options) {
   Chart.prototype.buildContent = function () {
     var self = this;
     var canvas = this.canvas;
-    var content = canvas.selectAll('g#content')
+    var content = this.content = canvas.selectAll('g#content')
       .data(function (d) { return [d]; });
 
-    var contentEnter = content.enter()
+    content.enter()
       .append('g')
-      .attr('clip-path', 'url(#simple-function-plot-clip-dynamic-' + this.id + ')')
+      .attr('clip-path', 'url(#function-plot-clip-' + this.id + ')')
       .attr('id', 'content');
 
-    var line = d3.svg.line()
-      .x(function (d) { return self.meta.xScale(d[0]); })
-      .y(function (d) { return self.meta.yScale(d[1]); });
-
     // helper line, x = 0
-    contentEnter.append('path')
-      .datum([[0, Const.LIMIT], [0, -Const.LIMIT]])
+    var yOrigin = content.selectAll('path.y.origin')
+      .data([ [[0, yScale.domain()[0]], [0, yScale.domain()[1]]] ]);
+    yOrigin.enter()
+      .append('path')
       .attr('class', 'y origin')
-      .attr('stroke', '#eee')
-      .attr('d', line);
+      .attr('stroke', '#eee');
+    yOrigin.attr('d', line);
 
     // helper line y = 0
-    contentEnter.append('path')
-      .datum([[-Const.LIMIT, 0], [Const.LIMIT, 0]])
+    var xOrigin = content.selectAll('path.x.origin')
+      .data([ [[xScale.domain()[0], 0], [xScale.domain()[1], 0]] ]);
+    xOrigin.enter()
+      .append('path')
       .attr('class', 'x origin')
-      .attr('stroke', '#eee')
-      .attr('d', line);
+      .attr('stroke', '#eee');
+    xOrigin.attr('d', line);
 
-    // content construction (based on graphOptions.type)
-    content.selectAll('g.graph').data(function (d) { return d.data; })
+    // content construction (based on graphOptions)
+    // join
+    var graphs = content.selectAll('g.graph')
+      .data(function (d) { return d.data; });
+
+    // enter
+    graphs
       .enter()
-        .append('g').attr('class', 'graph');
+        .append('g')
+        .attr('class', 'graph');
+
+    // enter + update
+    graphs
+      .each(function (data, index) {
+        var options = extend({
+          owner: self,
+          index: index
+        }, data.graphOptions);
+        var type = options.type || 'line';
+        d3.select(this)
+          .call(types[type](options));
+        d3.select(this)
+          .call(helper(options));
+      });
   };
 
   Chart.prototype.buildZoomHelper = function () {
@@ -332,12 +341,10 @@ module.exports = function (options) {
       .attr('height', height);
   };
 
-  Chart.prototype.addLink = function (link) {
-    this.linkedGraphs.push(link);
-  };
-
-  Chart.prototype.getScale = function () {
-    return (d3.event && d3.event.scale) || zoomBehavior.scale() || 1;
+  Chart.prototype.addLink = function () {
+    for (var i = 0; i < arguments.length; i += 1) {
+      this.linkedGraphs.push(arguments[i]);
+    }
   };
 
   Chart.prototype.getFontSize = function () {
@@ -357,28 +364,12 @@ module.exports = function (options) {
       },
       draw: function () {
         // update the stroke width of the origin lines
-        var canvas = instance.canvas;
-        canvas.selectAll('.origin')
-          .attr('stroke-width', 1 / ((d3.event && d3.event.scale) || 1));
-
-        // content construction (based on graphOptions.type)
-        canvas.selectAll('g.graph')
-          .each(function (data, index) {
-            var options = extend({
-              owner: instance,
-              index: index
-            }, data.graphOptions);
-            var type = options.type || 'line';
-            d3.select(this)
-              .call(types[type](options));
-            d3.select(this)
-              .call(helper(options));
-          });
+        instance.buildContent();
       },
       'zoom:scaleUpdate': function (xOther, yOther) {
         zoomBehavior
-          .x(instance.meta.xZoomScale.domain( xOther.domain() ))
-          .y(instance.meta.yZoomScale.domain( yOther.domain() ));
+          .x(xScale.domain( xOther.domain() ))
+          .y(yScale.domain( yOther.domain() ));
       },
       'tip:update': function (x, y, index) {
         var meta = instance.root.datum().data[index];
@@ -401,30 +392,22 @@ module.exports = function (options) {
     var all = {
       mousemove: function () {
         var mouse = d3.mouse(instance.root.select('rect.zoom-and-drag').node());
-        var x = instance.meta.xZoomScale.invert(mouse[0]);
-        var y = instance.meta.yZoomScale.invert(mouse[1]);
+        var x = xScale.invert(mouse[0]);
+        var y = yScale.invert(mouse[1]);
         instance.linkedGraphs.forEach(function (graph) {
           graph.emit('mousemove', x, y);
         });
       },
 
-      zoom: function (xZoomScale, yZoomScale) {
+      zoom: function (xScale, yScale) {
         instance.linkedGraphs.forEach(function (graph, i) {
           // - updates the position of the axes
           // - updates the position/scale of the clipping rectangle
-          var t = d3.event.translate;
-          var s = d3.event.scale;
           var canvas = graph.canvas;
-          graph.root.select('.dynamic-clip')
-            .attr('transform', 'scale(' + 1 / s + ')')
-            .attr('x', -t[0])
-            .attr('y', -t[1]);
           canvas.select('.x.axis').call(graph.meta.xAxis);
           canvas.select('.y.axis').call(graph.meta.yAxis);
-          canvas.select('#content')
-            .attr('transform', 'translate(' + t + ')scale(' + s + ')');
           if (i) {
-            graph.emit('zoom:scaleUpdate', xZoomScale, yZoomScale);
+            graph.emit('zoom:scaleUpdate', xScale, yScale);
           }
 
           // content draw

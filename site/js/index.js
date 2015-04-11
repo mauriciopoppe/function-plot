@@ -1,6 +1,7 @@
 'use strict';
 $(document).on('markupLoaded', function () {
   var functionPlot = window.functionPlot;
+  var a, b, c;
   /**
    * ## Plotting a curve
    *
@@ -11,7 +12,7 @@ $(document).on('markupLoaded', function () {
    *
    * The required parameters are:
    *
-   * - `target` a selector to get an existing node
+   * - `target` a selector to the node to hold the graph
    * - `data` an array of objects which contain info about the functions to render
    */
   functionPlot({
@@ -257,22 +258,59 @@ $(document).on('markupLoaded', function () {
    *
    * Multiple graphs can be linked, when the tip's position, graph scale or
    * graph translate properties are modified on the original graph the linked
-   * graphs are signaled with the same events
+   * graphs are signaled with the same events, in the following example `a`
+   * also fires the internal `all:zoom` event, the `zoom` operation is performed
+   * on `a` and `b`, but when `b` fires the `all:zoom` event the zoom operation is only
+   * performed on `b`
    */
-  var instanceA = functionPlot({
+  a = functionPlot({
     target: '#linkedA',
     height: 250,
     xDomain: [-10, 10],
     data: [{ fn: function (x) { return x * x; } }]
   });
-  var instanceB = functionPlot({
+  b = functionPlot({
     target: '#linkedB',
     height: 250,
     xDomain: [-10, 10],
-    disableZoom: true,
     data: [{ fn: function (x) { return 2 * x; } }]
   });
-  instanceA.addLink(instanceB);
+  a.addLink(b);
+
+
+  /**
+   * ## Linked graphs 2
+   *
+   * Since the `zoom` event is dispatched to all the linked graphs as well, one can
+   * set as many linked graphs as wanted and all of them will perform the same
+   * zoom operation, in the following example these functions are plotted:
+   *
+   * - $y = x^2$
+   * - $y' = 2x$
+   * - $y'' = 2$
+   *
+   */
+  a = functionPlot({
+    target: '#linkedAMultiple',
+    height: 250,
+    xDomain: [-10, 10],
+    data: [{ fn: function (x) { return x * x; } }]
+  });
+  b = functionPlot({
+    target: '#linkedBMultiple',
+    height: 250,
+    xDomain: [-10, 10],
+    data: [{ fn: function (x) { return 2 * x; } }]
+  });
+  c = functionPlot({
+    target: '#linkedCMultiple',
+    height: 250,
+    xDomain: [-10, 10],
+    data: [{ fn: function (x) { return 2; } }]
+  });
+  a.addLink(b, c);
+  b.addLink(a, c);
+  c.addLink(a, b);
 
   /** */
 });
