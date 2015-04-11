@@ -31,7 +31,7 @@
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
         <script src="js/plugins.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.js"></script>
+        <script src="js/vendor/d3.js"></script>
 
         <!-- app -->
         <script src="js/bundle.js"></script>
@@ -45,6 +45,26 @@
             e.src='https://www.google-analytics.com/analytics.js';
             r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
             ga('create','UA-XXXXX-X','auto');ga('send','pageview');
+        </script>
+        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">
+          MathJax.Hub.Config({
+            showProcessingMessages: false,
+            messageStyle: 'none',
+            tex2jax: {
+              inlineMath: [['$','$']],
+              displayMath: [['$$','$$']],
+              processEnvironments: false
+            },
+            TeX: {
+              equationNumbers: {
+                autoNumber: "AMS"
+              }
+            },
+            'HTML-CSS': {
+              imageFont: null
+            }
+          });
         </script>
     </body>
 </html>

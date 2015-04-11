@@ -104,7 +104,8 @@ module.exports = function (options) {
     // enter
     this.root.enter = root.enter()
       .append('svg')
-        .attr('class', 'simple-function-plot');
+        .attr('class', 'simple-function-plot')
+        .attr('font-size', this.getFontSize());
 
     // merge
     root
@@ -331,12 +332,16 @@ module.exports = function (options) {
       .attr('height', height);
   };
 
+  Chart.prototype.addLink = function (link) {
+    this.linkedGraphs.push(link);
+  };
+
   Chart.prototype.getScale = function () {
     return (d3.event && d3.event.scale) || zoomBehavior.scale() || 1;
   };
 
-  Chart.prototype.addLink = function (link) {
-    this.linkedGraphs.push(link);
+  Chart.prototype.getFontSize = function () {
+    return Math.max(Math.max(width, height) / 50, 8);
   };
 
   function setUpEventListeners(instance) {

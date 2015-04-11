@@ -1,43 +1,27 @@
 'use strict';
 $(document).on('markupLoaded', function () {
   var functionPlot = window.functionPlot;
-  //var width = functionPlot.constants.DEFAULT_WIDTH;
-  //var height = functionPlot.constants.DEFAULT_HEIGHT;
-  //var width = 740, height = 450;
   /**
    * ## Plotting a curve
    *
-   * The shortest example, the curve y = x^2 is evaluated with values inside the range
-   * defined by the canvas size (default dimensions of the canvas are `550x350`),
+   * The shortest example, the function $y = x^2$ is evaluated with values inside the range
+   * defined by the canvas size (the default dimensions are `550x350`),
    * whenever the local space is modified (because of a translate/scale operation)
    * the function is evaluated again with the new bounds, result: infinite graphs!
+   *
+   * The required parameters are:
+   *
+   * - `target` a selector to get an existing node
+   * - `data` an array of objects which contain info about the functions to render
    */
-  var options = {
+  functionPlot({
     target: '#linear',
     data: [{
       fn: function (x) {
         return x * x;
       }
     }]
-  };
-  functionPlot(options);
-  //var updated;
-  //var oldData = options.data;
-  //$('#update').on('click', function () {
-  //  if (!updated) {
-  //    options.title = Math.random().toString(16);
-  //    options.xLabel = 'X';
-  //    options.yLabel = 'Y';
-  //    options.data = oldData;
-  //  } else {
-  //    delete options.title;
-  //    delete options.xLabel;
-  //    delete options.yLabel;
-  //    delete options.data;
-  //  }
-  //  updated = !updated;
-  //  functionPlot(options);
-  //});
+  });
 
   /**
    * ## Additional options
@@ -111,8 +95,8 @@ $(document).on('markupLoaded', function () {
    * ## Limits
    *
    * Some functions approach to infinity or are undefined under a range of values,
-   * for example `y = 1/x` when approached from the left approaches -infinity and
-   * when approached from the right approaches +infinity, to deal with continuity
+   * for example $y = 1/x$ when coming from the left of $x=0$ approaches $-\infty$ and
+   * when coming from the right of $x=0$ approaches $+\infty$, to deal with continuity
    * problems we can specify the places the function is undefined/infinity under
    * the option `limits`
    */
@@ -151,7 +135,6 @@ $(document).on('markupLoaded', function () {
    * ## Scatter
    *
    * A function can be represented with some points belonging to the curve
-   *
    */
   functionPlot({
     target: '#scatter',
@@ -172,8 +155,8 @@ $(document).on('markupLoaded', function () {
    * The little circle that has the x-coordinate of the mouse position is called
    * a "tip", the following options can be configured:
    *
-   * - `xLine` true to show a dashed line parallel to y = 0 on the tip position
-   * - `yLine` true to show a dashed line parallel to x = 0 on the tip position
+   * - `xLine` true to show a dashed line parallel to $y = 0$ on the tip position
+   * - `yLine` true to show a dashed line parallel to $x = 0$ on the tip position
    * - `renderer` a custom rendering function for the text shown in the tip
    */
   functionPlot({
@@ -196,8 +179,8 @@ $(document).on('markupLoaded', function () {
    * ## Derivative
    *
    * If a data object has a `derivative` object then its property `fn` will be used to compute
-   * the equation of the line tangent to the point `x0` (the derivative is a function which
-   * gives the slope of the tangent line at any derivable point)
+   * the equation of the line tangent to the point `x0`, i.e. the point $(x_0, f(x_0))$
+   * (the derivative is a function which gives the slope of the tangent line at any derivable point)
    */
   functionPlot({
     target: '#derivative',
@@ -219,8 +202,8 @@ $(document).on('markupLoaded', function () {
    * ## Derivative - Tangent line auto update
    *
    * if `updateOnMouseOver` is set to true then tangent line is computed whenever the mouse is moved
-   * inside the canvas (let `x0` be the mouse's abscissa then the tangent line to the point
-   * `x0, fn(x0)` is computed whenever the position of the mouse changes)
+   * inside the canvas (let $x_0$ be the mouse's abscissa then the tangent line to the point
+   * $(x_0, f(x_0))$ is computed whenever the position of the mouse changes)
    */
   functionPlot({
     target: '#derivativeLive',
@@ -278,10 +261,14 @@ $(document).on('markupLoaded', function () {
    */
   var instanceA = functionPlot({
     target: '#linkedA',
+    height: 250,
+    xDomain: [-10, 10],
     data: [{ fn: function (x) { return x * x; } }]
   });
   var instanceB = functionPlot({
     target: '#linkedB',
+    height: 250,
+    xDomain: [-10, 10],
     disableZoom: true,
     data: [{ fn: function (x) { return 2 * x; } }]
   });
@@ -293,4 +280,5 @@ $(document).on('markupLoaded', function () {
 
 $('#content').load('partials/all.html', function () {
   $(document).trigger('markupLoaded');
+  MathJax.Hub.Queue(['Typeset', MathJax.Hub]);
 });

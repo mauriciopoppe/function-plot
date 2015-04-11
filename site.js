@@ -16,7 +16,7 @@ var exampleTemplate = [
   ' <div class="example row">',
   '   <div class="col-md-6">',
   '     <% _.forEach(c.ids, function (id) { %>',
-  '     <div id="<%= id %>"></div>',
+  '     <span class="graph" id="<%= id %>"></span>',
   '     <% }) %>',
   '   </div>',
   '   <div class="col-md-6">',
@@ -28,7 +28,7 @@ var exampleTemplate = [
 ].join('\n');
 
 var parsed = comments.map(function (c) {
-  var ids = c.code.match(/select\('.*'\)/g);
+  var ids = c.code.match(/target:\s*'(.*)'/g);
   if (ids) {
     ids = ids
       .map(function (str) {

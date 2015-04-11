@@ -44,12 +44,14 @@
     "test": "echo 'no tests!'",
     "test:watch": "nodemon --watch lib --watch test --watch index.js --exec 'npm test'",
     "start": "./node_modules/.bin/beefy index.js:js/bundle.js 5555 --cwd site/ -- --standalone functionPlot",
+    "html": "node site.js",
     "build": "browserify index.js -o site/js/bundle.js --standalone functionPlot",
     "minify": "cat site/js/bundle.js | uglifyjs -o site/js/bundle.js",
     "deploy": "npm run lint && gh-pages-deploy"
   },
   "gh-pages-deploy": {
     "prep": [
+      "html",
       "build",
       "minify"
     ],

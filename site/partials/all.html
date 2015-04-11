@@ -2,27 +2,31 @@
  <div class="example row">
    <div class="col-md-6">
      
-     <div id="linear"></div>
+     <span class="graph" id="linear"></span>
      
    </div>
    <div class="col-md-6">
      <div class="comment"><h2>Plotting a curve</h2>
-<p>The shortest example, the curve y = x^2 is evaluated with values inside the range<br />defined by the canvas size (default dimensions of the canvas are <code>550x350</code>),<br />whenever the local space is modified (because of a translate/scale operation)<br />the function is evaluated again with the new bounds, result: infinite graphs!</p></div>
-     <div class="code"><pre><code>instance = functionPlot({
+<p>The shortest example, the function $y = x^2$ is evaluated with values inside the range<br />defined by the canvas size (the default dimensions are <code>550x350</code>),<br />whenever the local space is modified (because of a translate/scale operation)<br />the function is evaluated again with the new bounds, result: infinite graphs!</p><p>The required parameters are:</p><ul>
+<li><code>target</code> a selector to get an existing node</li>
+<li><code>data</code> an array of objects which contain info about the functions to render</li>
+</ul>
+</div>
+     <div class="code"><pre><code>functionPlot({
+  target: '#linear',
   data: [{
     fn: function (x) {
       return x * x;
     }
   }]
-});
-d3.select('#linear').call(instance);</code></pre></div>
+});</code></pre></div>
    </div>
  </div>
 
  <div class="example row">
    <div class="col-md-6">
      
-     <div id="linear-with-options"></div>
+     <span class="graph" id="linear-with-options"></span>
      
    </div>
    <div class="col-md-6">
@@ -36,8 +40,9 @@ d3.select('#linear').call(instance);</code></pre></div>
 <li><code>disableZoom</code>: true to disable translation/scaling on the graph</li>
 </ul>
 </div>
-     <div class="code"><pre><code>instance = functionPlot({
+     <div class="code"><pre><code>functionPlot({
   title: 'y = sin(x)',
+  target: '#linear-with-options',
   width: 400,
   height: 300,
   disableZoom: true,
@@ -48,15 +53,14 @@ d3.select('#linear').call(instance);</code></pre></div>
       return Math.sin(x);
     }
   }]
-});
-d3.select('#linear-with-options').call(instance);</code></pre></div>
+});</code></pre></div>
    </div>
  </div>
 
  <div class="example row">
    <div class="col-md-6">
      
-     <div id="domain"></div>
+     <span class="graph" id="domain"></span>
      
    </div>
    <div class="col-md-6">
@@ -66,7 +70,8 @@ d3.select('#linear-with-options').call(instance);</code></pre></div>
 <li><code>yDomain</code>, defaults to <code>[-5, 5]</code></li>
 </ul>
 </div>
-     <div class="code"><pre><code>instance = functionPlot({
+     <div class="code"><pre><code>functionPlot({
+  target: '#domain',
   yDomain: [-1, 1],
   xDomain: [8, 24],
   data: [{
@@ -74,21 +79,21 @@ d3.select('#linear-with-options').call(instance);</code></pre></div>
       return Math.sin(x);
     }
   }]
-});
-d3.select('#domain').call(instance);</code></pre></div>
+});</code></pre></div>
    </div>
  </div>
 
  <div class="example row">
    <div class="col-md-6">
      
-     <div id="closed"></div>
+     <span class="graph" id="closed"></span>
      
    </div>
    <div class="col-md-6">
      <div class="comment"><h2>Closed Path + Range</h2>
 <p>You can also restrict the values to be evaluated with the <code>range</code> option,<br />this works really nice with the <code>closed</code> option of the <code>line</code> type to render<br />for example a <a href="http://mathworld.wolfram.com/DefiniteIntegral.html">definite integral</a></p></div>
-     <div class="code"><pre><code>instance = functionPlot({
+     <div class="code"><pre><code>functionPlot({
+  target: '#closed',
   xDomain: [0, 10],
   data: [{
     fn: function (x) {
@@ -100,21 +105,21 @@ d3.select('#domain').call(instance);</code></pre></div>
     },
     range: [2, 8]
   }]
-});
-d3.select('#closed').call(instance);</code></pre></div>
+});</code></pre></div>
    </div>
  </div>
 
  <div class="example row">
    <div class="col-md-6">
      
-     <div id="withLimits"></div>
+     <span class="graph" id="withLimits"></span>
      
    </div>
    <div class="col-md-6">
      <div class="comment"><h2>Limits</h2>
-<p>Some functions approach to infinity or are undefined under a range of values,<br />for example <code>y = 1/x</code> when approached from the left approaches -infinity and<br />when approached from the right approaches +infinity, to deal with continuity<br />problems we can specify the places the function is undefined/infinity under<br />the option <code>limits</code></p></div>
-     <div class="code"><pre><code>instance = functionPlot({
+<p>Some functions approach to infinity or are undefined under a range of values,<br />for example $y = 1/x$ when coming from the left of $x=0$ approaches $-\infty$ and<br />when coming from the right of $x=0$ approaches $+\infty$, to deal with continuity<br />problems we can specify the places the function is undefined/infinity under<br />the option <code>limits</code></p></div>
+     <div class="code"><pre><code>functionPlot({
+  target: '#withLimits',
   data: [{
     title: 'f(x) = 1/x',
     fn: function (x) {
@@ -125,21 +130,21 @@ d3.select('#closed').call(instance);</code></pre></div>
       interpolate: 'linear'
     }
   }]
-});
-d3.select('#withLimits').call(instance);</code></pre></div>
+});</code></pre></div>
    </div>
  </div>
 
  <div class="example row">
    <div class="col-md-6">
      
-     <div id="multiple"></div>
+     <span class="graph" id="multiple"></span>
      
    </div>
    <div class="col-md-6">
      <div class="comment"><h2>Multiple graphs</h2>
 <p><code>data</code> as seen in the examples above is an array, which means that multiple<br />functions can be rendered in the same graph</p></div>
-     <div class="code"><pre><code>instance = functionPlot({
+     <div class="code"><pre><code>functionPlot({
+  target: '#multiple',
   data: [
     {fn: function (x) { return x; }},
     {fn: function (x) { return -x; }},
@@ -147,21 +152,21 @@ d3.select('#withLimits').call(instance);</code></pre></div>
     {fn: function (x) { return x * x * x; }},
     {fn: function (x) { return x * x * x * x; }}
   ]
-});
-d3.select('#multiple').call(instance);</code></pre></div>
+});</code></pre></div>
    </div>
  </div>
 
  <div class="example row">
    <div class="col-md-6">
      
-     <div id="scatter"></div>
+     <span class="graph" id="scatter"></span>
      
    </div>
    <div class="col-md-6">
      <div class="comment"><h2>Scatter</h2>
 <p>A function can be represented with some points belonging to the curve</p></div>
-     <div class="code"><pre><code>instance = functionPlot({
+     <div class="code"><pre><code>functionPlot({
+  target: '#scatter',
   yDomain: [-1, 9],
   data: [{
     fn: function (x) {
@@ -171,26 +176,26 @@ d3.select('#multiple').call(instance);</code></pre></div>
       type: 'scatter'
     }
   }]
-});
-d3.select('#scatter').call(instance);</code></pre></div>
+});</code></pre></div>
    </div>
  </div>
 
  <div class="example row">
    <div class="col-md-6">
      
-     <div id="tip"></div>
+     <span class="graph" id="tip"></span>
      
    </div>
    <div class="col-md-6">
      <div class="comment"><h2>Tip</h2>
 <p>The little circle that has the x-coordinate of the mouse position is called<br />a &quot;tip&quot;, the following options can be configured:</p><ul>
-<li><code>xLine</code> true to show a dashed line parallel to y = 0 on the tip position</li>
-<li><code>yLine</code> true to show a dashed line parallel to x = 0 on the tip position</li>
+<li><code>xLine</code> true to show a dashed line parallel to $y = 0$ on the tip position</li>
+<li><code>yLine</code> true to show a dashed line parallel to $x = 0$ on the tip position</li>
 <li><code>renderer</code> a custom rendering function for the text shown in the tip</li>
 </ul>
 </div>
-     <div class="code"><pre><code>instance = functionPlot({
+     <div class="code"><pre><code>functionPlot({
+  target: '#tip',
   tip: {
     xLine: true,    // dashed line parallel to y = 0
     yLine: true,    // dashed line parallel to x = 0
@@ -203,21 +208,21 @@ d3.select('#scatter').call(instance);</code></pre></div>
   data: [
     { fn: function (x) { return x * x; }}
   ]
-});
-d3.select('#tip').call(instance);</code></pre></div>
+});</code></pre></div>
    </div>
  </div>
 
  <div class="example row">
    <div class="col-md-6">
      
-     <div id="derivative"></div>
+     <span class="graph" id="derivative"></span>
      
    </div>
    <div class="col-md-6">
      <div class="comment"><h2>Derivative</h2>
-<p>If a data object has a <code>derivative</code> object then its property <code>fn</code> will be used to compute<br />the equation of the line tangent to the point <code>x0</code> (the derivative is a function which<br />gives the slope of the tangent line at any derivable point)</p></div>
-     <div class="code"><pre><code>instance = functionPlot({
+<p>If a data object has a <code>derivative</code> object then its property <code>fn</code> will be used to compute<br />the equation of the line tangent to the point <code>x0</code>, i.e. the point $(x_0, f(x_0))$<br />(the derivative is a function which gives the slope of the tangent line at any derivable point)</p></div>
+     <div class="code"><pre><code>functionPlot({
+  target: '#derivative',
   yDomain: [-1, 9],
   data: [{
     fn: function (x) {
@@ -230,21 +235,21 @@ d3.select('#tip').call(instance);</code></pre></div>
       x0: 2
     }
   }]
-});
-d3.select('#derivative').call(instance);</code></pre></div>
+});</code></pre></div>
    </div>
  </div>
 
  <div class="example row">
    <div class="col-md-6">
      
-     <div id="derivativeLive"></div>
+     <span class="graph" id="derivativeLive"></span>
      
    </div>
    <div class="col-md-6">
      <div class="comment"><h2>Derivative - Tangent line auto update</h2>
-<p>if <code>updateOnMouseOver</code> is set to true then tangent line is computed whenever the mouse is moved<br />inside the canvas (let <code>x0</code> be the mouse&#39;s abscissa then the tangent line to the point<br /><code>x0, fn(x0)</code> is computed whenever the position of the mouse changes)</p></div>
-     <div class="code"><pre><code>instance = functionPlot({
+<p>if <code>updateOnMouseOver</code> is set to true then tangent line is computed whenever the mouse is moved<br />inside the canvas (let $x_0$ be the mouse&#39;s abscissa then the tangent line to the point<br />$(x_0, f(x_0))$ is computed whenever the position of the mouse changes)</p></div>
+     <div class="code"><pre><code>functionPlot({
+  target: '#derivativeLive',
   yDomain: [-1, 9],
   data: [{
     fn: function (x) {
@@ -257,21 +262,21 @@ d3.select('#derivative').call(instance);</code></pre></div>
       updateOnMouseOver: true
     }
   }]
-});
-d3.select('#derivativeLive').call(instance);</code></pre></div>
+});</code></pre></div>
    </div>
  </div>
 
  <div class="example row">
    <div class="col-md-6">
      
-     <div id="derivativeLiveMulti"></div>
+     <span class="graph" id="derivativeLiveMulti"></span>
      
    </div>
    <div class="col-md-6">
      <div class="comment"><h2>Derivative - Tangent multiple lines</h2>
 <p>An example of a graph with multiple functions, each function is configured with<br />a <code>derivative</code> object with auto update of the slope as described above</p></div>
-     <div class="code"><pre><code>instance = functionPlot({
+     <div class="code"><pre><code>functionPlot({
+  target: '#derivativeLiveMulti',
   data: [{
     fn: function (x) {
       return x * x;
@@ -293,31 +298,34 @@ d3.select('#derivativeLive').call(instance);</code></pre></div>
       updateOnMouseOver: true
     }
   }]
-});
-d3.select('#derivativeLiveMulti').call(instance);</code></pre></div>
+});</code></pre></div>
    </div>
  </div>
 
  <div class="example row">
    <div class="col-md-6">
      
-     <div id="linkedA"></div>
+     <span class="graph" id="linkedA"></span>
      
-     <div id="linkedB"></div>
+     <span class="graph" id="linkedB"></span>
      
    </div>
    <div class="col-md-6">
      <div class="comment"><h2>Linked graphs</h2>
 <p>Multiple graphs can be linked, when the tip&#39;s position, graph scale or<br />graph translate properties are modified on the original graph the linked<br />graphs are signaled with the same events</p></div>
      <div class="code"><pre><code>var instanceA = functionPlot({
+  target: '#linkedA',
+  height: 250,
+  xDomain: [-10, 10],
   data: [{ fn: function (x) { return x * x; } }]
 });
 var instanceB = functionPlot({
+  target: '#linkedB',
+  height: 250,
+  xDomain: [-10, 10],
   disableZoom: true,
   data: [{ fn: function (x) { return 2 * x; } }]
 });
-instanceA.addLink(instanceB);
-d3.select('#linkedA').call(instanceA);
-d3.select('#linkedB').call(instanceB);</code></pre></div>
+instanceA.addLink(instanceB);</code></pre></div>
    </div>
  </div>

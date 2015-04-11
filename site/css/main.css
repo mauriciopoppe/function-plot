@@ -103,12 +103,10 @@ textarea {
     opacity: 0.1;
 }
 
-svg.simple-function-plot {
-    font-size: 10px;
+.graph {
+  display: inline-block;
+  margin: 0 auto;
 }
-
-
-
 
 
 
