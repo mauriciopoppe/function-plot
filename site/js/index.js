@@ -7,8 +7,6 @@ $(document).on('markupLoaded', function () {
     target: '#description-sample',
     yDomain: [-1, 9],
     tip: {
-      xLine: true,
-      yLine: true,
       renderer: function () {}
     },
     data: [{

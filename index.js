@@ -34,15 +34,11 @@ module.exports = function (options) {
     .y(function (d) { return yScale(d[1]); });
 
   function Chart() {
-    if (!(this instanceof Chart)) {
-      return new Chart();
-    }
-
     this.id = options.target;
     this.linkedGraphs = [this];
 
     this.setVars();
-    setUpEventListeners(this);
+    this.setUpEventListeners();
     this.build();
   }
 
@@ -81,7 +77,7 @@ module.exports = function (options) {
       .scale(yScale)
       .orient('left')
       //.tickSize(-width)
-      .tickFormat(tickFormat)
+      .tickFormat(tickFormat);
   };
 
   Chart.prototype.setVars = function () {
@@ -256,7 +252,7 @@ module.exports = function (options) {
 
     yLabel = canvas.selectAll('text.y.axis-label')
       .data(function (d) {
-        return [d.yLabel].filter(Boolean)
+        return [d.yLabel].filter(Boolean);
       });
     yLabel.enter()
       .append('text')
@@ -361,7 +357,8 @@ module.exports = function (options) {
     return Math.max(Math.max(width, height) / 50, 8);
   };
 
-  function setUpEventListeners(instance) {
+  Chart.prototype.setUpEventListeners = function () {
+    var instance = this;
     var events = {
       mousemove: function (x, y) {
         instance.tip.move(x, y);
@@ -446,9 +443,9 @@ module.exports = function (options) {
     Object.keys(all).forEach(function (e) {
       instance.on('all:' + e, all[e]);
     });
-  }
+  };
 
-  return Chart();
+  return new Chart();
 };
 Const = module.exports.constants = require('./lib/constants');
 types = module.exports.types = require('./lib/types/');
