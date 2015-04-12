@@ -15,11 +15,9 @@ $ npm install --save function-plot
 ```js
 var d3 = window.d3
 var functionPlot = require('function-plot');
-var instance = functionPlot({
+functionPlot({
   // options below
 })
-d3.select(' selector of the parent container for the chart ')
-  .call(instance)
 ```
 
 ## Example
@@ -30,30 +28,30 @@ See `public/index.js`
 'use strict';
 var d3 = window.d3;
 var functionPlot = window.functionPlot;
-d3.select('#canvas')
-  .call(functionPlot({
-    data: [{
-      title: 'f(x)',
-      fn: function (x) {
-        return -x * x;
-      }
-    }, {
-      fn: function (x) {
-        return Math.sqrt(x);
-      },
-      graphOptions: {
-        type: 'scatter'
-      }
-    }, {
-      fn: function (x) {
-        return 1 / x;
-      },
-      graphOptions: {
-        limits: [0],
-        interpolate: 'linear'
-      }
-    }]
-  }));
+functionPlot({
+  target: '#canvas',
+  data: [{
+    title: 'f(x)',
+    fn: function (x) {
+      return -x * x;
+    }
+  }, {
+    fn: function (x) {
+      return Math.sqrt(x);
+    },
+    graphOptions: {
+      type: 'scatter'
+    }
+  }, {
+    fn: function (x) {
+      return 1 / x;
+    },
+    graphOptions: {
+      limits: [0],
+      interpolate: 'linear'
+    }
+  }]
+});
 ```
 
 Screenshot (for the example located at `public/index.js`):
@@ -90,9 +88,10 @@ var functionPlot = require('function-plot');
     with values which are in `range` limiting the values to the screen min/max coordinates for `x`, i.e.
     at any given time the graph min/max x coordinates will limit the range of values to be plotted
     * `options.data[i].range` {number[]} if given the function will only be evaluated with multiple values from this range
-    * `options.data[i].increment` {number} the increment used in each iteration to reach the width of the chart i.e.
+    * `options.data[i].samples` {number} the fixed number of samples to be computed at the current domain ends
+    * `options.data[i].deltaX` {number} the increment used in each iteration to reach the width of the chart i.e.
     this quantity is added k times to the x scale's min x value until it surpasses the x scale's max value,
-    defaults to `(max - min) / 100`
+    defaults to `(max - min) / 100`    
     * `options.data[i].derivative` {Object} Info of the instantaneous rate of change of y with respect to x
       * `options.data[i].derivative.fn` {Function} The derivative of `options.data[i].fn`
       * `options.data[i].derivative.x0` {number} The abscissa of the point which belongs to the curve
@@ -111,7 +110,7 @@ var functionPlot = require('function-plot');
 Common options:
 
 * `options`
-  * `options.limits` {number[]} x values which make the function undefined, e.g. in `1/x` the value 0 makes the 
+  * **experimental** `options.limits` {number[]} x values which make the function undefined, e.g. in `1/x` the value 0 makes the 
   function invalid
 
 Depending on the type of graph:
@@ -126,10 +125,13 @@ Depending on the type of graph:
 After cloning the repo and running `npm install`
 
 ```sh
+node site.js    // generate the examples shown on index.html
 npm start
 ```
 
-Open `localhost:5555` and that's it! Local development server powered [beefy](https://www.npmjs.com/package/beefy)
+Open `127.0.0.1:5555` and that's it! Local development server powered [beefy](https://www.npmjs.com/package/beefy)
+
+Plain demo: `127.0.0.1:5555/demo.html` 
 
 ## TODO
 

@@ -38,7 +38,7 @@ module.exports = function (options) {
       return new Chart();
     }
 
-    this.id = Math.random().toString(16).substr(2);
+    this.id = options.target;
     this.linkedGraphs = [this];
 
     this.setVars();
@@ -58,11 +58,12 @@ module.exports = function (options) {
     var yDomain = this.meta.yDomain;
 
     var si = d3.format('s');
+    var r = d3.format('.0r');
     var tickFormat = function (d) {
-      if (d > 10000) {
+      if (Math.abs(d) >= 1) {
         return si(d);
       }
-      return d;
+      return r(d);
     };
 
     xScale = this.meta.xScale = d3.scale.linear()
@@ -73,14 +74,14 @@ module.exports = function (options) {
       .range([height, 0]);
     this.meta.xAxis = d3.svg.axis()
       .scale(xScale)
-      .orient('bottom');
-      //.tickSize(-height);
-      //.tickFormat(tickFormat);
+      .orient('bottom')
+      //.tickSize(-height)
+      .tickFormat(tickFormat);
     this.meta.yAxis = d3.svg.axis()
       .scale(yScale)
-      .orient('left');
-      //.tickSize(-width);
-      //.tickFormat(tickFormat);
+      .orient('left')
+      //.tickSize(-width)
+      .tickFormat(tickFormat)
   };
 
   Chart.prototype.setVars = function () {

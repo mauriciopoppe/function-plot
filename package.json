@@ -44,6 +44,7 @@
     "test": "echo 'no tests!'",
     "test:watch": "nodemon --watch lib --watch test --watch index.js --exec 'npm test'",
     "start": "./node_modules/.bin/beefy index.js:js/bundle.js 5555 --cwd site/ -- --standalone functionPlot",
+    "fetch": "curl -o site/partials/brcdn-module.html -L https://www.brcdn.org/?module=simple-function-plot&version=latest",
     "html": "node site.js",
     "build": "browserify index.js -o site/js/bundle.js --standalone functionPlot",
     "minify": "cat site/js/bundle.js | uglifyjs -o site/js/bundle.js",
@@ -51,6 +52,7 @@
   },
   "gh-pages-deploy": {
     "prep": [
+      "fetch",
       "html",
       "build",
       "minify"

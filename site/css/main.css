@@ -95,6 +95,47 @@ textarea {
    Author's custom styles
    ========================================================================== */
 
+/*flat ui*/
+/*https://color.adobe.com/Flat-UI-color-theme-2469224/edit/?copy=true*/
+
+/*
+  #2C3E50
+  #E74C3C
+  #ECF0F1
+  #3498DB
+  #2980B9
+*/
+h1 {
+  font-size: 5em;
+}
+
+h2 {
+  font-size: 3em;
+}
+
+h3 {
+  font-size: 2em;
+  color: #2980B9;
+}
+
+a {
+  color: #E74C3C;
+}
+a:hover {
+  color: #FF4C3C;
+}
+
+pre {
+  font-size: 11px;
+  background: transparent;
+  border: 1px solid #ECF0F1;
+}
+
+code {
+  background-color: #ECF0F1;
+  color: #3498DB;
+}
+
 .axis path,
 .axis line {
     fill: none;
@@ -108,14 +149,58 @@ textarea {
   margin: 0 auto;
 }
 
+#description {
+  font-size: 1em;
+  width: 650px;
+}
+/*#description-sample {*/
+  /*width: 600px;*/
+/*}*/
 
+.social-buttons > div {
+  margin: 20px;
+}
 
+.header {
+  background: #2C3E50;
+  color: #ECF0F1;
+  padding: 50px;
+}
 
+.content {
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
 
+.footer {
+  font-size: 0.8em;
+  padding: 40px;
+  background: #2C3E50;
+  color: #ECF0F1;
+}
 
+.container {
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
 
+.about {
+  padding: 20px;
+}
 
+.demos {
+  margin-top: 70px;
+}
 
+.hljs {
+  background: transparent;
+}
+section {
+  font-size: 3em;
+  background: #ECF0F1;
+  padding: 10px;
+  color: #3498DB;
+}
 /* ==========================================================================
    Helper classes
    ========================================================================== */

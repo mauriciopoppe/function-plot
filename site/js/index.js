@@ -2,13 +2,33 @@
 $(document).on('markupLoaded', function () {
   var functionPlot = window.functionPlot;
   var a, b, c;
+
+  functionPlot({
+    target: '#description-sample',
+    yDomain: [-1, 9],
+    tip: {
+      xLine: true,
+      yLine: true,
+      renderer: function () {}
+    },
+    data: [{
+      fn: function (x) {
+        return x * x;
+      },
+      derivative: {
+        fn: function (x) {
+          return 2 * x;
+        },
+        updateOnMouseOver: true
+      }
+    }]
+  });
+
   /**
-   * ## Plotting a curve
+   * ### Plotting a curve
    *
    * The shortest example, the function $y = x^2$ is evaluated with values inside the range
-   * defined by the canvas size (the default dimensions are `550x350`),
-   * whenever the local space is modified (because of a translate/scale operation)
-   * the function is evaluated again with the new bounds, result: infinite graphs!
+   * defined by the canvas size (the default dimensions are `550x350`)
    *
    * The required parameters are:
    *
@@ -25,7 +45,7 @@ $(document).on('markupLoaded', function () {
   });
 
   /**
-   * ## Additional options
+   * ### Additional options
    *
    * Additionally the graph can have the following options defined on the top level object:
    *
@@ -52,7 +72,7 @@ $(document).on('markupLoaded', function () {
   });
 
   /**
-   * ## Domain
+   * ### Domain
    *
    * The domains of both axes can be changed with the following configurations:
    *
@@ -72,23 +92,24 @@ $(document).on('markupLoaded', function () {
   });
 
   /**
-   * ## $\Delta{x}$
+   * ### $\Delta{x}$
    *
-   * `deltaX` the change in $x$ to use as increment between the current domain ends i.e. let $x_0$ and $x_n$ be the domain ends,
-   * $f(x)$ will be sampled with $f(x_0 + k_0 \* increment), f(x_0 + k_1 \* increment), \ldots, f(x_0 + k_n \* increment)$ where
-   * $0 \leq k_i \* increment \leq x_n - x_0$
+   * `deltaX` the change in $x$ to use as increment between samples of the current domain ends i.e. let
+   * $x_0$ and $x_n$ be the domain ends, $f(x)$ will be sampled with $f(x_0 + k_0 \* \Delta{x}),
+   * f(x_0 + k_1 \* \Delta{x}), \ldots, f(x_0 + k_n \* \Delta{x})$ where
+   * $0 \leq k_i \* \Delta{x} \leq x_n - x_0$
    *
-   * e.g. increment = 0.1
+   * e.g. $\Delta{x}$ = 0.1
    *
    * $$
    * domain = [-5, 5] \\\
-   * increment = 0.1 \\\
+   * \Delta{x} = 0.1 \\\
    * values = -5, -4.9, -4.8, \ldots, 4.8, 4.9, 5.0
    * $$
    *
    * $$
    * domain = [-10, 10] \\\
-   * increment = 0.1 \\\
+   * \Delta{x} = 0.1 \\\
    * values = -10, -9.9, -9.8, \ldots, 9.8, 9.9, 10
    * $$
    */
@@ -103,23 +124,23 @@ $(document).on('markupLoaded', function () {
   });
 
   /**
-   * ## Samples
+   * ### Samples
    *
    * `samples` sets a fixed number of samples between the current domain ends, `deltaX`
-   * is set dynamically each time the graph is rendered with this param, note that samples
+   * is set dynamically each time the graph is rendered with this param, note that `samples`
    * has a higher priority than `deltaX`
    *
    * e.g.  samples = 100
    *
    * $$
    * domain = [-5, 5] \\\
-   * increment = \frac{5 - -5}{100} = 0.1 \\\
+   * \Delta{x} = \frac{5 - -5}{100} = 0.1 \\\
    * values = -5, -4.9, -4.8, \ldots, 4.8, 4.9, 5.0
    * $$
    *
    * $$
    * domain = [-10, 10] \\\
-   * increment = \frac{10 - -10}{100} = 0.2 \\\
+   * \Delta{x} = \frac{10 - -10}{100} = 0.2 \\\
    * values = -10, -9.8, -9.6, \ldots, 9.6, 9.8, 10
    * $$
    *
@@ -135,7 +156,7 @@ $(document).on('markupLoaded', function () {
   });
 
   /**
-   * ## Closed Path + Range
+   * ### Closed Path + Range
    *
    * Additional graph options for each graph renderer can be set under `graphOptions`,
    * these options will be used by each type of graph.
@@ -167,7 +188,7 @@ $(document).on('markupLoaded', function () {
   });
 
   /**
-   * ## Multiple graphs
+   * ### Multiple graphs
    *
    * `data` as seen in the examples above is an array, which means that multiple
    * functions can be rendered in the same graph
@@ -184,7 +205,7 @@ $(document).on('markupLoaded', function () {
   });
 
   /**
-   * ## Scatter
+   * ### Scatter
    *
    * A function can be represented with some points belonging to the curve
    */
@@ -202,7 +223,7 @@ $(document).on('markupLoaded', function () {
   });
 
   /**
-   * ## Tip
+   * ### Tip
    *
    * The little circle that has the x-coordinate of the mouse position is called
    * a "tip", the following options can be configured:
@@ -217,7 +238,6 @@ $(document).on('markupLoaded', function () {
       xLine: true,    // dashed line parallel to y = 0
       yLine: true,    // dashed line parallel to x = 0
       renderer: function (x, y, index) {
-        // decide what to do show here
         // the returning value will be shown in the tip
       }
     },
@@ -228,7 +248,7 @@ $(document).on('markupLoaded', function () {
   });
 
   /**
-   * ## Derivative
+   * ### Derivative
    *
    * If a data object has a `derivative` object then its property `fn` will be used to compute
    * the equation of the line tangent to the point `x0`, i.e. the point $(x_0, f(x_0))$
@@ -251,7 +271,7 @@ $(document).on('markupLoaded', function () {
   });
 
   /**
-   * ## Derivative - Tangent line auto update
+   * ### Derivative <br> <div class="small">Tangent line on mouse's position</div>
    *
    * if `updateOnMouseOver` is set to true then tangent line is computed whenever the mouse is moved
    * inside the canvas (let $x_0$ be the mouse's abscissa then the tangent line to the point
@@ -274,7 +294,7 @@ $(document).on('markupLoaded', function () {
   });
 
   /**
-   * ## Derivative - Tangent multiple lines
+   * ### Derivative <br> <div class="small">Multiple tangent lines</div>
    *
    * An example of a graph with multiple functions, each function is configured with
    * a `derivative` object with auto update of the slope as described above
@@ -305,7 +325,7 @@ $(document).on('markupLoaded', function () {
   });
 
   /**
-   * ## Linked graphs
+   * ### Linked graphs
    *
    * Multiple graphs can be linked, when the tip's position, graph scale or
    * graph translate properties are modified on the original graph the linked
@@ -330,7 +350,7 @@ $(document).on('markupLoaded', function () {
 
 
   /**
-   * ## Linked graphs 2
+   * ### Linked graphs <div class="small">Multiple</div>
    *
    * Since the `zoom` event is dispatched to all the linked graphs as well, one can
    * set as many linked graphs as wanted and all of them will perform the same
@@ -364,12 +384,12 @@ $(document).on('markupLoaded', function () {
   c.addLink(a, b);
 
   /**
-   * ## Limits
+   * ### Limits
    *
    * Some functions approach to infinity or are undefined under a range of values,
    * for example $y = 1/x$ when coming from the left of $x=0$ approaches $-\infty$ and
    * when coming from the right of $x=0$ approaches $+\infty$, to deal with continuity
-   * problems we can specify the places the function is undefined/infinity under
+   * problems we can specify the places the function is undefined/$\infty$ under
    * the option `limits`
    *
    * @experimental
@@ -393,7 +413,33 @@ $(document).on('markupLoaded', function () {
 });
 
 
-$('#content').load('partials/all.html', function () {
+$('#examples').load('partials/all.html', function () {
   $(document).trigger('markupLoaded');
-  //MathJax.Hub.Queue(['Typeset', MathJax.Hub]);
+  $('pre code').each(function (i, block) {
+    hljs.highlightBlock(block);
+  });
 });
+
+
+$('#brcdn').load('partials/brcdn-module.html .panel.panel-primary', function () {
+  clipboard();
+});
+
+function clipboard() {
+  ZeroClipboard.config( { swfPath: "//cdnjs.cloudflare.com/ajax/libs/zeroclipboard/2.2.0/ZeroClipboard.swf" } );
+  var elements = [].slice.call(document.querySelectorAll('[data-clipboard-text]'));
+  var client = new ZeroClipboard(elements);
+  client.on('ready', function (event) {
+    elements.forEach(function (el) {
+      el.addEventListener('click', function (e) {
+        e.preventDefault();
+      }, false);
+    });
+    client.on('aftercopy', function (e) {
+      e.target.setAttribute('class', 'btn btn-sm btn-success');
+      setTimeout(function () {
+        e.target.setAttribute('class', 'btn btn-sm btn-primary');
+      }, 200);
+    });
+  });
+}
