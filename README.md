@@ -32,7 +32,7 @@ functionPlot({
 
 ## Example
 
-See `site/js/index.js`
+See [`site/js/index.js`](https://github.com/maurizzzio/function-plot/blob/master/site/js/index.js)
 
 ```javascript
 'use strict';
