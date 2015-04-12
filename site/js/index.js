@@ -37,16 +37,16 @@ $(document).on('markupLoaded', function () {
    * - `disableZoom`: true to disable translation/scaling on the graph
    */
   functionPlot({
-    title: 'y = sin(x)',
+    title: 'y = x * x',
     target: '#linear-with-options',
-    width: 400,
-    height: 300,
+    width: 580,
+    height: 400,
     disableZoom: true,
     xLabel: 'x - axis',
     yLabel: 'y - axis',
     data: [{
       fn: function (x) {
-        return Math.sin(x);
+        return x * x;
       }
     }]
   });
@@ -66,16 +66,90 @@ $(document).on('markupLoaded', function () {
     data: [{
       fn: function (x) {
         return Math.sin(x);
-      }
+      },
+      deltaX: 0.01
+    }]
+  });
+
+  /**
+   * ## $\Delta{x}$
+   *
+   * `deltaX` the change in $x$ to use as increment between the current domain ends i.e. let $x_0$ and $x_n$ be the domain ends,
+   * $f(x)$ will be sampled with $f(x_0 + k_0 \* increment), f(x_0 + k_1 \* increment), \ldots, f(x_0 + k_n \* increment)$ where
+   * $0 \leq k_i \* increment \leq x_n - x_0$
+   *
+   * e.g. increment = 0.1
+   *
+   * $$
+   * domain = [-5, 5] \\\
+   * increment = 0.1 \\\
+   * values = -5, -4.9, -4.8, \ldots, 4.8, 4.9, 5.0
+   * $$
+   *
+   * $$
+   * domain = [-10, 10] \\\
+   * increment = 0.1 \\\
+   * values = -10, -9.9, -9.8, \ldots, 9.8, 9.9, 10
+   * $$
+   */
+  functionPlot({
+    target: '#graphOptionsDeltaX',
+    data: [{
+      fn: function (x) {
+        return Math.sin(x);
+      },
+      deltaX: 0.01
+    }]
+  });
+
+  /**
+   * ## Samples
+   *
+   * `samples` sets a fixed number of samples between the current domain ends, `deltaX`
+   * is set dynamically each time the graph is rendered with this param, note that samples
+   * has a higher priority than `deltaX`
+   *
+   * e.g.  samples = 100
+   *
+   * $$
+   * domain = [-5, 5] \\\
+   * increment = \frac{5 - -5}{100} = 0.1 \\\
+   * values = -5, -4.9, -4.8, \ldots, 4.8, 4.9, 5.0
+   * $$
+   *
+   * $$
+   * domain = [-10, 10] \\\
+   * increment = \frac{10 - -10}{100} = 0.2 \\\
+   * values = -10, -9.8, -9.6, \ldots, 9.6, 9.8, 10
+   * $$
+   *
+   */
+  functionPlot({
+    target: '#graphOptionsSamples',
+    data: [{
+      fn: function (x) {
+        return Math.sin(x);
+      },
+      samples: 1000
     }]
   });
 
   /**
    * ## Closed Path + Range
    *
-   * You can also restrict the values to be evaluated with the `range` option,
+   * Additional graph options for each graph renderer can be set under `graphOptions`,
+   * these options will be used by each type of graph.
+   *
+   * You can restrict the values to be evaluated with the `range` option,
    * this works really nice with the `closed` option of the `line` type to render
    * for example a [definite integral](http://mathworld.wolfram.com/DefiniteIntegral.html)
+   *
+   * Available `graphOptions`
+   *
+   * - `type`: the type of graph, currently `line` and `scatter` are supported
+   * - `interpolate`: used by the `line` type sets the interpolate option for `d3.svg.line`
+   * - `closed`: true to use `d3.svg.area` instead of `d3.svg.line`, `y0` will always be
+   * 0 and `y1` will be $fn(x)$
    */
   functionPlot({
     target: '#closed',
@@ -89,29 +163,6 @@ $(document).on('markupLoaded', function () {
         closed: true
       },
       range: [2, 8]
-    }]
-  });
-
-  /**
-   * ## Limits
-   *
-   * Some functions approach to infinity or are undefined under a range of values,
-   * for example $y = 1/x$ when coming from the left of $x=0$ approaches $-\infty$ and
-   * when coming from the right of $x=0$ approaches $+\infty$, to deal with continuity
-   * problems we can specify the places the function is undefined/infinity under
-   * the option `limits`
-   */
-  functionPlot({
-    target: '#withLimits',
-    data: [{
-      title: 'f(x) = 1/x',
-      fn: function (x) {
-        return 1 / x;
-      },
-      graphOptions: {
-        limits: [0],
-        interpolate: 'linear'
-      }
     }]
   });
 
@@ -312,11 +363,37 @@ $(document).on('markupLoaded', function () {
   b.addLink(a, c);
   c.addLink(a, b);
 
+  /**
+   * ## Limits
+   *
+   * Some functions approach to infinity or are undefined under a range of values,
+   * for example $y = 1/x$ when coming from the left of $x=0$ approaches $-\infty$ and
+   * when coming from the right of $x=0$ approaches $+\infty$, to deal with continuity
+   * problems we can specify the places the function is undefined/infinity under
+   * the option `limits`
+   *
+   * @experimental
+   */
+  functionPlot({
+    target: '#withLimits',
+    data: [{
+      title: 'f(x) = 1/x',
+      fn: function (x) {
+        return 1 / x;
+      },
+      deltaX: 0.01,
+      graphOptions: {
+        limits: [0],
+        interpolate: 'linear'
+      }
+    }]
+  });
+
   /** */
 });
 
 
 $('#content').load('partials/all.html', function () {
   $(document).trigger('markupLoaded');
-  MathJax.Hub.Queue(['Typeset', MathJax.Hub]);
+  //MathJax.Hub.Queue(['Typeset', MathJax.Hub]);
 });

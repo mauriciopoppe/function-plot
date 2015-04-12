@@ -1,14 +1,14 @@
 
  <div class="example row">
    <div class="col-md-6">
-     
+
      <span class="graph" id="linear"></span>
-     
+
    </div>
    <div class="col-md-6">
      <div class="comment"><h2>Plotting a curve</h2>
-<p>The shortest example, the function $y = x^2$ is evaluated with values inside the range<br />defined by the canvas size (the default dimensions are <code>550x350</code>),<br />whenever the local space is modified (because of a translate/scale operation)<br />the function is evaluated again with the new bounds, result: infinite graphs!</p><p>The required parameters are:</p><ul>
-<li><code>target</code> a selector to get an existing node</li>
+<p>The shortest example, the function $y = x^2$ is evaluated with values inside the range defined by the canvas size (the default dimensions are <code>550x350</code>), whenever the local space is modified (because of a translate/scale operation) the function is evaluated again with the new bounds, result: infinite graphs!</p><p>The required parameters are:</p><ul>
+<li><code>target</code> a selector to the node to hold the graph</li>
 <li><code>data</code> an array of objects which contain info about the functions to render</li>
 </ul>
 </div>
@@ -25,9 +25,9 @@
 
  <div class="example row">
    <div class="col-md-6">
-     
+
      <span class="graph" id="linear-with-options"></span>
-     
+
    </div>
    <div class="col-md-6">
      <div class="comment"><h2>Additional options</h2>
@@ -41,7 +41,7 @@
 </ul>
 </div>
      <div class="code"><pre><code>functionPlot({
-  title: 'y = sin(x)',
+  title: 'y = x * x',
   target: '#linear-with-options',
   width: 400,
   height: 300,
@@ -50,7 +50,7 @@
   yLabel: 'y - axis',
   data: [{
     fn: function (x) {
-      return Math.sin(x);
+      return x * x;
     }
   }]
 });</code></pre></div>
@@ -59,9 +59,9 @@
 
  <div class="example row">
    <div class="col-md-6">
-     
+
      <span class="graph" id="domain"></span>
-     
+
    </div>
    <div class="col-md-6">
      <div class="comment"><h2>Domain</h2>
@@ -77,7 +77,8 @@
   data: [{
     fn: function (x) {
       return Math.sin(x);
-    }
+    },
+    deltaX: 0.01
   }]
 });</code></pre></div>
    </div>
@@ -85,13 +86,63 @@
 
  <div class="example row">
    <div class="col-md-6">
-     
+
+     <span class="graph" id="graphOptionsDeltaX"></span>
+
+   </div>
+   <div class="col-md-6">
+     <div class="comment"><h2>$\Delta{x}$</h2>
+<p><code>deltaX</code> the change in $x$ to use as increment between the current domain ends i.e. let $x_0$ and $x_n$ be the domain ends, $f(x)$ will be sampled with $f(x_0 + k_0 * increment), f(x_0 + k_1 * increment), \ldots, f(x_0 + k_n * increment)$ where $0 \leq k_i * increment \leq x_n - x_0$</p><p>e.g. increment = 0.1</p><p>$$ domain = [-5, 5] \\ increment = 0.1 \\ values = -5, -4.9, -4.8, \ldots, 4.8, 4.9, 5.0 $$</p><p>$$ domain = [-10, 10] \\ increment = 0.1 \\ values = -10, -9.9, -9.8, \ldots, 9.8, 9.9, 10 $$</p></div>
+     <div class="code"><pre><code>functionPlot({
+  target: '#graphOptionsDeltaX',
+  data: [{
+    fn: function (x) {
+      return Math.sin(x);
+    },
+    deltaX: 0.01
+  }]
+});</code></pre></div>
+   </div>
+ </div>
+
+ <div class="example row">
+   <div class="col-md-6">
+
+     <span class="graph" id="graphOptionsSamples"></span>
+
+   </div>
+   <div class="col-md-6">
+     <div class="comment"><h2>Samples</h2>
+<ul>
+<li><code>samples</code> sets a fixed number of samples between the current domain ends, <code>deltaX</code> is set dynamically each time the graph is rendered</li>
+</ul>
+<p>e.g.  samples = 100</p><p>$$ domain = [-5, 5] \\ increment = \frac{5 - -5}{100} = 0.1 \\ values = -5, -4.9, -4.8, \ldots, 4.8, 4.9, 5.0 $$</p><p>$$ domain = [-10, 10] \\ increment = \frac{10 - -10}{100} = 0.2 \\ values = -10, -9.8, -9.6, \ldots, 9.6, 9.8, 10 $$</p></div>
+     <div class="code"><pre><code>functionPlot({
+  target: '#graphOptionsSamples',
+  data: [{
+    fn: function (x) {
+      return Math.sin(x);
+    },
+    samples: 1000
+  }]
+});</code></pre></div>
+   </div>
+ </div>
+
+ <div class="example row">
+   <div class="col-md-6">
+
      <span class="graph" id="closed"></span>
-     
+
    </div>
    <div class="col-md-6">
      <div class="comment"><h2>Closed Path + Range</h2>
-<p>You can also restrict the values to be evaluated with the <code>range</code> option,<br />this works really nice with the <code>closed</code> option of the <code>line</code> type to render<br />for example a <a href="http://mathworld.wolfram.com/DefiniteIntegral.html">definite integral</a></p></div>
+<p>Additional graph options for each graph renderer can be set under <code>graphOptions</code>, these options will be used by each type of graph.</p><p>You can restrict the values to be evaluated with the <code>range</code> option, this works really nice with the <code>closed</code> option of the <code>line</code> type to render for example a <a href="http://mathworld.wolfram.com/DefiniteIntegral.html">definite integral</a></p><p>Available <code>graphOptions</code></p><ul>
+<li><code>type</code>: the type of graph, currently <code>line</code> and <code>scatter</code> are supported</li>
+<li><code>interpolate</code>: used by the <code>line</code> type sets the interpolate option for <code>d3.svg.line</code></li>
+<li><code>closed</code>: true to use <code>d3.svg.area</code> instead of <code>d3.svg.line</code>, <code>y0</code> will always be 0 and <code>y1</code> will be $fn(x)$</li>
+</ul>
+</div>
      <div class="code"><pre><code>functionPlot({
   target: '#closed',
   xDomain: [0, 10],
@@ -111,38 +162,13 @@
 
  <div class="example row">
    <div class="col-md-6">
-     
-     <span class="graph" id="withLimits"></span>
-     
-   </div>
-   <div class="col-md-6">
-     <div class="comment"><h2>Limits</h2>
-<p>Some functions approach to infinity or are undefined under a range of values,<br />for example $y = 1/x$ when coming from the left of $x=0$ approaches $-\infty$ and<br />when coming from the right of $x=0$ approaches $+\infty$, to deal with continuity<br />problems we can specify the places the function is undefined/infinity under<br />the option <code>limits</code></p></div>
-     <div class="code"><pre><code>functionPlot({
-  target: '#withLimits',
-  data: [{
-    title: 'f(x) = 1/x',
-    fn: function (x) {
-      return 1 / x;
-    },
-    graphOptions: {
-      limits: [0],
-      interpolate: 'linear'
-    }
-  }]
-});</code></pre></div>
-   </div>
- </div>
 
- <div class="example row">
-   <div class="col-md-6">
-     
      <span class="graph" id="multiple"></span>
-     
+
    </div>
    <div class="col-md-6">
      <div class="comment"><h2>Multiple graphs</h2>
-<p><code>data</code> as seen in the examples above is an array, which means that multiple<br />functions can be rendered in the same graph</p></div>
+<p><code>data</code> as seen in the examples above is an array, which means that multiple functions can be rendered in the same graph</p></div>
      <div class="code"><pre><code>functionPlot({
   target: '#multiple',
   data: [
@@ -158,9 +184,9 @@
 
  <div class="example row">
    <div class="col-md-6">
-     
+
      <span class="graph" id="scatter"></span>
-     
+
    </div>
    <div class="col-md-6">
      <div class="comment"><h2>Scatter</h2>
@@ -182,13 +208,13 @@
 
  <div class="example row">
    <div class="col-md-6">
-     
+
      <span class="graph" id="tip"></span>
-     
+
    </div>
    <div class="col-md-6">
      <div class="comment"><h2>Tip</h2>
-<p>The little circle that has the x-coordinate of the mouse position is called<br />a &quot;tip&quot;, the following options can be configured:</p><ul>
+<p>The little circle that has the x-coordinate of the mouse position is called a &quot;tip&quot;, the following options can be configured:</p><ul>
 <li><code>xLine</code> true to show a dashed line parallel to $y = 0$ on the tip position</li>
 <li><code>yLine</code> true to show a dashed line parallel to $x = 0$ on the tip position</li>
 <li><code>renderer</code> a custom rendering function for the text shown in the tip</li>
@@ -214,13 +240,13 @@
 
  <div class="example row">
    <div class="col-md-6">
-     
+
      <span class="graph" id="derivative"></span>
-     
+
    </div>
    <div class="col-md-6">
      <div class="comment"><h2>Derivative</h2>
-<p>If a data object has a <code>derivative</code> object then its property <code>fn</code> will be used to compute<br />the equation of the line tangent to the point <code>x0</code>, i.e. the point $(x_0, f(x_0))$<br />(the derivative is a function which gives the slope of the tangent line at any derivable point)</p></div>
+<p>If a data object has a <code>derivative</code> object then its property <code>fn</code> will be used to compute the equation of the line tangent to the point <code>x0</code>, i.e. the point $(x_0, f(x_0))$ (the derivative is a function which gives the slope of the tangent line at any derivable point)</p></div>
      <div class="code"><pre><code>functionPlot({
   target: '#derivative',
   yDomain: [-1, 9],
@@ -241,13 +267,13 @@
 
  <div class="example row">
    <div class="col-md-6">
-     
+
      <span class="graph" id="derivativeLive"></span>
-     
+
    </div>
    <div class="col-md-6">
      <div class="comment"><h2>Derivative - Tangent line auto update</h2>
-<p>if <code>updateOnMouseOver</code> is set to true then tangent line is computed whenever the mouse is moved<br />inside the canvas (let $x_0$ be the mouse&#39;s abscissa then the tangent line to the point<br />$(x_0, f(x_0))$ is computed whenever the position of the mouse changes)</p></div>
+<p>if <code>updateOnMouseOver</code> is set to true then tangent line is computed whenever the mouse is moved inside the canvas (let $x_0$ be the mouse&#39;s abscissa then the tangent line to the point $(x_0, f(x_0))$ is computed whenever the position of the mouse changes)</p></div>
      <div class="code"><pre><code>functionPlot({
   target: '#derivativeLive',
   yDomain: [-1, 9],
@@ -268,13 +294,13 @@
 
  <div class="example row">
    <div class="col-md-6">
-     
+
      <span class="graph" id="derivativeLiveMulti"></span>
-     
+
    </div>
    <div class="col-md-6">
      <div class="comment"><h2>Derivative - Tangent multiple lines</h2>
-<p>An example of a graph with multiple functions, each function is configured with<br />a <code>derivative</code> object with auto update of the slope as described above</p></div>
+<p>An example of a graph with multiple functions, each function is configured with a <code>derivative</code> object with auto update of the slope as described above</p></div>
      <div class="code"><pre><code>functionPlot({
   target: '#derivativeLiveMulti',
   data: [{
@@ -304,15 +330,15 @@
 
  <div class="example row">
    <div class="col-md-6">
-     
+
      <span class="graph" id="linkedA"></span>
-     
+
      <span class="graph" id="linkedB"></span>
-     
+
    </div>
    <div class="col-md-6">
      <div class="comment"><h2>Linked graphs</h2>
-<p>Multiple graphs can be linked, when the tip&#39;s position, graph scale or<br />graph translate properties are modified on the original graph the linked<br />graphs are signaled with the same events, in the following example <code>a</code><br />also fires the internal <code>all:zoom</code> event, the <code>zoom</code> operation is performed<br />on <code>a</code> and <code>b</code>, but when <code>b</code> fires the <code>all:zoom</code> event the zoom operation is only<br />performed on <code>b</code></p></div>
+<p>Multiple graphs can be linked, when the tip&#39;s position, graph scale or graph translate properties are modified on the original graph the linked graphs are signaled with the same events, in the following example <code>a</code> also fires the internal <code>all:zoom</code> event, the <code>zoom</code> operation is performed on <code>a</code> and <code>b</code>, but when <code>b</code> fires the <code>all:zoom</code> event the zoom operation is only performed on <code>b</code></p></div>
      <div class="code"><pre><code>a = functionPlot({
   target: '#linkedA',
   height: 250,
@@ -331,17 +357,17 @@ a.addLink(b);</code></pre></div>
 
  <div class="example row">
    <div class="col-md-6">
-     
+
      <span class="graph" id="linkedAMultiple"></span>
-     
+
      <span class="graph" id="linkedBMultiple"></span>
-     
+
      <span class="graph" id="linkedCMultiple"></span>
-     
+
    </div>
    <div class="col-md-6">
      <div class="comment"><h2>Linked graphs 2</h2>
-<p>Since the <code>zoom</code> event is dispatched to all the linked graphs as well, one can<br />set as many linked graphs as wanted and all of them will perform the same<br />zoom operation, in the following example these functions are plotted:</p><ul>
+<p>Since the <code>zoom</code> event is dispatched to all the linked graphs as well, one can set as many linked graphs as wanted and all of them will perform the same zoom operation, in the following example these functions are plotted:</p><ul>
 <li>$y = x^2$</li>
 <li>$y&#39; = 2x$</li>
 <li>$y&#39;&#39; = 2$</li>
@@ -368,5 +394,31 @@ c = functionPlot({
 a.addLink(b, c);
 b.addLink(a, c);
 c.addLink(a, b);</code></pre></div>
+   </div>
+ </div>
+
+ <div class="example row">
+   <div class="col-md-6">
+
+     <span class="graph" id="withLimits"></span>
+
+   </div>
+   <div class="col-md-6">
+     <div class="comment"><h2>Limits</h2>
+<p>Some functions approach to infinity or are undefined under a range of values, for example $y = 1/x$ when coming from the left of $x=0$ approaches $-\infty$ and when coming from the right of $x=0$ approaches $+\infty$, to deal with continuity problems we can specify the places the function is undefined/infinity under the option <code>limits</code></p><div><b>Experimental feature</b>, it might change in the near time</div></div>
+     <div class="code"><pre><code>functionPlot({
+  target: '#withLimits',
+  data: [{
+    title: 'f(x) = 1/x',
+    fn: function (x) {
+      return 1 / x;
+    },
+    deltaX: 0.01,
+    graphOptions: {
+      limits: [0],
+      interpolate: 'linear'
+    }
+  }]
+});</code></pre></div>
    </div>
  </div>

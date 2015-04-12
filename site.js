@@ -11,7 +11,7 @@ var comments = dox.parseComments(file);
 
 var output = fs.createWriteStream('./site/partials/all.html');
 
-var exampleTemplate = [
+var structure = [
   '<% _.forEach(comments, function (c) { %>',
   ' <div class="example row">',
   '   <div class="col-md-6">',
@@ -26,6 +26,9 @@ var exampleTemplate = [
   ' </div>',
   '<% }); %>'
 ].join('\n');
+var experimentalTemplate = [
+  '<div><b>Experimental feature</b>, it might change without any further notice</div>'
+].join('\n');
 
 var parsed = comments.map(function (c) {
   var ids = c.code.match(/target:\s*'(.*)'/g);
@@ -35,7 +38,12 @@ var parsed = comments.map(function (c) {
         return /#[0-9a-zA-Z\-]*/.exec(str)[0].substr(1);
       });
   }
+
   var comment = c.description.full;
+  if (_.find(c.tags, {type: 'experimental'})) {
+    comment += experimentalTemplate;
+  }
+  comment = comment.replace(/<br\s*\/>/g, ' ');
   return {
     comment: comment,
     code: c.code,
@@ -45,7 +53,7 @@ var parsed = comments.map(function (c) {
   return entry.ids;
 });
 
-output.write(_.template(exampleTemplate)({
+output.write(_.template(structure)({
   comments: parsed
 }));
 output.end();

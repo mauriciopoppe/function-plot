@@ -57,6 +57,14 @@ module.exports = function (options) {
     var xDomain = this.meta.xDomain;
     var yDomain = this.meta.yDomain;
 
+    var si = d3.format('s');
+    var tickFormat = function (d) {
+      if (d > 10000) {
+        return si(d);
+      }
+      return d;
+    };
+
     xScale = this.meta.xScale = d3.scale.linear()
       .domain(xDomain)
       .range([0, width]);
@@ -66,11 +74,13 @@ module.exports = function (options) {
     this.meta.xAxis = d3.svg.axis()
       .scale(xScale)
       .orient('bottom');
-    //.tickSize(-height);
+      //.tickSize(-height);
+      //.tickFormat(tickFormat);
     this.meta.yAxis = d3.svg.axis()
       .scale(yScale)
       .orient('left');
-    //.tickSize(-width);
+      //.tickSize(-width);
+      //.tickFormat(tickFormat);
   };
 
   Chart.prototype.setVars = function () {
@@ -167,7 +177,6 @@ module.exports = function (options) {
     this.meta.zoomBehavior
       .x(xScale)
       .y(yScale)
-      .scaleExtent([0.1, 16])
       .on('zoom', function onZoom() {
         self.emit('all:zoom', xScale, yScale);
       });
@@ -230,13 +239,13 @@ module.exports = function (options) {
     var xLabel, yLabel;
     var canvas = this.canvas;
 
-    xLabel = canvas.selectAll('text.x.label')
+    xLabel = canvas.selectAll('text.x.axis-label')
       .data(function (d) {
         return [d.xLabel].filter(Boolean);
       });
     xLabel.enter()
       .append('text')
-      .attr('class', 'x label')
+      .attr('class', 'x axis-label')
       .attr('text-anchor', 'end');
     xLabel
       .attr('x', width)
@@ -244,13 +253,13 @@ module.exports = function (options) {
       .text(function (d) { return d; });
     xLabel.exit().remove();
 
-    yLabel = canvas.selectAll('text.y.label')
+    yLabel = canvas.selectAll('text.y.axis-label')
       .data(function (d) {
         return [d.yLabel].filter(Boolean)
       });
     yLabel.enter()
       .append('text')
-      .attr('class', 'y label')
+      .attr('class', 'y axis-label')
       .attr('y', 6)
       .attr('dy', '.75em')
       .attr('text-anchor', 'end')
