@@ -2,7 +2,7 @@
 
 [![NPM][npm-image]][npm-url]
 
-> A simple 2d function plotter powered by d3 and used on http://blog.maurizzzio.com
+> A  2d function plotter powered by d3
 
 ## Install
 
@@ -22,7 +22,7 @@ functionPlot({
 
 ## Example
 
-See `public/index.js`
+See `site/js/index.js`
 
 ```javascript
 'use strict';
@@ -53,10 +53,6 @@ functionPlot({
   }]
 });
 ```
-
-Screenshot (for the example located at `public/index.js`):
-
-![screen shot 2015-03-31 at 3 04 07 am](https://cloud.githubusercontent.com/assets/1616682/6913963/11013696-d754-11e4-8bf1-8008f36cd670.gif)
 
 ## API
 
@@ -105,7 +101,7 @@ var functionPlot = require('function-plot');
       * `options.data[i].graphOptions.type` {string} the type of graph to render for the function (possible values: 
       'line', 'scatter')
 
-### Single Graph Options
+### Graph Options
 
 Common options:
 

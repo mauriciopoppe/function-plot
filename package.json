@@ -5,6 +5,7 @@
   "bugs": "https://github.com/maurizzzio/function-plot/issues",
   "license": "MIT",
   "main": "index.js",
+  "homepage": "http://maurizzzio.github.io/function-plot/",
   "author": "Mauricio Poppe <mauricio.poppe@gmail.com>",
   "files": [
     "/*",
