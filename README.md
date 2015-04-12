@@ -4,6 +4,16 @@
 
 > A  2d function plotter powered by d3
 
+Function Plot is a small library built on top of <a href="http://d3js.org/">D3.js</a> whose purpose
+is to render functions with 2 variables with little configuration (think of it as a little clone of Google's plotting
+utility: [y = x * x](https://www.google.com/webhp?sourceid=chrome-instant&ion=1&espv=2&es_th=1&ie=UTF-8#q=y+%3D+x+%5E+2)
+
+The library currently supports interactive line charts and scatterplots,
+whenever the graph scale is modified the function is evaluated again with
+the new bounds, result: infinite graphs!
+    
+Have a look at [the homepage](http://maurizzzio.github.io/function-plot/) for a detailed explanation of what the library is capable of
+
 ## Install
 
 ```sh
