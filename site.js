@@ -5,34 +5,10 @@
 var fs = require('fs');
 var dox = require('dox');
 var _ = require('lodash');
+var jade = require('jade');
 
 var file = fs.readFileSync('./site/js/index.js', { encoding: 'utf-8' });
 var comments = dox.parseComments(file);
-
-var output = fs.createWriteStream('./site/partials/all.html');
-
-var structure = [
-  '<% _.forEach(comments, function (c) { %>',
-  ' <div class="example">',
-  '   <div class="container">',
-  '     <div class="row">',
-  '       <div class="col-md-6">',
-  '         <div class="comment"><%= c.comment %></div>',
-  '         <div class="code"><pre><code class="javascript"><%= c.code %></code></pre></div>',
-  '       </div>',
-  '       <div class="col-md-6 center-block demos">',
-  '         <% _.forEach(c.ids, function (id) { %>',
-  '         <span class="graph" id="<%= id %>"></span>',
-  '         <% }) %>',
-  '       </div>',
-  '     </div>',
-  '   </div>',
-  ' </div>',
-  '<% }); %>'
-].join('\n');
-var experimentalTemplate = [
-  '<div><b>Experimental feature</b>, it might change without any further notice</div>'
-].join('\n');
 
 var parsed = comments.map(function (c) {
   var ids = c.code.match(/target:\s*'(.*)'/g);
@@ -44,12 +20,14 @@ var parsed = comments.map(function (c) {
   }
 
   var comment = c.description.full;
+  var experimental;
   if (_.find(c.tags, {type: 'experimental'})) {
-    comment += experimentalTemplate;
+    experimental = true;
   }
   comment = comment.replace(/<br\s*\/>/g, ' ');
   return {
     comment: comment,
+    experimental: experimental,
     code: c.code,
     ids: ids
   };
@@ -57,7 +35,6 @@ var parsed = comments.map(function (c) {
   return entry.ids;
 });
 
-output.write(_.template(structure)({
-  comments: parsed
-}));
+var output = fs.createWriteStream('./site/partials/all.html');
+output.write(jade.compileFile('./site/jade/examples.jade')({comments: parsed}));
 output.end();

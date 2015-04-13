@@ -33,6 +33,7 @@
     "eslint": "^0.17.1",
     "gh-pages-deploy": "^0.3.0",
     "istanbul": "^0.3.8",
+    "jade": "^1.9.2",
     "lodash": "^3.6.0",
     "mocha": "^2.2.1",
     "mocha-lcov-reporter": "^0.0.2",
