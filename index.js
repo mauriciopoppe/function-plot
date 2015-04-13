@@ -174,6 +174,7 @@ module.exports = function (options) {
     this.meta.zoomBehavior
       .x(xScale)
       .y(yScale)
+      .scaleExtent([0.000001, Infinity])
       .on('zoom', function onZoom() {
         self.emit('all:zoom', xScale, yScale);
       });
