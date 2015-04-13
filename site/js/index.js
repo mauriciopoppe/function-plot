@@ -411,7 +411,7 @@ $(document).on('markupLoaded', function () {
 });
 
 
-$('#examples').load('partials/all.html', function () {
+$('#examples').load('partials/examples.html', function () {
   $(document).trigger('markupLoaded');
   $('pre code').each(function (i, block) {
     hljs.highlightBlock(block);

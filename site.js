@@ -35,6 +35,6 @@ var parsed = comments.map(function (c) {
   return entry.ids;
 });
 
-var output = fs.createWriteStream('./site/partials/all.html');
+var output = fs.createWriteStream('./site/partials/examples.html');
 output.write(jade.compileFile('./site/jade/examples.jade')({comments: parsed}));
 output.end();

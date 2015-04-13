@@ -229,6 +229,12 @@ module.exports = function (options) {
       .call(this.meta.xAxis);
     this.canvas.select('.y.axis')
       .call(this.meta.yAxis);
+
+    this.canvas.selectAll('.axis path, .axis line')
+      .attr('fill', 'none')
+      .attr('stroke', 'black')
+      .attr('shape-rendering', 'crispedges')
+      .attr('opacity', 0.1);
   };
 
   Chart.prototype.buildAxisLabel = function () {

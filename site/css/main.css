@@ -136,14 +136,6 @@ code {
   color: #3498DB;
 }
 
-.axis path,
-.axis line {
-    fill: none;
-    stroke: #000;
-    shape-rendering: crispEdges;
-    opacity: 0.1;
-}
-
 .graph {
   display: inline-block;
   margin: 0 auto;
