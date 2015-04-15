@@ -38,8 +38,8 @@ module.exports = function (options) {
     this.linkedGraphs = [this];
 
     this.setVars();
-    this.setUpEventListeners();
     this.build();
+    this.setUpEventListeners();
   }
 
   Chart.prototype = Object.create(events.prototype);
@@ -114,21 +114,19 @@ module.exports = function (options) {
     root
       .attr('width', width + margin.left + margin.right)
       .attr('height', height + margin.top + margin.bottom);
-    root.select('.top-right-legend')
-      .attr('y', margin.top / 2)
-      .attr('x', width + margin.left);
 
     this.buildTitle();
     this.buildLegend();
     this.buildCanvas();
     this.buildClip();
     this.buildAxis();
-    this.buildAxisLabel();
+    //this.buildAxisLabel();
     this.buildContent();
-
-    // helper to detect the closest fn to the mouse position
+    //
+    //// helper to detect the closest fn to the mouse position
     var tip = this.tip = mousetip(extend(options.tip, { owner: this }));
-    this.canvas.enter.call(tip);
+    this.canvas
+      .call(tip);
 
     this.buildZoomHelper();
   };
@@ -174,19 +172,19 @@ module.exports = function (options) {
     this.meta.zoomBehavior
       .x(xScale)
       .y(yScale)
-      .scaleExtent([0.000001, Infinity])
+      .scaleExtent([0.00001, Infinity])
       .on('zoom', function onZoom() {
         self.emit('all:zoom', xScale, yScale);
       });
 
     // enter
     var canvas = this.canvas = this.root
-      .selectAll('#canvas')
+      .selectAll('.canvas')
       .data(function (d) { return [d]; });
 
     this.canvas.enter = canvas.enter()
       .append('g')
-        .attr('id', 'canvas');
+        .attr('class', 'canvas');
 
     // enter + update
     canvas
@@ -276,13 +274,13 @@ module.exports = function (options) {
   Chart.prototype.buildContent = function () {
     var self = this;
     var canvas = this.canvas;
-    var content = this.content = canvas.selectAll('g#content')
+    var content = this.content = canvas.selectAll('g.content')
       .data(function (d) { return [d]; });
 
     content.enter()
       .append('g')
       .attr('clip-path', 'url(#function-plot-clip-' + this.id + ')')
-      .attr('id', 'content');
+      .attr('class', 'content');
 
     // helper line, x = 0
     var yOrigin = content.selectAll('path.y.origin')
@@ -337,7 +335,12 @@ module.exports = function (options) {
       .append('rect')
       .attr('class', 'zoom-and-drag')
       .style('fill', 'none')
-      .style('pointer-events', 'all')
+      .style('pointer-events', 'all');
+
+    // update
+    this.canvas.select('.zoom-and-drag')
+      .attr('width', width)
+      .attr('height', height)
       .on('mouseover', function () {
         self.emit('all:mouseover');
       })
@@ -347,11 +350,6 @@ module.exports = function (options) {
       .on('mousemove', function () {
         self.emit('all:mousemove');
       });
-
-    // update
-    this.canvas.select('.zoom-and-drag')
-      .attr('width', width)
-      .attr('height', height);
   };
 
   Chart.prototype.addLink = function () {
