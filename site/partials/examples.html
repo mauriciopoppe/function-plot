@@ -4,13 +4,13 @@
 <li><code>data</code> an array of objects which contain info about the functions to render</li>
 </ul>
 </div><div class="code"><pre><code class="javascript">functionPlot({
-  target: '#linear',
+  target: '#quadratic',
   data: [{
     fn: function (x) {
       return x * x;
     }
   }]
-});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="linear" class="grah"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Additional options</h3>
+});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="quadratic" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Additional options</h3>
 <p>Additionally the graph can have the following options defined on the top level object:</p><ul>
 <li><code>title</code>: the title of the graph</li>
 <li><code>width</code>: width of the graph</li>
@@ -21,7 +21,7 @@
 </ul>
 </div><div class="code"><pre><code class="javascript">functionPlot({
   title: 'y = x * x',
-  target: '#linear-with-options',
+  target: '#quadratic-with-options',
   width: 580,
   height: 400,
   disableZoom: true,
@@ -32,7 +32,7 @@
       return x * x;
     }
   }]
-});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="linear-with-options" class="grah"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Domain</h3>
+});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="quadratic-with-options" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Domain</h3>
 <p>The domains of both axes can be changed with the following configurations:</p><ul>
 <li><code>xDomain</code>, defaults to <code>[-5, 5]</code></li>
 <li><code>yDomain</code>, defaults to <code>[-5, 5]</code></li>
@@ -47,7 +47,7 @@
     },
     deltaX: 0.01
   }]
-});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="domain" class="grah"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>$\Delta{x}$</h3>
+});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="domain" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>$\Delta{x}$</h3>
 <p><code>deltaX</code> the change in $x$ to use as increment between samples of the current domain ends i.e. let $x_0$ and $x_n$ be the domain ends, $f(x)$ will be sampled with $f(x_0 + k_0 * \Delta{x}), f(x_0 + k_1 * \Delta{x}), \ldots, f(x_0 + k_n * \Delta{x})$ where $0 \leq k_i * \Delta{x} \leq x_n - x_0$</p><p>e.g. $\Delta{x}$ = 0.1</p><p>$$ domain = [-5, 5] \\ \Delta{x} = 0.1 \\ values = -5, -4.9, -4.8, \ldots, 4.8, 4.9, 5.0 $$</p><p>$$ domain = [-10, 10] \\ \Delta{x} = 0.1 \\ values = -10, -9.9, -9.8, \ldots, 9.8, 9.9, 10 $$</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#graphOptionsDeltaX',
   data: [{
@@ -56,7 +56,7 @@
     },
     deltaX: 0.01
   }]
-});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="graphOptionsDeltaX" class="grah"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Samples</h3>
+});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="graphOptionsDeltaX" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Samples</h3>
 <p><code>samples</code> sets a fixed number of samples between the current domain ends, <code>deltaX</code> is set dynamically each time the graph is rendered with this param, note that <code>samples</code> has a higher priority than <code>deltaX</code></p><p>e.g.  samples = 100</p><p>$$ domain = [-5, 5] \\ \Delta{x} = \frac{5 - -5}{100} = 0.1 \\ values = -5, -4.9, -4.8, \ldots, 4.8, 4.9, 5.0 $$</p><p>$$ domain = [-10, 10] \\ \Delta{x} = \frac{10 - -10}{100} = 0.2 \\ values = -10, -9.8, -9.6, \ldots, 9.6, 9.8, 10 $$</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#graphOptionsSamples',
   data: [{
@@ -65,7 +65,7 @@
     },
     samples: 1000
   }]
-});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="graphOptionsSamples" class="grah"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Closed Path + Range</h3>
+});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="graphOptionsSamples" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Closed Path + Range</h3>
 <p>Additional graph options for each graph renderer can be set under <code>graphOptions</code>, these options will be used by each type of graph.</p><p>You can restrict the values to be evaluated with the <code>range</code> option, this works really nice with the <code>closed</code> option of the <code>line</code> type to render for example a <a href="http://mathworld.wolfram.com/DefiniteIntegral.html">definite integral</a></p><p>Available <code>graphOptions</code></p><ul>
 <li><code>type</code>: the type of graph, currently <code>line</code> and <code>scatter</code> are supported</li>
 <li><code>interpolate</code>: used by the <code>line</code> type sets the interpolate option for <code>d3.svg.line</code></li>
@@ -84,7 +84,7 @@
     },
     range: [2, 8]
   }]
-});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="closed" class="grah"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Multiple graphs</h3>
+});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="closed" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Multiple graphs</h3>
 <p><code>data</code> as seen in the examples above is an array, which means that multiple functions can be rendered in the same graph</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#multiple',
   data: [
@@ -94,7 +94,7 @@
     {fn: function (x) { return x * x * x; }},
     {fn: function (x) { return x * x * x * x; }}
   ]
-});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="multiple" class="grah"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Scatter</h3>
+});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="multiple" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Scatter</h3>
 <p>A function can be represented with some points belonging to the curve</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#scatter',
   yDomain: [-1, 9],
@@ -106,7 +106,7 @@
       type: 'scatter'
     }
   }]
-});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="scatter" class="grah"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Tip</h3>
+});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="scatter" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Tip</h3>
 <p>The little circle that has the x-coordinate of the mouse position is called a &quot;tip&quot;, the following options can be configured:</p><ul>
 <li><code>xLine</code> true to show a dashed line parallel to $y = 0$ on the tip position</li>
 <li><code>yLine</code> true to show a dashed line parallel to $x = 0$ on the tip position</li>
@@ -125,7 +125,7 @@
   data: [
     { fn: function (x) { return x * x; }}
   ]
-});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="tip" class="grah"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Derivative</h3>
+});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="tip" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Derivative</h3>
 <p>If a data object has a <code>derivative</code> object then its property <code>fn</code> will be used to compute the equation of the line tangent to the point <code>x0</code>, i.e. the point $(x_0, f(x_0))$ (the derivative is a function which gives the slope of the tangent line at any derivable point)</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#derivative',
   yDomain: [-1, 9],
@@ -140,7 +140,7 @@
       x0: 2
     }
   }]
-});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="derivative" class="grah"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Derivative <br> <div class="small">Tangent line on mouse&#39;s position</div></h3>
+});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="derivative" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Derivative <br> <div class="small">Tangent line on mouse&#39;s position</div></h3>
 <p>if <code>updateOnMouseOver</code> is set to true then tangent line is computed whenever the mouse is moved inside the canvas (let $x_0$ be the mouse&#39;s abscissa then the tangent line to the point $(x_0, f(x_0))$ is computed whenever the position of the mouse changes)</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#derivativeLive',
   yDomain: [-1, 9],
@@ -155,7 +155,7 @@
       updateOnMouseOver: true
     }
   }]
-});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="derivativeLive" class="grah"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Derivative <br> <div class="small">Multiple tangent lines</div></h3>
+});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="derivativeLive" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Derivative <br> <div class="small">Multiple tangent lines</div></h3>
 <p>An example of a graph with multiple functions, each function is configured with a <code>derivative</code> object with auto update of the slope as described above</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#derivativeLiveMulti',
   data: [{
@@ -179,7 +179,7 @@
       updateOnMouseOver: true
     }
   }]
-});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="derivativeLiveMulti" class="grah"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Linked graphs</h3>
+});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="derivativeLiveMulti" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Linked graphs</h3>
 <p>Multiple graphs can be linked, when the tip&#39;s position, graph scale or graph translate properties are modified on the original graph the linked graphs are signaled with the same events, in the following example <code>a</code> also fires the internal <code>all:zoom</code> event, the <code>zoom</code> operation is performed on <code>a</code> and <code>b</code>, but when <code>b</code> fires the <code>all:zoom</code> event the zoom operation is only performed on <code>b</code></p></div><div class="code"><pre><code class="javascript">a = functionPlot({
   target: '#linkedA',
   height: 250,
@@ -192,7 +192,7 @@ b = functionPlot({
   xDomain: [-10, 10],
   data: [{ fn: function (x) { return 2 * x; } }]
 });
-a.addLink(b);</code></pre></div></div><div class="col-md-6 center-block demos"><span id="linkedA" class="grah"></span><span id="linkedB" class="grah"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Linked graphs <div class="small">Multiple</div></h3>
+a.addLink(b);</code></pre></div></div><div class="col-md-6 center-block demos"><span id="linkedA" class="graph"></span><span id="linkedB" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Linked graphs <div class="small">Multiple</div></h3>
 <p>Since the <code>zoom</code> event is dispatched to all the linked graphs as well, one can set as many linked graphs as wanted and all of them will perform the same zoom operation, in the following example these functions are plotted:</p><ul>
 <li>$y = x^2$</li>
 <li>$y&#39; = 2x$</li>
@@ -218,7 +218,66 @@ c = functionPlot({
 });
 a.addLink(b, c);
 b.addLink(a, c);
-c.addLink(a, b);</code></pre></div></div><div class="col-md-6 center-block demos"><span id="linkedAMultiple" class="grah"></span><span id="linkedBMultiple" class="grah"></span><span id="linkedCMultiple" class="grah"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Limits</h3>
+c.addLink(a, b);</code></pre></div></div><div class="col-md-6 center-block demos"><span id="linkedAMultiple" class="graph"></span><span id="linkedBMultiple" class="graph"></span><span id="linkedCMultiple" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Update</h3>
+<p>To update a graphic one needs to call <code>functionPlot</code> on the same target element with <em>any</em> object that is configured properly</p></div><div class="code"><pre><code class="javascript">var options = {
+  target: '#quadratic-update',
+  data: [{
+    fn: function (x) {
+      return x;
+    }
+  }]
+};
+$('#update').click(function () {
+  if (!options.title) {
+    // add a title, a tip and change the function to y = x * x
+    options.title = 'hello world';
+    options.tip = {
+      xLine: true,
+      yLine: true
+    };
+    options.data[0] = {
+      fn: function (x) {
+        return x * x;
+      },
+      derivative: {
+        fn: function (x) {
+          return 2 * x;
+        },
+        updateOnMouseOver: true
+      }
+    }
+  } else {
+    // remove the title and the tip
+    // update the function to be y = x
+    delete options.title;
+    delete options.tip;
+    options.data[0] =  {
+      fn: function (x) {
+        return x;
+      }
+    }
+  }
+  functionPlot(options);
+});
+// initial plot
+functionPlot(options);</code></pre></div></div><div class="col-md-6 center-block demos"><span id="quadratic-update" class="graph"></span><div>
+   <button id="update" class="btn btn-primary">Update</button></div></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>With <a href="http://mathjs.org/">Math.js</a></h3>
+<p>You can parse functions using <img style="width: 50px; height: 15px" src="img/mathjs_330x100.png"/> taking advantage of its nifty syntax, in the following example the equation of a parabola is rendered whose fixed point (the focus) is at $(0, p)$, the slider below the graph controls the value of $p$</p><p>NOTE: math.js is not bundled with function-plot</p></div><div class="code"><pre><code class="javascript">var scope = { p: 3 };
+var fn = math.eval('f(x) = 1/(4p) * x^2', scope);
+var config = {
+  target: '#parsedWithMathJS',
+  data: [{ fn: fn }]
+};
+$('#p-slider').on('change', function () {
+  scope.p = +this.value;
+  functionPlot(config);
+});
+// initial plot
+functionPlot(config);</code></pre></div></div><div class="col-md-6 center-block demos"><span id="parsedWithMathJS" class="graph"></span><div>
+   <div class="extra">
+     <input id="p-slider" type="range" min="-3" max="3" value="0.2" step="0.2" />
+     <span id="p-slider-value"></span>
+   </div></div></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Limits</h3>
 <p>Some functions approach to infinity or are undefined under a range of values, for example $y = 1/x$ when coming from the left of $x=0$ approaches $-\infty$ and when coming from the right of $x=0$ approaches $+\infty$, to deal with continuity problems we can specify the places the function is undefined/$\infty$ under the option <code>limits</code></p></div><div class="experimental"><b>Experimental Feature:</b><span>it might change without any further notice</span></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#withLimits',
   data: [{
@@ -232,4 +291,4 @@ c.addLink(a, b);</code></pre></div></div><div class="col-md-6 center-block demos
       interpolate: 'linear'
     }
   }]
-});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="withLimits" class="grah"></span></div></div></div></div>
+});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="withLimits" class="graph"></span></div></div></div></div>

@@ -13,4 +13,6 @@ each c in comments
               code.javascript!= c.code
         .col-md-6.center-block.demos
           each id in c.ids
-            span.grah(id=id)
+            span.graph(id=id)
+          - if (c.additionalDOM)
+            div!= c.additionalDOM

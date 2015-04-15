@@ -24,11 +24,16 @@ var parsed = comments.map(function (c) {
   if (_.find(c.tags, {type: 'experimental'})) {
     experimental = true;
   }
+  var additionalDOM = _.find(c.tags, {type: 'additionalDOM'});
+  if (additionalDOM) {
+    additionalDOM = additionalDOM.string;
+  }
   comment = comment.replace(/<br\s*\/>/g, ' ');
   return {
     comment: comment,
     experimental: experimental,
     code: c.code,
+    additionalDOM: additionalDOM,
     ids: ids
   };
 }).filter(function (entry) {

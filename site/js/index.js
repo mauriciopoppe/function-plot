@@ -34,7 +34,7 @@ $(document).on('markupLoaded', function () {
    * - `data` an array of objects which contain info about the functions to render
    */
   functionPlot({
-    target: '#linear',
+    target: '#quadratic',
     data: [{
       fn: function (x) {
         return x * x;
@@ -56,7 +56,7 @@ $(document).on('markupLoaded', function () {
    */
   functionPlot({
     title: 'y = x * x',
-    target: '#linear-with-options',
+    target: '#quadratic-with-options',
     width: 580,
     height: 400,
     disableZoom: true,
@@ -346,7 +346,6 @@ $(document).on('markupLoaded', function () {
   });
   a.addLink(b);
 
-
   /**
    * ### Linked graphs <div class="small">Multiple</div>
    *
@@ -382,6 +381,90 @@ $(document).on('markupLoaded', function () {
   c.addLink(a, b);
 
   /**
+   * ### Update
+   *
+   * To update a graphic one needs to call `functionPlot` on the same target
+   * element with *any* object that is configured properly
+   *
+   * @additionalDOM
+   *
+   *    <button id="update" class="btn btn-primary">Update</button>
+   */
+  var options = {
+    target: '#quadratic-update',
+    data: [{
+      fn: function (x) {
+        return x;
+      }
+    }]
+  };
+  $('#update').click(function () {
+    if (!options.title) {
+      // add a title, a tip and change the function to y = x * x
+      options.title = 'hello world';
+      options.tip = {
+        xLine: true,
+        yLine: true
+      };
+      options.data[0] = {
+        fn: function (x) {
+          return x * x;
+        },
+        derivative: {
+          fn: function (x) {
+            return 2 * x;
+          },
+          updateOnMouseOver: true
+        }
+      }
+    } else {
+      // remove the title and the tip
+      // update the function to be y = x
+      delete options.title;
+      delete options.tip;
+      options.data[0] =  {
+        fn: function (x) {
+          return x;
+        }
+      }
+    }
+    functionPlot(options);
+  });
+  // initial plot
+  functionPlot(options);
+
+  /**
+   * ### With [Math.js](http://mathjs.org/)
+   *
+   * You can parse functions using <img style="width: 50px; height: 15px" src="img/mathjs_330x100.png"/>
+   * taking advantage of its nifty syntax, in the following example the equation of a parabola is rendered
+   * whose fixed point (the focus) is at $(0, p)$, the slider below the graph controls
+   * the value of $p$
+   *
+   * NOTE: math.js is not bundled with function-plot
+   *
+   * @additionalDOM
+   *
+   *    <div class="extra">
+   *      <input id="p-slider" type="range" min="-3" max="3" value="0.2" step="0.2" />
+   *      <span id="p-slider-value"></span>
+   *    </div>
+   *
+   */
+  var scope = { p: 3 };
+  var fn = math.eval('f(x) = 1/(4p) * x^2', scope);
+  var config = {
+    target: '#parsedWithMathJS',
+    data: [{ fn: fn }]
+  };
+  $('#p-slider').on('change', function () {
+    scope.p = +this.value;
+    functionPlot(config);
+  });
+  // initial plot
+  functionPlot(config);
+
+  /**
    * ### Limits
    *
    * Some functions approach to infinity or are undefined under a range of values,
@@ -415,6 +498,11 @@ $('#examples').load('partials/examples.html', function () {
   $(document).trigger('markupLoaded');
   $('pre code').each(function (i, block) {
     hljs.highlightBlock(block);
+  });
+
+  $('#p-slider').on('change', function () {
+    var value = +this.value;
+    $('#p-slider-value').html(value);
   });
 });
 
