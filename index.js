@@ -120,10 +120,10 @@ module.exports = function (options) {
     this.buildCanvas();
     this.buildClip();
     this.buildAxis();
-    //this.buildAxisLabel();
+    this.buildAxisLabel();
     this.buildContent();
-    //
-    //// helper to detect the closest fn to the mouse position
+
+    // helper to detect the closest fn to the cursor's current abscissa
     var tip = this.tip = mousetip(extend(options.tip, { owner: this }));
     this.canvas
       .call(tip);

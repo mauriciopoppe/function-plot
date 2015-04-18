@@ -19,28 +19,30 @@
   </style>
 </head>
 <body>
-  <!--<span id="quadratic"></span>-->
+  <span id="playground"></span>
+  <div></div>
+  <span id="quadratic"></span>
   <span id="quadratic-update"></span>
     <button id="update">update</button>
-  <!--<span id="quadratic-with-options"></span>-->
-  <!--<span id="domain"></span>-->
-  <!--<span id="closed"></span>-->
-  <!--<span id="multiple"></span>-->
-  <!--<span id="withLimits"></span>-->
-  <!--<span id="scatter"></span>-->
-  <!--<div></div>-->
-  <!--<span id="tip"></span>-->
-  <!--<div></div>-->
-  <!--<span id="derivative"></span>-->
-  <!--<span id="derivativeLive"></span>-->
-  <!--<span id="derivativeLiveMulti"></span>-->
-  <!--<div></div>-->
-  <!--<span id="linkedA"></span>-->
-  <!--<span id="linkedB"></span>-->
-  <!--<div></div>-->
-  <!--<span id="linkedAMultiple"></span>-->
-  <!--<span id="linkedBMultiple"></span>-->
-  <!--<span id="linkedCMultiple"></span>-->
+  <span id="quadratic-with-options"></span>
+  <span id="domain"></span>
+  <span id="closed"></span>
+  <span id="multiple"></span>
+  <span id="withLimits"></span>
+  <span id="scatter"></span>
+  <div></div>
+  <span id="tip"></span>
+  <div></div>
+  <span id="derivative"></span>
+  <span id="derivativeLive"></span>
+  <span id="derivativeLiveMulti"></span>
+  <div></div>
+  <span id="linkedA"></span>
+  <span id="linkedB"></span>
+  <div></div>
+  <span id="linkedAMultiple"></span>
+  <span id="linkedBMultiple"></span>
+  <span id="linkedCMultiple"></span>
 
   <script src="js/vendor/jquery-1.11.2.min.js"></script>
   <script src="js/vendor/d3.js"></script>
@@ -48,5 +50,19 @@
   <script src="js/index.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/1.5.2/math.min.js"></script>
   <script>  $(document).trigger('markupLoaded'); </script>
+  <script>
+    functionPlot({
+      target: '#playground',
+      data: [{
+        fn: function (x) {
+          return 1;
+        },
+        graphOptions: {
+          type: 'scatter'
+        },
+        range: [1, 1]
+      }]
+    })
+  </script>
 </body>
 </html>
