@@ -483,6 +483,12 @@ $(document).on('markupLoaded', function () {
       fn: function (x) {
         return 1 / x;
       },
+      derivative: {
+        fn: function (x) {
+          return -1 / x / x;
+        },
+        updateOnMouseOver: true
+      },
       samples: 1000,
       graphOptions: {
         interpolate: 'linear'
@@ -500,6 +506,12 @@ $(document).on('markupLoaded', function () {
     data: [{
       fn: function (x) {
         return Math.tan(x);
+      },
+      derivative: {
+        fn: function (x) {
+          return 1 / Math.cos(x) / Math.cos(x);
+        },
+        updateOnMouseOver: true
       },
       samples: 1000,
       graphOptions: {
