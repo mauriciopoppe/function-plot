@@ -107,24 +107,21 @@ var functionPlot = require('function-plot');
       `options.data[i].derivative.fn` with the current mouse position (i.e. let `x0` be the abscissa of the
       mouse position transformed to local coordinates, the tangent line to the point `x0, fn(x0)`)
     * `options.data[i].graphOptions` {Object} options passed to the the files located in `lib/type/`, the most useful
-    property of this object is `type` which is used to determine the type of graph to be rendered for a function
-      * `options.data[i].graphOptions.type` {string} the type of graph to render for the function (possible values: 
-      'line', 'scatter')
+    property of this object is `type` which is used to determine the type of graph to be rendered for a function, described
+    below
 
 ### Graph Options
 
-Common options:
+* `options` {Object}
+  * `options.type` {string} type of graph, currently `line` and `scatter` are supported
 
-* `options`
-  * **experimental** `options.limits` {number[]} x values which make the function undefined, e.g. in `1/x` the value 0 makes the 
-  function invalid
-
-Depending on the type of graph:
+Depending on the type option:
 
 #### `line`
 
-* `options`
   * `options.interpolate` {string} passed to `d3.svg.line().interpolate( ... )`  
+  * `options.closed` {boolean} True to close the path, for any segment of the closed area graph
+    `y0` will be 0 and `y1` will be `f(x)`  
   
 ## Development
 
