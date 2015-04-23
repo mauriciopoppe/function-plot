@@ -26,6 +26,8 @@
     <button id="update">update</button>
   <span id="quadratic-with-options"></span>
   <span id="domain"></span>
+  <span id="delta-x"></span>
+  <span id="samples"></span>
   <span id="closed"></span>
   <span id="multiple"></span>
   <span id="withLimits"></span>
@@ -34,15 +36,18 @@
   <span id="tip"></span>
   <div></div>
   <span id="derivative"></span>
-  <span id="derivativeLive"></span>
-  <span id="derivativeLiveMulti"></span>
+  <span id="derivative-update"></span>
+  <span id="derivative-update-multiple"></span>
   <div></div>
-  <span id="linkedA"></span>
-  <span id="linkedB"></span>
+  <span id="linked-a"></span>
+  <span id="linked-b"></span>
   <div></div>
-  <span id="linkedAMultiple"></span>
-  <span id="linkedBMultiple"></span>
-  <span id="linkedCMultiple"></span>
+  <span id="linked-a-multiple"></span>
+  <span id="linked-b-multiple"></span>
+  <span id="linked-c-multiple"></span>
+  <div></div>
+  <span id="function-continuity"></span>
+  <span id="function-continuity-tan-x"></span>
 
   <script src="js/vendor/jquery-1.11.2.min.js"></script>
   <script src="js/vendor/d3.js"></script>
@@ -53,14 +58,16 @@
   <script>
     functionPlot({
       target: '#playground',
+      xDomain: [-25, 25],
+      yDomain: [-12, 12],
       data: [{
         fn: function (x) {
-          return 1;
+          return Math.tan(x);
         },
+        samples: 490 * 3,
         graphOptions: {
-          type: 'scatter'
-        },
-        range: [1, 1]
+          interpolate: 'linear'
+        }
       }]
     })
   </script>

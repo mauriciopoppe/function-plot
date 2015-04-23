@@ -85,7 +85,10 @@ $(document).on('markupLoaded', function () {
       fn: function (x) {
         return Math.sin(x);
       },
-      deltaX: 0.01
+      deltaX: 0.01,
+      graphOptions: {
+        interpolate: 'linear'
+      }
     }]
   });
 
@@ -112,7 +115,7 @@ $(document).on('markupLoaded', function () {
    * $$
    */
   functionPlot({
-    target: '#graphOptionsDeltaX',
+    target: '#delta-x',
     data: [{
       fn: function (x) {
         return Math.sin(x);
@@ -144,7 +147,7 @@ $(document).on('markupLoaded', function () {
    *
    */
   functionPlot({
-    target: '#graphOptionsSamples',
+    target: '#samples',
     data: [{
       fn: function (x) {
         return Math.sin(x);
@@ -206,6 +209,7 @@ $(document).on('markupLoaded', function () {
    * ### Scatter
    *
    * A function can be represented with some points belonging to the curve
+   * instead of the
    */
   functionPlot({
     target: '#scatter',
@@ -276,7 +280,7 @@ $(document).on('markupLoaded', function () {
    * $(x_0, f(x_0))$ is computed whenever the position of the mouse changes)
    */
   functionPlot({
-    target: '#derivativeLive',
+    target: '#derivative-update',
     yDomain: [-1, 9],
     data: [{
       fn: function (x) {
@@ -298,7 +302,7 @@ $(document).on('markupLoaded', function () {
    * a `derivative` object with auto update of the slope as described above
    */
   functionPlot({
-    target: '#derivativeLiveMulti',
+    target: '#derivative-update-multiple',
     data: [{
       fn: function (x) {
         return x * x;
@@ -333,13 +337,13 @@ $(document).on('markupLoaded', function () {
    * performed on `b`
    */
   a = functionPlot({
-    target: '#linkedA',
+    target: '#linked-a',
     height: 250,
     xDomain: [-10, 10],
     data: [{ fn: function (x) { return x * x; } }]
   });
   b = functionPlot({
-    target: '#linkedB',
+    target: '#linked-b',
     height: 250,
     xDomain: [-10, 10],
     data: [{ fn: function (x) { return 2 * x; } }]
@@ -359,19 +363,19 @@ $(document).on('markupLoaded', function () {
    *
    */
   a = functionPlot({
-    target: '#linkedAMultiple',
+    target: '#linked-a-multiple',
     height: 250,
     xDomain: [-10, 10],
     data: [{ fn: function (x) { return x * x; } }]
   });
   b = functionPlot({
-    target: '#linkedBMultiple',
+    target: '#linked-b-multiple',
     height: 250,
     xDomain: [-10, 10],
     data: [{ fn: function (x) { return 2 * x; } }]
   });
   c = functionPlot({
-    target: '#linkedCMultiple',
+    target: '#linked-c-multiple',
     height: 250,
     xDomain: [-10, 10],
     data: [{ fn: function (x) { return 2; } }]
@@ -454,7 +458,7 @@ $(document).on('markupLoaded', function () {
   var scope = { p: 3 };
   var fn = math.eval('f(x) = 1/(4p) * x^2', scope);
   var config = {
-    target: '#parsedWithMathJS',
+    target: '#parsed-with-mathjs',
     data: [{ fn: fn }]
   };
   $('#p-slider').on('change', function () {
@@ -465,26 +469,40 @@ $(document).on('markupLoaded', function () {
   functionPlot(config);
 
   /**
-   * ### Limits
+   * ### Function continuity
    *
-   * Some functions approach to infinity or are undefined under a range of values,
-   * for example $y = 1/x$ when coming from the left of $x=0$ approaches $-\infty$ and
-   * when coming from the right of $x=0$ approaches $+\infty$, to deal with continuity
-   * problems we can specify the places the function is undefined/$\infty$ under
-   * the option `limits`
+   * Some functions are not defined under some range of values, for example
+   * the function $f(x) = \frac{1}{x}$ is undefined when $x = 0$, the library identifies
+   * these kind of peaks by comparing the sign of two contiguous evaluated values with a
+   * small threshold, thus there's no need to explicitly tell these asymptotes
    *
-   * @experimental
    */
   functionPlot({
-    target: '#withLimits',
+    target: '#function-continuity',
     data: [{
-      title: 'f(x) = 1/x',
       fn: function (x) {
         return 1 / x;
       },
-      deltaX: 0.01,
+      samples: 1000,
       graphOptions: {
-        limits: [0],
+        interpolate: 'linear'
+      }
+    }]
+  });
+
+  /**
+   * ### Function continuity <div class="small">$tan(x)$</div>
+   *
+   * Plotting $f(x) = tan(x)$ which has many vertical asymptotes
+   */
+  functionPlot({
+    target: '#function-continuity-tan-x',
+    data: [{
+      fn: function (x) {
+        return Math.tan(x);
+      },
+      samples: 1000,
+      graphOptions: {
         interpolate: 'linear'
       }
     }]
