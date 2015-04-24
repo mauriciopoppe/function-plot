@@ -98,12 +98,18 @@ var functionPlot = require('function-plot');
     * `options.data[i].deltaX` {number} the increment used in each iteration to reach the width of the chart i.e.
     this quantity is added k times to the x scale's min x value until it surpasses the x scale's max value,
     defaults to `(max - min) / 100`    
+    * `options.data[i].secants` {Object[]} Secants of `options.data[i].fn`
+      * `options.data[i].secants[j].x0` {number} The abscissa of the first point
+      * `options.data[i].secants[j].x1` {number} (optional if `updateOnMouseMove` is set) The abscissa of the second point
+      * `options.data[i].secants[j].updateOnMouseMove` {boolean} (optional) True to update the secant line by evaluating
+      `options.data[i].fn` with the current mouse position (`x0` is the fixed point and `x1` is computed
+      dynamically based on the current mouse position)
     * `options.data[i].derivative` {Object} Info of the instantaneous rate of change of y with respect to x
       * `options.data[i].derivative.fn` {Function} The derivative of `options.data[i].fn`
       * `options.data[i].derivative.x0` {number} The abscissa of the point which belongs to the curve
       represented by `options.data[i].fn` whose tangent will be computed (i.e. the tangent line to the point
       `x0, fn(x0)`)
-      * `options.data[i].derivative.updateOnMouseOver` {boolean} True to compute the tangent line by evaluating
+      * `options.data[i].derivative.updateOnMouseMove` {boolean} True to compute the tangent line by evaluating
       `options.data[i].derivative.fn` with the current mouse position (i.e. let `x0` be the abscissa of the
       mouse position transformed to local coordinates, the tangent line to the point `x0, fn(x0)`)
     * `options.data[i].graphOptions` {Object} options passed to the the files located in `lib/type/`, the most useful

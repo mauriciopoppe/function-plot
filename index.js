@@ -14,7 +14,7 @@ var extend = require('extend');
 
 var mousetip = require('./lib/tip');
 var utils = require('./lib/utils');
-var helper = require('./lib/helper/');
+var helpers = require('./lib/helpers/');
 
 var assert = utils.assert;
 
@@ -323,7 +323,7 @@ module.exports = function (options) {
         d3.select(this)
           .call(types[type](options));
         d3.select(this)
-          .call(helper(options));
+          .call(helpers(options));
       });
   };
 

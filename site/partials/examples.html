@@ -128,8 +128,49 @@
   data: [
     { fn: function (x) { return x * x; }}
   ]
-});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="tip" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Derivative</h3>
-<p>If a data object has a <code>derivative</code> object then its property <code>fn</code> will be used to compute the equation of the line tangent to the point <code>x0</code>, i.e. the point $(x_0, f(x_0))$ (the derivative is a function which gives the slope of the tangent line at any derivable point)</p></div><div class="code"><pre><code class="javascript">functionPlot({
+});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="tip" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Secants</h3>
+<p>If a data object has a <code>secants</code> array, then each object will be used to compute secant lines between two points belonging to the function, additionally if <code>updateOnMouseMove</code> is a property set to <code>true</code> in the object then $(x_0, f(x_0))$ will be used as an anchored point and $(x_1, f(x_1))$ will be computed dynamically based on the mouse abscissa</p><p>Available options for each object:</p><ul>
+<li><code>x0</code> the abscissa of the first point</li>
+<li><code>x1</code> (optional if <code>updateOnMouseMove</code> is set) the abscissa of the second point</li>
+<li><code>updateOnMouseMove</code> (optional) if set to <code>true</code> <code>x1</code> will be computed dynamically based on the current position of the mouse</li>
+</ul>
+</div><div class="code"><pre><code class="javascript">functionPlot({
+  target: '#secant',
+  yDomain: [-1, 9],
+  xDomain: [-3, 3],
+  data: [{
+    fn: function (x) {
+      return x * x;
+    },
+    secants: [
+      { x0: 1, x1: 3 },
+      { x0: 1, x1: 2.5 },
+      { x0: 1, x1: 2 }
+    ]
+  }]
+});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="secant" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Secants <br> <div class="small">Dynamic secant lines</div></h3>
+<p>An example where <code>updateOnMouseMove</code> is set in two secant lines, each line will be computed on the dynamically based on the current position of the mouse</p></div><div class="code"><pre><code class="javascript">functionPlot({
+  target: '#secant-update',
+  yDomain: [-1, 9],
+  data: [{
+    fn: function (x) {
+      return x * x;
+    },
+    secants: [{
+      x0: 2,
+      updateOnMouseMove: true
+    }, {
+      x0: -2,
+      updateOnMouseMove: true
+    }]
+  }]
+});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="secant-update" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Derivative</h3>
+<p>If a data object has a <code>derivative</code> object then its property <code>fn</code> will be used to compute the equation of the line tangent to the point <code>x0</code>, i.e. the point $(x_0, f(x_0))$ (the derivative is a function which gives the slope of the tangent line at any derivable point)</p><p>Available options for the <code>derivative</code> object:</p><ul>
+<li><code>fn</code> The function that is the first derivative of <code>data.fn</code></li>
+<li><code>x0</code> (optional if <code>updateOnMouseMove</code> is set) the abscissa of the point belonging to the curve whose tangent will be computed</li>
+<li><code>updateOnMouseMove</code> if set to <code>true</code> <code>x1</code> will be computed dynamically based on the current position of the mouse</li>
+</ul>
+</div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#derivative',
   yDomain: [-1, 9],
   data: [{
@@ -144,7 +185,7 @@
     }
   }]
 });</code></pre></div></div><div class="col-md-6 center-block demos"><span id="derivative" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Derivative <br> <div class="small">Tangent line on mouse&#39;s position</div></h3>
-<p>if <code>updateOnMouseOver</code> is set to true then tangent line is computed whenever the mouse is moved inside the canvas (let $x_0$ be the mouse&#39;s abscissa then the tangent line to the point $(x_0, f(x_0))$ is computed whenever the position of the mouse changes)</p></div><div class="code"><pre><code class="javascript">functionPlot({
+<p>if <code>updateOnMouseMove</code> is set to true then tangent line is computed whenever the mouse is moved inside the canvas (let $x_0$ be the mouse&#39;s abscissa then the tangent line to the point $(x_0, f(x_0))$ is computed whenever the position of the mouse changes)</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#derivative-update',
   yDomain: [-1, 9],
   data: [{
@@ -155,7 +196,7 @@
       fn: function (x) {
         return 2 * x;
       },
-      updateOnMouseOver: true
+      updateOnMouseMove: true
     }
   }]
 });</code></pre></div></div><div class="col-md-6 center-block demos"><span id="derivative-update" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Derivative <br> <div class="small">Multiple tangent lines</div></h3>
@@ -169,7 +210,7 @@
       fn: function (x) {
         return 2 * x;
       },
-      updateOnMouseOver: true
+      updateOnMouseMove: true
     }
   }, {
     fn: function (x) {
@@ -179,7 +220,7 @@
       fn: function (x) {
         return 3 * x * x;
       },
-      updateOnMouseOver: true
+      updateOnMouseMove: true
     }
   }]
 });</code></pre></div></div><div class="col-md-6 center-block demos"><span id="derivative-update-multiple" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Linked graphs</h3>
@@ -246,7 +287,7 @@ $('#update').click(function () {
         fn: function (x) {
           return 2 * x;
         },
-        updateOnMouseOver: true
+        updateOnMouseMove: true
       }
     }
   } else {
@@ -287,6 +328,12 @@ functionPlot(config);</code></pre></div></div><div class="col-md-6 center-block 
     fn: function (x) {
       return 1 / x;
     },
+    derivative: {
+      fn: function (x) {
+        return -1 / x / x;
+      },
+      updateOnMouseMove: true
+    },
     samples: 1000,
     graphOptions: {
       interpolate: 'linear'
@@ -298,6 +345,12 @@ functionPlot(config);</code></pre></div></div><div class="col-md-6 center-block 
   data: [{
     fn: function (x) {
       return Math.tan(x);
+    },
+    derivative: {
+      fn: function (x) {
+        return 1 / Math.cos(x) / Math.cos(x);
+      },
+      updateOnMouseMove: true
     },
     samples: 1000,
     graphOptions: {

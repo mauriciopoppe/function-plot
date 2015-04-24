@@ -17,7 +17,7 @@ $(document).on('markupLoaded', function () {
         fn: function (x) {
           return 2 * x;
         },
-        updateOnMouseOver: true
+        updateOnMouseMove: true
       }
     }]
   });
@@ -250,11 +250,73 @@ $(document).on('markupLoaded', function () {
   });
 
   /**
+   * ### Secants
+   *
+   * If a data object has a `secants` array, then each object will be used to compute
+   * secant lines between two points belonging to the function, additionally if `updateOnMouseMove`
+   * is a property set to `true` in the object then $(x_0, f(x_0))$ will be used as an anchored point
+   * and $(x_1, f(x_1))$ will be computed dynamically based on the mouse abscissa
+   *
+   * Available options for each object:
+   *
+   * - `x0` the abscissa of the first point
+   * - `x1` (optional if `updateOnMouseMove` is set) the abscissa of the second point
+   * - `updateOnMouseMove` (optional) if set to `true` `x1` will be computed dynamically based on the current
+   * position of the mouse
+   */
+  functionPlot({
+    target: '#secant',
+    yDomain: [-1, 9],
+    xDomain: [-3, 3],
+    data: [{
+      fn: function (x) {
+        return x * x;
+      },
+      secants: [
+        { x0: 1, x1: 3 },
+        { x0: 1, x1: 2.5 },
+        { x0: 1, x1: 2 }
+      ]
+    }]
+  });
+
+  /**
+   * ### Secants <br> <div class="small">Dynamic secant lines</div>
+   *
+   * An example where `updateOnMouseMove` is set in two secant lines, each line will be computed on the
+   * dynamically based on the current position of the mouse
+   */
+  functionPlot({
+    target: '#secant-update',
+    yDomain: [-1, 9],
+    data: [{
+      fn: function (x) {
+        return x * x;
+      },
+      secants: [{
+        x0: 2,
+        updateOnMouseMove: true
+      }, {
+        x0: -2,
+        updateOnMouseMove: true
+      }]
+    }]
+  });
+
+  /**
    * ### Derivative
    *
    * If a data object has a `derivative` object then its property `fn` will be used to compute
    * the equation of the line tangent to the point `x0`, i.e. the point $(x_0, f(x_0))$
    * (the derivative is a function which gives the slope of the tangent line at any derivable point)
+   *
+   * Available options for the `derivative` object:
+   *
+   * - `fn` The function that is the first derivative of `data.fn`
+   * - `x0` (optional if `updateOnMouseMove` is set) the abscissa of the point belonging to the curve
+   * whose tangent will be computed
+   * - `updateOnMouseMove` if set to `true` `x1` will be computed dynamically based on the current
+   * position of the mouse
    */
   functionPlot({
     target: '#derivative',
@@ -275,7 +337,7 @@ $(document).on('markupLoaded', function () {
   /**
    * ### Derivative <br> <div class="small">Tangent line on mouse's position</div>
    *
-   * if `updateOnMouseOver` is set to true then tangent line is computed whenever the mouse is moved
+   * if `updateOnMouseMove` is set to true then tangent line is computed whenever the mouse is moved
    * inside the canvas (let $x_0$ be the mouse's abscissa then the tangent line to the point
    * $(x_0, f(x_0))$ is computed whenever the position of the mouse changes)
    */
@@ -290,7 +352,7 @@ $(document).on('markupLoaded', function () {
         fn: function (x) {
           return 2 * x;
         },
-        updateOnMouseOver: true
+        updateOnMouseMove: true
       }
     }]
   });
@@ -311,7 +373,7 @@ $(document).on('markupLoaded', function () {
         fn: function (x) {
           return 2 * x;
         },
-        updateOnMouseOver: true
+        updateOnMouseMove: true
       }
     }, {
       fn: function (x) {
@@ -321,7 +383,7 @@ $(document).on('markupLoaded', function () {
         fn: function (x) {
           return 3 * x * x;
         },
-        updateOnMouseOver: true
+        updateOnMouseMove: true
       }
     }]
   });
@@ -418,7 +480,7 @@ $(document).on('markupLoaded', function () {
           fn: function (x) {
             return 2 * x;
           },
-          updateOnMouseOver: true
+          updateOnMouseMove: true
         }
       }
     } else {
@@ -487,7 +549,7 @@ $(document).on('markupLoaded', function () {
         fn: function (x) {
           return -1 / x / x;
         },
-        updateOnMouseOver: true
+        updateOnMouseMove: true
       },
       samples: 1000,
       graphOptions: {
@@ -511,7 +573,7 @@ $(document).on('markupLoaded', function () {
         fn: function (x) {
           return 1 / Math.cos(x) / Math.cos(x);
         },
-        updateOnMouseOver: true
+        updateOnMouseMove: true
       },
       samples: 1000,
       graphOptions: {
