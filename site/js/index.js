@@ -218,6 +218,7 @@ $(document).on('markupLoaded', function () {
       fn: function (x) {
         return Math.sqrt(x);
       },
+      samples: 100,
       graphOptions: {
         type: 'scatter'
       }
@@ -550,10 +551,6 @@ $(document).on('markupLoaded', function () {
           return -1 / x / x;
         },
         updateOnMouseMove: true
-      },
-      samples: 1000,
-      graphOptions: {
-        interpolate: 'linear'
       }
     }]
   });
@@ -569,15 +566,12 @@ $(document).on('markupLoaded', function () {
       fn: function (x) {
         return Math.tan(x);
       },
+      samples: 2000,
       derivative: {
         fn: function (x) {
           return 1 / Math.cos(x) / Math.cos(x);
         },
         updateOnMouseMove: true
-      },
-      samples: 1000,
-      graphOptions: {
-        interpolate: 'linear'
       }
     }]
   });

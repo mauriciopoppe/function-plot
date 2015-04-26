@@ -61,13 +61,12 @@
   <script>
     functionPlot({
       target: '#playground',
-      xDomain: [-25, 25],
-      yDomain: [-12, 12],
+//      xDomain: [-25, 25],
+//      yDomain: [-12, 12],
       data: [{
         fn: function (x) {
-          return Math.tan(x);
+          return 1 / x;
         },
-        samples: 490 * 3,
         graphOptions: {
           interpolate: 'linear'
         }
