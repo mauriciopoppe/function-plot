@@ -70,11 +70,12 @@ functionPlot({
 var functionPlot = require('function-plot');
 ```
 
-### `functionPlot(options)`
+### `instance = functionPlot(options)`
 
 **params, All the params are optional unless otherwise stated**
 
 * `options`
+  * `options.target` {string} the selector of the parent element to render the graph to
   * `options.title` {string} If set the chart will have it as a title on the top
   * `options.xDomain` {array} domain of the linear scale (used in the x axis) 
   * `options.yDomain` {array} domain of the linear scale (used in the y axis)
@@ -129,6 +130,41 @@ Depending on the type option:
   * `options.closed` {boolean} True to close the path, for any segment of the closed area graph
     `y0` will be 0 and `y1` will be `f(x)`  
   
+### `instance`  
+
+* `instance.id` {string} equal to `options.target`
+* `instance.linkedGraphs` {array} array of function-plot instances linked to the events of this instance,
+i.e. when the zoom event is dispatched on this instance it's also dispatched on all the instances of
+this array
+* `instance.meta` {object}
+  * `instance.meta.margin` {object} graph's left,right,top,bottom margins
+  * `instance.meta.width` {number} width of the canvas (minus the margins)
+  * `instance.meta.height` {number} height of the canvas (minus the margins)
+  * `instance.meta.xScale` {d3.scale.linear} graph's x-scale
+  * `instance.meta.yScale` {d3.scale.linear} graph's y-scale
+  * `instance.meta.xAxis` {d3.svg.axis} graph's x-axis
+  * `instance.meta.yAxis` {d3.svg.axis} graph's y-axis
+* `instance.root` {d3.selection} `svg` element that holds the graph (canvas + title + axes)
+* `instance.canvas` {d3.selection} `g.canvas` element that holds the area where the graphs are plotted
+(clipped with a mask)
+
+**Events**
+
+An instance can subscribe to any of the following events by doing `instance.on([eventName], callback)`,
+events can be triggered by doing `instance.emit([eventName][, params])`
+
+* `mouseover` fired whenever the mouse is over the canvas
+* `mousemove` fired whenever the mouse is moved inside the canvas, callback params `x`, `y` (in canvas space
+coordinates)
+* `mouseout` fired whenever the mouse is moved outside the canvas
+* `draw` emit this event to redraw the contents of the canvas
+* `zoom:scaleUpdate` fired whenever the scale of another graph is updated, callback params `xScale`, `yScale`
+(x-scale and y-scale of another graph whose scales were updated)
+* `tip:update` fired whenever the tip position is updated, callback params `x`, `y`, `index` (in canvas
+space coordinates, `index` is the index of the graph where the tip is on top of)
+* `all:mousemove` same as `mousemove` but it's dispatched for all the linked graphs
+* `all:zoom` fired whenever there's scaling/translation on the graph, dispatched on all the linked graphs
+
 ## Development
 
 After cloning the repo and running `npm install`
