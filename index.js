@@ -73,12 +73,12 @@ module.exports = function (options) {
       .scale(xScale)
       .orient('bottom')
       //.tickSize(-height)
-      .tickFormat(tickFormat);
+      //.tickFormat(tickFormat);
     this.meta.yAxis = d3.svg.axis()
       .scale(yScale)
       .orient('left')
       //.tickSize(-width)
-      .tickFormat(tickFormat);
+      //.tickFormat(si);
   };
 
   Chart.prototype.setVars = function () {
@@ -315,13 +315,17 @@ module.exports = function (options) {
     // enter + update
     graphs
       .each(function (data, index) {
+        data.graphOptions = extend({
+          type: 'interval'
+        }, data.graphOptions);
+
         var options = extend({
           owner: self,
           index: index
         }, data.graphOptions);
-        var type = options.type || 'line';
+
         d3.select(this)
-          .call(types[type](options));
+          .call(types[options.type](options));
         d3.select(this)
           .call(helpers(options));
       });

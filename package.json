@@ -24,7 +24,9 @@
     "2d"
   ],
   "dependencies": {
-    "extend": "^2.0.0"
+    "built-in-math-eval": "^0.1.0",
+    "extend": "^2.0.0",
+    "interval-arithmetic-eval": "^0.2.1"
   },
   "devDependencies": {
     "beefy": "^2.1.3",
@@ -48,7 +50,7 @@
     "start": "./node_modules/.bin/beefy index.js:js/bundle.js 5555 --cwd site/ -- --standalone functionPlot",
     "fetch": "curl -o site/partials/brcdn-module.html -L https://www.brcdn.org/?module=function-plot&version=latest",
     "html": "node site.js",
-    "prepublish": "npm run lint",
+    "pre_publish": "npm run lint",
     "build": "browserify index.js -o site/js/bundle.js --standalone functionPlot",
     "minify": "cat site/js/bundle.js | uglifyjs -o site/js/bundle.js",
     "deploy": "npm run lint && gh-pages-deploy"

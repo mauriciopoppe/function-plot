@@ -39,9 +39,9 @@
 
 <div class="container" id="description">
   <p>
-    Function Plot is a small library built on top of <a href="http://d3js.org/">D3.js</a> whose purpose
-    is to render functions with little configuration (think of it as a little clone of Google's plotting
-    utility: <a
+    <b>Function Plot</b> is a plotting library built on top of <a href="http://d3js.org/">D3.js</a>
+    used to render functions with little configuration (think of it as a clone of Google's
+    plotting utility: <a
     href="https://www.google.com/webhp?sourceid=chrome-instant&ion=1&espv=2&es_th=1&ie=UTF-8#q=y+%3D+x+%5E+2">$y = x ^ 2$</a>)
   </p>
   <p>
@@ -51,6 +51,30 @@
   </p>
   <p class="center-block" style="width: 600px;">
     <span id="description-sample"></span>
+  </p>
+
+  <p>
+    <b>Function Plot</b> unlike other plotters that use $n$-equally spaced points joined by line segments
+    uses <a href="https://github.com/maurizzzio/interval-arithmetic">interval-arithmetic</a> to
+    correctly determine sections of the screen that need to be plotted with a few samples
+  </p>
+  <p>
+    Most naive plotters will have problems plotting functions that oscillate too rapid,
+    for example $f(x) = sin(e^x)$ oscillates rapidly when $x > 5$, no matter how many times the
+    function is evaluated we will never be able to render this function correctly
+  </p>
+  <p class="center-block" style="width: 600px;">
+    <span id="description-sin-exp-x-naive"></span>
+  </p>
+
+  <p>
+    <b>Function Plot</b> will instead evaluate the function using interval math which means that when
+    a rectangle whose $x$ bounds are $[x_i, x_{i + 1}]$ appears on the screen it's ensured that it
+    contains all the possible $f(\xi)$ for $\xi \in [x_i, x_{i+1}]$, the result: pixel perfect
+    representation of curves
+  </p>
+  <p class="center-block" style="width: 600px;">
+    <span id="description-sin-exp-x"></span>
   </p>
 </div>
 

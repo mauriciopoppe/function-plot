@@ -10,15 +10,39 @@ $(document).on('markupLoaded', function () {
       renderer: function () {}
     },
     data: [{
-      fn: function (x) {
-        return x * x;
-      },
+      fn: 'x^2',
       derivative: {
-        fn: function (x) {
-          return 2 * x;
-        },
+        fn: '2 * x',
         updateOnMouseMove: true
       }
+    }]
+  });
+
+  functionPlot({
+    target: '#description-sin-exp-x-naive',
+    yDomain: [-4, 4],
+    xDomain: [-2, 6],
+    tip: {
+      renderer: function () {}
+    },
+    data: [{
+      fn: 'sin(exp(x))',
+      samples: 5000,
+      graphOptions: {
+        type: 'line'
+      }
+    }]
+  });
+
+  functionPlot({
+    target: '#description-sin-exp-x',
+    yDomain: [-4, 4],
+    xDomain: [-2, 6],
+    tip: {
+      renderer: function () {}
+    },
+    data: [{
+      fn: 'sin(exp(x))'
     }]
   });
 
@@ -32,13 +56,17 @@ $(document).on('markupLoaded', function () {
    *
    * - `target` a selector to the node to hold the graph
    * - `data` an array of objects which contain info about the functions to render
+   *  - `data.fn` (string) a mathematical expression to render, it's parsed and evaluated
+   *  using [interval-arithmetic](https://www.npmjs.com/package/interval-arithmetic-eval)
+   *
+   * The syntax of the string that represent the mathematical expression is just like ECMAScript
+   * however the `^` operator has been replaced with `pow` and there's no namespace for the
+   * functions to be evaluated
    */
   functionPlot({
     target: '#quadratic',
     data: [{
-      fn: function (x) {
-        return x * x;
-      }
+      fn: 'x^2'
     }]
   });
 
@@ -63,9 +91,7 @@ $(document).on('markupLoaded', function () {
     xLabel: 'x - axis',
     yLabel: 'y - axis',
     data: [{
-      fn: function (x) {
-        return x * x;
-      }
+      fn: 'x^2'
     }]
   });
 
@@ -82,66 +108,26 @@ $(document).on('markupLoaded', function () {
     yDomain: [-1, 1],
     xDomain: [8, 24],
     data: [{
-      fn: function (x) {
-        return Math.sin(x);
-      },
-      deltaX: 0.01,
-      graphOptions: {
-        interpolate: 'linear'
-      }
-    }]
-  });
-
-  /**
-   * ### $\Delta{x}$
-   *
-   * `deltaX` the change in $x$ to use as increment between samples of the current domain ends i.e. let
-   * $x_0$ and $x_n$ be the domain ends, $f(x)$ will be sampled with $f(x_0 + k_0 \* \Delta{x}),
-   * f(x_0 + k_1 \* \Delta{x}), \ldots, f(x_0 + k_n \* \Delta{x})$ where
-   * $0 \leq k_i \* \Delta{x} \leq x_n - x_0$
-   *
-   * e.g. $\Delta{x}$ = 0.1
-   *
-   * $$
-   * domain = [-5, 5] \\\
-   * \Delta{x} = 0.1 \\\
-   * values = -5, -4.9, -4.8, \ldots, 4.8, 4.9, 5.0
-   * $$
-   *
-   * $$
-   * domain = [-10, 10] \\\
-   * \Delta{x} = 0.1 \\\
-   * values = -10, -9.9, -9.8, \ldots, 9.8, 9.9, 10
-   * $$
-   */
-  functionPlot({
-    target: '#delta-x',
-    data: [{
-      fn: function (x) {
-        return Math.sin(x);
-      },
-      deltaX: 0.01
+      fn: 'sin(x)'
     }]
   });
 
   /**
    * ### Samples
    *
-   * `samples` sets a fixed number of samples between the current domain ends, `deltaX`
-   * is set dynamically each time the graph is rendered with this param, note that `samples`
-   * has a higher priority than `deltaX`
+   * `samples` determine the number of equally spaced points in which the function will be
+   * evaluated in the current domain, increasing it will more accurately represent the function
+   * using rectangles at the cost of processing speed
    *
    * e.g.  samples = 100
    *
    * $$
    * domain = [-5, 5] \\\
-   * \Delta{x} = \frac{5 - -5}{100} = 0.1 \\\
    * values = -5, -4.9, -4.8, \ldots, 4.8, 4.9, 5.0
    * $$
    *
    * $$
    * domain = [-10, 10] \\\
-   * \Delta{x} = \frac{10 - -10}{100} = 0.2 \\\
    * values = -10, -9.8, -9.6, \ldots, 9.6, 9.8, 10
    * $$
    *
@@ -149,42 +135,33 @@ $(document).on('markupLoaded', function () {
   functionPlot({
     target: '#samples',
     data: [{
-      fn: function (x) {
-        return Math.sin(x);
-      },
+      fn: 'sin(x)',
       samples: 1000
     }]
   });
 
   /**
-   * ### Closed Path + Range
-   *
-   * Additional graph options for each graph renderer can be set under `graphOptions`,
-   * these options will be used by each type of graph.
+   * ### Range and closed path
    *
    * You can restrict the values to be evaluated with the `range` option,
    * this works really nice with the `closed` option of the `line` type to render
    * for example a [definite integral](http://mathworld.wolfram.com/DefiniteIntegral.html)
    *
-   * Available `graphOptions`
+   * Additional graph options for the renderer of each graph can be set inside `graphOptions`
    *
-   * - `type`: the type of graph, currently `line` and `scatter` are supported
-   * - `interpolate`: used by the `line` type sets the interpolate option for `d3.svg.line`
-   * - `closed`: true to use `d3.svg.area` instead of `d3.svg.line`, `y0` will always be
-   * 0 and `y1` will be $fn(x)$
+   * - `type`: the type of graph, `line` (naive sampling), `scatter` (naive sampling) and
+   * `interval` (interval arithmetic sampling) are supported
+   * - `closed`: true to render a closed path, `y0` will always be 0 and `y1` will be $fn(x)$
    */
   functionPlot({
     target: '#closed',
     xDomain: [0, 10],
     data: [{
-      fn: function (x) {
-        return 3 + Math.sin(x);
-      },
+      fn: '3 + sin(x)',
+      range: [2, 8],
       graphOptions: {
-        type: 'line',
         closed: true
-      },
-      range: [2, 8]
+      }
     }]
   });
 
@@ -197,11 +174,11 @@ $(document).on('markupLoaded', function () {
   functionPlot({
     target: '#multiple',
     data: [
-      {fn: function (x) { return x; }},
-      {fn: function (x) { return -x; }},
-      {fn: function (x) { return x * x; }},
-      {fn: function (x) { return x * x * x; }},
-      {fn: function (x) { return x * x * x * x; }}
+      { fn: 'x' },
+      { fn: '-x' },
+      { fn: 'x * x' },
+      { fn: 'x * x * x' },
+      { fn: 'x * x * x * x' }
     ]
   });
 
@@ -209,15 +186,14 @@ $(document).on('markupLoaded', function () {
    * ### Scatter
    *
    * A function can be represented with some points belonging to the curve
-   * instead of the
+   * instead of the actual curve, to render some points make sure to set a low value for
+   * `samples` and set the type option to `scatter`
+   *
    */
   functionPlot({
     target: '#scatter',
-    yDomain: [-1, 9],
     data: [{
-      fn: function (x) {
-        return Math.sqrt(x);
-      },
+      fn: 'x < 0 ? -sqrt(-x) : sqrt(x)',
       samples: 100,
       graphOptions: {
         type: 'scatter'
@@ -246,7 +222,7 @@ $(document).on('markupLoaded', function () {
     },
     yDomain: [-1, 9],
     data: [
-      { fn: function (x) { return x * x; }}
+      { fn: 'x^2' }
     ]
   });
 
@@ -270,9 +246,7 @@ $(document).on('markupLoaded', function () {
     yDomain: [-1, 9],
     xDomain: [-3, 3],
     data: [{
-      fn: function (x) {
-        return x * x;
-      },
+      fn: 'x^2',
       secants: [
         { x0: 1, x1: 3 },
         { x0: 1, x1: 2.5 },
@@ -291,9 +265,7 @@ $(document).on('markupLoaded', function () {
     target: '#secant-update',
     yDomain: [-1, 9],
     data: [{
-      fn: function (x) {
-        return x * x;
-      },
+      fn: 'x^2',
       secants: [{
         x0: 2,
         updateOnMouseMove: true
@@ -323,13 +295,9 @@ $(document).on('markupLoaded', function () {
     target: '#derivative',
     yDomain: [-1, 9],
     data: [{
-      fn: function (x) {
-        return x * x;
-      },
+      fn: 'x^2',
       derivative: {
-        fn: function (x) {
-          return 2 * x;
-        },
+        fn: '2 * x',
         x0: 2
       }
     }]
@@ -346,13 +314,9 @@ $(document).on('markupLoaded', function () {
     target: '#derivative-update',
     yDomain: [-1, 9],
     data: [{
-      fn: function (x) {
-        return x * x;
-      },
+      fn: 'x^2',
       derivative: {
-        fn: function (x) {
-          return 2 * x;
-        },
+        fn: '2 * x',
         updateOnMouseMove: true
       }
     }]
@@ -367,23 +331,15 @@ $(document).on('markupLoaded', function () {
   functionPlot({
     target: '#derivative-update-multiple',
     data: [{
-      fn: function (x) {
-        return x * x;
-      },
+      fn: 'x * x',
       derivative: {
-        fn: function (x) {
-          return 2 * x;
-        },
+        fn: '2 * x',
         updateOnMouseMove: true
       }
     }, {
-      fn: function (x) {
-        return x * x * x;
-      },
+      fn: 'x * x * x',
       derivative: {
-        fn: function (x) {
-          return 3 * x * x;
-        },
+        fn: '3 * x * x',
         updateOnMouseMove: true
       }
     }]
@@ -403,13 +359,13 @@ $(document).on('markupLoaded', function () {
     target: '#linked-a',
     height: 250,
     xDomain: [-10, 10],
-    data: [{ fn: function (x) { return x * x; } }]
+    data: [{ fn: 'x * x' }]
   });
   b = functionPlot({
     target: '#linked-b',
     height: 250,
     xDomain: [-10, 10],
-    data: [{ fn: function (x) { return 2 * x; } }]
+    data: [{ fn: '2 * x' }]
   });
   a.addLink(b);
 
@@ -429,19 +385,19 @@ $(document).on('markupLoaded', function () {
     target: '#linked-a-multiple',
     height: 250,
     xDomain: [-10, 10],
-    data: [{ fn: function (x) { return x * x; } }]
+    data: [{ fn: 'x * x' }]
   });
   b = functionPlot({
     target: '#linked-b-multiple',
     height: 250,
     xDomain: [-10, 10],
-    data: [{ fn: function (x) { return 2 * x; } }]
+    data: [{ fn: '2 * x' }]
   });
   c = functionPlot({
     target: '#linked-c-multiple',
     height: 250,
     xDomain: [-10, 10],
-    data: [{ fn: function (x) { return 2; } }]
+    data: [{ fn: '2' }]
   });
   a.addLink(b, c);
   b.addLink(a, c);
@@ -460,9 +416,7 @@ $(document).on('markupLoaded', function () {
   var options = {
     target: '#quadratic-update',
     data: [{
-      fn: function (x) {
-        return x;
-      }
+      fn: 'x'
     }]
   };
   $('#update').click(function () {
@@ -474,13 +428,9 @@ $(document).on('markupLoaded', function () {
         yLine: true
       };
       options.data[0] = {
-        fn: function (x) {
-          return x * x;
-        },
+        fn: 'x * x',
         derivative: {
-          fn: function (x) {
-            return 2 * x;
-          },
+          fn: '2 * x',
           updateOnMouseMove: true
         }
       }
@@ -490,9 +440,7 @@ $(document).on('markupLoaded', function () {
       delete options.title;
       delete options.tip;
       options.data[0] =  {
-        fn: function (x) {
-          return x;
-        }
+        fn: 'x'
       }
     }
     functionPlot(options);
@@ -501,55 +449,18 @@ $(document).on('markupLoaded', function () {
   functionPlot(options);
 
   /**
-   * ### With [Math.js](http://mathjs.org/)
-   *
-   * You can parse functions using <img style="width: 50px; height: 15px" src="img/mathjs_330x100.png"/>
-   * taking advantage of its nifty syntax, in the following example the equation of a parabola is rendered
-   * whose fixed point (the focus) is at $(0, p)$, the slider below the graph controls
-   * the value of $p$
-   *
-   * NOTE: math.js is not bundled with function-plot
-   *
-   * @additionalDOM
-   *
-   *    <div class="extra">
-   *      <input id="p-slider" type="range" min="-3" max="3" value="0.2" step="0.2" />
-   *      <span id="p-slider-value"></span>
-   *    </div>
-   *
-   */
-  var scope = { p: 3 };
-  var fn = math.eval('f(x) = 1/(4p) * x^2', scope);
-  var config = {
-    target: '#parsed-with-mathjs',
-    data: [{ fn: fn }]
-  };
-  $('#p-slider').on('change', function () {
-    scope.p = +this.value;
-    functionPlot(config);
-  });
-  // initial plot
-  functionPlot(config);
-
-  /**
    * ### Function continuity
    *
    * Some functions are not defined under some range of values, for example
    * the function $f(x) = \frac{1}{x}$ is undefined when $x = 0$, the library identifies
-   * these kind of peaks by comparing the sign of two contiguous evaluated values with a
-   * small threshold, thus there's no need to explicitly tell these asymptotes
-   *
+   * these kind of peaks and there's no need to explicitly tell these asymptotes
    */
   functionPlot({
     target: '#function-continuity',
     data: [{
-      fn: function (x) {
-        return 1 / x;
-      },
+      fn: '1 / x',
       derivative: {
-        fn: function (x) {
-          return -1 / x / x;
-        },
+        fn: '-1 / x / x',
         updateOnMouseMove: true
       }
     }]
@@ -563,14 +474,9 @@ $(document).on('markupLoaded', function () {
   functionPlot({
     target: '#function-continuity-tan-x',
     data: [{
-      fn: function (x) {
-        return Math.tan(x);
-      },
-      samples: 2000,
+      fn: 'tan(x)',
       derivative: {
-        fn: function (x) {
-          return 1 / Math.cos(x) / Math.cos(x);
-        },
+        fn: '1 / (cos(x) ^ 2)',
         updateOnMouseMove: true
       }
     }]

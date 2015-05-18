@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+	<meta charset="UTF-8">
+	<title>sampling</title>
+  <style>
+    body {
+      font: 10px sans-serif;
+    }
+
+    .axis path,
+    .axis line {
+      fill: none;
+      stroke: #000;
+      shape-rendering: crispEdges;
+      opacity: 0.1;
+    }
+
+  </style>
+</head>
+<body>
+  <span id="sample-1"></span>
+  <span id="sample-2"></span>
+  <span id="sample-3"></span>
+  <span id="sample-4"></span>
+
+  <script src="js/vendor/d3.js"></script>
+  <script src="js/bundle.js"></script>
+  <script>
+    functionPlot({
+      target: '#sample-1',
+//      xDomain: [-1, 1],
+//      yDomain: [-1.5, 1.5],
+      data: [{
+//        fn: 'x^2'
+//        fn: 'x^3'
+//        fn: 'sin(exp(x))'
+//        fn: 'sin(300 * x)'
+//        fn: 'sin(x) / x'
+//        fn: '(x * sqrt(x - 2 + 1 / x)) / (x - 1)'
+//        fn: 'x < 1 ? -sqrt(x) : sqrt(x)'   // alternative
+//        fn: 'tan(x)'
+//        fn: '1 / x'
+//        fn: 'sin(1 / x)'
+//        fn: 'sqrt(x)'
+        fn: '1 + (x^2) + 0.0125 * log(abs(1 - 3 * (x - 1)))'
+      }]
+    });
+//    var a = functionPlot({
+//      target: '#sample-1',
+//      xDomain: [-0.5, 6],
+//      yDomain: [-1.5, 1.5],
+//      data: [{
+//        fn: function (x) {
+//          return Math.sin(Math.pow(Math.E, x));     // 1525 samples in google, 2953 full to the right
+////          return Math.sin(1 / x);
+////          return Math.sin(x);
+////          return Math.tan(x);
+////          return x * x;
+////          return 1 / x;
+//        },
+//        sampling: {
+////          initialSamples: 500,
+////          depth: 25
+////          eps: 0.01
+//        }
+//        ,graphOptions: {
+////          type: 'scatter'
+//        }
+//      }]
+//    });
+
+//    var b = functionPlot({
+//      target: '#sample-2',
+//      xDomain: [-0.5, 6],
+//      yDomain: [-1.5, 1.5],
+//      data: [{
+//        fn: function (x) {
+//          return Math.sin(Math.pow(Math.E, x));     // 1525 samples in google, 2953 full to the right
+////          return Math.sin(1 / x);
+////          return Math.sin(x);
+////          return Math.tan(x);
+////          return x * x;
+////          return 1 / x;
+//        },
+//        sampling: {
+//          initialSamples: 4000,
+//          depth: 0,
+////          eps: 0.01
+//        }
+////        ,graphOptions: {
+////          type: 'scatter'
+////        }
+//      }]
+//    });
+////    a.addLink(b);
+////    b.addLink(a);
+//
+//    functionPlot({
+//      target: '#sample-3',
+//      data: [{
+//        fn: function (x) {
+//          return x * x;
+//        },
+//        sampling: {
+//          initialSamples: 100,
+//          depth: 25
+//        },
+//        graphOptions: {
+//          type: 'scatter'
+//        }
+//      }]
+//    });
+//
+//    functionPlot({
+//      target: '#sample-4',
+//      data: [{
+//        fn: function (x) {
+////          return Math.tan(x);
+//          var a = 0.001;
+//          return x + a * a / (a * a + x * x);
+//        },
+//        sampling: {
+//          initialSamples: 500,
+//          depth: 25
+//        },
+//        graphOptions: {
+////          type: 'scatter'
+//        }
+//      }]
+//    });
+  </script>
+</body>
+</html>
