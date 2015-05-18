@@ -71,12 +71,12 @@ module.exports = function (options) {
       .range([height, 0]);
     this.meta.xAxis = d3.svg.axis()
       .scale(xScale)
-      .orient('bottom')
+      .orient('bottom');
       //.tickSize(-height)
       //.tickFormat(tickFormat);
     this.meta.yAxis = d3.svg.axis()
       .scale(yScale)
-      .orient('left')
+      .orient('left');
       //.tickSize(-width)
       //.tickFormat(si);
   };
