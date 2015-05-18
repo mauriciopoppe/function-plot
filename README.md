@@ -91,7 +91,7 @@ var functionPlot = require('function-plot');
   * `options.data` {array} *required* An array defining the functions to be rendered
     * `options.data[i].title` {string} title of the function
     * `options.data[i].skipTip` {boolean} true to avoid this function from being a target of the tip
-    * `options.data[i].fn` {function} the function that represents the curve, this function is evaluated 
+    * `options.data[i].fn` {string} the function that represents the curve, this function is evaluated 
     with values which are in `range` limiting the values to the screen min/max coordinates for `x`, i.e.
     at any given time the graph min/max x coordinates will limit the range of values to be plotted
     * `options.data[i].range` {number[]} if given the function will only be evaluated with multiple values from this range
@@ -104,7 +104,7 @@ var functionPlot = require('function-plot');
       `options.data[i].fn` with the current mouse position (`x0` is the fixed point and `x1` is computed
       dynamically based on the current mouse position)
     * `options.data[i].derivative` {Object} Info of the instantaneous rate of change of y with respect to x
-      * `options.data[i].derivative.fn` {Function} The derivative of `options.data[i].fn`
+      * `options.data[i].derivative.fn` {string} The derivative of `options.data[i].fn`
       * `options.data[i].derivative.x0` {number} The abscissa of the point which belongs to the curve
       represented by `options.data[i].fn` whose tangent will be computed (i.e. the tangent line to the point
       `x0, fn(x0)`)
