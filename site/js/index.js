@@ -486,6 +486,7 @@ $(document).on('markupLoaded', function () {
   /** */
 });
 
+$('#wzrd').load('partials/wzrd.html');
 
 $('#examples').load('partials/examples.html', function () {
   $(document).trigger('markupLoaded');

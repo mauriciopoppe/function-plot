@@ -6,6 +6,7 @@ var fs = require('fs');
 var dox = require('dox');
 var _ = require('lodash');
 var jade = require('jade');
+var version = require('./package.json').version;
 
 var file = fs.readFileSync('./site/js/index.js', { encoding: 'utf-8' });
 var comments = dox.parseComments(file);
@@ -43,3 +44,7 @@ var parsed = comments.map(function (c) {
 var output = fs.createWriteStream('./site/partials/examples.html');
 output.write(jade.compileFile('./site/jade/examples.jade')({comments: parsed}));
 output.end();
+
+var wzrd = fs.createWriteStream('./site/partials/wzrd.html');
+wzrd.write(jade.compileFile('./site/jade/wzrd.jade')({version: version}));
+wzrd.end();
