@@ -11,6 +11,7 @@ $(document).on('markupLoaded', function () {
     },
     data: [{
       fn: 'x^2',
+      samples: 30,
       derivative: {
         fn: '2 * x',
         updateOnMouseMove: true
