@@ -88,10 +88,13 @@ var functionPlot = require('function-plot');
     * `options.tip.yLine` {boolean} true to show a line parallel to the Y axis on mouseover
     * `options.tip.renderer` {function} Function to be called to define custom rendering on mouseover, called with the
      `x` and `f(x)` of the function which is closest to the mouse position (args: `x, y`)
+  * `options.annotations` {array} An array defining parallel lines to the y-axis
+    * `options.annotations[i].x` {number} x-coordinate of the line parallel to the y-axis
+    * `options.annotations[i].text` {string} text shown next to the parallel line    
   * `options.data` {array} *required* An array defining the functions to be rendered
     * `options.data[i].title` {string} title of the function
     * `options.data[i].skipTip` {boolean} true to avoid this function from being a target of the tip
-    * `options.data[i].fn` {string} the function that represents the curve, this function is evaluated 
+    * `options.data[i].fn` *required* {string} the function that represents the curve, this function is evaluated 
     with values which are in `range` limiting the values to the screen min/max coordinates for `x`, i.e.
     at any given time the graph min/max x coordinates will limit the range of values to be plotted
     * `options.data[i].range` {number[]} if given the function will only be evaluated with multiple values from this range
@@ -179,7 +182,7 @@ Plain demo: `127.0.0.1:5555/demo.html`
 ## TODO
 
 - [ ] baselines (parallel to the X axis) http://metricsgraphicsjs.org/examples.htm
-- [ ] annotations (parallel to the Y axis)
+- [X] annotations (parallel to the Y axis)
 - [X] axis labeling
 
 ## License

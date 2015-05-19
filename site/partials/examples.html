@@ -50,7 +50,24 @@
     fn: 'sin(x)',
     samples: 1000
   }]
-});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="samples" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Range and closed path</h3>
+});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="samples" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Annotations</h3>
+<p>Parallel lines to the y-axis can be set in the <code>annotations</code> option:</p><ul>
+<li><code>x</code>: x coordinate of the parallel line</li>
+<li><code>text</code> (optional) text of shown next to the parallel line</li>
+</ul>
+</div><div class="code"><pre><code class="javascript">functionPlot({
+  target: '#annotations',
+  yDomain: [-1, 9],
+  data: [{
+    fn: 'x^2'
+  }],
+  annotations: [{
+    x: -1
+  }, {
+    x: 1,
+    text: 'x = 1'
+  }]
+});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="annotations" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Range and closed path</h3>
 <p>You can restrict the values to be evaluated with the <code>range</code> option, this works really nice with the <code>closed</code> option of the <code>line</code> type to render for example a <a href="http://mathworld.wolfram.com/DefiniteIntegral.html">definite integral</a></p><p>Additional graph options for the renderer of each graph can be set inside <code>graphOptions</code></p><ul>
 <li><code>type</code>: the type of graph, <code>line</code> (naive sampling), <code>scatter</code> (naive sampling) and <code>interval</code> (interval arithmetic sampling) are supported</li>
 <li><code>closed</code>: true to render a closed path, <code>y0</code> will always be 0 and <code>y1</code> will be $fn(x)$</li>

@@ -141,6 +141,28 @@ $(document).on('markupLoaded', function () {
   });
 
   /**
+   * ### Annotations
+   *
+   * Parallel lines to the y-axis can be set in the `annotations` option:
+   *
+   * - `x`: x coordinate of the y-axis parallel line
+   * - `text` (optional) text shown next to the parallel line
+   */
+  functionPlot({
+    target: '#annotations',
+    yDomain: [-1, 9],
+    data: [{
+      fn: 'x^2'
+    }],
+    annotations: [{
+      x: -1
+    }, {
+      x: 1,
+      text: 'x = 1'
+    }]
+  });
+
+  /**
    * ### Range and closed path
    *
    * You can restrict the values to be evaluated with the `range` option,

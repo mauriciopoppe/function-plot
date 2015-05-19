@@ -15,6 +15,7 @@ var extend = require('extend');
 var mousetip = require('./lib/tip');
 var utils = require('./lib/utils');
 var helpers = require('./lib/helpers/');
+var annotations = require('./lib/helpers/annotations');
 
 var assert = utils.assert;
 
@@ -301,17 +302,19 @@ module.exports = function (options) {
       .attr('stroke', '#eee');
     xOrigin.attr('d', line);
 
+    // annotations (parallel to the y-axis)
+    content
+      .call(annotations({ owner: self }));
+
     // content construction (based on graphOptions)
     // join
     var graphs = content.selectAll('g.graph')
       .data(function (d) { return d.data; });
-
     // enter
     graphs
       .enter()
         .append('g')
         .attr('class', 'graph');
-
     // enter + update
     graphs
       .each(function (data, index) {
