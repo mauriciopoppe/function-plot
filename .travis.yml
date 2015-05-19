@@ -11,4 +11,4 @@ install:
 
 script:
   - npm run lint
-  - browserify index.js
+  - browserify index.js > /dev/null
