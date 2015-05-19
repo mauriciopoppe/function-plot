@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/maurizzzio/function-plot.png?label=ready&title=Ready)](https://waffle.io/maurizzzio/function-plot)
 # function-plot [![Build Status][travis-image]][travis-url]
 
 [![NPM][npm-image]][npm-url]
