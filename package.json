@@ -57,7 +57,6 @@
   },
   "gh-pages-deploy": {
     "prep": [
-      "fetch",
       "html",
       "build",
       "minify"

@@ -1,5 +1,11 @@
+- var bundle = 'function-plot@' + version
+- var link = 'https://wzrd.in/standalone/' + bundle
+- var script = '<script src="' + link + '"></script>'
+
 .wzrd-in
-  p Alternative wzrd.in link
-   a(href='https://wzrd.in/standalone/function-plot@' + version)
-    | function-plot@
-    =version
+  //p Bundled package ready for production (powered by wzrd.in)
+   a(href=link)= bundle
+
+  .code
+    pre
+      code= script

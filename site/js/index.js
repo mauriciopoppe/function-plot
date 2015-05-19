@@ -11,7 +11,6 @@ $(document).on('markupLoaded', function () {
     },
     data: [{
       fn: 'x^2',
-      samples: 30,
       derivative: {
         fn: '2 * x',
         updateOnMouseMove: true
@@ -501,25 +500,25 @@ $('#examples').load('partials/examples.html', function () {
 });
 
 
-$('#brcdn').load('partials/brcdn-module.html .panel.panel-primary', function () {
-  clipboard();
-});
-
-function clipboard() {
-  ZeroClipboard.config( { swfPath: "//cdnjs.cloudflare.com/ajax/libs/zeroclipboard/2.2.0/ZeroClipboard.swf" } );
-  var elements = [].slice.call(document.querySelectorAll('[data-clipboard-text]'));
-  var client = new ZeroClipboard(elements);
-  client.on('ready', function (event) {
-    elements.forEach(function (el) {
-      el.addEventListener('click', function (e) {
-        e.preventDefault();
-      }, false);
-    });
-    client.on('aftercopy', function (e) {
-      e.target.setAttribute('class', 'btn btn-sm btn-success');
-      setTimeout(function () {
-        e.target.setAttribute('class', 'btn btn-sm btn-primary');
-      }, 200);
-    });
-  });
-}
+//$('#brcdn').load('partials/brcdn-module.html .panel.panel-primary', function () {
+//  clipboard();
+//});
+//
+//function clipboard() {
+//  ZeroClipboard.config( { swfPath: "//cdnjs.cloudflare.com/ajax/libs/zeroclipboard/2.2.0/ZeroClipboard.swf" } );
+//  var elements = [].slice.call(document.querySelectorAll('[data-clipboard-text]'));
+//  var client = new ZeroClipboard(elements);
+//  client.on('ready', function (event) {
+//    elements.forEach(function (el) {
+//      el.addEventListener('click', function (e) {
+//        e.preventDefault();
+//      }, false);
+//    });
+//    client.on('aftercopy', function (e) {
+//      e.target.setAttribute('class', 'btn btn-sm btn-success');
+//      setTimeout(function () {
+//        e.target.setAttribute('class', 'btn btn-sm btn-primary');
+//      }, 200);
+//    });
+//  });
+//}
