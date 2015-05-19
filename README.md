@@ -32,37 +32,7 @@ functionPlot({
 
 ## Example
 
-See [`site/js/index.js`](https://github.com/maurizzzio/function-plot/blob/master/site/js/index.js)
-
-```javascript
-'use strict';
-var d3 = window.d3;
-var functionPlot = window.functionPlot;
-functionPlot({
-  target: '#canvas',
-  data: [{
-    title: 'f(x)',
-    fn: function (x) {
-      return -x * x;
-    }
-  }, {
-    fn: function (x) {
-      return Math.sqrt(x);
-    },
-    graphOptions: {
-      type: 'scatter'
-    }
-  }, {
-    fn: function (x) {
-      return 1 / x;
-    },
-    graphOptions: {
-      limits: [0],
-      interpolate: 'linear'
-    }
-  }]
-});
-```
+All the available options are described in the [`homepage`](http://maurizzzio.github.io/function-plot/)
 
 ## API
 
