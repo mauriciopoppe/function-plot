@@ -56,7 +56,7 @@
 <li><code>y</code>: y coordinate of a line parallel to the x-axis</li>
 <li><code>text</code> (optional) text shown next to the parallel line</li>
 </ul>
-</div><div class="code"><pre><code class="javascript">functionPlot({
+<p>NOTE: either <code>x</code> or <code>y</code> need to be set on the object, setting both of them will raise an exception</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#annotations',
   yDomain: [-1, 9],
   data: [{
@@ -294,4 +294,31 @@ functionPlot(options);</code></pre></div></div><div class="col-md-6 center-block
       updateOnMouseMove: true
     }
   }]
-});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="function-continuity-tan-x" class="graph"></span></div></div></div></div>
+});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="function-continuity-tan-x" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Implicit functions</h3>
+<p>Consider plotting the function $$ x^2 + y^2 = 1 $$</p><p>which is the equation of a circle of radius 1 however $y$ is not expressed in terms of $x$, solving for $y$ we get:</p><p>$$ y = \pm\sqrt{1 - x^2} $$</p><p>Which raises two functions</p><p>$$ y = \sqrt{1 - x^2} \quad and \quad y = -\sqrt{1 - x^2} $$</p><p>Instead of rendering two functions this library can also plot the implicit version with the only requirement of making the equation equal to zero and adding the option <code>implicit</code> on graph (the sampler expects that the function is depends on $x$ and $y$)</p><p>$$ 0 = x^2 + y^2 - 1 $$</p></div><div class="code"><pre><code class="javascript">functionPlot({
+  target: '#circle-explicit',
+  yDomain: [-1.897959183, 1.897959183],
+  xDomain: [-3, 3],
+  data: [
+    { fn: 'sqrt(1 - x * x)' },
+    { fn: '-sqrt(1 - x * x)' }
+  ]
+});
+functionPlot({
+  target: '#circle-implicit',
+  yDomain: [-1.897959183, 1.897959183],
+  xDomain: [-3, 3],
+  data: [{
+    fn: 'x * x + y * y - 1',
+    implicit: true
+  }]
+});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="circle-explicit" class="graph"></span><span id="circle-implicit" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h2>Implicit function   <div class="small">complex implicit functions</div></h2>
+<p>Consider the following equation</p><p>$$ cos(\pi\;x) = cos(\pi\;y) $$</p><p>It&#39;s impossible to find an explicit version of it because we would need an infinite number of functions, however for a finite region of the plane a finite number of functions suffice</p></div><div class="code"><pre><code class="javascript">functionPlot({
+  target: '#implicit-complex',
+  yDomain: [-3.795918366, 3.795918366],
+  xDomain: [-6, 6],
+  data: [{
+    fn: 'cos(PI * x) - cos(PI * y)',
+    implicit: true
+  }]
+});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="implicit-complex" class="graph"></span></div></div></div></div>

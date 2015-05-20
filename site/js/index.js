@@ -511,6 +511,75 @@ $(document).on('markupLoaded', function () {
     }]
   });
 
+  /**
+   * ### Implicit functions
+   *
+   * Consider plotting the function
+   * $$
+   * x^2 + y^2 = 1
+   * $$
+   *
+   * which is the equation of a circle of radius 1 however $y$ is not expressed in terms of $x$,
+   * solving for $y$ we get:
+   *
+   * $$
+   * y = \pm\sqrt{1 - x^2}
+   * $$
+   *
+   * Which raises two functions
+   *
+   * $$
+   * y = \sqrt{1 - x^2} \quad and \quad y = -\sqrt{1 - x^2}
+   * $$
+   *
+   * Instead of rendering two functions this library can also plot the implicit version
+   * with the only requirement of making the equation equal to zero and adding the option
+   * `implicit` on graph (the sampler expects that the function is depends on $x$ and $y$)
+   *
+   * $$
+   * 0 = x^2 + y^2 - 1
+   * $$
+   */
+  functionPlot({
+    target: '#circle-explicit',
+    yDomain: [-1.897959183, 1.897959183],
+    xDomain: [-3, 3],
+    data: [
+      { fn: 'sqrt(1 - x * x)' },
+      { fn: '-sqrt(1 - x * x)' }
+    ]
+  });
+  functionPlot({
+    target: '#circle-implicit',
+    yDomain: [-1.897959183, 1.897959183],
+    xDomain: [-3, 3],
+    data: [{
+      fn: 'x * x + y * y - 1',
+      implicit: true
+    }]
+  });
+
+  /**
+   * ### Implicit function <br /> <div class="small">complex implicit functions</div>
+   *
+   * Consider the following equation
+   *
+   * $$
+   * cos(\pi x) = cos(\pi y)
+   * $$
+   *
+   * It's impossible to find an explicit version of it because we would need an infinite number
+   * of functions, however for a finite region of the plane a finite number of functions suffice
+   */
+  functionPlot({
+    target: '#implicit-complex',
+    yDomain: [-3.795918366, 3.795918366],
+    xDomain: [-6, 6],
+    data: [{
+      fn: 'cos(PI * x) - cos(PI * y)',
+      implicit: true
+    }]
+  });
   /** */
 });
 

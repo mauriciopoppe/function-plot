@@ -70,7 +70,8 @@ var functionPlot = require('function-plot');
     at any given time the graph min/max x coordinates will limit the range of values to be plotted
     * `options.data[i].range` {number[]} if given the function will only be evaluated with multiple values from this range
     * `options.data[i].samples` {number} the fixed number of samples to be computed within the current domain ends
-    (the samples are equally spaced points between the domain ends)
+    * `options.data[i].implicit` {boolean} true to creates samples for the function considering it implicit, it assumes
+    that the function depends on the variables *x* and *y*
     * `options.data[i].secants` {Object[]} Secants of `options.data[i].fn`
       * `options.data[i].secants[j].x0` {number} The abscissa of the first point
       * `options.data[i].secants[j].x1` {number} (optional if `updateOnMouseMove` is set) The abscissa of the second point
@@ -149,12 +150,6 @@ npm start
 Open `127.0.0.1:5555` and that's it! Local development server powered [beefy](https://www.npmjs.com/package/beefy)
 
 Plain demo: `127.0.0.1:5555/demo.html` 
-
-## TODO
-
-- [ ] baselines (parallel to the X axis) http://metricsgraphicsjs.org/examples.htm
-- [X] annotations (parallel to the Y axis)
-- [X] axis labeling
 
 ## License
 
