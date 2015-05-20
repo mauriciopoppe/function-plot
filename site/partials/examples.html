@@ -51,9 +51,10 @@
     samples: 1000
   }]
 });</code></pre></div></div><div class="col-md-6 center-block demos"><span id="samples" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Annotations</h3>
-<p>Parallel lines to the y-axis can be set in the <code>annotations</code> option:</p><ul>
-<li><code>x</code>: x coordinate of the parallel line</li>
-<li><code>text</code> (optional) text of shown next to the parallel line</li>
+<p>Parallel lines to the y-axis or x-axis can be set in the <code>annotations</code> option:</p><ul>
+<li><code>x</code>: x coordinate of a line parallel to the y-axis</li>
+<li><code>y</code>: y coordinate of a line parallel to the x-axis</li>
+<li><code>text</code> (optional) text shown next to the parallel line</li>
 </ul>
 </div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#annotations',
@@ -66,6 +67,9 @@
   }, {
     x: 1,
     text: 'x = 1'
+  }, {
+    y: 2,
+    text: 'y = 2'
   }]
 });</code></pre></div></div><div class="col-md-6 center-block demos"><span id="annotations" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Range and closed path</h3>
 <p>You can restrict the values to be evaluated with the <code>range</code> option, this works really nice with the <code>closed</code> option of the <code>line</code> type to render for example a <a href="http://mathworld.wolfram.com/DefiniteIntegral.html">definite integral</a></p><p>Additional graph options for the renderer of each graph can be set inside <code>graphOptions</code></p><ul>

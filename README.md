@@ -58,8 +58,9 @@ var functionPlot = require('function-plot');
     * `options.tip.yLine` {boolean} true to show a line parallel to the Y axis on mouseover
     * `options.tip.renderer` {function} Function to be called to define custom rendering on mouseover, called with the
      `x` and `f(x)` of the function which is closest to the mouse position (args: `x, y`)
-  * `options.annotations` {array} An array defining parallel lines to the y-axis
+  * `options.annotations` {array} An array defining parallel lines to the y-axis or the x-axis
     * `options.annotations[i].x` {number} x-coordinate of the line parallel to the y-axis
+    * `options.annotations[i].y` {number} y-coordinate of the line parallel to the x-axis
     * `options.annotations[i].text` {string} text shown next to the parallel line    
   * `options.data` {array} *required* An array defining the functions to be rendered
     * `options.data[i].title` {string} title of the function
