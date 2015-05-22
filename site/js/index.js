@@ -401,7 +401,7 @@ $(document).on('markupLoaded', function () {
   /**
    * ### Linked graphs <div class="small">Multiple</div>
    *
-   * Since the `zoom` event is dispatched to all the linked graphs as well, one can
+   * Since the `zoom` event is dispatched to all the linked graphs, one can
    * set as many linked graphs as wanted and all of them will perform the same
    * zoom operation, in the following example these functions are plotted:
    *
@@ -519,7 +519,7 @@ $(document).on('markupLoaded', function () {
    * x^2 + y^2 = 1
    * $$
    *
-   * which is the equation of a circle of radius 1 however $y$ is not expressed in terms of $x$,
+   * which is the equation of a circle of radius 1, however $y$ is not expressed in terms of $x$,
    * solving for $y$ we get:
    *
    * $$
@@ -532,9 +532,9 @@ $(document).on('markupLoaded', function () {
    * y = \sqrt{1 - x^2} \quad and \quad y = -\sqrt{1 - x^2}
    * $$
    *
-   * Instead of rendering two functions this library can also plot the implicit version
-   * with the only requirement of making the equation equal to zero and adding the option
-   * `implicit` on graph (the sampler expects that the function is depends on $x$ and $y$)
+   * This library can also plot implicit equations with the only requirement of making the equation
+   * equal to zero and adding the option `implicit` (the sampler expects that the function
+   * depends on the variables $x$ and $y$)
    *
    * $$
    * 0 = x^2 + y^2 - 1
