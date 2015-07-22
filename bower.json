@@ -1,0 +1,30 @@
+{
+  "name": "function-plot",
+  "main": "site/js/function-plot.js",
+  "homepage": "https://github.com/maurizzzio/function-plot",
+  "authors": [
+    "Mauricio Poppe <me@maurizzzio.com>"
+  ],
+  "description": "A 2d function plotter powered by d3",
+  "moduleType": [
+    "amd",
+    "globals",
+    "node"
+  ],
+  "keywords": [
+    "function",
+    "plot",
+    "plotter"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "site/",
+    "!site/js/function-plot.js",
+    "lib/"
+  ]
+}

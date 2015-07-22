@@ -21,6 +21,7 @@ var assert = utils.assert;
 
 var Const;
 var types;
+var cache = [];
 
 module.exports = function (options) {
   options = options || {};
@@ -36,12 +37,17 @@ module.exports = function (options) {
     .y(function (d) { return yScale(d[1]); });
 
   function Chart() {
-    this.id = options.target;
+    var n = Math.random();
+    var letter = String.fromCharCode(Math.floor(n * 26) + 97);
+    this.id = letter + n.toString(16).substr(2)
     this.linkedGraphs = [this];
 
     this.setVars();
     this.build();
     this.setUpEventListeners();
+
+    options.id = this.id;
+    cache[this.id] = this;
   }
 
   Chart.prototype = Object.create(events.prototype);
@@ -57,12 +63,12 @@ module.exports = function (options) {
 
     var si = d3.format('s');
     var r = d3.format('.0r');
-    var tickFormat = function (d) {
-      if (Math.abs(d) >= 1) {
-        return si(d);
-      }
-      return r(d);
-    };
+    //var tickFormat = function (d) {
+    //  if (Math.abs(d) >= 1) {
+    //    return si(d);
+    //  }
+    //  return r(d);
+    //};
 
     xScale = this.meta.xScale = d3.scale.linear()
       .domain(xDomain)
@@ -458,7 +464,10 @@ module.exports = function (options) {
     });
   };
 
-  return new Chart();
+  if (!cache[options.id]) {
+    return new Chart();
+  }
+  return cache[options.id];
 };
 Const = module.exports.constants = require('./lib/constants');
 types = module.exports.types = require('./lib/types/');
