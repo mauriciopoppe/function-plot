@@ -39,18 +39,21 @@ module.exports = function (options) {
   function Chart() {
     var n = Math.random();
     var letter = String.fromCharCode(Math.floor(n * 26) + 97);
-    this.id = letter + n.toString(16).substr(2)
+    this.id = letter + n.toString(16).substr(2);
     this.linkedGraphs = [this];
-
-    this.setVars();
-    this.build();
-    this.setUpEventListeners();
 
     options.id = this.id;
     cache[this.id] = this;
   }
 
   Chart.prototype = Object.create(events.prototype);
+
+  Chart.prototype.update = function () {
+    this.setVars();
+    this.build();
+    this.setUpEventListeners();
+    return this;
+  };
 
   Chart.prototype.updateBounds = function () {
     width = this.meta.width = (options.width || Const.DEFAULT_WIDTH)
@@ -464,10 +467,11 @@ module.exports = function (options) {
     });
   };
 
-  if (!cache[options.id]) {
-    return new Chart();
+  var instance = cache[options.id];
+  if (!instance) {
+    instance = new Chart();
   }
-  return cache[options.id];
+  return instance.update();
 };
 Const = module.exports.constants = require('./lib/constants');
 types = module.exports.types = require('./lib/types/');
