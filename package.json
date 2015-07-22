@@ -52,8 +52,9 @@
     "html": "node site.js",
     "pre_publish": "npm run lint",
     "build": "browserify index.js -o site/js/function-plot.js --standalone functionPlot",
-    "minify": "cat site/js/bundle.js | uglifyjs -o site/js/bundle.js",
-    "deploy": "npm run lint && gh-pages-deploy"
+    "minify": "cat site/js/function-plot.js | uglifyjs -o site/js/function-plot.js",
+    "dist": "npm run build && cat site/js/function-plot.js | uglifyjs -o dist/function-plot.js",
+    "deploy": "npm run lint && npm run dist && gh-pages-deploy"
   },
   "gh-pages-deploy": {
     "prep": [

@@ -24,7 +24,8 @@
     "test",
     "tests",
     "site/",
-    "!site/js/function-plot.js",
+    "dist/",
+    "!dist/function-plot.js",
     "lib/"
   ]
 }
