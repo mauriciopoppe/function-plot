@@ -41,12 +41,15 @@
  "x^x"
  */
 
-//functionPlot({
-//  target: '#playground',
-//  data: [
-//    { fn: 'cos(x) + sin(x/2)' }
-//  ]
-//});
+functionPlot({
+  target: '#playground',
+  data: [
+    { fn: 'sin(x/2)' },
+    { fn: 'cos(x)' },
+    //{ fn: 'tan(x)' },
+    { fn: 'cos(x) + sin(x/4)' }
+  ]
+});
 
 //functionPlot({
 //  target: '#playground',
@@ -69,15 +72,15 @@
 //  }]
 //});
 
-functionPlot({
-  target: '#playground',
-  yDomain: [-1.897959183, 1.897959183],
-  xDomain: [-3, 3],
-  data: [{
-    r: 'sin(6 theta) + 2',
-    polar: true,
-    graphOptions: {
-      type: 'line'
-    }
-  }]
-});
+//functionPlot({
+//  target: '#playground',
+//  yDomain: [-1.897959183, 1.897959183],
+//  xDomain: [-3, 3],
+//  data: [{
+//    r: 'sin(6 theta) + 2',
+//    polar: true,
+//    graphOptions: {
+//      type: 'line'
+//    }
+//  }]
+//});

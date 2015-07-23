@@ -26,7 +26,7 @@
   "dependencies": {
     "built-in-math-eval": "^0.2.3",
     "extend": "^3.0.0",
-    "interval-arithmetic-eval": "^0.3.2"
+    "interval-arithmetic-eval": "^0.3.3"
   },
   "devDependencies": {
     "beefy": "^2.1.3",
