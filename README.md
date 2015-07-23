@@ -1,6 +1,8 @@
-# function-plot [![Build Status][travis-image]][travis-url]
+# function-plot 
 
 [![NPM][npm-image]][npm-url]
+[![Build Status][travis-image]][travis-url]
+[![Stability](https://img.shields.io/badge/stability-stable-green.svg)](https://nodejs.org/api/documentation.html#apicontent)
 
 > A  2d function plotter powered by d3
 
@@ -171,7 +173,7 @@ Plain demo: `127.0.0.1:5555/demo.html`
 
 2015 MIT © Mauricio Poppe
 
-[npm-image]: https://nodei.co/npm/function-plot.png?downloads=true
+[npm-image]: https://img.shields.io/npm/v/function-plot.svg?style=flat
 [npm-url]: https://npmjs.org/package/function-plot
 [travis-image]: https://travis-ci.org/maurizzzio/function-plot.svg?branch=master
 [travis-url]: https://travis-ci.org/maurizzzio/function-plot
