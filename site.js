@@ -8,7 +8,7 @@ var _ = require('lodash');
 var jade = require('jade');
 var version = require('./package.json').version;
 
-var file = fs.readFileSync('./site/js/index.js', { encoding: 'utf-8' });
+var file = fs.readFileSync('./site/js/site.js', { encoding: 'utf-8' });
 var comments = dox.parseComments(file);
 
 var parsed = comments.map(function (c) {
