@@ -328,8 +328,15 @@ module.exports = function (options) {
     graphs
       .each(function (data, index) {
         data.graphOptions = extend({
-          sampler: 'interval',
           type: 'interval'
+        }, data.graphOptions);
+
+        // if the type of graph chosen is not `interval` then default the sampler to `builtIn`
+        var sampler = data.graphOptions.type !== 'interval'
+          ? 'builtIn'
+          : 'interval';
+        data.graphOptions = extend({
+          sampler: sampler
         }, data.graphOptions);
 
         var options = extend({
