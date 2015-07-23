@@ -59,8 +59,7 @@
   },
   "gh-pages-deploy": {
     "prep": [
-      "html",
-      "build"
+      "html"
     ],
     "staticpath": "site"
   }
