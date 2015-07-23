@@ -55,7 +55,7 @@
     "minify": "cat site/js/function-plot.js | uglifyjs -o site/js/function-plot.js",
     "build": "npm run browserify && npm run minify",
     "dist": "npm run build && cp site/js/function-plot.js dist/",
-    "deploy": "npm run lint && npm run dist && gh-pages-deploy"
+    "deploy": "npm run lint && gh-pages-deploy"
   },
   "gh-pages-deploy": {
     "prep": [
