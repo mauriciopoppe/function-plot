@@ -328,6 +328,7 @@ module.exports = function (options) {
     graphs
       .each(function (data, index) {
         data.graphOptions = extend({
+          sampler: 'interval',
           type: 'interval'
         }, data.graphOptions);
 

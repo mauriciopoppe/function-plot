@@ -29,7 +29,8 @@ $(document).on('markupLoaded', function () {
       fn: 'sin(exp(x))',
       samples: 5000,
       graphOptions: {
-        type: 'line'
+        type: 'line',
+        sampler: 'builtIn'
       }
     }]
   });
@@ -225,7 +226,8 @@ $(document).on('markupLoaded', function () {
       fn: 'x < 0 ? -sqrt(-x) : sqrt(x)',
       samples: 100,
       graphOptions: {
-        type: 'scatter'
+        type: 'scatter',
+        sampler: 'builtIn'
       }
     }]
   });
