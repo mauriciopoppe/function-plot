@@ -11,7 +11,7 @@ utility: [y = x * x](https://www.google.com/webhp?sourceid=chrome-instant&ion=1&
 The library currently supports interactive line charts and scatterplots, whenever the graph scale is modified the function
 is evaluated again with the new bounds, result: infinite graphs!
     
-Have a look at [the homepage](http://maurizzzio.github.io/function-plot/) for a detailed explanation on what the library is capable of
+Have a look at [the homepage](http://maurizzzio.github.io/function-plot/)
 
 ## Install
 
@@ -19,7 +19,7 @@ Have a look at [the homepage](http://maurizzzio.github.io/function-plot/) for a 
 $ npm install --save function-plot
 ```
 
-## Usage
+## Usage with browserify
 
 ```js
 var d3 = window.d3
