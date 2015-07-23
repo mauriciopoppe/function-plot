@@ -50,8 +50,8 @@ module.exports = function (options) {
 
   Chart.prototype.update = function () {
     this.setVars();
-    this.build();
     this.setUpEventListeners();
+    this.build();
     return this;
   };
 
@@ -381,6 +381,7 @@ module.exports = function (options) {
 
   Chart.prototype.setUpEventListeners = function () {
     var instance = this;
+
     var events = {
       mousemove: function (x, y) {
         instance.tip.move(x, y);
@@ -448,6 +449,8 @@ module.exports = function (options) {
     };
 
     Object.keys(events).forEach(function (e) {
+      instance.removeAllListeners(e);
+      instance.removeAllListeners('all:' + e);
       instance.on(e, events[e]);
       // create an event for each event existing on `events` in the form 'all:' event
       // e.g. all:mouseover all:mouseout
@@ -463,6 +466,7 @@ module.exports = function (options) {
     });
 
     Object.keys(all).forEach(function (e) {
+      instance.removeAllListeners('all:' + e);
       instance.on('all:' + e, all[e]);
     });
   };

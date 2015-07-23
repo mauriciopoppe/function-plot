@@ -51,16 +51,16 @@
     "fetch": "curl -o site/partials/brcdn-module.html -L https://www.brcdn.org/?module=function-plot&version=latest",
     "html": "node site.js",
     "pre_publish": "npm run lint",
-    "build": "browserify index.js -o site/js/function-plot.js --standalone functionPlot",
+    "browserify": "browserify index.js -o site/js/function-plot.js --standalone functionPlot",
     "minify": "cat site/js/function-plot.js | uglifyjs -o site/js/function-plot.js",
-    "dist": "npm run build && cat site/js/function-plot.js | uglifyjs -o dist/function-plot.js",
+    "build": "npm run browserify && npm run minify",
+    "dist": "npm run build && cp site/js/function-plot.js dist/",
     "deploy": "npm run lint && npm run dist && gh-pages-deploy"
   },
   "gh-pages-deploy": {
     "prep": [
       "html",
-      "build",
-      "minify"
+      "build"
     ],
     "staticpath": "site"
   }
