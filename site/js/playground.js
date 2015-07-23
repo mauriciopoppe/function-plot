@@ -44,10 +44,13 @@
 functionPlot({
   target: '#playground',
   data: [
-    { fn: 'sin(x/2)' },
-    { fn: 'cos(x)' },
+    //{ fn: 'sin(exp(x))', graphOptions: {sampler: 'mathjs', type: 'line'}, samples: 4000 },
+    //{ fn: 'tan(x)', graphOptions: {sampler: 'mathjs', type: 'line'}, samples: 5000 },
+    { fn: 'gamma(x)', graphOptions: {sampler: 'mathjs', type: 'line'} },
+    //{ fn: 'sin(x/2)' },
+    //{ fn: 'cos(x)' },
     //{ fn: 'tan(x)' },
-    { fn: 'cos(x) + sin(x/4)' }
+    //{ fn: 'cos(x) + sin(x/4)' }
   ]
 });
 

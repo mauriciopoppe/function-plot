@@ -731,6 +731,40 @@ $(document).on('markupLoaded', function () {
       implicit: true
     }]
   });
+
+  /**
+   * ### Advanced: sampler
+   *
+   * `function-plot` uses `interval-arithmetic` math by default, unfortunately some functions are
+   * not implemented yet because of the underlying complexity, for this reason you can always
+   * evaluate a function with <img style="width: 50px; height: 15px" src="img/mathjs_330x100.png"/>,
+   * to do so make sure that the datum has the following set:
+   *
+   * - `sampler: 'mathjs'` to evaluate functions using math.js
+   * - `type: 'line'` or `type: 'scatter'`
+   */
+  functionPlot({
+    target: '#sampler-mathjs',
+    disableZoom: true,
+    data: [{
+      fn: 'gamma(x)',
+      graphOptions: {
+        sampler: 'mathjs',
+        type: 'line'
+      }
+    }]
+  });
+  functionPlot({
+    target: '#sampler-tan-mathjs',
+    data: [{
+      fn: 'tan(x)',
+      samples: 4000,
+      graphOptions: {
+        sampler: 'mathjs',
+        type: 'line'
+      }
+    }]
+  });
   /** */
 });
 

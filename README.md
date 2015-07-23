@@ -92,8 +92,8 @@ var functionPlot = require('function-plot');
 ### `options.data[i].graphOptions` {Object}
 
 * `type` {string} type of graph, currently `line`, `scatter` and `interval` are supported, `interval` is the default option
-* `sampler` {string} the sampler to use, currently `interval` and `builtIn` are supported (`interval` should
-be used with `type: 'interval'` and `builtIn` with `type: 'line'` or `type: 'scatter'`)
+* `sampler` {string} the sampler to use, currently `interval` and `mathjs` are supported (`interval` should
+be used with `type: 'interval'` and `mathjs` with `type: 'line'` or `type: 'scatter'`)
 
 Depending on the type option:
 

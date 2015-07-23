@@ -331,9 +331,9 @@ module.exports = function (options) {
           type: 'interval'
         }, data.graphOptions);
 
-        // if the type of graph chosen is not `interval` then default the sampler to `builtIn`
+        // if the type of graph chosen is not `interval` then default the sampler to `mathjs`
         var sampler = data.graphOptions.type !== 'interval'
-          ? 'builtIn'
+          ? 'mathjs'
           : 'interval';
         data.graphOptions = extend({
           sampler: sampler
