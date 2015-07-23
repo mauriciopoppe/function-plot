@@ -41,29 +41,30 @@
  "x^x"
  */
 
-functionPlot({
-  target: '#playground',
-  data: [
-    { fn: 'cos(x) + sin(x/2)' }
-  ]
-});
-
 //functionPlot({
 //  target: '#playground',
-//  yDomain: [-1.897959183, 1.897959183],
-//  xDomain: [-3, 3],
-//  data: [{
-//    //x: 'cos(5t)',
-//    //y: 'sin(3t)',
-//
-//
-//    //y=(cosq)(e^(cosq)-2cos4q-(sin(q/12))^5)
-//    //x=(sinq)(e^(cosq)-2cos4q-(sin(q/12))^5)
-//    x: 'sin(t) * (exp(cos(t)) - 2 cos(4t) - sin(t/12)^5)',
-//    y: 'cos(t) * (exp(cos(t)) - 2 cos(4t) - sin(t/12)^5)',
-//    range: [-10 * Math.PI, 10 * Math.PI],
-//
-//    parametricRange: [],
-//    parametric: true
-//  }]
+//  data: [
+//    { fn: 'cos(x) + sin(x/2)' }
+//  ]
 //});
+
+functionPlot({
+  target: '#playground',
+  yDomain: [-1.897959183, 1.897959183],
+  xDomain: [-3, 3],
+  data: [{
+    //x: 'cos(5t)',
+    //y: 'sin(3t)',
+
+
+    //y=(cosq)(e^(cosq)-2cos4q-(sin(q/12))^5)
+    //x=(sinq)(e^(cosq)-2cos4q-(sin(q/12))^5)
+    x: 'sin(t) * (exp(cos(t)) - 2 cos(4t) - sin(t/12)^5)',
+    y: 'cos(t) * (exp(cos(t)) - 2 cos(4t) - sin(t/12)^5)',
+    range: [-10 * Math.PI, 10 * Math.PI],
+    parametric: true,
+    graphOptions: {
+      type: 'line'
+    }
+  }]
+});
