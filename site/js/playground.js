@@ -25,7 +25,7 @@
 //});
 
 //// failing:
-//functionPlot({
+//var instance = functionPlot({
 //  target: '#playground',
 //  data: [
 //    { fn: 'sin(exp(x))', graphOptions: {sampler: 'mathjs', type: 'line'}, samples: 4000 },
@@ -36,6 +36,11 @@
 //    //{ fn: 'tan(x)' },
 //    //{ fn: 'cos(x) + sin(x/4)' }
 //  ]
+//})
+//instance.on('eval', function (data, i, isHelper) {
+//  if (!isHelper) {
+//    console.log(data, i)
+//  }
 //})
 
 //// parametric:
