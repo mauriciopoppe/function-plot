@@ -155,7 +155,17 @@ coordinates)
 (x-scale and y-scale of another graph whose scales were updated)
 * `tip:update` fired whenever the tip position is updated, callback params `x`, `y`, `index` (in canvas
 space coordinates, `index` is the index of the graph where the tip is on top of)
-* `all:mousemove` same as `mousemove` but it's dispatched for all the linked graphs
+* `eval` fired whenever the sampler evaluates a function, callback params `data` (an array of segment/points),
+`index` (the index of datum in the `data` array), `isHelper` (true if the data is created for a helper e.g.
+for the derivative/secant)
+
+The following events are dispatched to all the linked graphs
+
+* `all:mouseover` same as `mouseover` but it's dispatched in each linked graph
+* `all:mousemove` same as `mousemove` but it's dispatched in each linked graph
+* `all:mouseout` same as `mouseout` but it's dispatched in each linked graph
+* `all:draw` same as `draw` but it's dispatched in each linked graph
+* `all:zoom:scaleUpdate` same as `zoom:scaleUpdate` but it's dispatched in each linked graph
 * `all:zoom` fired whenever there's scaling/translation on the graph, dispatched on all the linked graphs
 
 ## Development
