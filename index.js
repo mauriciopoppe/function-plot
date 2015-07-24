@@ -44,13 +44,13 @@ module.exports = function (options) {
 
     options.id = this.id
     cache[this.id] = this
+    this.setUpEventListeners()
   }
 
   Chart.prototype = Object.create(events.prototype)
 
   Chart.prototype.update = function () {
     this.setVars()
-    this.setUpEventListeners()
     this.build()
     return this
   }
@@ -444,8 +444,6 @@ module.exports = function (options) {
     }
 
     Object.keys(events).forEach(function (e) {
-      instance.removeAllListeners(e)
-      instance.removeAllListeners('all:' + e)
       instance.on(e, events[e])
       // create an event for each event existing on `events` in the form 'all:' event
       // e.g. all:mouseover all:mouseout
@@ -461,7 +459,6 @@ module.exports = function (options) {
     })
 
     Object.keys(all).forEach(function (e) {
-      instance.removeAllListeners('all:' + e)
       instance.on('all:' + e, all[e])
     })
   }

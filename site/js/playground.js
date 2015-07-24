@@ -15,7 +15,7 @@
 //  }]
 //});
 
-// implicit
+//// implicit
 //functionPlot({
 //  target: '#playground',
 //  data: [{
@@ -24,36 +24,21 @@
 //  }]
 //});
 
-/*
- "x!"         // throwing an error
- "x^2 - 2"
- "x^2 - x"
- "x^0.5"      // todo
- "pow(x,0.5)" // todo
- "x * pi"
- "x + exp(1)"
- "x + exp(exp(1))"
- "gamma(x)"         // not implemented
- "cube(2x)"         // (2x)^3
+//// failing:
+//functionPlot({
+//  target: '#playground',
+//  data: [
+//    { fn: 'sin(exp(x))', graphOptions: {sampler: 'mathjs', type: 'line'}, samples: 4000 },
+//    { fn: 'tan(x)', graphOptions: {sampler: 'mathjs', type: 'line'}, samples: 5000 },
+//    //{ fn: 'gamma(x)', graphOptions: {sampler: 'mathjs', type: 'line'} },
+//    //{ fn: 'sin(x/2)' },
+//    //{ fn: 'cos(x)' },
+//    //{ fn: 'tan(x)' },
+//    //{ fn: 'cos(x) + sin(x/4)' }
+//  ]
+//})
 
- This equation fails online also:
-
- "x^x"
- */
-
-functionPlot({
-  target: '#playground',
-  data: [
-    //{ fn: 'sin(exp(x))', graphOptions: {sampler: 'mathjs', type: 'line'}, samples: 4000 },
-    //{ fn: 'tan(x)', graphOptions: {sampler: 'mathjs', type: 'line'}, samples: 5000 },
-    { fn: 'gamma(x)', graphOptions: {sampler: 'mathjs', type: 'line'} },
-    //{ fn: 'sin(x/2)' },
-    //{ fn: 'cos(x)' },
-    //{ fn: 'tan(x)' },
-    //{ fn: 'cos(x) + sin(x/4)' }
-  ]
-});
-
+//// parametric:
 //functionPlot({
 //  target: '#playground',
 //  yDomain: [-1.897959183, 1.897959183],
@@ -75,6 +60,7 @@ functionPlot({
 //  }]
 //});
 
+//// polar
 //functionPlot({
 //  target: '#playground',
 //  yDomain: [-1.897959183, 1.897959183],
@@ -87,3 +73,44 @@ functionPlot({
 //    }
 //  }]
 //});
+
+//// update
+//var options = {
+//  target: '#playground',
+//  data: [{
+//    fn: 'x'
+//  }]
+//};
+//var instance
+//document.querySelector('#update').addEventListener('click', function () {
+//  if (!options.title) {
+//    // add a title, a tip and change the function to y = x * x
+//    options.title = 'hello world';
+//    options.tip = {
+//      xLine: true,
+//      yLine: true
+//    };
+//    options.data[0] = {
+//      fn: 'x * x',
+//      derivative: {
+//        fn: '2 * x',
+//        updateOnMouseMove: true
+//      }
+//    }
+//  } else {
+//    // remove the title and the tip
+//    // update the function to be y = x
+//    delete options.title;
+//    delete options.tip;
+//    options.data[0] =  {
+//      fn: 'x'
+//    }
+//  }
+//  functionPlot(options);
+//});
+//instance = functionPlot(options);
+//instance.on('eval', function (data, i, isHelper) {
+//  if (!isHelper) {
+//    console.log(data, i)
+//  }
+//})
