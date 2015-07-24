@@ -4,6 +4,8 @@
 [![Build Status][travis-image]][travis-url]
 [![Stability](https://img.shields.io/badge/stability-stable-green.svg)](https://nodejs.org/api/documentation.html#apicontent)
 
+[![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
+
 > A  2d function plotter powered by d3
 
 Function Plot is a powerful library built on top of <a href="http://d3js.org/">D3.js</a> whose purpose
@@ -12,7 +14,7 @@ utility: [y = x * x](https://www.google.com/webhp?sourceid=chrome-instant&ion=1&
 
 The library currently supports interactive line charts and scatterplots, whenever the graph scale is modified the function
 is evaluated again with the new bounds, result: infinite graphs!
-    
+
 Have a look at [the homepage](http://maurizzzio.github.io/function-plot/)
 
 ## Install
