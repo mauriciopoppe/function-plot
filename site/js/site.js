@@ -733,6 +733,50 @@ $(document).on('markupLoaded', function () {
   });
 
   /**
+   * ### Points and polylines
+   *
+   * To plot a collection of points or a polyline the following options are required:
+   *
+   * - `points` An array of coordinates, each coordinate is represented by a 2-element array
+   * - `graphOptions.sampler = mathjs` interval arithmetic needs to be disabled for collections
+   * of points
+   *  - `graphOptions.type = line` to render a polyline
+   *  - `graphOptions.type = scatter` to render points
+   */
+  functionPlot({
+    target: '#points',
+    data: [{
+      points: [
+        [1, 1],
+        [2, 1],
+        [2, 2],
+        [1, 2],
+        [1, 1]
+      ],
+      graphOptions: {
+        type: 'scatter',
+        sampler: 'mathjs'
+      }
+    }]
+  });
+  functionPlot({
+    target: '#polyline',
+    data: [{
+      points: [
+        [1, 1],
+        [2, 1],
+        [2, 2],
+        [1, 2],
+        [1, 1]
+      ],
+      graphOptions: {
+        type: 'line',
+        sampler: 'mathjs'
+      }
+    }]
+  });
+
+  /**
    * ### Advanced: sampler
    *
    * `function-plot` uses `interval-arithmetic` math by default, unfortunately some functions are

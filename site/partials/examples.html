@@ -393,7 +393,47 @@ functionPlot(options);</code></pre></div></div><div class="col-md-6 center-block
     fn: 'cos(PI * x) - cos(PI * y)',
     implicit: true
   }]
-});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="implicit-complex" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Advanced: sampler</h3>
+});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="implicit-complex" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Points and polylines</h3>
+<p>To plot a collection of points or a polyline the following options are required:</p><ul>
+<li><code>points</code> An array of coordinates, each coordinate is represented by a 2-element array</li>
+<li><code>graphOptions.sampler = mathjs</code> interval arithmetic needs to be disabled for collections of points<ul>
+<li><code>graphOptions.type = line</code> to render a polyline</li>
+<li><code>graphOptions.type = scatter</code> to render points</li>
+</ul>
+</li>
+</ul>
+</div><div class="code"><pre><code class="javascript">functionPlot({
+  target: '#points',
+  data: [{
+    points: [
+      [1, 1],
+      [2, 1],
+      [2, 2],
+      [1, 2],
+      [1, 1]
+    ],
+    graphOptions: {
+      type: 'scatter',
+      sampler: 'mathjs'
+    }
+  }]
+});
+functionPlot({
+  target: '#polyline',
+  data: [{
+    points: [
+      [1, 1],
+      [2, 1],
+      [2, 2],
+      [1, 2],
+      [1, 1]
+    ],
+    graphOptions: {
+      type: 'line',
+      sampler: 'mathjs'
+    }
+  }]
+});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="points" class="graph"></span><span id="polyline" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Advanced: sampler</h3>
 <p><code>function-plot</code> uses <code>interval-arithmetic</code> math by default, unfortunately some functions are not implemented yet because of the underlying complexity, for this reason you can always evaluate a function with <img style="width: 50px; height: 15px" src="img/mathjs_330x100.png"/>, to do so make sure that the datum has the following set:</p><ul>
 <li><code>sampler: &#39;mathjs&#39;</code> to evaluate functions using math.js</li>
 <li><code>type: &#39;line&#39;</code> or <code>type: &#39;scatter&#39;</code></li>

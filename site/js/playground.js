@@ -119,3 +119,21 @@
 //    console.log(data, i)
 //  }
 //})
+
+// points
+//functionPlot({
+//  target: '#playground',
+//  data: [{
+//    points: [
+//      [1, 1],
+//      [2, 1],
+//      [2, 2],
+//      [1, 2],
+//      [1, 1]
+//    ],
+//    graphOptions: {
+//      type: 'line',
+//      sampler: 'mathjs'
+//    }
+//  }]
+//});
