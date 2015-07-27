@@ -414,7 +414,7 @@ functionPlot(options);</code></pre></div></div><div class="col-md-6 center-block
     ],
     graphOptions: {
       type: 'scatter',
-      sampler: 'mathjs'
+      sampler: 'builtIn'
     }
   }]
 });
@@ -430,12 +430,14 @@ functionPlot({
     ],
     graphOptions: {
       type: 'line',
-      sampler: 'mathjs'
+      sampler: 'builtIn'
     }
   }]
 });</code></pre></div></div><div class="col-md-6 center-block demos"><span id="points" class="graph"></span><span id="polyline" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Advanced: sampler</h3>
-<p><code>function-plot</code> uses <code>interval-arithmetic</code> math by default, unfortunately some functions are not implemented yet because of the underlying complexity, for this reason you can always evaluate a function with <img style="width: 50px; height: 15px" src="img/mathjs_330x100.png"/>, to do so make sure that the datum has the following set:</p><ul>
-<li><code>sampler: &#39;mathjs&#39;</code> to evaluate functions using math.js</li>
+<p><code>function-plot</code> uses interval-arithmetic math by default, unfortunately some functions are not implemented yet because of the underlying complexity, for this reason you can always evaluate a function with <img style="width: 50px; height: 15px" src="img/mathjs_330x100.png"/>, to do so make sure that you include <code>math.js</code> before<code>function-plot</code></p><pre><code class="lang-html">&lt;script src=&quot;//cdnjs.cloudflare.com/ajax/libs/mathjs/1.5.2/math.min.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+<p>And then set the following:</p><ul>
+<li><code>sampler: &#39;builtIn&#39;</code> the parser bundled with function-plot will be replaced with the one in math.js</li>
 <li><code>type: &#39;line&#39;</code> or <code>type: &#39;scatter&#39;</code></li>
 </ul>
 </div><div class="code"><pre><code class="javascript">functionPlot({
@@ -444,7 +446,7 @@ functionPlot({
   data: [{
     fn: 'gamma(x)',
     graphOptions: {
-      sampler: 'mathjs',
+      sampler: 'builtIn',
       type: 'line'
     }
   }]
@@ -455,7 +457,7 @@ functionPlot({
     fn: 'tan(x)',
     samples: 4000,
     graphOptions: {
-      sampler: 'mathjs',
+      sampler: 'builtIn',
       type: 'line'
     }
   }]

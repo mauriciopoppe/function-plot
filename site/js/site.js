@@ -755,7 +755,7 @@ $(document).on('markupLoaded', function () {
       ],
       graphOptions: {
         type: 'scatter',
-        sampler: 'mathjs'
+        sampler: 'builtIn'
       }
     }]
   });
@@ -771,7 +771,7 @@ $(document).on('markupLoaded', function () {
       ],
       graphOptions: {
         type: 'line',
-        sampler: 'mathjs'
+        sampler: 'builtIn'
       }
     }]
   });
@@ -779,12 +779,19 @@ $(document).on('markupLoaded', function () {
   /**
    * ### Advanced: sampler
    *
-   * `function-plot` uses `interval-arithmetic` math by default, unfortunately some functions are
+   * `function-plot` uses interval-arithmetic math by default, unfortunately some functions are
    * not implemented yet because of the underlying complexity, for this reason you can always
    * evaluate a function with <img style="width: 50px; height: 15px" src="img/mathjs_330x100.png"/>,
-   * to do so make sure that the datum has the following set:
+   * to do so make sure that you include `math.js` before` function-plot`
    *
-   * - `sampler: 'mathjs'` to evaluate functions using math.js
+   * ```html
+   * <script src="//cdnjs.cloudflare.com/ajax/libs/mathjs/1.5.2/math.min.js"></script>
+   * ```
+   *
+   * And then set the following:
+   *
+   * - `sampler: 'builtIn'` the parser bundled with function-plot will be replaced with the one
+   * in math.js
    * - `type: 'line'` or `type: 'scatter'`
    */
   functionPlot({
@@ -793,7 +800,7 @@ $(document).on('markupLoaded', function () {
     data: [{
       fn: 'gamma(x)',
       graphOptions: {
-        sampler: 'mathjs',
+        sampler: 'builtIn',
         type: 'line'
       }
     }]
@@ -804,7 +811,7 @@ $(document).on('markupLoaded', function () {
       fn: 'tan(x)',
       samples: 4000,
       graphOptions: {
-        sampler: 'mathjs',
+        sampler: 'builtIn',
         type: 'line'
       }
     }]

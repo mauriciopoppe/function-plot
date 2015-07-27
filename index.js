@@ -320,7 +320,7 @@ module.exports = function (options) {
 
         // if the type of graph chosen is not `interval` then default the sampler to `mathjs`
         var sampler = data.graphOptions.type !== 'interval'
-          ? 'mathjs'
+          ? 'builtIn'
           : 'interval'
         data.graphOptions = extend({
           sampler: sampler
