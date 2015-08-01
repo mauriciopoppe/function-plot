@@ -1,5 +1,14 @@
 'use strict';
 
+// easy
+functionPlot({
+  target: '#playground',
+  disableZoom: true,
+  data: [{
+    fn: 'x^2'
+  }]
+})
+
 //// annotation test
 //functionPlot({
 //  target: '#playground',

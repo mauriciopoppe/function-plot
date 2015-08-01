@@ -185,16 +185,6 @@ module.exports = function (options) {
       .attr('class', 'canvas')
 
     // enter + update
-    canvas
-      .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
-      .call(zoomBehavior)
-      .each(function () {
-        var el = d3.select(this)
-        if (options.disableZoom) {
-          // https://github.com/mbostock/d3/issues/894
-          el.on('.zoom', null)
-        }
-      })
   }
 
   Chart.prototype.buildClip = function () {
@@ -275,6 +265,27 @@ module.exports = function (options) {
     var content = this.content = canvas.selectAll('g.content')
       .data(function (d) { return [d] })
 
+    canvas
+      .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+      .call(zoomBehavior)
+      .each(function () {
+        var el = d3.select(this)
+        var listeners = ['mousedown', 'mousewheel', 'mouseover', 'DOMMouseScroll', 'dblclick', 'wheel', 'MozMousePixelScroll']
+        listeners = listeners.map(function (l) { return l + '.zoom' })
+        if (!el._hasZoomListeners) {
+          listeners.forEach(function (l) {
+            el['_' + l] = el.on(l)
+          })
+        }
+        function setState (state) {
+          listeners.forEach(function (l) {
+            state ? el.on(l, el['_' + l]) : el.on(l, null)
+          }) 
+        }
+        // make a copy of all the listeners available to be removed/added later
+        setState(!options.disableZoom)
+      })
+    
     content.enter()
       .append('g')
       .attr('clip-path', 'url(#function-plot-clip-' + this.id + ')')
@@ -388,7 +399,6 @@ module.exports = function (options) {
         instance.tip.hide()
       },
       draw: function () {
-        // update the stroke width of the origin lines
         instance.buildContent()
       },
       'zoom:scaleUpdate': function (xOther, yOther) {
