@@ -795,9 +795,7 @@ $(document).on('markupLoaded', function () {
       fn: 'x^2'
     }],
     plugins: [
-      functionPlot.plugins.zoomBox({
-        key: '<shift>'
-      })
+      functionPlot.plugins.zoomBox()
     ]
   })
 
