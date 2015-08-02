@@ -16,7 +16,7 @@ $(document).on('markupLoaded', function () {
         updateOnMouseMove: true
       }
     }]
-  });
+  })
 
   functionPlot({
     target: '#description-sin-exp-x-naive',
@@ -32,7 +32,7 @@ $(document).on('markupLoaded', function () {
         type: 'line'
       }
     }]
-  });
+  })
 
   functionPlot({
     target: '#description-sin-exp-x',
@@ -44,7 +44,7 @@ $(document).on('markupLoaded', function () {
     data: [{
       fn: 'sin(exp(x))'
     }]
-  });
+  })
 
   /**
    * ### Plotting a curve
@@ -68,7 +68,7 @@ $(document).on('markupLoaded', function () {
     data: [{
       fn: 'x^2'
     }]
-  });
+  })
 
   /**
    * ### Additional options
@@ -93,7 +93,7 @@ $(document).on('markupLoaded', function () {
     data: [{
       fn: 'x^2'
     }]
-  });
+  })
 
   /**
    * ### Domain
@@ -110,7 +110,7 @@ $(document).on('markupLoaded', function () {
     data: [{
       fn: 'sin(x)'
     }]
-  });
+  })
 
   /**
    * ### Samples
@@ -138,7 +138,7 @@ $(document).on('markupLoaded', function () {
       fn: 'sin(x)',
       samples: 1000
     }]
-  });
+  })
 
   /**
    * ### Annotations
@@ -167,7 +167,7 @@ $(document).on('markupLoaded', function () {
       y: 2,
       text: 'y = 2'
     }]
-  });
+  })
 
   /**
    * ### Range and closed path
@@ -192,7 +192,7 @@ $(document).on('markupLoaded', function () {
         closed: true
       }
     }]
-  });
+  })
 
   /**
    * ### Multiple graphs
@@ -209,7 +209,7 @@ $(document).on('markupLoaded', function () {
       { fn: 'x * x * x' },
       { fn: 'x * x * x * x' }
     ]
-  });
+  })
 
   /**
    * ### Scatter
@@ -228,7 +228,7 @@ $(document).on('markupLoaded', function () {
         type: 'scatter'
       }
     }]
-  });
+  })
 
   /**
    * ### Tip
@@ -253,7 +253,7 @@ $(document).on('markupLoaded', function () {
     data: [
       { fn: 'x^2' }
     ]
-  });
+  })
 
   /**
    * ### Secants
@@ -282,7 +282,7 @@ $(document).on('markupLoaded', function () {
         { x0: 1, x1: 2 }
       ]
     }]
-  });
+  })
 
   /**
    * ### Secants <br> <div class="small">Dynamic secant lines</div>
@@ -303,7 +303,7 @@ $(document).on('markupLoaded', function () {
         updateOnMouseMove: true
       }]
     }]
-  });
+  })
 
   /**
    * ### Derivative
@@ -330,7 +330,7 @@ $(document).on('markupLoaded', function () {
         x0: 2
       }
     }]
-  });
+  })
 
   /**
    * ### Derivative <br> <div class="small">Tangent line on mouse's position</div>
@@ -349,7 +349,7 @@ $(document).on('markupLoaded', function () {
         updateOnMouseMove: true
       }
     }]
-  });
+  })
 
   /**
    * ### Derivative <br> <div class="small">Multiple tangent lines</div>
@@ -372,7 +372,7 @@ $(document).on('markupLoaded', function () {
         updateOnMouseMove: true
       }
     }]
-  });
+  })
 
   /**
    * ### Linked graphs
@@ -389,14 +389,14 @@ $(document).on('markupLoaded', function () {
     height: 250,
     xDomain: [-10, 10],
     data: [{ fn: 'x * x' }]
-  });
+  })
   b = functionPlot({
     target: '#linked-b',
     height: 250,
     xDomain: [-10, 10],
     data: [{ fn: '2 * x' }]
-  });
-  a.addLink(b);
+  })
+  a.addLink(b)
 
   /**
    * ### Linked graphs <div class="small">Multiple</div>
@@ -415,22 +415,22 @@ $(document).on('markupLoaded', function () {
     height: 250,
     xDomain: [-10, 10],
     data: [{ fn: 'x * x' }]
-  });
+  })
   b = functionPlot({
     target: '#linked-b-multiple',
     height: 250,
     xDomain: [-10, 10],
     data: [{ fn: '2 * x' }]
-  });
+  })
   c = functionPlot({
     target: '#linked-c-multiple',
     height: 250,
     xDomain: [-10, 10],
     data: [{ fn: '2' }]
-  });
-  a.addLink(b, c);
-  b.addLink(a, c);
-  c.addLink(a, b);
+  })
+  a.addLink(b, c)
+  b.addLink(a, c)
+  c.addLink(a, b)
 
   /**
    * ### Update
@@ -472,10 +472,10 @@ $(document).on('markupLoaded', function () {
         fn: 'x'
       }
     }
-    functionPlot(options);
-  });
+    functionPlot(options)
+  })
   // initial plot
-  functionPlot(options);
+  functionPlot(options)
 
   /**
    * ### Function continuity
@@ -493,7 +493,7 @@ $(document).on('markupLoaded', function () {
         updateOnMouseMove: true
       }
     }]
-  });
+  })
 
   /**
    * ### Function continuity <div class="small">$tan(x)$</div>
@@ -509,7 +509,7 @@ $(document).on('markupLoaded', function () {
         updateOnMouseMove: true
       }
     }]
-  });
+  })
 
   /**
    * ## The tale of a circle
@@ -542,7 +542,7 @@ $(document).on('markupLoaded', function () {
       { fn: 'sqrt(1 - x * x)' },
       { fn: '-sqrt(1 - x * x)' }
     ]
-  });
+  })
 
   /**
    * ### Parametric equations
@@ -582,7 +582,7 @@ $(document).on('markupLoaded', function () {
         type: 'line'
       }
     }]
-  });
+  })
 
   /**
    * ### Parametric Equations  <br /> <div class="small">Butterfly curve</div>
@@ -609,7 +609,7 @@ $(document).on('markupLoaded', function () {
         type: 'line'
       }
     }]
-  });
+  })
 
   /**
    * ### Polar equations
@@ -652,7 +652,7 @@ $(document).on('markupLoaded', function () {
         type: 'line'
       }
     }]
-  });
+  })
 
   /**
    * ### Polar equations <br /> <div class="small">Polar rose</div>
@@ -674,7 +674,7 @@ $(document).on('markupLoaded', function () {
         type: 'line'
       }
     }]
-  });
+  })
 
   /**
    * ### Implicit functions
@@ -707,7 +707,7 @@ $(document).on('markupLoaded', function () {
       fn: 'x * x + y * y - 1',
       implicit: true
     }]
-  });
+  })
 
   /**
    * ### Implicit function <br /> <div class="small">complex implicit functions</div>
@@ -730,7 +730,7 @@ $(document).on('markupLoaded', function () {
       fn: 'cos(PI * x) - cos(PI * y)',
       implicit: true
     }]
-  });
+  })
 
   /**
    * ### Points and polylines
@@ -758,7 +758,7 @@ $(document).on('markupLoaded', function () {
         sampler: 'builtIn'
       }
     }]
-  });
+  })
   functionPlot({
     target: '#polyline',
     data: [{
@@ -774,7 +774,32 @@ $(document).on('markupLoaded', function () {
         sampler: 'builtIn'
       }
     }]
-  });
+  })
+
+  /**
+   * ### Plugins: zoom box
+   *
+   * The zoom box plugin allows the magnification of some section of the graph
+   * to enable it use the `plugin` configuration option
+   *
+   * When the graph is rendered press `<shift>` and drag some portion of the screen
+   *
+   * Configuration options:
+   *
+   * - `key=<shift>` The key that triggers the magnification behavior, the string to
+   * keyCode mapping is powered by [vkey](https://www.npmjs.com/package/vkey)
+   */
+  functionPlot({
+    target: '#plugin-zoom-box',
+    data: [{
+      fn: 'x^2'
+    }],
+    plugins: [
+      functionPlot.plugins.zoomBox({
+        key: '<shift>'
+      })
+    ]
+  })
 
   /**
    * ### Advanced: sampler
@@ -804,7 +829,7 @@ $(document).on('markupLoaded', function () {
         type: 'line'
       }
     }]
-  });
+  })
   functionPlot({
     target: '#sampler-tan-mathjs',
     data: [{
@@ -815,45 +840,44 @@ $(document).on('markupLoaded', function () {
         type: 'line'
       }
     }]
-  });
-
+  })
   /** */
-});
+})
 
-$('#wzrd').load('partials/wzrd.html');
+$('#wzrd').load('partials/wzrd.html')
 
 $('#examples').load('partials/examples.html', function () {
-  $(document).trigger('markupLoaded');
+  $(document).trigger('markupLoaded')
   $('pre code').each(function (i, block) {
-    hljs.highlightBlock(block);
-  });
+    hljs.highlightBlock(block)
+  })
 
   $('#p-slider').on('change', function () {
     var value = +this.value;
-    $('#p-slider-value').html(value);
-  });
-});
+    $('#p-slider-value').html(value)
+  })
+})
 
 
 //$('#brcdn').load('partials/brcdn-module.html .panel.panel-primary', function () {
-//  clipboard();
-//});
+//  clipboard()
+//})
 //
 //function clipboard() {
-//  ZeroClipboard.config( { swfPath: "//cdnjs.cloudflare.com/ajax/libs/zeroclipboard/2.2.0/ZeroClipboard.swf" } );
-//  var elements = [].slice.call(document.querySelectorAll('[data-clipboard-text]'));
-//  var client = new ZeroClipboard(elements);
+//  ZeroClipboard.config( { swfPath: "//cdnjs.cloudflare.com/ajax/libs/zeroclipboard/2.2.0/ZeroClipboard.swf" } )
+//  var elements = [].slice.call(document.querySelectorAll('[data-clipboard-text]'))
+//  var client = new ZeroClipboard(elements)
 //  client.on('ready', function (event) {
 //    elements.forEach(function (el) {
 //      el.addEventListener('click', function (e) {
-//        e.preventDefault();
-//      }, false);
-//    });
+//        e.preventDefault()
+//      }, false)
+//    })
 //    client.on('aftercopy', function (e) {
-//      e.target.setAttribute('class', 'btn btn-sm btn-success');
+//      e.target.setAttribute('class', 'btn btn-sm btn-success')
 //      setTimeout(function () {
-//        e.target.setAttribute('class', 'btn btn-sm btn-primary');
-//      }, 200);
-//    });
-//  });
+//        e.target.setAttribute('class', 'btn btn-sm btn-primary')
+//      }, 200)
+//    })
+//  })
 //}

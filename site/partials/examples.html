@@ -11,7 +11,7 @@
   data: [{
     fn: 'x^2'
   }]
-});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="quadratic" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Additional options</h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="quadratic" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Additional options</h3>
 <p>Additionally the graph can have the following options defined on the top level object:</p><ul>
 <li><code>title</code>: the title of the graph</li>
 <li><code>width</code>: width of the graph</li>
@@ -31,7 +31,7 @@
   data: [{
     fn: 'x^2'
   }]
-});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="quadratic-with-options" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Domain</h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="quadratic-with-options" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Domain</h3>
 <p>The domains of both axes can be changed with the following configurations:</p><ul>
 <li><code>xDomain</code>, defaults to <code>[-5, 5]</code></li>
 <li><code>yDomain</code>, defaults to <code>[-5, 5]</code></li>
@@ -43,14 +43,14 @@
   data: [{
     fn: 'sin(x)'
   }]
-});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="domain" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Samples</h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="domain" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Samples</h3>
 <p><code>samples</code> determine the number of equally spaced points in which the function will be evaluated in the current domain, increasing it will more accurately represent the function using rectangles at the cost of processing speed</p><p>e.g.  samples = 100</p><p>$$ domain = [-5, 5] \\ values = -5, -4.9, -4.8, \ldots, 4.8, 4.9, 5.0 $$</p><p>$$ domain = [-10, 10] \\ values = -10, -9.8, -9.6, \ldots, 9.6, 9.8, 10 $$</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#samples',
   data: [{
     fn: 'sin(x)',
     samples: 1000
   }]
-});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="samples" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Annotations</h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="samples" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Annotations</h3>
 <p>Parallel lines to the y-axis or x-axis can be set in the <code>annotations</code> option:</p><ul>
 <li><code>x</code>: x coordinate of a line parallel to the y-axis</li>
 <li><code>y</code>: y coordinate of a line parallel to the x-axis</li>
@@ -71,7 +71,7 @@
     y: 2,
     text: 'y = 2'
   }]
-});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="annotations" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Range and closed path</h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="annotations" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Range and closed path</h3>
 <p>You can restrict the values to be evaluated with the <code>range</code> option, this works really nice with the <code>closed</code> option of the <code>line</code> type to render for example a <a href="http://mathworld.wolfram.com/DefiniteIntegral.html">definite integral</a></p><p>Additional graph options for the renderer of each graph can be set inside <code>graphOptions</code></p><ul>
 <li><code>type</code>: the type of graph, <code>line</code> (naive sampling), <code>scatter</code> (naive sampling) and <code>interval</code> (interval arithmetic sampling) are supported</li>
 <li><code>closed</code>: true to render a closed path, <code>y0</code> will always be 0 and <code>y1</code> will be $fn(x)$</li>
@@ -86,7 +86,7 @@
       closed: true
     }
   }]
-});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="closed" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Multiple graphs</h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="closed" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Multiple graphs</h3>
 <p><code>data</code> as seen in the examples above is an array, which means that multiple functions can be rendered in the same graph</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#multiple',
   data: [
@@ -96,7 +96,7 @@
     { fn: 'x * x * x' },
     { fn: 'x * x * x * x' }
   ]
-});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="multiple" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Scatter</h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="multiple" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Scatter</h3>
 <p>A function can be represented with some points belonging to the curve instead of the actual curve, to render some points make sure to set a low value for <code>samples</code> and set the type option to <code>scatter</code></p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#scatter',
   data: [{
@@ -106,7 +106,7 @@
       type: 'scatter'
     }
   }]
-});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="scatter" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Tip</h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="scatter" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Tip</h3>
 <p>The little circle that has the x-coordinate of the mouse position is called a &quot;tip&quot;, the following options can be configured:</p><ul>
 <li><code>xLine</code> true to show a dashed line parallel to $y = 0$ on the tip position</li>
 <li><code>yLine</code> true to show a dashed line parallel to $x = 0$ on the tip position</li>
@@ -125,7 +125,7 @@
   data: [
     { fn: 'x^2' }
   ]
-});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="tip" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Secants</h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="tip" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Secants</h3>
 <p>If a data object has a <code>secants</code> array, then each object will be used to compute secant lines between two points belonging to the function, additionally if <code>updateOnMouseMove</code> is a property set to <code>true</code> in the object then $(x_0, f(x_0))$ will be used as an anchored point and $(x_1, f(x_1))$ will be computed dynamically based on the mouse abscissa</p><p>Available options for each object:</p><ul>
 <li><code>x0</code> the abscissa of the first point</li>
 <li><code>x1</code> (optional if <code>updateOnMouseMove</code> is set) the abscissa of the second point</li>
@@ -143,7 +143,7 @@
       { x0: 1, x1: 2 }
     ]
   }]
-});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="secant" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Secants <br> <div class="small">Dynamic secant lines</div></h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="secant" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Secants <br> <div class="small">Dynamic secant lines</div></h3>
 <p>An example where <code>updateOnMouseMove</code> is set in two secant lines, each line will be computed on the dynamically based on the current position of the mouse</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#secant-update',
   yDomain: [-1, 9],
@@ -157,7 +157,7 @@
       updateOnMouseMove: true
     }]
   }]
-});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="secant-update" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Derivative</h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="secant-update" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Derivative</h3>
 <p>If a data object has a <code>derivative</code> object then its property <code>fn</code> will be used to compute the equation of the line tangent to the point <code>x0</code>, i.e. the point $(x_0, f(x_0))$ (the derivative is a function which gives the slope of the tangent line at any derivable point)</p><p>Available options for the <code>derivative</code> object:</p><ul>
 <li><code>fn</code> The function that is the first derivative of <code>data.fn</code></li>
 <li><code>x0</code> (optional if <code>updateOnMouseMove</code> is set) the abscissa of the point belonging to the curve whose tangent will be computed</li>
@@ -173,7 +173,7 @@
       x0: 2
     }
   }]
-});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="derivative" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Derivative <br> <div class="small">Tangent line on mouse&#39;s position</div></h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="derivative" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Derivative <br> <div class="small">Tangent line on mouse&#39;s position</div></h3>
 <p>if <code>updateOnMouseMove</code> is set to true then tangent line is computed whenever the mouse is moved inside the canvas (let $x_0$ be the mouse&#39;s abscissa then the tangent line to the point $(x_0, f(x_0))$ is computed whenever the position of the mouse changes)</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#derivative-update',
   yDomain: [-1, 9],
@@ -184,7 +184,7 @@
       updateOnMouseMove: true
     }
   }]
-});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="derivative-update" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Derivative <br> <div class="small">Multiple tangent lines</div></h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="derivative-update" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Derivative <br> <div class="small">Multiple tangent lines</div></h3>
 <p>An example of a graph with multiple functions, each function is configured with a <code>derivative</code> object with auto update of the slope as described above</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#derivative-update-multiple',
   data: [{
@@ -200,20 +200,20 @@
       updateOnMouseMove: true
     }
   }]
-});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="derivative-update-multiple" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Linked graphs</h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="derivative-update-multiple" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Linked graphs</h3>
 <p>Multiple graphs can be linked, when the tip&#39;s position, graph scale or graph translate properties are modified on the original graph the linked graphs are signaled with the same events, in the following example <code>a</code> also fires the internal <code>all:zoom</code> event, the <code>zoom</code> operation is performed on <code>a</code> and <code>b</code>, but when <code>b</code> fires the <code>all:zoom</code> event the zoom operation is only performed on <code>b</code></p></div><div class="code"><pre><code class="javascript">a = functionPlot({
   target: '#linked-a',
   height: 250,
   xDomain: [-10, 10],
   data: [{ fn: 'x * x' }]
-});
+})
 b = functionPlot({
   target: '#linked-b',
   height: 250,
   xDomain: [-10, 10],
   data: [{ fn: '2 * x' }]
-});
-a.addLink(b);</code></pre></div></div><div class="col-md-6 center-block demos"><span id="linked-a" class="graph"></span><span id="linked-b" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Linked graphs <div class="small">Multiple</div></h3>
+})
+a.addLink(b)</code></pre></div></div><div class="col-md-6 center-block demos"><span id="linked-a" class="graph"></span><span id="linked-b" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Linked graphs <div class="small">Multiple</div></h3>
 <p>Since the <code>zoom</code> event is dispatched to all the linked graphs, one can set as many linked graphs as wanted and all of them will perform the same zoom operation, in the following example these functions are plotted:</p><ul>
 <li>$y = x^2$</li>
 <li>$y&#39; = 2x$</li>
@@ -224,22 +224,22 @@ a.addLink(b);</code></pre></div></div><div class="col-md-6 center-block demos"><
   height: 250,
   xDomain: [-10, 10],
   data: [{ fn: 'x * x' }]
-});
+})
 b = functionPlot({
   target: '#linked-b-multiple',
   height: 250,
   xDomain: [-10, 10],
   data: [{ fn: '2 * x' }]
-});
+})
 c = functionPlot({
   target: '#linked-c-multiple',
   height: 250,
   xDomain: [-10, 10],
   data: [{ fn: '2' }]
-});
-a.addLink(b, c);
-b.addLink(a, c);
-c.addLink(a, b);</code></pre></div></div><div class="col-md-6 center-block demos"><span id="linked-a-multiple" class="graph"></span><span id="linked-b-multiple" class="graph"></span><span id="linked-c-multiple" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Update</h3>
+})
+a.addLink(b, c)
+b.addLink(a, c)
+c.addLink(a, b)</code></pre></div></div><div class="col-md-6 center-block demos"><span id="linked-a-multiple" class="graph"></span><span id="linked-b-multiple" class="graph"></span><span id="linked-c-multiple" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Update</h3>
 <p>To update a graphic one needs to call <code>functionPlot</code> on the same target element with <em>any</em> object that is configured properly</p></div><div class="code"><pre><code class="javascript">var options = {
   target: '#quadratic-update',
   data: [{
@@ -270,10 +270,10 @@ $('#update').click(function () {
       fn: 'x'
     }
   }
-  functionPlot(options);
-});
+  functionPlot(options)
+})
 // initial plot
-functionPlot(options);</code></pre></div></div><div class="col-md-6 center-block demos"><span id="quadratic-update" class="graph"></span><div>
+functionPlot(options)</code></pre></div></div><div class="col-md-6 center-block demos"><span id="quadratic-update" class="graph"></span><div>
    <button id="update" class="btn btn-primary">Update</button></div></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Function continuity</h3>
 <p>Some functions are not defined under some range of values, for example the function $f(x) = \frac{1}{x}$ is undefined when $x = 0$, the library identifies these kind of peaks and there&#39;s no need to explicitly tell these asymptotes</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#function-continuity',
@@ -284,7 +284,7 @@ functionPlot(options);</code></pre></div></div><div class="col-md-6 center-block
       updateOnMouseMove: true
     }
   }]
-});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="function-continuity" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Function continuity <div class="small">$tan(x)$</div></h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="function-continuity" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Function continuity <div class="small">$tan(x)$</div></h3>
 <p>Plotting $f(x) = tan(x)$ which has many vertical asymptotes</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#function-continuity-tan-x',
   data: [{
@@ -294,7 +294,7 @@ functionPlot(options);</code></pre></div></div><div class="col-md-6 center-block
       updateOnMouseMove: true
     }
   }]
-});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="function-continuity-tan-x" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h2>The tale of a circle</h2>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="function-continuity-tan-x" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h2>The tale of a circle</h2>
 <p>Consider plotting the function</p><p>$$ x^2 + y^2 = 1 $$</p><p>which is the equation of a circle of radius 1, unfortunately $y$ is not expressed in terms of $x$ and <code>function-plot</code> needs an equation in the form $y = f(x)$, solving for $y$ we get:</p><p>$$ y = \pm\sqrt{1 - x^2} $$</p><p>Which raises two functions</p><p>$$ y = \sqrt{1 - x^2} \quad and \quad y = -\sqrt{1 - x^2} $$</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#circle-explicit',
   yDomain: [-1.897959183, 1.897959183],
@@ -303,7 +303,7 @@ functionPlot(options);</code></pre></div></div><div class="col-md-6 center-block
     { fn: 'sqrt(1 - x * x)' },
     { fn: '-sqrt(1 - x * x)' }
   ]
-});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="circle-explicit" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Parametric equations</h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="circle-explicit" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Parametric equations</h3>
 <p>The original equation of the circle $x^2 + y^2 = 1$ can be parametrized as</p><p>$$ x = cos(t) \\ y = sin(t) $$</p><p>For $0 \leq t \leq 2 \pi$</p><p>The options that tell <code>function-plot</code> to render a parametric equation are defined inside each term of the <code>data</code> array and need to have the following properties set:</p><ul>
 <li><code>parametric = true</code> to mark this term as a parametric equation</li>
 <li><code>x</code> the x-coordinate of a point to be sampled with a parameter <code>t</code></li>
@@ -322,7 +322,7 @@ functionPlot(options);</code></pre></div></div><div class="col-md-6 center-block
       type: 'line'
     }
   }]
-});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="parametric-circle" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Parametric Equations    <div class="small">Butterfly curve</div></h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="parametric-circle" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Parametric Equations    <div class="small">Butterfly curve</div></h3>
 <p>Let&#39;s render the famous equation of the butterfly curve using parametric equations, the equations are:</p><p>$$ x = sin(t)(e^{cos(t)} - 2cos(4t) - sin(\tfrac{t}{12})^5) \\ y = cos(t)(e^{cos(t)} - 2cos(4t) - sin(\tfrac{t}{12})^5) $$</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#butterfly-curve',
   yDomain: [-4.428571429, 4.428571429],
@@ -336,7 +336,7 @@ functionPlot(options);</code></pre></div></div><div class="col-md-6 center-block
       type: 'line'
     }
   }]
-});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="butterfly-curve" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Polar equations</h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="butterfly-curve" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Polar equations</h3>
 <p>The original equation of the circle $x^2 + y^2 = 1$ can be expressed with the following polar equation</p><p>$$ r = r_0 \; cos(\theta - \gamma) + sqrt(a^2 -r_0^2 sin^2(\theta - \gamma)) $$</p><p>Where $\theta$ is the polar angle, $a$ is the radius of the circle with center $(r_0, \gamma)$</p><p>The options that tell <code>function-plot</code> to render a polar equation are defined inside each term of the <code>data</code> array and need to have the following properties set:</p><ul>
 <li><code>polar = true</code> to mark this term as a polar equation</li>
 <li><code>r</code> a polar equation in terms of <code>theta</code></li>
@@ -358,7 +358,7 @@ functionPlot(options);</code></pre></div></div><div class="col-md-6 center-block
       type: 'line'
     }
   }]
-});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="polar-circle" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Polar equations   <div class="small">Polar rose</div></h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="polar-circle" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Polar equations   <div class="small">Polar rose</div></h3>
 <p>Rendering the equation of the polar rose</p><p>$$ r = 2 sin(4 \theta) $$</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#polar-complex',
   yDomain: [-1.897959183, 1.897959183],
@@ -370,7 +370,7 @@ functionPlot(options);</code></pre></div></div><div class="col-md-6 center-block
       type: 'line'
     }
   }]
-});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="polar-complex" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Implicit functions</h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="polar-complex" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Implicit functions</h3>
 <p>The equation of a circle of radius 1 $x^2 + y^2 = 1$ expressed in an explicit way is:</p><p>$$ y = \sqrt{1 - x^2} \quad and \quad y = -\sqrt{1 - x^2} $$</p><p>This library can also plot implicit equations with the only requirement of making the equation equal to zero and adding the option <code>implicit</code> (the sampler expects that the function depends on the variables $x$ and $y$)</p><p>$$ 0 = x^2 + y^2 - 1 $$</p><p>To render implicit equations you have to make sure of the following:</p><ul>
 <li><code>fn(x, y)</code> means that the function <code>fn</code> needs to be expressed in terms of <code>x</code> and <code>y</code></li>
 <li><code>implicit = true</code> is set on the data item that is an implicit equation</li>
@@ -383,7 +383,7 @@ functionPlot(options);</code></pre></div></div><div class="col-md-6 center-block
     fn: 'x * x + y * y - 1',
     implicit: true
   }]
-});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="circle-implicit" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Implicit function   <div class="small">complex implicit functions</div></h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="circle-implicit" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Implicit function   <div class="small">complex implicit functions</div></h3>
 <p>Consider the following equation</p><p>$$ cos(\pi x) = cos(\pi y) $$</p><p>It&#39;s impossible to find an explicit version of it because we would need an infinite number of functions, however for a finite region of the plane a finite number of functions suffice</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#implicit-complex',
   yDomain: [-3.795918366, 3.795918366],
@@ -393,7 +393,7 @@ functionPlot(options);</code></pre></div></div><div class="col-md-6 center-block
     fn: 'cos(PI * x) - cos(PI * y)',
     implicit: true
   }]
-});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="implicit-complex" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Points and polylines</h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="implicit-complex" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Points and polylines</h3>
 <p>To plot a collection of points or a polyline the following options are required:</p><ul>
 <li><code>points</code> An array of coordinates, each coordinate is represented by a 2-element array</li>
 <li><code>graphOptions.sampler = mathjs</code> interval arithmetic needs to be disabled for collections of points<ul>
@@ -417,7 +417,7 @@ functionPlot(options);</code></pre></div></div><div class="col-md-6 center-block
       sampler: 'builtIn'
     }
   }]
-});
+})
 functionPlot({
   target: '#polyline',
   data: [{
@@ -433,7 +433,21 @@ functionPlot({
       sampler: 'builtIn'
     }
   }]
-});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="points" class="graph"></span><span id="polyline" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Advanced: sampler</h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="points" class="graph"></span><span id="polyline" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Plugins: zoom box</h3>
+<p>The zoom box plugin allows the magnification of some section of the graph to enable it use the <code>plugin</code> configuration option</p><p>When the graph is rendered press <code>&lt;shift&gt;</code> and drag some portion of the screen</p><p>Configuration options:</p><ul>
+<li><code>keydown=&lt;shift&gt;</code> The key that triggers the magnification behavior, the string to keyCode mapping is powered by <a href="https://www.npmjs.com/package/vkey">vkey</a></li>
+</ul>
+</div><div class="code"><pre><code class="javascript">functionPlot({
+  target: '#plugin-zoom-box',
+  data: [{
+    fn: 'x^2'
+  }],
+  plugins: [
+    functionPlot.plugins.zoomBox({
+      key: '<shift>'
+    })
+  ]
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="plugin-zoom-box" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Advanced: sampler</h3>
 <p><code>function-plot</code> uses interval-arithmetic math by default, unfortunately some functions are not implemented yet because of the underlying complexity, for this reason you can always evaluate a function with <img style="width: 50px; height: 15px" src="img/mathjs_330x100.png"/>, to do so make sure that you include <code>math.js</code> before<code>function-plot</code></p><pre><code class="lang-html">&lt;script src=&quot;//cdnjs.cloudflare.com/ajax/libs/mathjs/1.5.2/math.min.js&quot;&gt;&lt;/script&gt;
 </code></pre>
 <p>And then set the following:</p><ul>
@@ -450,7 +464,7 @@ functionPlot({
       type: 'line'
     }
   }]
-});
+})
 functionPlot({
   target: '#sampler-tan-mathjs',
   data: [{
@@ -461,4 +475,4 @@ functionPlot({
       type: 'line'
     }
   }]
-});</code></pre></div></div><div class="col-md-6 center-block demos"><span id="sampler-mathjs" class="graph"></span><span id="sampler-tan-mathjs" class="graph"></span></div></div></div></div>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="sampler-mathjs" class="graph"></span><span id="sampler-tan-mathjs" class="graph"></span></div></div></div></div>
