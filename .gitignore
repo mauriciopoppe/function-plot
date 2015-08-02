@@ -1,5 +1,5 @@
 # Created by https://www.gitignore.io
-
+.DS_Store
 ### Node ###
 # Dependency directory
 node_modules

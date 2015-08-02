@@ -24,9 +24,11 @@
     "2d"
   ],
   "dependencies": {
+    "built-in-math-eval": "^0.2.3",
     "extend": "^3.0.0",
     "interval-arithmetic-eval": "^0.3.3",
-    "built-in-math-eval": "^0.2.3"
+    "key-pressed": "0.0.1",
+    "keydown": "0.0.3"
   },
   "devDependencies": {
     "beefy": "^2.1.3",

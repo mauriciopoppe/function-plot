@@ -3,10 +3,12 @@
 // easy
 functionPlot({
   target: '#playground',
-  disableZoom: true,
   data: [{
     fn: 'x^2'
-  }]
+  }],
+  plugins: [
+    functionPlot.plugins.zoomBox()
+  ]
 })
 
 //// annotation test

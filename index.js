@@ -41,6 +41,7 @@ module.exports = function (options) {
     var letter = String.fromCharCode(Math.floor(n * 26) + 97)
     this.id = letter + n.toString(16).substr(2)
     this.linkedGraphs = [this]
+    this.options = options
 
     options.id = this.id
     cache[this.id] = this
@@ -127,6 +128,7 @@ module.exports = function (options) {
       .call(tip)
 
     this.buildZoomHelper()
+    this.setUpPlugins()
   }
 
   Chart.prototype.buildTitle = function () {
@@ -270,6 +272,7 @@ module.exports = function (options) {
       .call(zoomBehavior)
       .each(function () {
         var el = d3.select(this)
+        // make a copy of all the listeners available to be removed/added later
         var listeners = ['mousedown', 'mousewheel', 'mouseover', 'DOMMouseScroll', 'dblclick', 'wheel', 'MozMousePixelScroll']
         listeners = listeners.map(function (l) { return l + '.zoom' })
         if (!el._hasZoomListeners) {
@@ -280,12 +283,10 @@ module.exports = function (options) {
         function setState (state) {
           listeners.forEach(function (l) {
             state ? el.on(l, el['_' + l]) : el.on(l, null)
-          }) 
+          })
         }
-        // make a copy of all the listeners available to be removed/added later
         setState(!options.disableZoom)
       })
-    
     content.enter()
       .append('g')
       .attr('clip-path', 'url(#function-plot-clip-' + this.id + ')')
@@ -375,10 +376,25 @@ module.exports = function (options) {
       })
   }
 
+  Chart.prototype.setUpPlugins = function () {
+    var plugins = options.plugins || []
+    var self = this
+    plugins.forEach(function (plugin) {
+      plugin(self)
+    })
+  }
+
   Chart.prototype.addLink = function () {
     for (var i = 0; i < arguments.length; i += 1) {
       this.linkedGraphs.push(arguments[i])
     }
+  }
+
+  Chart.prototype.updateAxes = function () {
+    var instance = this
+    var canvas = instance.canvas
+    canvas.select('.x.axis').call(instance.meta.xAxis)
+    canvas.select('.y.axis').call(instance.meta.yAxis)
   }
 
   Chart.prototype.getFontSize = function () {
@@ -436,19 +452,19 @@ module.exports = function (options) {
 
       zoom: function (xScale, yScale) {
         instance.linkedGraphs.forEach(function (graph, i) {
-          // - updates the position of the axes
-          // - updates the position/scale of the clipping rectangle
-          var canvas = graph.canvas
-          canvas.select('.x.axis').call(graph.meta.xAxis)
-          canvas.select('.y.axis').call(graph.meta.yAxis)
+          graph.updateAxes()
+          // the first element is the instance who fired the event,
+          // content draw
+          graph.emit('draw')
+
+          // since its scale was updated through d3.behavior.zoom
+          // we don't need to do it again
           if (i) {
             graph.emit('zoom:scaleUpdate', xScale, yScale)
           }
-
-          // content draw
-          graph.emit('draw')
         })
 
+        // emit the position of the mouse to all the registered graphs
         instance.emit('all:mousemove')
       }
     }
@@ -481,3 +497,5 @@ module.exports = function (options) {
 }
 Const = module.exports.constants = require('./lib/constants')
 types = module.exports.types = require('./lib/types/')
+module.exports.plugins = require('./lib/plugins/')
+
