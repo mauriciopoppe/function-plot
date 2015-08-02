@@ -435,7 +435,7 @@ functionPlot({
   }]
 })</code></pre></div></div><div class="col-md-6 center-block demos"><span id="points" class="graph"></span><span id="polyline" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Plugins: zoom box</h3>
 <p>The zoom box plugin allows the magnification of some section of the graph to enable it use the <code>plugin</code> configuration option</p><p>When the graph is rendered press <code>&lt;shift&gt;</code> and drag some portion of the screen</p><p>Configuration options:</p><ul>
-<li><code>keydown=&lt;shift&gt;</code> The key that triggers the magnification behavior, the string to keyCode mapping is powered by <a href="https://www.npmjs.com/package/vkey">vkey</a></li>
+<li><code>key=&lt;shift&gt;</code> The key that triggers the magnification behavior, the string to keyCode mapping is powered by <a href="https://www.npmjs.com/package/vkey">vkey</a></li>
 </ul>
 </div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#plugin-zoom-box',
@@ -443,9 +443,7 @@ functionPlot({
     fn: 'x^2'
   }],
   plugins: [
-    functionPlot.plugins.zoomBox({
-      key: '<shift>'
-    })
+    functionPlot.plugins.zoomBox()
   ]
 })</code></pre></div></div><div class="col-md-6 center-block demos"><span id="plugin-zoom-box" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Advanced: sampler</h3>
 <p><code>function-plot</code> uses interval-arithmetic math by default, unfortunately some functions are not implemented yet because of the underlying complexity, for this reason you can always evaluate a function with <img style="width: 50px; height: 15px" src="img/mathjs_330x100.png"/>, to do so make sure that you include <code>math.js</code> before<code>function-plot</code></p><pre><code class="lang-html">&lt;script src=&quot;//cdnjs.cloudflare.com/ajax/libs/mathjs/1.5.2/math.min.js&quot;&gt;&lt;/script&gt;
