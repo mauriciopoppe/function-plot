@@ -1,13 +1,14 @@
 'use strict';
 
-// easy
 functionPlot({
   target: '#playground',
   data: [{
     fn: 'x^2'
   }],
   plugins: [
-    functionPlot.plugins.zoomBox()
+    functionPlot.plugins.zoomBox({
+      toggle: true
+    })
   ]
 })
 
