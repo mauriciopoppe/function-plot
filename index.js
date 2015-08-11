@@ -397,6 +397,23 @@ module.exports = function (options) {
     canvas.select('.y.axis').call(instance.meta.yAxis)
   }
 
+  Chart.prototype.programmaticZoom = function (xDomain, yDomain) {
+    var instance = this
+    d3.transition()
+      .duration(750)
+      .tween('zoom', function () {
+        var ix = d3.interpolate(xScale.domain(), xDomain)
+        var iy = d3.interpolate(yScale.domain(), yDomain)
+        return function (t) {
+          zoomBehavior
+            .x(xScale.domain(ix(t)))
+            .y(yScale.domain(iy(t)))
+          instance.updateAxes()
+          instance.emit('draw')
+        }
+      })
+  }
+
   Chart.prototype.getFontSize = function () {
     return Math.max(Math.max(width, height) / 50, 8)
   }
@@ -498,4 +515,4 @@ module.exports = function (options) {
 Const = module.exports.constants = require('./lib/constants')
 types = module.exports.types = require('./lib/types/')
 module.exports.plugins = require('./lib/plugins/')
-
+module.exports.eval = require('./lib/helpers/eval')

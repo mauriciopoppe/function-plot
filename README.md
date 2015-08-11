@@ -94,6 +94,7 @@ var functionPlot = require('function-plot');
     graph to be rendered for a function
   * `options.plugins` {array} An array describing plugins to be run when the graph is initialized, check out the
     examples on the main page
+    
 ### `options.data[i].graphOptions` {Object}
 
 * `type` {string} type of graph, currently `line`, `scatter` and `interval` are supported, `interval` is the default option
@@ -105,7 +106,7 @@ Depending on the type option:
 * `options.closed` {boolean} (only if `type: 'interval'` or `type: 'line'`) True to close the path, for any segment of the closed area graph
   `y0` will be 0 and `y1` will be `f(x)`  
   
-### if `options.data[i].parametric = true`
+#### if `options.data[i].parametric = true`
 
 - `x` the x-coordinate of a point to be sampled with a parameter `t`
 - `y` the y-coordinate of a point to be sampled with a parameter `t`
@@ -113,14 +114,14 @@ Depending on the type option:
 to determine the possible values of `t`, remember that the number of samples is
 set in the property `samples`
 
-### if `options.data[i].polar = true`
+#### if `options.data[i].polar = true`
 
 - `r` a polar equation in terms of `theta`
 - `range = [-Math.PI, Math.PI]` the `range` property in polar equations is used
 to determine the possible values of `theta`, remember that the number of samples is
 set in the property `samples`
    
-### if `options.data[i].implicit = true`
+#### if `options.data[i].implicit = true`
 
 - `fn` a function which needs to be expressed in terms of `x` and `y`
 
@@ -168,6 +169,55 @@ The following events are dispatched to all the linked graphs
 * `all:draw` same as `draw` but it's dispatched in each linked graph
 * `all:zoom:scaleUpdate` same as `zoom:scaleUpdate` but it's dispatched in each linked graph
 * `all:zoom` fired whenever there's scaling/translation on the graph, dispatched on all the linked graphs
+
+When the `definite-integral` plugin is included the instance will fire the following events
+
+* `definite-integral`
+  * `datum` {object} The datum whose definite integral was computed
+  * `i` {number} The index of the datum in the `data` array
+  * `value` {number} The value of the definite integral
+  * `a` {number} the left endpoint of the interval
+  * `b` {number} the right endpoint of the interval
+
+## Recipes
+
+### Evaluate a function at some value `x`
+ 
+```javascript
+var y = functionPlot.eval.builtIn(datum, fnProperty, scope)
+```
+
+Where `datum` is an object that has a function to be evaluated in the property `fnProperty` ,
+to eval this function we need an `x` value which is sent through the scope
+
+e.g.
+
+```javascript
+var datum = {
+  fn: 'x^2'
+}
+var scope = {
+  x: 2
+}
+var y = functionPlot.eval.builtIn(datum, 'fn', scope)
+```
+
+Every element of the `data` property sent to `functionPlot` is saved on `instance.options.data`,
+if you want to get the evaluated values of all the elements here run
+
+```javascript
+var instance = functionPlot( ... )
+instance.options.data.forEach(function (datum) {
+  var datum = {
+    fn: 'x^2'
+  }
+  var scope = {
+    // a value for x
+    x: 2
+  }
+  var y = functionPlot.eval.builtIn(datum, 'fn', scope)
+}
+```
 
 ## Development
 

@@ -800,6 +800,54 @@ $(document).on('markupLoaded', function () {
   })
 
   /**
+   * ### Plugin: definite integral values
+   *
+   * The definite integral plugin computes the value of a definite integral using
+   * Simpson's rule, the computation is powered by [integrate-adaptive-simpson](https://github.com/scijs/integrate-adaptive-simpson)
+   *
+   * When the graph is rendered press `<shift>` and drag some portion of the screen,
+   * the limits of the brush control are sent to the integrator module which computes
+   * the value of the definite integral, listen for the `definite-integral` event
+   * on the instance returned by `functionPlot`
+   *
+   * Configuration options:
+   *
+   * - `key=<shift>` The key that triggers the drag behavior on the canvas to control
+   * the interval of the definite integral
+   * - `tol` Sent to the integrator module
+   * - `maxdepth` Sent to the integrator module
+   *
+   * Emitter params:
+   *
+   * - `datum` {object} The datum whose definite integral was computed
+   * - `i` {number} The index of the datum in the `data` array
+   * - `value` {number} The value of the definite integral
+   * - `a` {number} the left endpoint of the interval
+   * - `b` {number} the right endpoint of the interval
+   */
+  var instance = functionPlot({
+    target: '#playground',
+    xDomain: [0.01, 1],
+    yDomain: [-100, 100],
+    data: [{
+      fn: '1/x * cos(1/x)',
+      graphOptions: {
+        // to make it look like a definite integral
+        closed: true
+      }
+    }],
+    plugins: [
+      functionPlot.plugins.definiteIntegral({
+        tol: 1e-8,
+        maxdepth: 20
+      })
+    ]
+  })
+  instance.on('definite-integral', function (datum, i, value, a, b) {
+    console.log(value, a, b)
+  })
+
+  /**
    * ### Advanced: sampler
    *
    * `function-plot` uses interval-arithmetic math by default, unfortunately some functions are

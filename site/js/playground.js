@@ -11,6 +11,25 @@ functionPlot({
   ]
 })
 
+//var instance = functionPlot({
+//  target: '#playground',
+//  xDomain: [0.01, 1],
+//  yDomain: [-100, 100],
+//  data: [{
+//    fn: '1/x * cos(1/x)',
+//    graphOptions: {
+//      closed: true
+//    }
+//  }],
+//  plugins: [
+//    functionPlot.plugins.definiteIntegral()
+//  ]
+//})
+//instance.on('definite-integral', function (datum, i, value, a, b) {
+//  console.log(value, a, b)
+//})
+
+
 //// annotation test
 //functionPlot({
 //  target: '#playground',
