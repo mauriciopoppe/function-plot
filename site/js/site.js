@@ -788,6 +788,8 @@ $(document).on('markupLoaded', function () {
    *
    * - `key=<shift>` The key that triggers the magnification behavior, the string to
    * keyCode mapping is powered by [vkey](https://www.npmjs.com/package/vkey)
+   * - `toggle=false` True to enable/disable the brush mask on keydown rather than enabling it on
+   * keydown and disabling it on keyup
    */
   functionPlot({
     target: '#plugin-zoom-box',
@@ -814,6 +816,8 @@ $(document).on('markupLoaded', function () {
    *
    * - `key=<shift>` The key that triggers the drag behavior on the canvas to control
    * the interval of the definite integral
+   * - `toggle=false` True to enable/disable the brush mask on keydown rather than enabling it on
+   * keydown and disabling it on keyup
    * - `tol` Sent to the integrator module
    * - `maxdepth` Sent to the integrator module
    *
