@@ -219,6 +219,17 @@ instance.options.data.forEach(function (datum) {
 }
 ```
 
+### Programmatic zoom
+
+Just call `instance.programmaticZoom` with the desired `x` and `y` domains
+
+```javascript
+var instance = functionPlot( ... )
+var xDomain = [-3, 3]
+var yDomain = [-1.897, 1.897]
+instance.programmaticZoom(xDomain, yDomain)
+```
+
 ## Development
 
 After cloning the repo and running `npm install`

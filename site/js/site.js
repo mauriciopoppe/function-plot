@@ -777,7 +777,7 @@ $(document).on('markupLoaded', function () {
   })
 
   /**
-   * ### Plugins: zoom box
+   * ### Plugin: zoom box
    *
    * The zoom box plugin allows the magnification of some section of the graph
    * to enable it use the `plugin` configuration option
