@@ -1,6 +1,6 @@
 'use strict';
 
-functionPlot({
+var instance = functionPlot({
   target: '#playground',
   data: [{
     fn: 'x^2'
@@ -10,6 +10,9 @@ functionPlot({
       toggle: true
     })
   ]
+})
+instance.on('programmatic-zoom', function () {
+  console.log('end')
 })
 
 //var instance = functionPlot({

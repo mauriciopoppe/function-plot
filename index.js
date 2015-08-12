@@ -412,6 +412,9 @@ module.exports = function (options) {
           instance.emit('draw')
         }
       })
+      .each('end', function () {
+        instance.emit('programmatic-zoom')
+      })
   }
 
   Chart.prototype.getFontSize = function () {
