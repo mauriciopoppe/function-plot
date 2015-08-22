@@ -27,7 +27,7 @@
     "built-in-math-eval": "^0.2.3",
     "extend": "^3.0.0",
     "integrate-adaptive-simpson": "^1.0.3",
-    "interval-arithmetic-eval": "^0.3.3",
+    "interval-arithmetic-eval": "^0.3.5",
     "key-pressed": "0.0.1",
     "keydown": "0.0.3"
   },

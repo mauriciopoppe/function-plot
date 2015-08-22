@@ -48,3 +48,4 @@ Session.vim
 bower_components
 site/test
 sandbox
+.DS_Store
