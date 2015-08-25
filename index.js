@@ -397,6 +397,12 @@ module.exports = function (options) {
     canvas.select('.y.axis').call(instance.meta.yAxis)
   }
 
+  Chart.prototype.updateOptions = function () {
+    // update the original options yDomain and xDomain
+    this.options.xDomain = this.meta.xScale.domain()
+    this.options.yDomain = this.meta.yScale.domain()
+  }
+
   Chart.prototype.programmaticZoom = function (xDomain, yDomain) {
     var instance = this
     d3.transition()
@@ -408,8 +414,7 @@ module.exports = function (options) {
           zoomBehavior
             .x(xScale.domain(ix(t)))
             .y(yScale.domain(iy(t)))
-          instance.updateAxes()
-          instance.emit('draw')
+          instance.draw()
         }
       })
       .each('end', function () {
@@ -419,6 +424,15 @@ module.exports = function (options) {
 
   Chart.prototype.getFontSize = function () {
     return Math.max(Math.max(width, height) / 50, 8)
+  }
+
+  Chart.prototype.draw = function () {
+    var instance = this
+    instance.emit('before:draw')
+    instance.updateOptions()
+    instance.updateAxes()
+    instance.buildContent()
+    instance.emit('after:draw')
   }
 
   Chart.prototype.setUpEventListeners = function () {
@@ -433,9 +447,6 @@ module.exports = function (options) {
       },
       mouseout: function () {
         instance.tip.hide()
-      },
-      draw: function () {
-        instance.buildContent()
       },
       'zoom:scaleUpdate': function (xOther, yOther) {
         zoomBehavior
@@ -472,16 +483,14 @@ module.exports = function (options) {
 
       zoom: function (xScale, yScale) {
         instance.linkedGraphs.forEach(function (graph, i) {
-          graph.updateAxes()
-          // the first element is the instance who fired the event,
-          // content draw
-          graph.emit('draw')
-
           // since its scale was updated through d3.behavior.zoom
           // we don't need to do it again
           if (i) {
             graph.emit('zoom:scaleUpdate', xScale, yScale)
           }
+          // the first element is the instance who fired the event,
+          // content draw
+          graph.draw()
         })
 
         // emit the position of the mouse to all the registered graphs

@@ -152,7 +152,8 @@ events can be triggered by doing `instance.emit([eventName][, params])`
 * `mousemove` fired whenever the mouse is moved inside the canvas, callback params `x`, `y` (in canvas space
 coordinates)
 * `mouseout` fired whenever the mouse is moved outside the canvas
-* `draw` emit this event to redraw the contents of the canvas
+* `before:draw` fired before drawing all the graphs 
+* `after:draw` fired after drawing all the graphs 
 * `zoom:scaleUpdate` fired whenever the scale of another graph is updated, callback params `xScale`, `yScale`
 (x-scale and y-scale of another graph whose scales were updated)
 * `tip:update` fired whenever the tip position is updated, callback params `x`, `y`, `index` (in canvas
@@ -166,7 +167,6 @@ The following events are dispatched to all the linked graphs
 * `all:mouseover` same as `mouseover` but it's dispatched in each linked graph
 * `all:mousemove` same as `mousemove` but it's dispatched in each linked graph
 * `all:mouseout` same as `mouseout` but it's dispatched in each linked graph
-* `all:draw` same as `draw` but it's dispatched in each linked graph
 * `all:zoom:scaleUpdate` same as `zoom:scaleUpdate` but it's dispatched in each linked graph
 * `all:zoom` fired whenever there's scaling/translation on the graph, dispatched on all the linked graphs
 
