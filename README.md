@@ -230,6 +230,41 @@ var yDomain = [-1.897, 1.897]
 instance.programmaticZoom(xDomain, yDomain)
 ```
 
+### Maintain aspect ratio
+
+Given the `xDomain` values you can compute the corresponding `yDomain` values to main
+the aspect ratio between the axes
+
+```javascript
+function computeYScale (width, height, xScale) {
+  var xDiff = xScale[1] - xScale[0]
+  var yDiff = height * xDiff / width
+  return [-yDiff / 2, yDiff / 2]
+}
+
+var width = 800
+var height = 400
+
+// desired xDomain values
+var xScale = [-10, 10]
+
+functionPlot({
+  width: width,
+  height: height,
+  xDomain: xScale,
+  yDomain: computeYScale(width, height, xScale),
+
+  target: '#demo',
+  data: [{
+    fn: 'x^2',
+    derivative: {
+      fn: '2x',
+      updateOnMouseMove: true
+    }
+  }]
+})
+```
+
 ## Development
 
 After cloning the repo and running `npm install`
