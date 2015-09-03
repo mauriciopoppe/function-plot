@@ -2,6 +2,7 @@
 
 var instance = functionPlot({
   target: '#playground',
+  grid: true,
   data: [{
     fn: 'x^2'
   }],

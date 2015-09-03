@@ -72,9 +72,11 @@ module.exports = function (options) {
       .domain(yDomain)
       .range([height, 0])
     this.meta.xAxis = d3.svg.axis()
+      .tickSize(options.grid ? -height : 0)
       .scale(xScale)
       .orient('bottom')
     this.meta.yAxis = d3.svg.axis()
+      .tickSize(options.grid ? -width : 0)
       .scale(yScale)
       .orient('left')
   }
@@ -298,7 +300,8 @@ module.exports = function (options) {
     yOrigin.enter()
       .append('path')
       .attr('class', 'y origin')
-      .attr('stroke', '#eee')
+      .attr('stroke', 'black')
+      .attr('opacity', 0.2)
     yOrigin.attr('d', line)
 
     // helper line y = 0
@@ -307,7 +310,8 @@ module.exports = function (options) {
     xOrigin.enter()
       .append('path')
       .attr('class', 'x origin')
-      .attr('stroke', '#eee')
+      .attr('stroke', 'black')
+      .attr('opacity', 0.2)
     xOrigin.attr('d', line)
 
     // annotations (parallel to the y-axis)
