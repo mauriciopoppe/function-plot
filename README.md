@@ -55,6 +55,7 @@ var functionPlot = require('function-plot');
   * `options.xLabel` {string} x axis label 
   * `options.yLabel` {string} y axis label
   * `options.disableZoom` {boolean} true to disable drag and zoom on the graph
+  * `options.grid` {boolean} true to show a grid
   * `options.tip` {object} configuration passed to `lib/tip`, it's the helper shown on mouseover on the closest
   function to the current mose position
     * `options.tip.xLine` {boolean} true to show a line parallel to the X axis on mouseover
