@@ -421,11 +421,6 @@ module.exports = function (options) {
     }
   }
 
-  Chart.prototype.getColorAtIndex = function (index) {
-    var datum = options.data[index] || {}
-    return datum.color || globals.COLORS[index]
-  }
-
   Chart.prototype.updateAxes = function () {
     var instance = this
     var canvas = instance.canvas
