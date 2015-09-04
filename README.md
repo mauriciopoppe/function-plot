@@ -68,6 +68,7 @@ var functionPlot = require('function-plot');
     * `options.annotations[i].text` {string} text shown next to the parallel line    
   * `options.data` {array} *required* An array defining the functions to be rendered
     * `options.data[i].title` {string} title of the function
+    * `options.data[i].color` {string} color of the function
     * `options.data[i].skipTip` {boolean} true to avoid this function from being a target of the tip
     * `options.data[i].fn` *required* {string} the function that represents the curve, this function is evaluated 
     with values which are in `range` limiting the values to the screen min/max coordinates for `x`, i.e.

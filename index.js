@@ -421,6 +421,11 @@ module.exports = function (options) {
     }
   }
 
+  Chart.prototype.getColorAtIndex = function (index) {
+    var datum = options.data[index] || {}
+    return datum.color || globals.COLORS[index]
+  }
+
   Chart.prototype.updateAxes = function () {
     var instance = this
     var canvas = instance.canvas
@@ -562,7 +567,7 @@ module.exports = function (options) {
   }
   return instance.build()
 }
-Const = module.exports.constants = require('./lib/constants')
+Const = module.exports.globals = require('./lib/globals')
 types = module.exports.types = require('./lib/types/')
 module.exports.plugins = require('./lib/plugins/')
 module.exports.eval = require('./lib/helpers/eval')

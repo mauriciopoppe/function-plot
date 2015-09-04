@@ -225,11 +225,16 @@ $(document).on('markupLoaded', function () {
    *
    * `data` as seen in the examples above is an array, which means that multiple
    * functions can be rendered in the same graph
+   *
+   * You can also change the color of each graph, by default the colors are set from
+   * `functionPlot.globals.COLORS` but you can override the color by setting the `color` option
+   * in each datum
+   *
    */
   functionPlot({
     target: '#multiple',
     data: [
-      { fn: 'x' },
+      { fn: 'x', color: 'pink' },
       { fn: '-x' },
       { fn: 'x * x' },
       { fn: 'x * x * x' },
