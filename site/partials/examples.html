@@ -31,12 +31,22 @@
   data: [{
     fn: 'x^2'
   }]
-})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="quadratic-with-options" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Domain</h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="quadratic-with-options" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Grid</h3>
+<p>Set <code>grid: true</code> in the options sent to function plot</p></div><div class="code"><pre><code class="javascript">functionPlot({
+  target: '#grid',
+  xLabel: 'real',
+  yLabel: 'imaginary',
+  grid: true,
+  data: [
+    { fn: 'sqrt(1 - x * x)' },
+    { fn: '-sqrt(1 - x * x)' }
+  ]
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="grid" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Domain</h3>
 <p>The domains of both axes can be changed with the following configurations:</p><ul>
-<li><code>xDomain</code>, defaults to <code>[-5, 5]</code></li>
-<li><code>yDomain</code>, defaults to <code>[-5, 5]</code></li>
+<li><code>xDomain</code>, defaults to <code>[-7, 7]</code></li>
+<li><code>yDomain</code>, keeps a 1:1 aspect ratio relative to <code>xDomain</code>, by default it&#39;s computed with the following formula</li>
 </ul>
-</div><div class="code"><pre><code class="javascript">functionPlot({
+<p>$$ yDiff = \frac{height * (xDomain[1] - xDomain[0])}{width} $$</p><p>NOTE: The origin is at the center of the graph by default so $yDiff$ is split in half and distributed evenly to the $\pm y$ axis</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#domain',
   yDomain: [-1, 1],
   xDomain: [8, 24],
@@ -78,7 +88,7 @@
 </ul>
 </div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#closed',
-  xDomain: [0, 10],
+  xDomain: [-2, 12],
   data: [{
     fn: '3 + sin(x)',
     range: [2, 8],

@@ -9,6 +9,7 @@ $(document).on('markupLoaded', function () {
     tip: {
       renderer: function () {}
     },
+    grid: true,
     data: [{
       fn: 'x^2',
       derivative: {
@@ -96,12 +97,37 @@ $(document).on('markupLoaded', function () {
   })
 
   /**
+   * ### Grid
+   *
+   * Set `grid: true` in the options sent to function plot
+   */
+  functionPlot({
+    target: '#grid',
+    xLabel: 'real',
+    yLabel: 'imaginary',
+    grid: true,
+    data: [
+      { fn: 'sqrt(1 - x * x)' },
+      { fn: '-sqrt(1 - x * x)' }
+    ]
+  })
+
+
+  /**
    * ### Domain
    *
    * The domains of both axes can be changed with the following configurations:
    *
-   * - `xDomain`, defaults to `[-5, 5]`
-   * - `yDomain`, defaults to `[-5, 5]`
+   * - `xDomain`, defaults to `[-7, 7]`
+   * - `yDomain`, keeps a 1:1 aspect ratio relative to `xDomain`, by default it's computed
+   * with the following formula
+   *
+   * $$
+   * yDiff = \frac{height * (xDomain[1] - xDomain[0])}{width}
+   * $$
+   *
+   * NOTE: The origin is at the center of the graph by default so $yDiff$ is split in half and distributed
+   * evenly to the $\pm y$ axis
    */
   functionPlot({
     target: '#domain',
@@ -184,7 +210,7 @@ $(document).on('markupLoaded', function () {
    */
   functionPlot({
     target: '#closed',
-    xDomain: [0, 10],
+    xDomain: [-2, 12],
     data: [{
       fn: '3 + sin(x)',
       range: [2, 8],

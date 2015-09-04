@@ -50,18 +50,24 @@ module.exports = function (options) {
 
   Chart.prototype = Object.create(events.prototype)
 
-  Chart.prototype.update = function () {
-    this.setVars()
-    this.build()
+  /**
+   * Rebuilds the entire graph from scratch recomputing
+   *
+   * - the inner width/height
+   * - scales/axes
+   *
+   * After this is done it does a complete redraw of all the datums,
+   * if only the datums need to be redrawn call `instance.draw()` instead
+   *
+   * @returns {Chart}
+   */
+  Chart.prototype.build = function () {
+    this.internalVars()
+    this.drawGraphWrapper()
     return this
   }
 
-  Chart.prototype.updateBounds = function () {
-    width = this.meta.width = (options.width || Const.DEFAULT_WIDTH) -
-      margin.left - margin.right
-    height = this.meta.height = (options.height || Const.DEFAULT_HEIGHT) -
-      margin.top - margin.bottom
-
+  Chart.prototype.updateScaleAxes = function () {
     var xDomain = this.meta.xDomain
     var yDomain = this.meta.yDomain
 
@@ -81,15 +87,29 @@ module.exports = function (options) {
       .orient('left')
   }
 
-  Chart.prototype.setVars = function () {
-    var limit = 10
+  Chart.prototype.internalVars = function () {
 
+    // measurements and other derived data
     this.meta = {}
+
     margin = this.meta.margin = {left: 30, right: 30, top: 20, bottom: 20}
     zoomBehavior = this.meta.zoomBehavior = d3.behavior.zoom()
 
-    var xDomain = this.meta.xDomain = options.xDomain || [-limit / 2, limit / 2]
-    var yDomain = this.meta.yDomain = options.yDomain || [-limit / 2, limit / 2]
+    // inner width/height
+    width = this.meta.width = (options.width || Const.DEFAULT_WIDTH) -
+      margin.left - margin.right
+    height = this.meta.height = (options.height || Const.DEFAULT_HEIGHT) -
+      margin.top - margin.bottom
+
+    function computeYScale (xScale) {
+      var xDiff = xScale[1] - xScale[0]
+      return height * xDiff / width
+    }
+
+    var xLimit = 14
+    var xDomain = this.meta.xDomain = options.xDomain || [-xLimit / 2, xLimit / 2]
+    var yLimit = computeYScale(xDomain)
+    var yDomain = this.meta.yDomain = options.yDomain || [-yLimit / 2, yLimit / 2]
 
     assert(xDomain[0] < xDomain[1])
     assert(yDomain[0] < yDomain[1])
@@ -98,10 +118,11 @@ module.exports = function (options) {
       this.meta.margin.top = 40
     }
 
-    this.updateBounds()
+    // scale/axes
+    this.updateScaleAxes()
   }
 
-  Chart.prototype.build = function () {
+  Chart.prototype.drawGraphWrapper = function () {
     var root = this.root = d3.select(options.target).selectAll('svg')
       .data([options])
 
@@ -122,7 +143,6 @@ module.exports = function (options) {
     this.buildClip()
     this.buildAxis()
     this.buildAxisLabel()
-    this.buildContent()
 
     // helper to detect the closest fn to the cursor's current abscissa
     var tip = this.tip = mousetip(extend(options.tip, { owner: this }))
@@ -131,6 +151,9 @@ module.exports = function (options) {
 
     this.buildZoomHelper()
     this.setUpPlugins()
+
+    // draw each datum after the wrapper was set up
+    this.draw()
   }
 
   Chart.prototype.buildTitle = function () {
@@ -221,11 +244,6 @@ module.exports = function (options) {
     this.canvas.select('.y.axis')
       .call(this.meta.yAxis)
 
-    this.canvas.selectAll('.axis path, .axis line')
-      .attr('fill', 'none')
-      .attr('stroke', 'black')
-      .attr('shape-rendering', 'crispedges')
-      .attr('opacity', 0.1)
   }
 
   Chart.prototype.buildAxisLabel = function () {
@@ -263,11 +281,15 @@ module.exports = function (options) {
     yLabel.exit().remove()
   }
 
+  /**
+   * @private
+   *
+   * Draws each of the datums stored in data.options, to do a full
+   * redraw call `instance.draw()`
+   */
   Chart.prototype.buildContent = function () {
     var self = this
     var canvas = this.canvas
-    var content = this.content = canvas.selectAll('g.content')
-      .data(function (d) { return [d] })
 
     canvas
       .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
@@ -289,13 +311,18 @@ module.exports = function (options) {
         }
         setState(!options.disableZoom)
       })
+
+    var content = this.content = canvas.selectAll(':scope > g.content')
+      .data(function (d) { return [d] })
+
+    // g tag clipped to hold the data
     content.enter()
       .append('g')
       .attr('clip-path', 'url(#function-plot-clip-' + this.id + ')')
       .attr('class', 'content')
 
     // helper line, x = 0
-    var yOrigin = content.selectAll('path.y.origin')
+    var yOrigin = content.selectAll(':scope > path.y.origin')
       .data([ [[0, yScale.domain()[0]], [0, yScale.domain()[1]]] ])
     yOrigin.enter()
       .append('path')
@@ -305,7 +332,7 @@ module.exports = function (options) {
     yOrigin.attr('d', line)
 
     // helper line y = 0
-    var xOrigin = content.selectAll('path.x.origin')
+    var xOrigin = content.selectAll(':scope > path.x.origin')
       .data([ [[xScale.domain()[0], 0], [xScale.domain()[1], 0]] ])
     xOrigin.enter()
       .append('path')
@@ -320,7 +347,7 @@ module.exports = function (options) {
 
     // content construction (based on graphOptions)
     // join
-    var graphs = content.selectAll('g.graph')
+    var graphs = content.selectAll(':scope > g.graph')
       .data(function (d) { return d.data })
     // enter
     graphs
@@ -399,9 +426,16 @@ module.exports = function (options) {
     var canvas = instance.canvas
     canvas.select('.x.axis').call(instance.meta.xAxis)
     canvas.select('.y.axis').call(instance.meta.yAxis)
+
+    // updates the style of the axes
+    canvas.selectAll('.axis path, .axis line')
+      .attr('fill', 'none')
+      .attr('stroke', 'black')
+      .attr('shape-rendering', 'crispedges')
+      .attr('opacity', 0.1)
   }
 
-  Chart.prototype.updateOptions = function () {
+  Chart.prototype.syncOptions = function () {
     // update the original options yDomain and xDomain
     this.options.xDomain = this.meta.xScale.domain()
     this.options.yDomain = this.meta.yScale.domain()
@@ -433,7 +467,7 @@ module.exports = function (options) {
   Chart.prototype.draw = function () {
     var instance = this
     instance.emit('before:draw')
-    instance.updateOptions()
+    instance.syncOptions()
     instance.updateAxes()
     instance.buildContent()
     instance.emit('after:draw')
@@ -526,7 +560,7 @@ module.exports = function (options) {
   if (!instance) {
     instance = new Chart()
   }
-  return instance.update()
+  return instance.build()
 }
 Const = module.exports.constants = require('./lib/constants')
 types = module.exports.types = require('./lib/types/')
