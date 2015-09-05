@@ -144,6 +144,9 @@ module.exports = function (options) {
     this.buildAxis()
     this.buildAxisLabel()
 
+    // draw each datum after the wrapper was set up
+    this.draw()
+
     // helper to detect the closest fn to the cursor's current abscissa
     var tip = this.tip = mousetip(extend(options.tip, { owner: this }))
     this.canvas
@@ -151,9 +154,6 @@ module.exports = function (options) {
 
     this.buildZoomHelper()
     this.setUpPlugins()
-
-    // draw each datum after the wrapper was set up
-    this.draw()
   }
 
   Chart.prototype.buildTitle = function () {
