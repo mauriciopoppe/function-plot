@@ -75,7 +75,7 @@ module.exports = function (options) {
     var format = function (scale) {
       return function (d) {
         var decimalFormat = scale.tickFormat(10)
-        var isInteger = d === +d && d === (d|0)
+        var isInteger = d === +d && d === (d | 0)
         // integers: d3.format('s'), see https://github.com/mbostock/d3/wiki/Formatting
         // decimals: default d3.scale.linear() formatting see
         //    https://github.com/mbostock/d3/blob/master/src/svg/axis.js#L29
