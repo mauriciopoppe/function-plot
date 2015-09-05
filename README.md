@@ -267,6 +267,26 @@ functionPlot({
 })
 ```
 
+### Changing the format of the values shown on the axes
+
+```javascript
+var instance = functionPlot({
+  target: '#complex-plane',
+  xLabel: 'real',
+  yLabel: 'imaginary'
+})
+// old format
+var format = instance.meta.yAxis.tickFormat()
+var imaginaryFormat = function (d) {
+  // new format = old format + ' i' for imaginary
+  return format(d) + ' i'
+}
+// update format
+instance.meta.yAxis.tickFormat(imaginaryFormat)
+// redraw the graph
+instance.draw()
+```
+
 ## Development
 
 After cloning the repo and running `npm install`
