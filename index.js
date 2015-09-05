@@ -71,6 +71,18 @@ module.exports = function (options) {
     var xDomain = this.meta.xDomain
     var yDomain = this.meta.yDomain
 
+    var integerFormat = d3.format('s')
+    var format = function (scale) {
+      return function (d) {
+        var decimalFormat = scale.tickFormat(10)
+        var isInteger = d === +d && d === (d|0)
+        // integers: d3.format('s'), see https://github.com/mbostock/d3/wiki/Formatting
+        // decimals: default d3.scale.linear() formatting see
+        //    https://github.com/mbostock/d3/blob/master/src/svg/axis.js#L29
+        return isInteger ? integerFormat(d) : decimalFormat(d)
+      }
+    }
+
     xScale = this.meta.xScale = d3.scale.linear()
       .domain(xDomain)
       .range([0, width])
@@ -78,12 +90,14 @@ module.exports = function (options) {
       .domain(yDomain)
       .range([height, 0])
     this.meta.xAxis = d3.svg.axis()
-      .tickSize(options.grid ? -height : 0)
       .scale(xScale)
+      .tickSize(options.grid ? -height : 0)
+      .tickFormat(format(xScale))
       .orient('bottom')
     this.meta.yAxis = d3.svg.axis()
-      .tickSize(options.grid ? -width : 0)
       .scale(yScale)
+      .tickSize(options.grid ? -width : 0)
+      .tickFormat(format(yScale))
       .orient('left')
   }
 
