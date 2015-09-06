@@ -769,7 +769,7 @@ $(document).on('markupLoaded', function () {
    * To plot a collection of points or a polyline the following options are required:
    *
    * - `points` An array of coordinates, each coordinate is represented by a 2-element array
-   * - `graphOptions.sampler = mathjs` interval arithmetic needs to be disabled for collections
+   * - `graphOptions.sampler = builtIn` interval arithmetic needs to be disabled for collections
    * of points
    *  - `graphOptions.type = line` to render a polyline
    *  - `graphOptions.type = scatter` to render points
@@ -800,6 +800,30 @@ $(document).on('markupLoaded', function () {
         [1, 2],
         [1, 1]
       ],
+      graphOptions: {
+        type: 'line',
+        sampler: 'builtIn'
+      }
+    }]
+  })
+
+  /**
+   * ### Vectors
+   *
+   * To render 2d vectors set the following on each datum
+   *
+   * - `vector` {Array} the vector itself
+   * - `displacement` {Array} displacement from the origin
+   * - the same `graphOptions` as a polyline
+   *
+   */
+  functionPlot({
+    target: '#vector',
+    xDomain: [-3, 8],
+    grid: true,
+    data: [{
+      vector: [2, 1],
+      displacement: [1, 2],
       graphOptions: {
         type: 'line',
         sampler: 'builtIn'

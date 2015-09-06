@@ -97,10 +97,10 @@
     }
   }]
 })</code></pre></div></div><div class="col-md-6 center-block demos"><span id="closed" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Multiple graphs</h3>
-<p><code>data</code> as seen in the examples above is an array, which means that multiple functions can be rendered in the same graph</p></div><div class="code"><pre><code class="javascript">functionPlot({
+<p><code>data</code> as seen in the examples above is an array, which means that multiple functions can be rendered in the same graph</p><p>You can also change the color of each graph, by default the colors are set from <code>functionPlot.globals.COLORS</code> but you can override the color by setting the <code>color</code> option in each datum</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#multiple',
   data: [
-    { fn: 'x' },
+    { fn: 'x', color: 'pink' },
     { fn: '-x' },
     { fn: 'x * x' },
     { fn: 'x * x * x' },
@@ -406,7 +406,7 @@ functionPlot(options)</code></pre></div></div><div class="col-md-6 center-block 
 })</code></pre></div></div><div class="col-md-6 center-block demos"><span id="implicit-complex" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Points and polylines</h3>
 <p>To plot a collection of points or a polyline the following options are required:</p><ul>
 <li><code>points</code> An array of coordinates, each coordinate is represented by a 2-element array</li>
-<li><code>graphOptions.sampler = mathjs</code> interval arithmetic needs to be disabled for collections of points<ul>
+<li><code>graphOptions.sampler = builtIn</code> interval arithmetic needs to be disabled for collections of points<ul>
 <li><code>graphOptions.type = line</code> to render a polyline</li>
 <li><code>graphOptions.type = scatter</code> to render points</li>
 </ul>
@@ -443,7 +443,23 @@ functionPlot({
       sampler: 'builtIn'
     }
   }]
-})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="points" class="graph"></span><span id="polyline" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Plugin: zoom box</h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="points" class="graph"></span><span id="polyline" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Vectors</h3>
+<p>To render 2d vectors set the following on each datum</p><ul>
+<li><code>vector</code> {Array} the vector itself</li>
+<li><code>displacement</code> {Array} displacement from the origin</li>
+<li>the same <code>graphOptions</code> as a polyline</li>
+</ul>
+</div><div class="code"><pre><code class="javascript">functionPlot({
+  target: '#vector',
+  data: [{
+    vector: [1, 2],
+    displacement: [1, 2],
+    graphOptions: {
+      type: 'line',
+      sampler: 'builtIn'
+    }
+  }]
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="vector" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Plugin: zoom box</h3>
 <p>The zoom box plugin allows the magnification of some section of the graph to enable it use the <code>plugin</code> configuration option</p><p>When the graph is rendered press <code>&lt;shift&gt;</code> and drag some portion of the screen</p><p>Configuration options:</p><ul>
 <li><code>key=&lt;shift&gt;</code> The key that triggers the magnification behavior, the string to keyCode mapping is powered by <a href="https://www.npmjs.com/package/vkey">vkey</a></li>
 <li><code>toggle=false</code> True to enable/disable the brush mask on keydown rather than enabling it on keydown and disabling it on keyup</li>
