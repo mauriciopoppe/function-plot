@@ -404,6 +404,13 @@ module.exports = function (options) {
           index: index
         }, data.graphOptions)
 
+        // shortcuts
+        // - vector needs the builtIn evaluator
+        if (data.vector) {
+          data.graphOptions.sampler = 'builtIn'
+          data.graphOptions.type = 'line'
+        }
+
         d3.select(this)
           .call(types[options.type](options))
         d3.select(this)
