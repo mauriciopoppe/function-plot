@@ -120,7 +120,7 @@ module.exports = function (options) {
       return height * xDiff / width
     }
 
-    var xLimit = 14
+    var xLimit = 12
     var xDomain = this.meta.xDomain = options.xDomain || [-xLimit / 2, xLimit / 2]
     var yLimit = computeYScale(xDomain)
     var yDomain = this.meta.yDomain = options.yDomain || [-yLimit / 2, yLimit / 2]
@@ -384,31 +384,41 @@ module.exports = function (options) {
       .enter()
       .append('g')
       .attr('class', 'graph')
+
+    function extendIf () {
+      var target = arguments[0]
+      for (var i = 1; i < arguments.length; i += 1) {
+        var source = arguments[i]
+        for (var p in source) {
+          if (source.hasOwnProperty(p) && !target.hasOwnProperty(p)) {
+            target[p] = source[p]
+          }
+        }
+      }
+      return target
+    }
+
     // enter + update
     graphs
       .each(function (data, index) {
-        data.graphOptions = extend({
-          type: 'interval'
-        }, data.graphOptions)
+        var options = data.graphOptions = data.graphOptions || {}
+        extendIf(options, { type: 'interval' })
 
-        // if the type of graph chosen is not `interval` then default the sampler to `mathjs`
-        var sampler = data.graphOptions.type !== 'interval'
+        // if the type of graph chosen is not `interval` then default the sampler to `builtIn`
+        var sampler = options.type !== 'interval'
           ? 'builtIn'
           : 'interval'
-        data.graphOptions = extend({
-          sampler: sampler
-        }, data.graphOptions)
 
-        var options = extend({
+        extendIf(options, {
+          sampler: sampler,
           owner: self,
           index: index
-        }, data.graphOptions)
-
+        })
         // shortcuts
         // - vector needs the builtIn evaluator
         if (data.vector) {
-          data.graphOptions.sampler = 'builtIn'
-          data.graphOptions.type = 'line'
+          options.sampler = 'builtIn'
+          options.type = 'line'
         }
 
         d3.select(this)
