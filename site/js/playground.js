@@ -4,13 +4,12 @@ var instance = functionPlot({
   target: '#playground',
   grid: true,
   data: [{
-    fn: 'x^2'
-  }],
-  plugins: [
-    functionPlot.plugins.zoomBox({
-      toggle: true
-    })
-  ]
+    fn: '((1.98310^5^2)6.700(1-(6.700/x)))/(( 1-1.652(1-(6.700/x)))^2)',
+    //graphOptions: {
+    //  type: 'line',
+    //  sampler: 'builtIn'
+    //}
+  }]
 })
 instance.on('programmatic-zoom', function () {
   console.log('end')

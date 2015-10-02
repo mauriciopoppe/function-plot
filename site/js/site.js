@@ -814,8 +814,6 @@ $(document).on('markupLoaded', function () {
    *
    * - `vector` {Array} the vector itself
    * - `displacement` {Array} displacement from the origin
-   * - the same `graphOptions` as a polyline
-   *
    */
   functionPlot({
     target: '#vector',
@@ -823,11 +821,7 @@ $(document).on('markupLoaded', function () {
     grid: true,
     data: [{
       vector: [2, 1],
-      displacement: [1, 2],
-      graphOptions: {
-        type: 'line',
-        sampler: 'builtIn'
-      }
+      displacement: [1, 2]
     }]
   })
 
