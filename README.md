@@ -287,6 +287,42 @@ instance.meta.yAxis.tickFormat(imaginaryFormat)
 instance.draw()
 ```
 
+### Styling
+
+Selectors (sass)
+
+```css
+.function-plot {
+  .x.axis {
+    .tick {
+      line {
+        // grid's vertical lines
+      }
+      text {
+        // x axis labels
+      }
+    }
+    path.domain {
+      // d attribute defines the graph brounds
+    }
+  }
+  
+  .y.axis {
+    .tick {
+      line {
+        // grid's horizontal lines
+      }
+      text {
+        // y axis labels
+      }
+    }
+    path.domain {
+      // d attribute defines the graph brounds
+    }
+  }
+}
+```
+
 ## Development
 
 After cloning the repo and running `npm install`
