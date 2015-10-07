@@ -303,7 +303,7 @@ Selectors (sass)
       }
     }
     path.domain {
-      // d attribute defines the graph brounds
+      // d attribute defines the graph bounds
     }
   }
   
@@ -317,7 +317,7 @@ Selectors (sass)
       }
     }
     path.domain {
-      // d attribute defines the graph brounds
+      // d attribute defines the graph bounds
     }
   }
 }
