@@ -291,7 +291,7 @@ instance.draw()
 
 Selectors (sass)
 
-```css
+```sass
 .function-plot {
   .x.axis {
     .tick {
