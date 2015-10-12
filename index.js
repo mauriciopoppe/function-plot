@@ -19,7 +19,7 @@ var annotations = require('./lib/helpers/annotations')
 
 var assert = utils.assert
 
-var Const
+var globals
 var types
 var cache = []
 
@@ -39,11 +39,9 @@ module.exports = function (options) {
   function Chart () {
     var n = Math.random()
     var letter = String.fromCharCode(Math.floor(n * 26) + 97)
-    this.id = letter + n.toString(16).substr(2)
+    this.id = options.id = letter + n.toString(16).substr(2)
     this.linkedGraphs = [this]
     this.options = options
-
-    options.id = this.id
     cache[this.id] = this
     this.setUpEventListeners()
   }
@@ -107,12 +105,17 @@ module.exports = function (options) {
     this.meta = {}
 
     margin = this.meta.margin = {left: 30, right: 30, top: 20, bottom: 20}
+    // if there's a title make the top margin bigger
+    if (options.title) {
+      this.meta.margin.top = 40
+    }
+
     zoomBehavior = this.meta.zoomBehavior = d3.behavior.zoom()
 
     // inner width/height
-    width = this.meta.width = (options.width || Const.DEFAULT_WIDTH) -
+    width = this.meta.width = (options.width || globals.DEFAULT_WIDTH) -
       margin.left - margin.right
-    height = this.meta.height = (options.height || Const.DEFAULT_HEIGHT) -
+    height = this.meta.height = (options.height || globals.DEFAULT_HEIGHT) -
       margin.top - margin.bottom
 
     function computeYScale (xScale) {
@@ -127,10 +130,6 @@ module.exports = function (options) {
 
     assert(xDomain[0] < xDomain[1])
     assert(yDomain[0] < yDomain[1])
-
-    if (options.title) {
-      this.meta.margin.top = 40
-    }
 
     // scale/axes
     this.updateScaleAxes()
@@ -549,7 +548,7 @@ module.exports = function (options) {
         text.push(format(x, y))
 
         instance.root.select('.top-right-legend')
-          .attr('fill', Const.COLORS[index])
+          .attr('fill', globals.COLORS[index])
           // .text(x.toFixed(3) + ', ' + y.toFixed(3))
           .text(text.join(' '))
       }
@@ -608,7 +607,7 @@ module.exports = function (options) {
   }
   return instance.build()
 }
-Const = module.exports.globals = require('./lib/globals')
+globals = module.exports.globals = require('./lib/globals')
 types = module.exports.types = require('./lib/types/')
 module.exports.plugins = require('./lib/plugins/')
 module.exports.eval = require('./lib/helpers/eval')

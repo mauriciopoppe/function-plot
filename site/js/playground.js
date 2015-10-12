@@ -1,19 +1,20 @@
 'use strict';
 
-var instance = functionPlot({
-  target: '#playground',
-  grid: true,
-  data: [{
-    fn: '((1.98310^5^2)6.700(1-(6.700/x)))/(( 1-1.652(1-(6.700/x)))^2)',
-    //graphOptions: {
-    //  type: 'line',
-    //  sampler: 'builtIn'
-    //}
-  }]
-})
-instance.on('programmatic-zoom', function () {
-  console.log('end')
-})
+//var instance = functionPlot({
+//  title: 'test',
+//  target: '#playground',
+//  grid: true,
+//  data: [{
+//    fn: 'x^2',
+//    graphOptions: {
+//      type: 'line',
+//      sampler: 'builtIn'
+//    }
+//  }]
+//})
+//instance.on('programmatic-zoom', function () {
+//  console.log('end')
+//})
 
 //var instance = functionPlot({
 //  target: '#playground',
@@ -113,46 +114,46 @@ instance.on('programmatic-zoom', function () {
 //  }]
 //});
 
-//// update
-//var options = {
-//  target: '#playground',
-//  data: [{
-//    fn: 'x'
-//  }]
-//};
-//var instance
-//document.querySelector('#update').addEventListener('click', function () {
-//  if (!options.title) {
-//    // add a title, a tip and change the function to y = x * x
-//    options.title = 'hello world';
-//    options.tip = {
-//      xLine: true,
-//      yLine: true
-//    };
-//    options.data[0] = {
-//      fn: 'x * x',
-//      derivative: {
-//        fn: '2 * x',
-//        updateOnMouseMove: true
-//      }
-//    }
-//  } else {
-//    // remove the title and the tip
-//    // update the function to be y = x
-//    delete options.title;
-//    delete options.tip;
-//    options.data[0] =  {
-//      fn: 'x'
-//    }
-//  }
-//  functionPlot(options);
-//});
-//instance = functionPlot(options);
-//instance.on('eval', function (data, i, isHelper) {
-//  if (!isHelper) {
-//    console.log(data, i)
-//  }
-//})
+// update
+var options = {
+  target: '#playground',
+  data: [{
+    fn: 'x'
+  }]
+};
+var instance
+document.querySelector('#update').addEventListener('click', function () {
+  if (!options.title) {
+    // add a title, a tip and change the function to y = x * x
+    options.title = 'hello world';
+    options.tip = {
+      xLine: true,
+      yLine: true
+    };
+    options.data[0] = {
+      fn: 'x * x',
+      derivative: {
+        fn: '2 * x',
+        updateOnMouseMove: true
+      }
+    }
+  } else {
+    // remove the title and the tip
+    // update the function to be y = x
+    delete options.title;
+    delete options.tip;
+    options.data[0] =  {
+      fn: 'x'
+    }
+  }
+  functionPlot(options);
+});
+instance = functionPlot(options);
+instance.on('eval', function (data, i, isHelper) {
+  if (!isHelper) {
+    console.log(data, i)
+  }
+})
 
 // points
 //functionPlot({
