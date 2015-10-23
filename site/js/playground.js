@@ -6,11 +6,7 @@ var instance = functionPlot({
   grid: true,
   data: [{
     fn: 'x * x + y * y - 1',
-    implicit: true,
-    graphOptions: {
-      sampler: 'builtIn',
-      type: 'line'
-    }
+    fnType: 'implicit'
   }]
 })
 //instance.on('programmatic-zoom', function () {
@@ -23,9 +19,7 @@ var instance = functionPlot({
 //  yDomain: [-100, 100],
 //  data: [{
 //    fn: '1/x * cos(1/x)',
-//    graphOptions: {
-//      closed: true
-//    }
+//    closed: true
 //  }],
 //  plugins: [
 //    functionPlot.plugins.definiteIntegral()
@@ -56,28 +50,9 @@ var instance = functionPlot({
 //  target: '#playground',
 //  data: [{
 //    fn: 'x * x + y * y - 1',
-//    implicit: true
+//    fnType: 'implicit'
 //  }]
 //});
-
-//// failing:
-//var instance = functionPlot({
-//  target: '#playground',
-//  data: [
-//    { fn: 'sin(exp(x))', graphOptions: {sampler: 'mathjs', type: 'line'}, samples: 4000 },
-//    { fn: 'tan(x)', graphOptions: {sampler: 'mathjs', type: 'line'}, samples: 5000 },
-//    //{ fn: 'gamma(x)', graphOptions: {sampler: 'mathjs', type: 'line'} },
-//    //{ fn: 'sin(x/2)' },
-//    //{ fn: 'cos(x)' },
-//    //{ fn: 'tan(x)' },
-//    //{ fn: 'cos(x) + sin(x/4)' }
-//  ]
-//})
-//instance.on('eval', function (data, i, isHelper) {
-//  if (!isHelper) {
-//    console.log(data, i)
-//  }
-//})
 
 //// parametric:
 //functionPlot({
@@ -94,10 +69,8 @@ var instance = functionPlot({
 //    x: 'sin(t) * (exp(cos(t)) - 2 cos(4t) - sin(t/12)^5)',
 //    y: 'cos(t) * (exp(cos(t)) - 2 cos(4t) - sin(t/12)^5)',
 //    range: [-10 * Math.PI, 10 * Math.PI],
-//    parametric: true,
-//    graphOptions: {
-//      type: 'line'
-//    }
+//    fnType: 'parametric',
+//    graphType: 'polyline'
 //  }]
 //});
 
@@ -108,10 +81,8 @@ var instance = functionPlot({
 //  xDomain: [-3, 3],
 //  data: [{
 //    r: 'sin(6 theta) + 2',
-//    polar: true,
-//    graphOptions: {
-//      type: 'line'
-//    }
+//    fnType: 'polar',
+//    graphType: 'polyline'
 //  }]
 //});
 
@@ -167,9 +138,7 @@ var instance = functionPlot({
 //      [1, 2],
 //      [1, 1]
 //    ],
-//    graphOptions: {
-//      type: 'line',
-//      sampler: 'mathjs'
-//    }
+//    fnType: 'points',
+//    graphType: 'polyline'
 //  }]
 //});
