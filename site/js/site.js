@@ -28,10 +28,8 @@ $(document).on('markupLoaded', function () {
     },
     data: [{
       fn: 'sin(exp(x))',
-      samples: 5000,
-      graphOptions: {
-        type: 'line'
-      }
+      nSamples: 5000,
+      graphType: 'polyline'
     }]
   })
 
@@ -139,13 +137,13 @@ $(document).on('markupLoaded', function () {
   })
 
   /**
-   * ### Samples
+   * ### Number of samples
    *
-   * `samples` determine the number of equally spaced points in which the function will be
+   * `nSamples` determine the number of equally spaced points in which the function will be
    * evaluated in the current domain, increasing it will more accurately represent the function
    * using rectangles at the cost of processing speed
    *
-   * e.g.  samples = 100
+   * e.g.  nSamples = 100
    *
    * $$
    * domain = [-5, 5] \\\
@@ -162,7 +160,7 @@ $(document).on('markupLoaded', function () {
     target: '#samples',
     data: [{
       fn: 'sin(x)',
-      samples: 1000
+      nSamples: 1000
     }]
   })
 
@@ -198,14 +196,12 @@ $(document).on('markupLoaded', function () {
   /**
    * ### Range and closed path
    *
-   * You can restrict the values to be evaluated with the `range` option,
-   * this works really nice with the `closed` option of the `line` type to render
-   * for example a [definite integral](http://mathworld.wolfram.com/DefiniteIntegral.html)
+   * The `x` values of the function will be taken from the current viewport limits,
+   * however you can define a custom range so that the function is evaluated only within this
+   * range, this works really nice with the `closed` option which will will render an area graph
+   * instead of a polyline, for example we can render a [definite integral](http://mathworld.wolfram.com/DefiniteIntegral.html)
    *
-   * Additional graph options for the renderer of each graph can be set inside `graphOptions`
-   *
-   * - `type`: the type of graph, `line` (naive sampling), `scatter` (naive sampling) and
-   * `interval` (interval arithmetic sampling) are supported
+   * - `range` {Array} A 2-number array, the function will be evaluated only within this range
    * - `closed`: true to render a closed path, `y0` will always be 0 and `y1` will be $fn(x)$
    */
   functionPlot({
@@ -214,9 +210,7 @@ $(document).on('markupLoaded', function () {
     data: [{
       fn: '3 + sin(x)',
       range: [2, 8],
-      graphOptions: {
-        closed: true
-      }
+      closed: true
     }]
   })
 
@@ -243,21 +237,30 @@ $(document).on('markupLoaded', function () {
   })
 
   /**
-   * ### Scatter
+   * ### Graph types
    *
-   * A function can be represented with some points belonging to the curve
-   * instead of the actual curve, to render some points make sure to set a low value for
-   * `samples` and set the type option to `scatter`
+   * There are three ways to represent a function in `function-plot`
    *
+   * - `polyline` where $f(x)$ is evaluated with some $x$ values, after the evaluation the points are joined with line segments using
+   *    `<path>`s
+   * - `scatter` where $f(x)$ is evaluated with some $x$ values, after the evaluation the points are represented by `<circle>`s
+   * - `interval` where $f(x)$ is evaluated with intervals instead of a single point, after the evaluation 2d rects
+   *   are painted on the screen (done using the `<path>` svg element)
+   *
+   * Set the type of graph you want to render in the option `graphType` (defaults to `interval`)
    */
   functionPlot({
-    target: '#scatter',
+    target: '#graph-types',
     data: [{
-      fn: 'x < 0 ? -sqrt(-x) : sqrt(x)',
-      samples: 100,
-      graphOptions: {
-        type: 'scatter'
-      }
+      fn: '-sqrt(-x)',
+      nSamples: 100,
+      graphType: 'scatter'
+    }, {
+      fn: 'sqrt(x)',
+      graphType: 'polyline'
+    }, {
+      fn: 'x^2',
+      graphType: 'interval'
     }]
   })
 
@@ -270,6 +273,11 @@ $(document).on('markupLoaded', function () {
    * - `xLine` true to show a dashed line parallel to $y = 0$ on the tip position
    * - `yLine` true to show a dashed line parallel to $x = 0$ on the tip position
    * - `renderer` a custom rendering function for the text shown in the tip
+   *
+   * NOTE: the tip only works with linear functions
+   *
+   * When you don't want a function to have a tip add the `skipTip: true` property to the object
+   * that holds the info of the function to render
    */
   functionPlot({
     target: '#tip',
@@ -282,7 +290,11 @@ $(document).on('markupLoaded', function () {
     },
     yDomain: [-1, 9],
     data: [
-      { fn: 'x^2' }
+      { fn: 'x^2' },
+      {
+        fn: 'x',
+        skipTip: true
+      }
     ]
   })
 
@@ -297,7 +309,7 @@ $(document).on('markupLoaded', function () {
    * Available options for each object:
    *
    * - `x0` the abscissa of the first point
-   * - `x1` (optional if `updateOnMouseMove` is set) the abscissa of the second point
+   * - `x1` *(optional if `updateOnMouseMove` is set) the abscissa of the second point
    * - `updateOnMouseMove` (optional) if set to `true` `x1` will be computed dynamically based on the current
    * position of the mouse
    */
@@ -590,16 +602,16 @@ $(document).on('markupLoaded', function () {
    * The options that tell `function-plot` to render a parametric equation are defined
    * inside each term of the `data` array and need to have the following properties set:
    *
-   * - `parametric = true` to mark this term as a parametric equation
+   * - `fnType: 'parametric'` to mark this term as a parametric equation
    * - `x` the x-coordinate of a point to be sampled with a parameter `t`
    * - `y` the y-coordinate of a point to be sampled with a parameter `t`
    * - `range = [0, 2 * Math.PI]` the `range` property in parametric equations is used
    * to determine the possible values of `t`, remember that the number of samples is
-   * set in the property `samples`
+   * set in the property `nSamples`
    *
    * NOTE: `function-plot` uses interval-arithmetic by default, to create a nice line
    * instead of rectangles generated by the interval-arithmetic sampler set
-   * `graphOptions.type` to `line` which uses the normal single point evaluation
+   * `graphType: 'polyline'` which uses the normal single point evaluation
    */
   functionPlot({
     target: '#parametric-circle',
@@ -608,10 +620,8 @@ $(document).on('markupLoaded', function () {
     data: [{
       x: 'cos(t)',
       y: 'sin(t)',
-      parametric: true,
-      graphOptions: {
-        type: 'line'
-      }
+      fnType: 'parametric',
+      graphType: 'polyline'
     }]
   })
 
@@ -635,10 +645,8 @@ $(document).on('markupLoaded', function () {
       x: 'sin(t) * (exp(cos(t)) - 2 cos(4t) - sin(t/12)^5)',
       y: 'cos(t) * (exp(cos(t)) - 2 cos(4t) - sin(t/12)^5)',
       range: [-10 * Math.PI, 10 * Math.PI],
-      parametric: true,
-      graphOptions: {
-        type: 'line'
-      }
+      fnType: 'parametric',
+      graphType: 'polyline'
     }]
   })
 
@@ -657,7 +665,7 @@ $(document).on('markupLoaded', function () {
    * The options that tell `function-plot` to render a polar equation are defined
    * inside each term of the `data` array and need to have the following properties set:
    *
-   * - `polar = true` to mark this term as a polar equation
+   * - `fnType: 'polar'` to tell function plot to render a polar equation
    * - `r` a polar equation in terms of `theta`
    * - `range = [-Math.PI, Math.PI]` the `range` property in polar equations is used
    * to determine the possible values of `theta`, remember that the number of samples is
@@ -665,7 +673,7 @@ $(document).on('markupLoaded', function () {
    *
    * NOTE: `function-plot` uses interval-arithmetic by default, to create a nice line
    * instead of rectangles generated by the interval-arithmetic sampler set
-   * `graphOptions.type` to `line` which uses the normal single point evaluation
+   * `graphType: 'polyline'` which uses the normal single point evaluation
    */
   functionPlot({
     target: '#polar-circle',
@@ -678,10 +686,8 @@ $(document).on('markupLoaded', function () {
         r0: 0,
         gamma: 0
       },
-      polar: true,
-      graphOptions: {
-        type: 'line'
-      }
+      fnType: 'polar',
+      graphType: 'polyline'
     }]
   })
 
@@ -700,10 +706,8 @@ $(document).on('markupLoaded', function () {
     xDomain: [-3, 3],
     data: [{
       r: '2 * sin(4 theta)',
-      polar: true,
-      graphOptions: {
-        type: 'line'
-      }
+      fnType: 'polar',
+      graphType: 'polyline'
     }]
   })
 
@@ -727,8 +731,9 @@ $(document).on('markupLoaded', function () {
    * To render implicit equations you have to make sure of the following:
    *
    * - `fn(x, y)` means that the function `fn` needs to be expressed in terms of `x` and `y`
-   * - `implicit = true` is set on the data item that is an implicit equation
+   * - `fnType: 'implicit'` is set on the datum that is an implicit equation
    *
+   * NOTE: implicit functions can only be rendered with interval-arithmetic
    */
   functionPlot({
     target: '#circle-implicit',
@@ -736,7 +741,7 @@ $(document).on('markupLoaded', function () {
     xDomain: [-3, 3],
     data: [{
       fn: 'x * x + y * y - 1',
-      implicit: true
+      fnType: 'implicit'
     }]
   })
 
@@ -759,7 +764,7 @@ $(document).on('markupLoaded', function () {
     disableZoom: true,
     data: [{
       fn: 'cos(PI * x) - cos(PI * y)',
-      implicit: true
+      fnType: 'implicit'
     }]
   })
 
@@ -769,10 +774,9 @@ $(document).on('markupLoaded', function () {
    * To plot a collection of points or a polyline the following options are required:
    *
    * - `points` An array of coordinates, each coordinate is represented by a 2-element array
-   * - `graphOptions.sampler = builtIn` interval arithmetic needs to be disabled for collections
-   * of points
-   *  - `graphOptions.type = line` to render a polyline
-   *  - `graphOptions.type = scatter` to render points
+   * - `fnType: 'points'` to tell function plot that the data is already available on `points`
+   *
+   * Note that you can use either `scatter` or `polyline` in the option graphType
    */
   functionPlot({
     target: '#points',
@@ -784,10 +788,8 @@ $(document).on('markupLoaded', function () {
         [1, 2],
         [1, 1]
       ],
-      graphOptions: {
-        type: 'scatter',
-        sampler: 'builtIn'
-      }
+      fnType: 'points',
+      graphType: 'scatter'
     }]
   })
   functionPlot({
@@ -800,10 +802,8 @@ $(document).on('markupLoaded', function () {
         [1, 2],
         [1, 1]
       ],
-      graphOptions: {
-        type: 'line',
-        sampler: 'builtIn'
-      }
+      fnType: 'points',
+      graphType: 'polyline'
     }]
   })
 
@@ -813,7 +813,9 @@ $(document).on('markupLoaded', function () {
    * To render 2d vectors set the following on each datum
    *
    * - `vector` {Array} the vector itself
-   * - `displacement` {Array} displacement from the origin
+   * - `offset` (optional) {Array} displacement from the origin
+   * - `fnType: 'vector'` to tell functoin plot that the data is already available on `vector`
+   * - `graphType: 'polyline'` to render a nice segment from `offset` to `offset + vector`
    */
   functionPlot({
     target: '#vector',
@@ -821,7 +823,9 @@ $(document).on('markupLoaded', function () {
     grid: true,
     data: [{
       vector: [2, 1],
-      displacement: [1, 2]
+      displacement: [1, 2],
+      graphType: 'polyline',
+      fnType: 'vector'
     }]
   })
 
@@ -884,10 +888,8 @@ $(document).on('markupLoaded', function () {
     yDomain: [-100, 100],
     data: [{
       fn: '1/x * cos(1/x)',
-      graphOptions: {
-        // to make it look like a definite integral
-        closed: true
-      }
+      // to make it look like a definite integral
+      closed: true
     }],
     plugins: [
       functionPlot.plugins.definiteIntegral({
@@ -916,28 +918,24 @@ $(document).on('markupLoaded', function () {
    *
    * - `sampler: 'builtIn'` the parser bundled with function-plot will be replaced with the one
    * in math.js
-   * - `type: 'line'` or `type: 'scatter'`
+   * - `graphType: 'polyline'` or `graphType: 'scatter'`
    */
   functionPlot({
     target: '#sampler-mathjs',
     disableZoom: true,
     data: [{
       fn: 'gamma(x)',
-      graphOptions: {
-        sampler: 'builtIn',
-        type: 'line'
-      }
+      sampler: 'builtIn',
+      graphType: 'polyline'
     }]
   })
   functionPlot({
     target: '#sampler-tan-mathjs',
     data: [{
       fn: 'tan(x)',
-      samples: 4000,
-      graphOptions: {
-        sampler: 'builtIn',
-        type: 'line'
-      }
+      nSamples: 4000,
+      sampler: 'builtIn',
+      graphType: 'polyline'
     }]
   })
   /** */

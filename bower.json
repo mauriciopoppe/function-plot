@@ -1,6 +1,6 @@
 {
   "name": "function-plot",
-  "main": "site/js/function-plot.js",
+  "main": "dist/function-plot.js",
   "homepage": "https://github.com/maurizzzio/function-plot",
   "authors": [
     "Mauricio Poppe <me@maurizzzio.com>"
