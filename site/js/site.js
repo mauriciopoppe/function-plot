@@ -823,7 +823,7 @@ $(document).on('markupLoaded', function () {
     grid: true,
     data: [{
       vector: [2, 1],
-      displacement: [1, 2],
+      offset: [1, 2],
       graphType: 'polyline',
       fnType: 'vector'
     }]
