@@ -29,6 +29,7 @@
     "extend": "^3.0.0",
     "integrate-adaptive-simpson": "^1.0.3",
     "interval-arithmetic-eval": "^0.3.5",
+    "is-object": "^1.0.1",
     "key-pressed": "0.0.1",
     "keydown": "0.0.3"
   },
@@ -52,15 +53,15 @@
     "lint": "standard",
     "test": "echo 'no tests!'",
     "test:watch": "nodemon --watch lib --watch test --watch index.js --exec 'npm test'",
-    "start": "./node_modules/.bin/beefy index.js:js/function-plot.js 5555 --cwd site/ -- --standalone functionPlot",
+    "start": "beefy index.js:js/function-plot.js 5555 --cwd site/ -- --standalone functionPlot",
     "fetch": "curl -o site/partials/brcdn-module.html -L https://www.brcdn.org/?module=function-plot&version=latest",
     "html": "node site.js",
     "pre_publish": "npm run lint",
     "browserify": "browserify index.js -o site/js/function-plot.js --standalone functionPlot",
     "minify": "cat site/js/function-plot.js | uglifyjs -o site/js/function-plot.js",
     "build": "npm run browserify && npm run minify",
-    "dist": "npm run build && cp site/js/function-plot.js dist/",
-    "deploy": "npm run lint && gh-pages-deploy"
+    "dist": "npm run lint && npm run build && cp site/js/function-plot.js dist/",
+    "deploy": "gh-pages-deploy"
   },
   "gh-pages-deploy": {
     "prep": [

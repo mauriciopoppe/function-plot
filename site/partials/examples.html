@@ -354,7 +354,7 @@ functionPlot(options)</code></pre></div></div><div class="col-md-6 center-block 
     graphType: 'polyline'
   }]
 })</code></pre></div></div><div class="col-md-6 center-block demos"><span id="butterfly-curve" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Polar equations</h3>
-<p>The original equation of the circle $x^2 + y^2 = 1$ can be expressed with the following polar equation</p><p>$$ r = r_0 \; cos(\theta - \gamma) + sqrt(a^2 -r_0^2 sin^2(\theta - \gamma)) $$</p><p>Where $\theta$ is the polar angle, $a$ is the radius of the circle with center $(r_0, \gamma)$</p><p>The options that tell <code>function-plot</code> to render a polar equation are defined inside each term of the <code>data</code> array and need to have the following properties set:</p><ul>
+<p>The original equation of the circle $x^2 + y^2 = 1$ can be expressed with the following polar equation</p><p>$$ r = r_0 \; cos(\theta - \gamma) + \sqrt{a^2 -r_0^2 sin^2(\theta - \gamma)} $$</p><p>Where $\theta$ is the polar angle, $a$ is the radius of the circle with center $(r_0, \gamma)$</p><p>The options that tell <code>function-plot</code> to render a polar equation are defined inside each term of the <code>data</code> array and need to have the following properties set:</p><ul>
 <li><code>fnType: &#39;polar&#39;</code> to tell function plot to render a polar equation</li>
 <li><code>r</code> a polar equation in terms of <code>theta</code></li>
 <li><code>range = [-Math.PI, Math.PI]</code> the <code>range</code> property in polar equations is used to determine the possible values of <code>theta</code>, remember that the number of samples is set in the property <code>samples</code></li>
@@ -451,7 +451,7 @@ functionPlot({
   grid: true,
   data: [{
     vector: [2, 1],
-    displacement: [1, 2],
+    offset: [1, 2],
     graphType: 'polyline',
     fnType: 'vector'
   }]
@@ -524,4 +524,45 @@ functionPlot({
     sampler: 'builtIn',
     graphType: 'polyline'
   }]
-})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="sampler-mathjs" class="graph"></span><span id="sampler-tan-mathjs" class="graph"></span></div></div></div></div>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="sampler-mathjs" class="graph"></span><span id="sampler-tan-mathjs" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Advanced: property evaluation</h3>
+<p>All of the examples above used a string in the property to evaluate e.g.</p><pre><code> functionPlot({
+   data: [{
+     fn: &#39;x^2&#39; 
+   }]
+ })
+</code></pre><p>You can use a function instead of a string, the input will vary depending on the type of <code>fnType</code></p><p>For any case the input will be a single object and its properties will be the same as the ones the function depends on, e.g. when <code>fnType: &#39;polar&#39;</code> then the function depends on <code>theta</code> so <code>theta</code> will be a property in the input object</p><p>if you want to use any other plotter your function is expected to return a single value (commonly used)</p><p>if you want to use the interval arithmetic plotter your function is expected to return an object with the properties hi, lo (rarely used unless you want to do interval arithmetic math)</p></div><div class="code"><pre><code class="javascript">functionPlot({
+  target: '#built-in-eval-function',
+  data: [{
+    // force the use of builtIn math
+    graphType: 'polyline',
+    fn: function (scope) {
+      // scope.x = Number
+      var x = scope.x
+      return x * x
+    }
+  }, {
+    fnType: 'polar',
+    graphType: 'polyline',
+    r: function (scope) {
+      var r0 = 0
+      var a = 1
+      var gamma = 0
+      return r0 * Math.cos(scope.theta - gamma) +
+        Math.sqrt(a * a - r0 * r0 * Math.pow(Math.sin(scope.theta - gamma), 2))
+    }
+  }]
+})
+functionPlot({
+  target: '#interval-arithmetic-eval-function',
+  data: [{
+    // uses interval arithmetic by default
+    fn: function (scope) {
+      // scope.x = {lo: Number, hi: number}
+      // simulate a line e.g. y = x
+      return {
+        lo: scope.x.lo,
+        hi: scope.x.hi
+      }
+    }
+  }]
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="built-in-eval-function" class="graph"></span><span id="interval-arithmetic-eval-function" class="graph"></span></div></div></div></div>

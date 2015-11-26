@@ -93,7 +93,7 @@ Additional style related options
 
 When `derivative` {Object} is present on a datum
 
-* `derivative.fn` {string} The derivative of `fn`
+* `derivative.fn` {string|Function} The derivative of `fn`
 * `derivative.x0` {number} The abscissa of the point which belongs to the curve
 represented by `fn` whose tangent will be computed (i.e. the tangent line to the point
 `x0, fn(x0)`)
@@ -110,32 +110,30 @@ When `secants` {Array} is present on a datum
 
 #### if `fnType: 'linear'` (default)
 
-* `fn` {string} the function that represents the curve, this function is evaluated with values which are inside `range`
+* `fn` {string|Function} the function that represents the curve, this function is evaluated with values which are inside `range`
 
 #### if `fnType: 'parametric'`
 
-- `x` the x-coordinate of a point to be sampled with a parameter `t`
-- `y` the y-coordinate of a point to be sampled with a parameter `t`
-- `range = [0, 2 * Math.PI]` the `range` property in parametric equations is used
-to determine the possible values of `t`, remember that the number of samples is
-set in the property `samples`
+- `x` {string|Function} the x-coordinate of a point to be sampled with a parameter `t`
+- `y` {string|Function} the y-coordinate of a point to be sampled with a parameter `t`
+- `range = [0, 2 * Math.PI]` {Array} the `range` property in parametric equations is used to determine the possible values of `t`, remember that the number of samples is set in the property `samples`
 
 #### if `fnType: 'polar'`
 
-- `r` a polar equation in terms of `theta`
+- `r` {string|Function} a polar equation in terms of `theta`
 - `range = [-Math.PI, Math.PI]` the `range` property in polar equations is used
 to determine the possible values of `theta`, remember that the number of samples is
 set in the property `samples`
 
 #### if `fnType: 'implicit'`
 
-- `fn` a function which needs to be expressed in terms of `x` and `y`
+- `fn` {string|Function} a function which needs to be expressed in terms of `x` and `y`
 
 **NOTE: implicit functions can only be rendered using interval-arithmetic**
 
 #### if `fnType: 'points'`
 
-- `points` an array of 2-number array which hold the coordinates of the points to render
+- `points` {Array} an array of 2-number array which hold the coordinates of the points to render
 
 **NOTE: make sure your type of graph is either `scatter` or `polyline`**
 
@@ -352,6 +350,8 @@ npm start
 Open `127.0.0.1:5555` and that's it! Local development server powered [beefy](https://www.npmjs.com/package/beefy)
 
 Development page: `127.0.0.1:5555/playground.html`
+
+Deploy steps: `npm run dist`
 
 ## License
 

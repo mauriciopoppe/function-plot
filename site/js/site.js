@@ -657,7 +657,7 @@ $(document).on('markupLoaded', function () {
    * following polar equation
    *
    * $$
-   * r = r_0 \; cos(\theta - \gamma) + sqrt(a^2 -r_0^2 sin^2(\theta - \gamma))
+   * r = r_0 \; cos(\theta - \gamma) + \sqrt{a^2 -r_0^2 sin^2(\theta - \gamma)}
    * $$
    *
    * Where $\theta$ is the polar angle, $a$ is the radius of the circle with center $(r_0, \gamma)$
@@ -938,6 +938,73 @@ $(document).on('markupLoaded', function () {
       graphType: 'polyline'
     }]
   })
+
+  /**
+   * ### Advanced: property evaluation
+   *
+   * All of the examples above used a string in the property to evaluate e.g.
+   *
+   *      // n
+   *      functionPlot({
+   *        data: [{
+   *          fn: 'x^2' 
+   *        }]
+   *      })
+   *
+   * You can use a function instead of a string, the input will vary depending
+   * on the type of `fnType`
+   *
+   * For any case the input will be a single object and its properties will be the same
+   * as the ones the function depends on, e.g. when `fnType: 'polar'` then the
+   * function depends on `theta` so `theta` will be a property in the input
+   * object
+   *
+   * if you want to use any other plotter your function is expected to return a
+   * single value (commonly used)
+   * 
+   * if you want to use the interval arithmetic plotter your function is
+   * expected to return an object with the properties hi, lo (rarely used unless
+   * you want to make computations with an interval arithmetic library)
+   * 
+   */
+  functionPlot({
+    target: '#built-in-eval-function',
+    data: [{
+      // force the use of builtIn math
+      graphType: 'polyline',
+      fn: function (scope) {
+        // scope.x = Number
+        var x = scope.x
+        return x * x
+      }
+    }, {
+      fnType: 'polar',
+      graphType: 'polyline',
+      r: function (scope) {
+        // scope.theta = number
+        var r0 = 0
+        var a = 1
+        var gamma = 0
+        return r0 * Math.cos(scope.theta - gamma) +
+          Math.sqrt(a * a - r0 * r0 * Math.pow(Math.sin(scope.theta - gamma), 2))
+      }
+    }]
+  })
+  functionPlot({
+    target: '#interval-arithmetic-eval-function',
+    data: [{
+      // uses interval arithmetic by default
+      fn: function (scope) {
+        // scope.x = {lo: Number, hi: number}
+        // simulate a line e.g. y = x
+        return {
+          lo: scope.x.lo,
+          hi: scope.x.hi
+        }
+      }
+    }]
+  })
+
   /** */
 })
 
