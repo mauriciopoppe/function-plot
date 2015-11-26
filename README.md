@@ -351,7 +351,13 @@ Open `127.0.0.1:5555` and that's it! Local development server powered [beefy](ht
 
 Development page: `127.0.0.1:5555/playground.html`
 
-Deploy steps: `npm run dist`
+Deploy steps:
+
+- `npm run dist`
+- `npm version major|minor|patch`
+- `git push origin master`
+- `npm run deploy`
+- `npm publish`
 
 ## License
 
