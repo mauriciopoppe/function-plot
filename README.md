@@ -354,9 +354,9 @@ Development page: `127.0.0.1:5555/playground.html`
 Deploy steps:
 
 - `npm run dist` (make sure to commit the dist files after this command)
-- `npm version major|minor|patch`
 - `git push origin master`
 - `npm run deploy`
+- `npm version major|minor|patch`
 - `npm publish`
 
 ## License
