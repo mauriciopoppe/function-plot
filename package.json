@@ -24,11 +24,11 @@
     "2d"
   ],
   "dependencies": {
-    "built-in-math-eval": "^0.2.3",
+    "built-in-math-eval": "^0.3.0",
     "clamp": "^1.0.1",
     "extend": "^3.0.0",
     "integrate-adaptive-simpson": "^1.0.3",
-    "interval-arithmetic-eval": "^0.3.5",
+    "interval-arithmetic-eval": "^0.4.0",
     "is-object": "^1.0.1",
     "key-pressed": "0.0.1",
     "keydown": "0.0.3"

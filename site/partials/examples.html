@@ -146,7 +146,13 @@
       skipTip: true
     }
   ]
-})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="tip" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Secants</h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="tip" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>nth-root</h3>
+<p>Plotting roots can be a challenging problem, most plotters will actually analyze expression of the type $x^{\tfrac{a}{b}}$, particularly they will analyze the denominator of the exponent (to plot in the negative x-axis), interval-arithmetic and math.js come bundled with a useful <code>nthRoot</code> function to solve these issues</p></div><div class="code"><pre><code class="javascript">functionPlot({
+  target: '#root-finding',
+  data: [{
+    fn: 'nthRoot(x, 3)^2'
+  }]
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="root-finding" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Secants</h3>
 <p>If a data object has a <code>secants</code> array, then each object will be used to compute secant lines between two points belonging to the function, additionally if <code>updateOnMouseMove</code> is a property set to <code>true</code> in the object then $(x_0, f(x_0))$ will be used as an anchored point and $(x_1, f(x_1))$ will be computed dynamically based on the mouse abscissa</p><p>Available options for each object:</p><ul>
 <li><code>x0</code> the abscissa of the first point</li>
 <li><code>x1</code> *(optional if <code>updateOnMouseMove</code> is set) the abscissa of the second point</li>
@@ -525,12 +531,13 @@ functionPlot({
     graphType: 'polyline'
   }]
 })</code></pre></div></div><div class="col-md-6 center-block demos"><span id="sampler-mathjs" class="graph"></span><span id="sampler-tan-mathjs" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Advanced: property evaluation</h3>
-<p>All of the examples above used a string in the property to evaluate e.g.</p><pre><code> functionPlot({
+<p>All of the examples above used a string in the property to evaluate e.g.</p><pre><code> // n
+ functionPlot({
    data: [{
      fn: &#39;x^2&#39; 
    }]
  })
-</code></pre><p>You can use a function instead of a string, the input will vary depending on the type of <code>fnType</code></p><p>For any case the input will be a single object and its properties will be the same as the ones the function depends on, e.g. when <code>fnType: &#39;polar&#39;</code> then the function depends on <code>theta</code> so <code>theta</code> will be a property in the input object</p><p>if you want to use any other plotter your function is expected to return a single value (commonly used)</p><p>if you want to use the interval arithmetic plotter your function is expected to return an object with the properties hi, lo (rarely used unless you want to do interval arithmetic math)</p></div><div class="code"><pre><code class="javascript">functionPlot({
+</code></pre><p>You can use a function instead of a string, the input will vary depending on the type of <code>fnType</code></p><p>For any case the input will be a single object and its properties will be the same as the ones the function depends on, e.g. when <code>fnType: &#39;polar&#39;</code> then the function depends on <code>theta</code> so <code>theta</code> will be a property in the input object</p><p>if you want to use any other plotter your function is expected to return a single value (commonly used)</p><p>if you want to use the interval arithmetic plotter your function is expected to return an object with the properties hi, lo (rarely used unless you want to make computations with an interval arithmetic library)</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#built-in-eval-function',
   data: [{
     // force the use of builtIn math
@@ -544,6 +551,7 @@ functionPlot({
     fnType: 'polar',
     graphType: 'polyline',
     r: function (scope) {
+      // scope.theta = number
       var r0 = 0
       var a = 1
       var gamma = 0

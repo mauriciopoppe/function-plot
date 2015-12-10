@@ -297,6 +297,22 @@ $(document).on('markupLoaded', function () {
       }
     ]
   })
+  
+  /**
+   * ### nth-root
+   *
+   * Plotting roots can be a challenging problem, most plotters will actually
+   * analyze expression of the type $x^{\tfrac{a}{b}}$, particularly they will
+   * analyze the denominator of the exponent (to plot in the negative x-axis),
+   * interval-arithmetic and math.js come bundled with a useful `nthRoot`
+   * function to solve these issues
+   */
+  functionPlot({
+    target: '#root-finding',
+    data: [{
+      fn: 'nthRoot(x, 3)^2'
+    }]
+  })
 
   /**
    * ### Secants
