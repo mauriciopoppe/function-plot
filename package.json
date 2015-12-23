@@ -28,10 +28,13 @@
     "clamp": "^1.0.1",
     "extend": "^3.0.0",
     "integrate-adaptive-simpson": "^1.0.3",
-    "interval-arithmetic-eval": "^0.4.0",
+    "interval-arithmetic-eval": "^0.4.3",
     "is-object": "^1.0.1",
     "key-pressed": "0.0.1",
-    "keydown": "0.0.3"
+    "keydown": "0.0.3",
+    "linspace": "0.0.1-1",
+    "log10": "^1.0.0",
+    "logspace": "0.0.0"
   },
   "devDependencies": {
     "beefy": "^2.1.3",

@@ -47,27 +47,33 @@ var functionPlot = require('function-plot');
 
 **params, All the params are optional unless otherwise stated**
 
-* `options`
-  * `options.target` {string} the selector of the parent element to render the graph to
-  * `options.title` {string} If set the chart will have it as a title on the top
-  * `options.xDomain` {array} domain of the linear scale (used in the x axis)
-  * `options.yDomain` {array} domain of the linear scale (used in the y axis)
-  * `options.xLabel` {string} x axis label
-  * `options.yLabel` {string} y axis label
-  * `options.disableZoom` {boolean} true to disable drag and zoom on the graph
-  * `options.grid` {boolean} true to show a grid
-  * `options.tip` {object} configuration passed to `lib/tip`, it's the helper shown on mouseover on the closest
+* `options` {Object}
+  * `target` {string} the selector of the parent element to render the graph to
+  * `title` {string} If set the chart will have it as a title on the top
+  * `xAxis` {Object}
+    * `type` {string} *default value: `'linear'`* the scale of this axis,
+        possible values `linear|log`
+    * `domain` {number[]} initial ends of the axis
+    * `label` {string} label to show near the axis
+  * `yAxis` {Object}
+    * `type` {string} *default value: `'linear'`* the scale of this axis,
+        possible values `linear|log`
+    * `domain` {number[]} initial ends of the axis
+    * `label` {string} label to show near the axis
+  * `disableZoom` {boolean} true to disable drag and zoom on the graph
+  * `grid` {boolean} true to show a grid
+  * `tip` {object} configuration passed to `lib/tip`, it's the helper shown on mouseover on the closest
   function to the current mose position
-    * `options.tip.xLine` {boolean} true to show a line parallel to the X axis on mouseover
-    * `options.tip.yLine` {boolean} true to show a line parallel to the Y axis on mouseover
-    * `options.tip.renderer` {function} Function to be called to define custom rendering on mouseover, called with the
+    * `xLine` {boolean} true to show a line parallel to the X axis on mouseover
+    * `yLine` {boolean} true to show a line parallel to the Y axis on mouseover
+    * `renderer` {function} Function to be called to define custom rendering on mouseover, called with the
      `x` and `f(x)` of the function which is closest to the mouse position (args: `x, y`)
-  * `options.annotations` {array} An array defining parallel lines to the y-axis or the x-axis
-    * `options.annotations[i].x` {number} x-coordinate of the line parallel to the y-axis
-    * `options.annotations[i].y` {number} y-coordinate of the line parallel to the x-axis
-    * `options.annotations[i].text` {string} text shown next to the parallel line
-  * `options.data` {array} *required* An array defining the functions to be rendered
-  * `options.plugins` {array} An array describing plugins to be run when the graph is initialized, check out the
+  * `annotations` {Object[]} An array defining parallel lines to the y-axis or the x-axis
+    * `x` {number} x-coordinate of the line parallel to the y-axis
+    * `y` {number} y-coordinate of the line parallel to the x-axis
+    * `text` {string} text shown next to the parallel line
+  * `data` {array} *required* An array defining the functions to be rendered
+  * `plugins` {array} An array describing plugins to be run when the graph is initialized, check out the
     examples on the main page
 
 ### `options.data` {Array}

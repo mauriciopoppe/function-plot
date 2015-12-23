@@ -5,7 +5,7 @@ $(document).on('markupLoaded', function () {
 
   functionPlot({
     target: '#description-sample',
-    yDomain: [-1, 9],
+    yAxis: {domain: [-1, 9]},
     tip: {
       renderer: function () {}
     },
@@ -21,8 +21,8 @@ $(document).on('markupLoaded', function () {
 
   functionPlot({
     target: '#description-sin-exp-x-naive',
-    yDomain: [-4, 4],
-    xDomain: [-2, 6],
+    yAxis: {domain: [-4, 4]},
+    xAxis: {domain: [-2, 6]},
     tip: {
       renderer: function () {}
     },
@@ -35,8 +35,8 @@ $(document).on('markupLoaded', function () {
 
   functionPlot({
     target: '#description-sin-exp-x',
-    yDomain: [-4, 4],
-    xDomain: [-2, 6],
+    yAxis: {domain: [-4, 4]},
+    xAxis: {domain: [-2, 6]},
     tip: {
       renderer: function () {}
     },
@@ -77,8 +77,12 @@ $(document).on('markupLoaded', function () {
    * - `title`: the title of the graph
    * - `width`: width of the graph
    * - `height`: height of the graph
-   * - `xLabel`: x axis label
-   * - `yLabel`: y axis label
+   * - `xAxis`:
+   *  - `type`: the type of scale for this axis, possible values `linear|log`
+   *    (default value: `'linear'`)
+   *  - `label`: x axis label
+   *  - `domain`: x axis possible values (see examples below)
+   * - `yAxis`: same options as `xAxis`
    * - `disableZoom`: true to disable translation/scaling on the graph
    */
   functionPlot({
@@ -87,8 +91,13 @@ $(document).on('markupLoaded', function () {
     width: 580,
     height: 400,
     disableZoom: true,
-    xLabel: 'x - axis',
-    yLabel: 'y - axis',
+    xAxis: {
+      label: 'x - axis',
+      domain: [-6, 6]
+    },
+    yAxis: {
+      label: 'y - axis'
+    },
     data: [{
       fn: 'x^2'
     }]
@@ -101,8 +110,12 @@ $(document).on('markupLoaded', function () {
    */
   functionPlot({
     target: '#grid',
-    xLabel: 'real',
-    yLabel: 'imaginary',
+    xAxis: {
+      label: 'real'
+    }, 
+    yAxis: {
+      label: 'imaginary' 
+    },
     grid: true,
     data: [
       { fn: 'sqrt(1 - x * x)' },
@@ -129,8 +142,8 @@ $(document).on('markupLoaded', function () {
    */
   functionPlot({
     target: '#domain',
-    yDomain: [-1, 1],
-    xDomain: [8, 24],
+    yAxis: {domain: [-1, 1]},
+    xAxis: {domain: [8, 24]},
     data: [{
       fn: 'sin(x)'
     }]
@@ -178,7 +191,7 @@ $(document).on('markupLoaded', function () {
    */
   functionPlot({
     target: '#annotations',
-    yDomain: [-1, 9],
+    yAxis: {domain: [-1, 9]},
     data: [{
       fn: 'x^2'
     }],
@@ -206,10 +219,34 @@ $(document).on('markupLoaded', function () {
    */
   functionPlot({
     target: '#closed',
-    xDomain: [-2, 12],
+    xAxis: {domain: [-2, 12]},
     data: [{
       fn: '3 + sin(x)',
       range: [2, 8],
+      closed: true
+    }]
+  })
+
+  /**
+   * ### Logarithmic scales
+   *
+   * The type of each axis can be configured to be logarithmic by specifying the
+   * type of axis to `log` inside the  `xAxis` option, note how this 
+   * change affects the way the functions are sampled
+   */
+  var instance = functionPlot({
+    target: '#logarithmic',
+    xAxis: {
+      type: 'log',
+      domain: [0.01, 1]
+    },
+    yAxis: {
+      domain: [-100, 100] 
+    },
+    grid: true,
+    data: [{
+      fn: '1/x * cos(1/x)',
+      // to make it look like a definite integral
       closed: true
     }]
   })
@@ -331,8 +368,8 @@ $(document).on('markupLoaded', function () {
    */
   functionPlot({
     target: '#secant',
-    yDomain: [-1, 9],
-    xDomain: [-3, 3],
+    yAxis: {domain: [-1, 9]},
+    xAxis: {domain: [-3, 3]},
     data: [{
       fn: 'x^2',
       secants: [
@@ -381,7 +418,7 @@ $(document).on('markupLoaded', function () {
    */
   functionPlot({
     target: '#derivative',
-    yDomain: [-1, 9],
+    yAxis: {domain: [-1, 9]},
     data: [{
       fn: 'x^2',
       derivative: {
@@ -400,7 +437,7 @@ $(document).on('markupLoaded', function () {
    */
   functionPlot({
     target: '#derivative-update',
-    yDomain: [-1, 9],
+    yAxis: {domain: [-1, 9]},
     data: [{
       fn: 'x^2',
       derivative: {
@@ -446,13 +483,13 @@ $(document).on('markupLoaded', function () {
   a = functionPlot({
     target: '#linked-a',
     height: 250,
-    xDomain: [-10, 10],
+    xAxis: {domain: [-10, 10]},
     data: [{ fn: 'x * x' }]
   })
   b = functionPlot({
     target: '#linked-b',
     height: 250,
-    xDomain: [-10, 10],
+    xAxis: {domain: [-10, 10]},
     data: [{ fn: '2 * x' }]
   })
   a.addLink(b)
@@ -472,19 +509,19 @@ $(document).on('markupLoaded', function () {
   a = functionPlot({
     target: '#linked-a-multiple',
     height: 250,
-    xDomain: [-10, 10],
+    xAxis: {domain: [-10, 10]},
     data: [{ fn: 'x * x' }]
   })
   b = functionPlot({
     target: '#linked-b-multiple',
     height: 250,
-    xDomain: [-10, 10],
+    xAxis: {domain: [-10, 10]},
     data: [{ fn: '2 * x' }]
   })
   c = functionPlot({
     target: '#linked-c-multiple',
     height: 250,
-    xDomain: [-10, 10],
+    xAxis: {domain: [-10, 10]},
     data: [{ fn: '2' }]
   })
   a.addLink(b, c)
@@ -595,8 +632,8 @@ $(document).on('markupLoaded', function () {
    */
   functionPlot({
     target: '#circle-explicit',
-    yDomain: [-1.897959183, 1.897959183],
-    xDomain: [-3, 3],
+    yAxis: {domain: [-1.897959183, 1.897959183]},
+    xAxis: {domain: [-3, 3]},
     data: [
       { fn: 'sqrt(1 - x * x)' },
       { fn: '-sqrt(1 - x * x)' }
@@ -631,8 +668,8 @@ $(document).on('markupLoaded', function () {
    */
   functionPlot({
     target: '#parametric-circle',
-    yDomain: [-1.897959183, 1.897959183],
-    xDomain: [-3, 3],
+    yAxis: {domain: [-1.897959183, 1.897959183]},
+    xAxis: {domain: [-3, 3]},
     data: [{
       x: 'cos(t)',
       y: 'sin(t)',
@@ -655,8 +692,8 @@ $(document).on('markupLoaded', function () {
    */
   functionPlot({
     target: '#butterfly-curve',
-    yDomain: [-4.428571429, 4.428571429],
-    xDomain: [-7, 7],
+    yAxis: {domain: [-4.428571429, 4.428571429]},
+    xAxis: {domain: [-7, 7]},
     data: [{
       x: 'sin(t) * (exp(cos(t)) - 2 cos(4t) - sin(t/12)^5)',
       y: 'cos(t) * (exp(cos(t)) - 2 cos(4t) - sin(t/12)^5)',
@@ -693,8 +730,8 @@ $(document).on('markupLoaded', function () {
    */
   functionPlot({
     target: '#polar-circle',
-    yDomain: [-1.897959183, 1.897959183],
-    xDomain: [-3, 3],
+    yAxis: {domain: [-1.897959183, 1.897959183]},
+    xAxis: {domain: [-3, 3]},
     data: [{
       r: 'r0 * cos(theta - gamma) + sqrt(a^2 - r0^2 * (sin(theta - gamma))^2)',
       scope: {
@@ -718,8 +755,8 @@ $(document).on('markupLoaded', function () {
    */
   functionPlot({
     target: '#polar-complex',
-    yDomain: [-1.897959183, 1.897959183],
-    xDomain: [-3, 3],
+    yAxis: {domain: [-1.897959183, 1.897959183]},
+    xAxis: {domain: [-3, 3]},
     data: [{
       r: '2 * sin(4 theta)',
       fnType: 'polar',
@@ -753,8 +790,8 @@ $(document).on('markupLoaded', function () {
    */
   functionPlot({
     target: '#circle-implicit',
-    yDomain: [-1.897959183, 1.897959183],
-    xDomain: [-3, 3],
+    yAxis: {domain: [-1.897959183, 1.897959183]},
+    xAxis: {domain: [-3, 3]},
     data: [{
       fn: 'x * x + y * y - 1',
       fnType: 'implicit'
@@ -775,8 +812,8 @@ $(document).on('markupLoaded', function () {
    */
   functionPlot({
     target: '#implicit-complex',
-    yDomain: [-3.795918366, 3.795918366],
-    xDomain: [-6, 6],
+    yAxis: {domain: [-3.795918366, 3.795918366]},
+    xAxis: {domain: [-6, 6]},
     disableZoom: true,
     data: [{
       fn: 'cos(PI * x) - cos(PI * y)',
@@ -835,7 +872,7 @@ $(document).on('markupLoaded', function () {
    */
   functionPlot({
     target: '#vector',
-    xDomain: [-3, 8],
+    xAxis: {domain: [-3, 8]},
     grid: true,
     data: [{
       vector: [2, 1],
@@ -900,8 +937,8 @@ $(document).on('markupLoaded', function () {
    */
   var instance = functionPlot({
     target: '#playground',
-    xDomain: [0.01, 1],
-    yDomain: [-100, 100],
+    xAxis: {domain: [0.01, 1]},
+    yAxis: {domain: [-100, 100]},
     data: [{
       fn: '1/x * cos(1/x)',
       // to make it look like a definite integral
