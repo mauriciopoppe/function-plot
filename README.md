@@ -172,7 +172,7 @@ An instance can subscribe to any of the following events by doing `instance.on([
 events can be triggered by doing `instance.emit([eventName][, params])`
 
 * `mouseover` fired whenever the mouse is over the canvas
-* `mousemove` fired whenever the mouse is moved inside the canvas, callback params `x`, `y` (in canvas space
+* `mousemove` fired whenever the mouse is moved inside the canvas, callback params: a single object `{x: number, y: number}` (in canvas space
 coordinates)
 * `mouseout` fired whenever the mouse is moved outside the canvas
 * `before:draw` fired before drawing all the graphs
