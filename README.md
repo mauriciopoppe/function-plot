@@ -94,6 +94,7 @@ will be evaluated with intervals instead of single values
 Additional style related options
 
 * `color` {string} color of the function to render
+* `attr` {Object} additional attributes set on the svg node that represents this datum
 * `closed` {boolean=false} (only if `graphType: 'polyline'` or `graphType: 'scatter'`) True to close the path, for any segment of the closed area graph
   `y0` will be 0 and `y1` will be `f(x)`
 
