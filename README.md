@@ -51,15 +51,17 @@ var functionPlot = require('function-plot');
   * `target` {string} the selector of the parent element to render the graph to
   * `title` {string} If set the chart will have it as a title on the top
   * `xAxis` {Object}
-    * `type` {string} *default value: `'linear'`* the scale of this axis,
+    * `type` {string} (default: `'linear'`) the scale of this axis,
         possible values `linear|log`
     * `domain` {number[]} initial ends of the axis
-    * `label` {string} label to show near the axis
+    * `invert` {boolean} (default: `false`) true to invert the values of this axis
+    * `label` {string} (default: `''`) label to show near the axis
   * `yAxis` {Object}
-    * `type` {string} *default value: `'linear'`* the scale of this axis,
+    * `type` {string} (default: `'linear'`) the scale of this axis,
         possible values `linear|log`
     * `domain` {number[]} initial ends of the axis
-    * `label` {string} label to show near the axis
+    * `invert` {boolean} (default: `false`) true to invert the values of this axis
+    * `label` {string} (default: `''`) label to show near the axis
   * `disableZoom` {boolean} true to disable drag and zoom on the graph
   * `grid` {boolean} true to show a grid
   * `tip` {object} configuration passed to `lib/tip`, it's the helper shown on mouseover on the closest
