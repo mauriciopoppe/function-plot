@@ -29,5 +29,8 @@
     "dist/",
     "!dist/function-plot.js",
     "lib/"
-  ]
+  ],
+  "dependencies": {
+    "d3": "^4.2.2"
+  }
 }
