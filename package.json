@@ -56,14 +56,14 @@
     "lint": "standard",
     "test": "echo 'no tests!'",
     "test:watch": "nodemon --watch lib --watch test --watch index.js --exec 'npm test'",
-    "start": "budo index.js:js/function-plot.js -- --standalone functionPlot",
+    "start": "budo index.js:bundle.js -- --standalone functionPlot",
     "fetch": "curl -o site/partials/brcdn-module.html -L https://www.brcdn.org/?module=function-plot&version=latest",
     "html": "node site.js",
     "pre_publish": "npm run lint",
-    "browserify": "browserify index.js -o site/js/function-plot.js --standalone functionPlot",
-    "minify": "cat site/js/function-plot.js | uglifyjs -o site/js/function-plot.js",
+    "browserify": "browserify index.js -o dist/function-plot.js --standalone functionPlot",
+    "minify": "cat dist/function-plot.js | uglifyjs -o dist/function-plot.js",
     "build": "npm run browserify && npm run minify",
-    "dist": "npm run lint && npm run build && cp site/js/function-plot.js dist/",
+    "dist": "npm run lint && npm run build",
     "deploy": "gh-pages-deploy"
   },
   "gh-pages-deploy": {
