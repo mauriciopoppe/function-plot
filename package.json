@@ -37,7 +37,7 @@
     "logspace": "0.0.0"
   },
   "devDependencies": {
-    "beefy": "^2.1.3",
+    "budo": "^9.2.1",
     "coveralls": "^2.11.2",
     "dox": "^0.7.1",
     "eslint": "^0.17.1",
@@ -56,7 +56,7 @@
     "lint": "standard",
     "test": "echo 'no tests!'",
     "test:watch": "nodemon --watch lib --watch test --watch index.js --exec 'npm test'",
-    "start": "beefy index.js:js/function-plot.js 5555 --cwd site/ -- --standalone functionPlot",
+    "start": "budo index.js:js/function-plot.js -- --standalone functionPlot",
     "fetch": "curl -o site/partials/brcdn-module.html -L https://www.brcdn.org/?module=function-plot&version=latest",
     "html": "node site.js",
     "pre_publish": "npm run lint",

@@ -9,15 +9,11 @@
 
 functionPlot({
   target: '#playground',
-  yAxis: { invert: true, },
+  // yAxis: { invert: true, },
   // xAxis: { invert: true, },
-  data: [{
-    fn: '1 / x',
-    derivative: {
-      fn: '-1/(x^2)',
-      updateOnMouseMove: true
-    }
-  }]
+  data: [
+    { fn: '2^x', sampler: 'builtIn', graphType: 'polyline'}
+  ]
 })
 
 // functionPlot({

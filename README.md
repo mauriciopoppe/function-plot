@@ -356,9 +356,9 @@ node site.js    // generate the examples shown on index.html
 npm start
 ```
 
-Open `127.0.0.1:5555` and that's it! Local development server powered [beefy](https://www.npmjs.com/package/beefy)
+Open `http://localhost/9966/site` and that's it! Local development server powered [beefy](https://www.npmjs.com/package/beefy)
 
-Development page: `127.0.0.1:5555/playground.html`
+Development page: `http://localhost:5555/site/playground.html`
 
 Deploy steps:
 
