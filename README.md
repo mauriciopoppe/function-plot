@@ -15,6 +15,8 @@ utility: [y = x * x](https://www.google.com/webhp?sourceid=chrome-instant&ion=1&
 The library currently supports interactive line charts and scatterplots, whenever the graph scale is modified the function
 is evaluated again with the new bounds, result: infinite graphs!
 
+**NOTE: function-plot requires d3 v3: [see this issue to keep track of the upgrade status](https://github.com/maurizzzio/function-plot/issues/79)**
+
 [**homepage**](http://maurizzzio.github.io/function-plot/)
 
 ## Install
