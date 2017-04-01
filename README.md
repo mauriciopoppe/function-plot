@@ -358,7 +358,7 @@ node site.js    // generate the examples shown on index.html
 npm start
 ```
 
-Main page: `http://localhost/9966/site`, development page: `http://localhost:9966/site/playground.html`
+Main page: `http://localhost:9966/site`, development page: `http://localhost:9966/site/playground.html`
 
 Deploy steps:
 
