@@ -15,9 +15,9 @@ utility: [y = x * x](https://www.google.com/webhp?sourceid=chrome-instant&ion=1&
 The library currently supports interactive line charts and scatterplots, whenever the graph scale is modified the function
 is evaluated again with the new bounds, result: infinite graphs!
 
-**NOTE: function-plot requires d3 v3: [see this issue to keep track of the upgrade status](https://github.com/maurizzzio/function-plot/issues/79)**
+**NOTE: function-plot requires d3 v3: [see this issue to keep track of the upgrade status](https://github.com/mauriciopoppe/function-plot/issues/79)**
 
-[**homepage**](http://maurizzzio.github.io/function-plot/)
+[**homepage**](http://mauriciopoppe.github.io/function-plot/)
 
 ## Install
 
@@ -37,7 +37,7 @@ functionPlot({
 
 ## Example
 
-All the available options are described in the [`homepage`](http://maurizzzio.github.io/function-plot/)
+All the available options are described in the [`homepage`](http://mauriciopoppe.github.io/function-plot/)
 
 ## API
 
@@ -374,5 +374,5 @@ Deploy steps:
 
 [npm-image]: https://img.shields.io/npm/v/function-plot.svg?style=flat
 [npm-url]: https://npmjs.org/package/function-plot
-[travis-image]: https://travis-ci.org/maurizzzio/function-plot.svg?branch=master
-[travis-url]: https://travis-ci.org/maurizzzio/function-plot
+[travis-image]: https://travis-ci.org/mauriciopoppe/function-plot.svg?branch=master
+[travis-url]: https://travis-ci.org/mauriciopoppe/function-plot
