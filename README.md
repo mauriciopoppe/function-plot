@@ -50,7 +50,7 @@ var functionPlot = require('function-plot');
 **params, All the params are optional unless otherwise stated**
 
 * `options` {Object}
-  * `target` {string} the selector of the parent element to render the graph to
+  * `target` {string|Object} the selector or DOM node of the parent element to render the graph to
   * `title` {string} If set the chart will have it as a title on the top
   * `xAxis` {Object}
     * `type` {string} (default: `'linear'`) the scale of this axis,
