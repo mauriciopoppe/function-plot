@@ -17,21 +17,23 @@ is evaluated again with the new bounds, result: infinite graphs!
 
 **NOTE: function-plot requires d3 v3**
 
+[![Edit l6k20jrlm](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/l6k20jrlm)
+
 [**homepage**](http://mauriciopoppe.github.io/function-plot/)
 
 [**examples on observablehq.com**](https://beta.observablehq.com/@liuyao12/function-plot), thanks to [@liuyao12](https://github.com/liuyao12)
 
-## Install
+## Quickstart
 
 ```sh
-$ npm install --save function-plot
+npm install d3@3 function-plot
 ```
 
 ## Usage with browserify
 
 ```js
-var d3 = window.d3
-var functionPlot = require('function-plot');
+window.d3 = require('d3');
+const functionPlot = require('function-plot');
 functionPlot({
   // options below
 })
@@ -350,25 +352,6 @@ Selectors (sass)
   }
 }
 ```
-
-## Development
-
-After cloning the repo and running `npm install`
-
-```sh
-node site.js    // generate the examples shown on index.html
-npm start
-```
-
-Main page: `http://localhost:9966/site`, development page: `http://localhost:9966/site/playground.html`
-
-Deploy steps:
-
-- `npm run dist` (make sure to commit the dist files after this command)
-- `npm version major|minor|patch`
-- `git push origin master`
-- `npm run deploy`
-- `npm publish`
 
 ## License
 
