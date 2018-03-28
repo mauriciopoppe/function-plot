@@ -44,7 +44,3 @@ var parsed = comments.map(function (c) {
 var output = fs.createWriteStream('./site/partials/examples.html')
 output.write(jade.compileFile('./site/jade/examples.jade')({comments: parsed}))
 output.end()
-
-var wzrd = fs.createWriteStream('./site/partials/wzrd.html')
-wzrd.write(jade.compileFile('./site/jade/wzrd.jade')({version: version}))
-wzrd.end()

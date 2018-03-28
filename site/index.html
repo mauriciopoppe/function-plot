@@ -40,7 +40,7 @@
         <!--github-->
         <iframe src="https://ghbtns.com/github-btn.html?user=mauriciopoppe&repo=function-plot&type=star&count=true" frameborder="0" scrolling="0" width="100px" height="20px"></iframe>
         <!--twitter-->
-        <a href="https://twitter.com/share" class="twitter-share-button" data-via="iMauricio">Tweet</a>
+        <a href="https://twitter.com/share" class="twitter-share-button" data-via="mauricio_poppe">Tweet</a>
         <script>!function(d,s,id){var
         js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
       </div>
@@ -60,8 +60,8 @@
     whenever the graph scale is modified the function is evaluated again with
     the new bounds, result: infinite graphs!
   </p>
-  <p class="center-block" style="width: 600px;">
-    <span id="description-sample"></span>
+  <p class="center-block">
+    <iframe src="https://codesandbox.io/embed/l6k20jrlm" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
   </p>
 
   <p>
@@ -94,21 +94,27 @@
 </section>
 
   <div class="container">
-    <p>Bundled versions powered by <a href="https://wzrd.in">wzrd.in</a>
-    <!--<a href="https://www.brcdn.org/?module=function-plot&version=latest">Browserify CDN</a></p>-->
-    <!--<div id="brcdn"></div>-->
 
-    <div id="wzrd"></div>
+    <pre><code>
+      npm i d3@v3 function-plot
+    </code></pre>
+
+    <pre><code>
+      window.d3 = require('d3')
+      const functionPlot = require('function-plot')
+      functionPlot({
+        // ..options
+      })
+    </code></pre>
+
     <hr/>
-    <p>
-      with bower:
-    </p>
-    <pre><code>$ bower install function-plot</code></pre>
-    <p>
-      and include it in your webpage as
-    </p>
-    <pre><code>&lt;script src=&quot;bower_components/d3/d3.min.js&quot;&gt;&lt;/script&gt;
-&lt;script src=&quot;bower_components/function-plot/dist/function-plot.js&quot;&gt;&lt;/script&gt;</code></pre>
+
+    <p>The old way:</p>
+    <pre><code id="old-way">
+      &lt;script src=&quot;https://unpkg.com/d3@3/d3.min.js&quot;&gt;&lt;/script&gt;
+      &lt;script src=&quot;https://unpkg.com/function-plot@1/dist/function-plot.js&quot;&gt;&lt;/script&gt;
+    </code></pre>
+
   </div>
 
 <section><div class="container">Examples</div></section>
@@ -117,20 +123,11 @@
     <div id="examples"></div>
   </div>
 
-<section>
-  <div class="container">Playground</div>
-</section>
-
-  <div class="container">
-    <a class="jsbin-embed" href="https://jsbin.com/heroqufiza/1/embed?js,output&height=500px">JS Bin on jsbin.com</a>
-    <script src="https://static.jsbin.com/js/embed.min.js?3.34.1"></script>
-  </div>
-
 <div class="text-center footer">
   <div class="container">
     <div class="about">
       <div>
-        Created by <a href="https://twitter.com/iMauricio">Mauricio Poppe</a> $\cdots$
+        Created by <a href="https://twitter.com/mauricio_poppe">Mauricio Poppe</a> $\cdots$
         Inspired by <a href="https://metricsgraphicsjs.org/">MetricGraphics</a>
       </div>
     </div>
