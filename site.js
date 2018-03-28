@@ -6,7 +6,6 @@ var fs = require('fs')
 var dox = require('dox')
 var _ = require('lodash')
 var jade = require('jade')
-var version = require('./package.json').version
 
 var file = fs.readFileSync('./site/js/site.js', { encoding: 'utf-8' })
 var comments = dox.parseComments(file)
