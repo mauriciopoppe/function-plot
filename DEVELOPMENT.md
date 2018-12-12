@@ -16,6 +16,6 @@ Deploy steps:
 - `npm run dist` (make sure to commit the dist files after this command)
 - `npm version major|minor|patch`
 - `git push origin master`
-- `npm run deploy`
+- `npm run deploy -- -- "Commit message"`
 - `npm publish`
 
