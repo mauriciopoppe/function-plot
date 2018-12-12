@@ -15,16 +15,16 @@ var parsed = comments.map(function (c) {
   if (ids) {
     ids = ids
       .map(function (str) {
-        return /#[0-9a-zA-Z\-]*/.exec(str)[0].substr(1)
+        return /#[0-9a-zA-Z-]*/.exec(str)[0].substr(1)
       })
   }
 
   var comment = c.description.full
   var experimental
-  if (_.find(c.tags, {type: 'experimental'})) {
+  if (_.find(c.tags, { type: 'experimental' })) {
     experimental = true
   }
-  var additionalDOM = _.find(c.tags, {type: 'additionalDOM'})
+  var additionalDOM = _.find(c.tags, { type: 'additionalDOM' })
   if (additionalDOM) {
     additionalDOM = additionalDOM.string
   }
@@ -41,5 +41,5 @@ var parsed = comments.map(function (c) {
 })
 
 var output = fs.createWriteStream('./site/partials/examples.html')
-output.write(jade.compileFile('./site/jade/examples.jade')({comments: parsed}))
+output.write(jade.compileFile('./site/jade/examples.jade')({ comments: parsed }))
 output.end()
