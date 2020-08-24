@@ -28,8 +28,9 @@
     "test:watch": "nodemon --watch lib --watch test --watch index.js --exec 'npm test'"
   },
   "files": [
-    "/*",
-    "!/site/"
+    "/dist",
+    "/lib",
+    "/index.js"
   ],
   "gh-pages-deploy": {
     "prep": [
