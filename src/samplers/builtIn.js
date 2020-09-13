@@ -52,7 +52,7 @@ function split (chart, meta, data) {
   var st = []
   var sets = []
   var domain = chart.meta.yScale.domain()
-  var zoomScale = chart.meta.zoomBehavior.scale()
+  var zoomYScaleMult = domain[0]
   var yMin = domain[0]
   var yMax = domain[1]
 
@@ -79,7 +79,7 @@ function split (chart, meta, data) {
       // there's a change in the slope sign
       oldSign !== newSign &&
       // the slope is bigger to some value (according to the current zoom scale)
-      Math.abs(deltaY / deltaX) > 1 / zoomScale) {
+      Math.abs(deltaY / deltaX) > 1 / zoomYScaleMult) {
       // retest this section again and determine if it's an asymptote
       var check = checkAsymptote(data[i - 1], data[i], meta, newSign, 3)
       if (check.asymptote) {

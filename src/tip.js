@@ -33,23 +33,26 @@ export default function mouseTip (config) {
   }
 
   function tip (selection) {
-    var innerSelection = selection.selectAll('g.tip')
+    var join = selection
+      .selectAll('g.tip')
       .data(function (d) { return [d] })
 
     // enter
-    innerSelection
+    const tipEnter = join
       .enter().append('g')
       .attr('class', 'tip')
       .attr('clip-path', 'url(#function-plot-clip-' + config.owner.id + ')')
 
     // enter + update = enter inner tip
-    tip.el = innerSelection.selectAll('g.inner-tip')
+    const tipInnerJoin = tip.join = join.merge(tipEnter)
+      .selectAll('g.inner-tip')
       .data(function (d) {
         // debugger
         return [d]
       })
 
-    tip.el.enter()
+    const tipInnerEnter = tip.enter = tipInnerJoin
+      .enter()
       .append('g')
       .attr('class', 'inner-tip')
       .style('display', 'none')
@@ -66,8 +69,10 @@ export default function mouseTip (config) {
       })
 
     // enter + update
-    selection.selectAll('.tip-x-line').style('display', config.xLine ? null : 'none')
-    selection.selectAll('.tip-y-line').style('display', config.yLine ? null : 'none')
+    tipInnerJoin.merge(tipInnerEnter)
+      .selectAll('.tip-x-line').style('display', config.xLine ? null : 'none')
+    tipInnerJoin.merge(tipInnerEnter)
+      .selectAll('.tip-y-line').style('display', config.yLine ? null : 'none')
   }
 
   tip.move = function (coordinates) {
@@ -76,10 +81,10 @@ export default function mouseTip (config) {
     var closestIndex = -1
     var x, y
 
-    var el = tip.el
+    var selection = tip.join.merge(tip.enter)
     var inf = 1e8
     var meta = config.owner.meta
-    var data = el.data()[0].data
+    var data = selection.datum()
     var xScale = meta.xScale
     var yScale = meta.yScale
     var width = meta.width
@@ -125,10 +130,10 @@ export default function mouseTip (config) {
       var clampX = clamp(x, xScale.invert(-MARGIN), xScale.invert(width + MARGIN))
       var clampY = clamp(y, yScale.invert(height + MARGIN), yScale.invert(-MARGIN))
       var color = utils.color(data[closestIndex], closestIndex)
-      el.attr('transform', 'translate(' + xScale(clampX) + ',' + yScale(clampY) + ')')
-      el.select('circle')
+      selection.attr('transform', 'translate(' + xScale(clampX) + ',' + yScale(clampY) + ')')
+      selection.select('circle')
         .attr('fill', color)
-      el.select('text')
+      selection.select('text')
         .attr('fill', color)
         .text(config.renderer(x, y, closestIndex))
     } else {
@@ -137,11 +142,13 @@ export default function mouseTip (config) {
   }
 
   tip.show = function () {
-    this.el.style('display', null)
+    tip.join.merge(tip.enter)
+      .style('display', null)
   }
 
   tip.hide = function () {
-    this.el.style('display', 'none')
+    tip.join.merge(tip.enter)
+      .style('display', 'none')
   }
   // generations of getters/setters
   Object.keys(config).forEach(function (option) {

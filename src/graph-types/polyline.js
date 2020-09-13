@@ -1,5 +1,5 @@
 import { select as d3Select } from 'd3-selection'
-import { line as d3Line, area as d3Area } from 'd3-shape'
+import { line as d3Line, area as d3Area, curveLinear as d3CurveLinear } from 'd3-shape'
 import clamp from 'clamp'
 
 import utils from '../utils'
@@ -15,6 +15,8 @@ export default function polyline (chart) {
       var index = d.index
       var evaluatedData = evaluate(chart, d)
       var color = utils.color(d, index)
+
+      // join
       var innerSelection = el.selectAll(':scope > path.line')
         .data(evaluatedData)
 
@@ -35,7 +37,7 @@ export default function polyline (chart) {
       }
 
       var line = d3Line()
-        .interpolate('linear')
+        .curve(d3CurveLinear)
         .x(function (d) { return xScale(d[0]) })
         .y(y)
       var area = d3Area()
@@ -43,14 +45,14 @@ export default function polyline (chart) {
         .y0(yScale(0))
         .y1(y)
 
-      innerSelection.enter()
+      const innerSelectionEnter = innerSelection.enter()
         .append('path')
         .attr('class', 'line line-' + index)
         .attr('stroke-width', 1)
         .attr('stroke-linecap', 'round')
 
       // enter + update
-      innerSelection
+      innerSelection.merge(innerSelectionEnter)
         .each(function () {
           var path = d3Select(this)
           var pathD
@@ -72,8 +74,12 @@ export default function polyline (chart) {
             })
             .attr('d', pathD)
         })
-        .attr(d.attr)
+        // .attr(d => {
+        //   if (d) console.log(d)
+        //   d.attr
+        // })
 
+      // exit
       innerSelection.exit().remove()
     })
   }

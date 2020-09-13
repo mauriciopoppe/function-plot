@@ -60,6 +60,7 @@
     "d3-axis": "^2.0.0",
     "d3-color": "^2.0.0",
     "d3-format": "^2.0.0",
+    "d3-interpolate": "^2.0.1",
     "d3-scale": "^3.2.2",
     "d3-selection": "^2.0.0",
     "d3-shape": "^2.0.0",

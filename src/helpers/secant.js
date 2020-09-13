@@ -78,16 +78,17 @@ export default function secant (chart) {
       var innerSelection = el.selectAll('g.secant')
         .data(data)
 
-      innerSelection.enter()
+      const innerSelectionEnter = innerSelection.enter()
         .append('g')
         .attr('class', 'secant')
 
       // enter + update
-      innerSelection
+      innerSelection.merge(innerSelectionEnter)
         .call(polyline(chart))
 
       // change the opacity of the secants
-      innerSelection.selectAll('path')
+      innerSelection.merge(innerSelectionEnter)
+        .selectAll('path')
         .attr('opacity', 0.5)
 
       // exit

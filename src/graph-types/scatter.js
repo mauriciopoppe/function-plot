@@ -24,13 +24,14 @@ export default function scatter (chart) {
         }
       }
 
-      var innerSelection = d3Select(this).selectAll(':scope > circle')
+      var innerSelection = d3Select(this)
+        .selectAll(':scope > circle')
         .data(joined)
 
-      innerSelection.enter()
+      const innerSelectionEnter = innerSelection.enter()
         .append('circle')
 
-      innerSelection
+      innerSelection.merge(innerSelectionEnter)
         .attr('fill', d3Hsl(color.toString()).brighter(1.5))
         .attr('stroke', color)
         .attr('opacity', 0.7)

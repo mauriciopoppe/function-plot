@@ -80,13 +80,13 @@ export default function interval (chart) {
       // the min height/width of the rects drawn by the path generator
       minWidthHeight = Math.max(evaluatedData[0].scaledDx, 1)
 
-      innerSelection.enter()
+      const innerSelectionEnter = innerSelection.enter()
         .append('path')
         .attr('class', 'line line-' + index)
         .attr('fill', 'none')
 
       // enter + update
-      innerSelection
+      innerSelection.merge(innerSelectionEnter)
         .attr('stroke-width', minWidthHeight)
         .attr('stroke', utils.color(d, index))
         .attr('opacity', closed ? 0.5 : 1)
