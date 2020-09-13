@@ -1,15 +1,12 @@
-/**
- * Created by mauricio on 3/29/15.
- */
-'use strict'
-var d3 = window.d3
+import { line as d3Line } from 'd3-shape'
+import { select as d3Select } from 'd3-selection'
+import extend from 'extend'
 
-var extend = require('extend')
-var builtInEvaluator = require('./eval').builtIn
-var datumDefaults = require('../datum-defaults')
-var polyline = require('../graph-types/polyline')
+import { builtIn as builtInEvaluator } from './eval'
+import datumDefaults from '../datum-defaults'
+import polyline from '../graph-types/polyline'
 
-module.exports = function (chart) {
+export default function secant (chart) {
   var secantDefaults = datumDefaults({
     isHelper: true,
     skipTip: true,
@@ -76,7 +73,7 @@ module.exports = function (chart) {
 
   secant = function (selection) {
     selection.each(function (d) {
-      var el = d3.select(this)
+      var el = d3Select(this)
       var data = computeLines.call(selection, d)
       var innerSelection = el.selectAll('g.secant')
         .data(data)

@@ -1,9 +1,3 @@
-/**
- * Created by mauricio on 3/29/15.
- */
-'use strict'
-// var d3 = window.d3
-
 import { line as d3Line } from 'd3-shape'
 import { select as d3Select } from 'd3-selection'
 

@@ -1,4 +1,4 @@
-module.exports = {
-  builtIn: require('./builtIn'),
-  interval: require('./interval')
-}
+import builtIn from './builtIn'
+import interval from './interval'
+
+export { builtIn, interval }

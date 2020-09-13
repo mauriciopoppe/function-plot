@@ -1,31 +1,22 @@
-/*
- * function-plot
- *
- * Copyright (c) 2015 Mauricio Poppe
- * Licensed under the MIT license.
- */
 import { line as d3Line } from 'd3-shape'
 import { format as d3Format } from 'd3-format'
 import { scaleLinear as d3ScaleLinear, scaleLog as d3ScaleLog } from 'd3-scale'
 import { axisLeft as d3AxisLeft, axisBottom as d3AxisBottom } from 'd3-axis'
 import { zoom as d3Zoom } from 'd3-zoom'
 import { select as d3Select } from 'd3-selection'
+import extend from 'extend'
+import events from 'events'
 
 import annotations from './helpers/annotations'
 import mousetip from './tip'
+import helpers from './helpers'
+import datumDefaults from './datum-defaults'
+import globals from './globals'
+import * as graphTypes from './graph-types'
+import plugins from './plugins'
+import * as $eval from './helpers/eval'
 
 require('./polyfills')
-const events = require('events')
-const extend = require('extend')
-
-// const mousetip = require('./tip')
-const helpers = require('./helpers/')
-// const annotations = require('./helpers/annotations')
-const datumDefaults = require('./datum-defaults')
-const globals = require('globals')
-const graphTypes = require('./graph-types/')
-const plugins = require('./plugins/')
-const $eval = require('./helpers/eval')
 
 const cache = []
 const d3Scale = { linear: d3ScaleLinear, log: d3ScaleLog }

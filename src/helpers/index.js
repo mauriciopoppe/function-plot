@@ -1,15 +1,12 @@
-/**
- * Created by mauricio on 4/8/15.
- */
-'use strict'
-var d3 = window.d3
-var derivative = require('./derivative')
-var secant = require('./secant')
+// var d3 = window.d3
+import { select as d3Select } from 'd3-selection'
+import derivative from './derivative'
+import secant from './secant'
 
-module.exports = function (chart) {
+export default function helpers(chart) {
   function helper (selection) {
     selection.each(function () {
-      var el = d3.select(this)
+      var el = d3Select(this)
       el.call(derivative(chart))
       el.call(secant(chart))
     })

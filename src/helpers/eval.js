@@ -1,9 +1,12 @@
+import builtInMathEval from 'built-in-math-eval'
+import intervalArithmeticEval from 'interval-arithmetic-eval'
+import extend from 'extend'
+
 'use strict'
 var samplers = {
-  interval: require('interval-arithmetic-eval'),
-  builtIn: require('built-in-math-eval')
+  interval: intervalArithmeticEval,
+  builtIn: builtInMathEval
 }
-var extend = require('extend')
 
 window.math && (samplers.builtIn = window.math.compile)
 
@@ -92,5 +95,7 @@ function generateEvaluator (samplerName) {
   return evaluate
 }
 
-module.exports.builtIn = generateEvaluator('builtIn')
-module.exports.interval = generateEvaluator('interval')
+const builtIn = generateEvaluator('builtIn')
+const interval = generateEvaluator('interval')
+
+export { builtIn, interval }

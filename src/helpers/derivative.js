@@ -1,13 +1,10 @@
-/**
- * Created by mauricio on 3/29/15.
- */
-'use strict'
-var d3 = window.d3
-var builtInEvaluator = require('./eval').builtIn
-var polyline = require('../graph-types/polyline')
-var datumDefaults = require('../datum-defaults')
+import { select as d3Select } from 'd3-selection'
 
-module.exports = function (chart) {
+import polyline from '../graph-types/polyline'
+import { builtIn as builtInEvaluator } from './eval'
+import datumDefaults from '../datum-defaults'
+
+export default function derivative(chart) {
   var derivativeDatum = datumDefaults({
     isHelper: true,
     skipTip: true,
@@ -55,7 +52,7 @@ module.exports = function (chart) {
 
   derivative = function (selection) {
     selection.each(function (d) {
-      var el = d3.select(this)
+      var el = d3Select(this)
       var data = computeLine.call(selection, d)
       checkAutoUpdate.call(selection, d)
       var innerSelection = el.selectAll('g.derivative')

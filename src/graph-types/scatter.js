@@ -1,12 +1,10 @@
-/**
- * Created by mauricio on 3/29/15.
- */
-'use strict'
-var d3 = window.d3
-var evaluate = require('../evaluate')
-var utils = require('../utils')
+import { select as d3Select } from 'd3-selection'
+import { hsl as d3Hsl } from 'd3-color'
 
-module.exports = function (chart) {
+import utils from '../utils'
+import evaluate from '../evaluate'
+
+export default function scatter (chart) {
   var xScale = chart.meta.xScale
   var yScale = chart.meta.yScale
 
@@ -26,14 +24,14 @@ module.exports = function (chart) {
         }
       }
 
-      var innerSelection = d3.select(this).selectAll(':scope > circle')
+      var innerSelection = d3Select(this).selectAll(':scope > circle')
         .data(joined)
 
       innerSelection.enter()
         .append('circle')
 
       innerSelection
-        .attr('fill', d3.hsl(color.toString()).brighter(1.5))
+        .attr('fill', d3Hsl(color.toString()).brighter(1.5))
         .attr('stroke', color)
         .attr('opacity', 0.7)
         .attr('r', 1)

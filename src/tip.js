@@ -1,17 +1,11 @@
-/**
- * Created by mauricio on 3/29/15.
- */
-'use strict'
-// var d3 = window.d3
-
 import { line as d3Line } from 'd3-shape'
 import { select as d3Select } from 'd3-selection'
+import extend from 'extend'
+import clamp from 'clamp'
 
-var extend = require('extend')
-var utils = require('./utils')
-var clamp = require('clamp')
-var globals = require('./globals')
-var builtInEvaluator = require('./helpers/eval').builtIn
+import utils from './utils'
+import globals from './globals'
+import { builtIn as builtInEvaluator } from './helpers/eval'
 
 export default function mouseTip (config) {
   config = extend({

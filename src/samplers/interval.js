@@ -1,12 +1,8 @@
-/**
- * Created by mauricio on 5/14/15.
- */
-'use strict'
-var intervalArithmeticEval = require('interval-arithmetic-eval')
+import intervalArithmeticEval from 'interval-arithmetic-eval'
 var Interval = intervalArithmeticEval.Interval
 
-var evaluate = require('../helpers/eval').interval
-var utils = require('../utils')
+import { interval as evaluate } from '../helpers/eval'
+import utils from '../utils'
 
 // disable the use of typed arrays in interval-arithmetic to improve the performance
 intervalArithmeticEval.policies.disableRounding()
@@ -121,4 +117,4 @@ var sampler = function (chart, d, range, nSamples) {
   return fnTypes[d.fnType].apply(null, arguments)
 }
 
-module.exports = sampler
+export default sampler

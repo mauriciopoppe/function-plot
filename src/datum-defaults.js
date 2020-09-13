@@ -1,10 +1,4 @@
-var isObject = require('is-object')
-
-module.exports = function (d) {
-  if (!isObject(d)) {
-    throw Error('datum is not an object')
-  }
-
+export default function datumDefaults (d) {
   // default graphType uses boxes i.e. 2d intervals
   if (!(d.hasOwnProperty('graphType'))) {
     d.graphType = 'interval'

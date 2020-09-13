@@ -1,8 +1,3 @@
-/**
- * Created by mauricio on 3/29/15.
- */
-'use strict'
-
 import { hsl as d3Hsl } from 'd3-color'
 
 // var d3 = window.d3

@@ -1,18 +1,17 @@
-/**
- * Created by mauricio on 3/29/15.
- */
-'use strict'
-var d3 = window.d3
-var evaluate = require('../evaluate')
-var utils = require('../utils')
-var clamp = require('clamp')
+import { select as d3Select } from 'd3-selection'
+import { line as d3Line, area as d3Area } from 'd3-shape'
+import clamp from 'clamp'
 
-module.exports = function (chart) {
+import utils from '../utils'
+import evaluate from '../evaluate'
+
+
+export default function polyline (chart) {
   var xScale = chart.meta.xScale
   var yScale = chart.meta.yScale
   function plotLine (selection) {
     selection.each(function (d) {
-      var el = plotLine.el = d3.select(this)
+      var el = plotLine.el = d3Select(this)
       var index = d.index
       var evaluatedData = evaluate(chart, d)
       var color = utils.color(d, index)
@@ -35,11 +34,11 @@ module.exports = function (chart) {
         return clamp(yScale(d[1]), yMin, yMax)
       }
 
-      var line = d3.svg.line()
+      var line = d3Line()
         .interpolate('linear')
         .x(function (d) { return xScale(d[0]) })
         .y(y)
-      var area = d3.svg.area()
+      var area = d3Area()
         .x(function (d) { return xScale(d[0]) })
         .y0(yScale(0))
         .y1(y)
@@ -53,7 +52,7 @@ module.exports = function (chart) {
       // enter + update
       innerSelection
         .each(function () {
-          var path = d3.select(this)
+          var path = d3Select(this)
           var pathD
           if (d.closed) {
             path.attr('fill', color)

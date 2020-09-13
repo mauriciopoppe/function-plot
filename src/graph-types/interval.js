@@ -1,12 +1,9 @@
-/**
- * Created by mauricio on 3/29/15.
- */
-'use strict'
-var d3 = window.d3
-var evaluate = require('../evaluate')
-var utils = require('../utils')
+import { select as d3Select } from 'd3-selection'
 
-module.exports = function (chart) {
+import evaluate from '../evaluate'
+import utils from '../utils'
+
+export default function interval (chart) {
   var minWidthHeight
   var xScale = chart.meta.xScale
   var yScale = chart.meta.yScale
@@ -73,7 +70,7 @@ module.exports = function (chart) {
 
   function plotLine (selection) {
     selection.each(function (d) {
-      var el = plotLine.el = d3.select(this)
+      var el = plotLine.el = d3Select(this)
       var index = d.index
       var closed = d.closed
       var evaluatedData = evaluate(chart, d)

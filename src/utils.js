@@ -1,14 +1,9 @@
-/**
- * Created by mauricio on 3/29/15.
- */
-'use strict'
-var linspace = require('linspace')
-var logspace = require('logspace')
-var log10 = require('log10')
+import globals from './globals'
+import linspace from 'linspace'
+import logspace from 'logspace'
+import log10 from 'log10'
 
-var globals = require('./globals')
-
-module.exports = {
+const utils = {
   isValidNumber: function (v) {
     return typeof v === 'number' && !isNaN(v)
   },
@@ -44,3 +39,5 @@ module.exports = {
     return data.color || globals.COLORS[index]
   }
 }
+
+export default utils

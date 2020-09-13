@@ -1,9 +1,5 @@
-/**
- * Created by mauricio on 4/5/15.
- */
-'use strict'
-module.exports = {
-  polyline: require('./polyline'),
-  interval: require('./interval'),
-  scatter: require('./scatter')
-}
+import polyline from './polyline'
+import interval from './interval'
+import scatter from './scatter'
+
+export { polyline, interval, scatter }

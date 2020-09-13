@@ -1,9 +1,8 @@
-'use strict'
-var clamp = require('clamp')
-var linspace = require('linspace')
+import clamp from 'clamp'
+import linspace from 'linspace'
 
-var utils = require('../utils')
-var evaluate = require('../helpers/eval').builtIn
+import utils from '../utils'
+import { builtIn as evaluate } from '../helpers/eval'
 
 function checkAsymptote (d0, d1, meta, sign, level) {
   if (!level) {
@@ -177,4 +176,4 @@ var sampler = function (chart, d, range, nSamples) {
   return fnTypes[d.fnType].apply(null, arguments)
 }
 
-module.exports = sampler
+export default sampler

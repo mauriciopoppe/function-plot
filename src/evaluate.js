@@ -1,11 +1,9 @@
-/**
- * Created by mauricio on 3/29/15.
- */
-'use strict'
-var globals = require('./globals')
+import globals from './globals'
+import { interval, builtIn } from './samplers'
+
 var evalTypeFn = {
-  interval: require('./samplers/interval'),
-  builtIn: require('./samplers/builtIn')
+  interval,
+  builtIn
 }
 
 /**
@@ -47,4 +45,4 @@ function evaluate (chart, d) {
   return data
 }
 
-module.exports = evaluate
+export default evaluate
