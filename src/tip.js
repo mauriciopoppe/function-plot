@@ -2,14 +2,18 @@
  * Created by mauricio on 3/29/15.
  */
 'use strict'
-var d3 = window.d3
+// var d3 = window.d3
+
+import { line as d3Line } from 'd3-shape'
+import { select as d3Select } from 'd3-selection'
+
 var extend = require('extend')
 var utils = require('./utils')
 var clamp = require('clamp')
 var globals = require('./globals')
 var builtInEvaluator = require('./helpers/eval').builtIn
 
-module.exports = function (config) {
+export default function mouseTip (config) {
   config = extend({
     xLine: false,
     yLine: false,
@@ -21,7 +25,7 @@ module.exports = function (config) {
 
   var MARGIN = 20
 
-  var line = d3.svg.line()
+  var line = d3Line()
     .x(function (d) { return d[0] })
     .y(function (d) { return d[1] })
 
@@ -56,7 +60,7 @@ module.exports = function (config) {
       .attr('class', 'inner-tip')
       .style('display', 'none')
       .each(function () {
-        var el = d3.select(this)
+        var el = d3Select(this)
         lineGenerator(el, [[0, -config.owner.meta.height - MARGIN], [0, config.owner.meta.height + MARGIN]])
           .attr('class', 'tip-x-line')
           .style('display', 'none')

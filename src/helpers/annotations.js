@@ -2,21 +2,24 @@
  * Created by mauricio on 3/29/15.
  */
 'use strict'
-var d3 = window.d3
+// var d3 = window.d3
 
-module.exports = function (options) {
+import { line as d3Line } from 'd3-shape'
+import { select as d3Select } from 'd3-selection'
+
+export default function annotations (options) {
   var annotations
   var xScale = options.owner.meta.xScale
   var yScale = options.owner.meta.yScale
 
-  var line = d3.svg.line()
+  var line = d3Line()
     .x(function (d) { return d[0] })
     .y(function (d) { return d[1] })
 
   annotations = function (parentSelection) {
     parentSelection.each(function () {
       // join
-      var current = d3.select(this)
+      var current = d3Select(this)
       var selection = current.selectAll('g.annotations')
         .data(function (d) { return d.annotations || [] })
 
