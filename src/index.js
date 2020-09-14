@@ -17,17 +17,18 @@ import * as $eval from './helpers/eval'
 
 require('./polyfills')
 
-const cache = []
 const d3Scale = { linear: d3ScaleLinear, log: d3ScaleLog }
 
 class Chart extends EventEmitter {
+  static cache = []
+
   constructor(options) {
     super()
 
     const n = Math.random()
     const letter = String.fromCharCode(Math.floor(n * 26) + 97)
     this.id = options.id = letter + n.toString(16).substr(2)
-    cache[this.id] = this
+    Chart.cache[this.id] = this
 
     this.linkedGraphs = [this]
     this.options = options
