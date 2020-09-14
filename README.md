@@ -330,7 +330,7 @@ Selectors (sass)
 
 ## License
 
-2015 MIT © Mauricio Poppe
+2015-2020 MIT © Mauricio Poppe
 
 [npm-image]: https://img.shields.io/npm/v/function-plot.svg?style=flat
 [npm-url]: https://npmjs.org/package/function-plot
