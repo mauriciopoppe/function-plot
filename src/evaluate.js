@@ -10,13 +10,12 @@ const evalTypeFn = {
  * Computes the endpoints x_lo, x_hi of the range
  * from which the sampler will take samples
  *
- * @param {Chart} chart
+ * @param {Object} scale
  * @param {Object} d An item from `data`
  * @returns {Array}
  */
-function computeEndpoints (chart, d) {
+function computeEndpoints (scale, d) {
   const range = d.range || [-Infinity, Infinity]
-  const scale = chart.meta.xScale
   const start = Math.max(scale.domain()[0], range[0])
   const end = Math.min(scale.domain()[1], range[1])
   return [start, end]
@@ -31,7 +30,7 @@ function computeEndpoints (chart, d) {
  * @returns {Array}
  */
 function evaluate (chart, d) {
-  const range = computeEndpoints(chart, d)
+  const range = computeEndpoints(chart.meta.xScale, d)
   const evalFn = evalTypeFn[d.sampler]
   const nSamples = d.nSamples || Math.min(
     globals.MAX_ITERATIONS,

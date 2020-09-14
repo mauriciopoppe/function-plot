@@ -8,7 +8,9 @@ const samplers = {
   builtIn: builtInMathEval
 }
 
-window.math && (samplers.builtIn = window.math.compile)
+if (global.math) {
+  samplers.builtIn = global.math.compile
+}
 
 function generateEvaluator (samplerName) {
   function doCompile (expression) {
@@ -62,20 +64,20 @@ function generateEvaluator (samplerName) {
   }
 
   /**
-   * Evaluates meta[property] with `constiables`
+   * Evaluates meta[property] with `variables`
    *
    * - Compiles meta[property] if it wasn't compiled already (also with cache
    *   check)
    * - Evaluates the resulting function with the merge of meta.scope and
-   *   `constiables`
+   *   `variables`
    *
    * @param {Object} meta
    * @param {String} property
-   * @param {Object} constiables
+   * @param {Object} variables
    * @returns {Number|Array} The builtIn evaluator returns a number, the
    * interval evaluator an array
    */
-  function evaluate (meta, property, constiables) {
+  function evaluate (meta, property, variables) {
     // e.g.
     //
     //  meta: {
@@ -83,12 +85,12 @@ function generateEvaluator (samplerName) {
     //    scope: { y: 3 }
     //  }
     //  property: 'fn'
-    //  constiables:  { x: 3 }
+    //  variables:  { x: 3 }
     //
     compileIfPossible(meta, property)
 
     return getCompiledExpression(meta, property).eval(
-      extend({}, meta.scope || {}, constiables)
+      extend({}, meta.scope || {}, variables)
     )
   }
 

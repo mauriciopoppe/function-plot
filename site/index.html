@@ -61,7 +61,7 @@
     the new bounds, result: infinite graphs!
   </p>
   <p class="center-block">
-<!--    <iframe src="https://codesandbox.io/embed/l6k20jrlm" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>-->
+    <iframe src="https://codesandbox.io/embed/l6k20jrlm" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
   </p>
 
   <p>
@@ -96,12 +96,11 @@
   <div class="container">
 
     <pre><code>
-      npm i d3@3 function-plot
+      npm i function-plot
     </code></pre>
 
     <pre><code>
-      window.d3 = require('d3')
-      const functionPlot = require('function-plot')
+      import functionPlot from 'function-plot'
       functionPlot({
         // ..options
       })
@@ -111,8 +110,7 @@
 
     <p>The old way:</p>
     <pre><code id="old-way">
-      &lt;script src=&quot;https://unpkg.com/d3@3/d3.min.js&quot;&gt;&lt;/script&gt;
-      &lt;script src=&quot;https://unpkg.com/function-plot@1/dist/function-plot.js&quot;&gt;&lt;/script&gt;
+      &lt;script src=&quot;https://unpkg.com/function-plot/dist/function-plot.js&quot;&gt;&lt;/script&gt;
     </code></pre>
 
   </div>
@@ -136,14 +134,12 @@
 
 <!-- includes -->
 <script src="//cdnjs.cloudflare.com/ajax/libs/mathjs/1.5.2/math.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/zeroclipboard/2.2.0/ZeroClipboard.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
 <script src="js/plugins.js"></script>
-<!--<script src="js/vendor/d3.js"></script>-->
 
 <!-- app -->
-<script src="/function-plot.js"></script>
+<script src="function-plot.js"></script>
 <script src="js/site.js"></script>
 
 <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->

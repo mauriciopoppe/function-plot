@@ -61,15 +61,15 @@ function functionPlot (options) {
 
   Chart.prototype.initializeAxes = function () {
     const self = this
-    const integerFormat = d3Format('s')
+    const integerFormat = d3Format('~s')
+    const floatFormat = d3Format('~e')
     const format = function (scale) {
       return function (d) {
-        const decimalFormat = scale.tickFormat(10)
-        const isInteger = d === +d && d === (d | 0)
-        // integers: d3.format('s'), see https://github.com/mbostock/d3/wiki/Formatting
-        // decimals: default d3.scale.linear() formatting see
-        //    https://github.com/mbostock/d3/blob/master/src/svg/axis.js#L29
-        return isInteger ? integerFormat(d) : decimalFormat(d)
+        if (Math.abs(d) < 1 && d !== 0) {
+          if (Math.abs(d) < 0.05) return floatFormat(d)
+          return d
+        }
+        return integerFormat(d)
       }
     }
 
@@ -124,13 +124,13 @@ function functionPlot (options) {
     this.meta.yScale = d3Scale[options.yAxis.type]()
       .domain(yDomain)
       .range(options.yAxis.invert ? [0, height] : [height, 0])
+
     this.meta.xAxis = d3AxisBottom(this.meta.xScale)
       .tickSize(options.grid ? -height : 0)
-      // .tickFormat(format(xScale))
-
+      .tickFormat(format(this.meta.xScale))
     this.meta.yAxis = d3AxisLeft(this.meta.yScale)
       .tickSize(options.grid ? -width : 0)
-      // .tickFormat(format(yScale))
+      .tickFormat(format(this.meta.yScale))
 
     this.line = d3Line()
       .x(function (d) { return self.meta.xScale(d[0]) })
@@ -357,30 +357,6 @@ function functionPlot (options) {
 
     canvas.merge(canvas.enter)
       .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
-      .each(function () {
-        const el = d3Select(this)
-        // make a copy of all the listeners available to be removed/added later
-        const listeners = [
-          'mousedown',
-          'touchstart',
-          ('onwheel' in document
-            ? 'wheel' : 'ononmousewheel' in document
-              ? 'mousewheel'
-              : 'MozMousePixelScroll')
-        ].map(function (d) { return d + '.zoom' })
-        if (!el._zoomListenersCache) {
-          listeners.forEach(function (l) {
-            el['_' + l] = el.on(l)
-          })
-          el._zoomListenersCache = true
-        }
-        function setState (state) {
-          listeners.forEach(function (l) {
-            state ? el.on(l, el['_' + l]) : el.on(l, null)
-          })
-        }
-        setState(!options.disableZoom)
-      })
 
     const content = this.content = canvas.merge(canvas.enter)
       .selectAll(':scope > g.content')
@@ -427,9 +403,7 @@ function functionPlot (options) {
     // - for each datum determine the sampler to use
     const graphs = content.merge(contentEnter)
       .selectAll(':scope > g.graph')
-      .data(function (d) {
-        return d.data.map(datumDefaults)
-      })
+      .data(d => d.data.map(datumDefaults))
 
     // enter
     const graphsEnter = graphs
@@ -443,10 +417,9 @@ function functionPlot (options) {
         // additional options needed in the graph-types/helpers
         d.index = index
 
-        d3Select(this)
-          .call(graphTypes[d.graphType](self))
-        d3Select(this)
-          .call(helpers(self))
+        const selection = d3Select(this)
+        selection.call(graphTypes[d.graphType](self))
+        selection.call(helpers(self))
       })
   }
 
@@ -545,6 +518,9 @@ function functionPlot (options) {
       },
 
       zoom: function zoom ({ transform }, target) {
+        // disable zoom
+        if (options.disableZoom) return
+
         if (!self.meta.zoomBehavior.xScale) {
           // the zoom behavior must work with a copy of the scale, the zoom behavior has its own state and assumes
           // that its updating the original scale!

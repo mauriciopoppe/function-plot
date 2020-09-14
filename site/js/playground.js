@@ -9,9 +9,6 @@
 
 functionPlot({
   target: '#playground',
-  title: 'hello world',
-  // yAxis: { invert: true, },
-  // xAxis: { invert: true, },
   data: [
     {
       fn: 'x^2',
