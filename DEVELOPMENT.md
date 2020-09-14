@@ -20,4 +20,3 @@ Release steps (do deploy first):
 
 - `npm version major|minor|patch`
 - `npm publish`
-
