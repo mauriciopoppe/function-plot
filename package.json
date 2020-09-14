@@ -16,7 +16,7 @@
     "html": "node site.js",
     "build": "npm run html && npm run build:webpack && npm run build:site",
     "build:webpack": "NODE_ENV=PROD webpack",
-    "build:site": "cp dist/function-plot.js site/function-plot.js",
+    "build:site": "cp dist/function-plot.js site/js/function-plot.js",
     "start": "webpack-dev-server",
     "test": "jest"
   },

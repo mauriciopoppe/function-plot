@@ -38,7 +38,7 @@
     <div class="social-buttons">
       <div>
         <!--github-->
-        <iframe src="https://ghbtns.com/github-btn.html?user=mauriciopoppe&repo=function-plot&type=star&count=true" frameborder="0" scrolling="0" width="100px" height="20px"></iframe>
+        <iframe src="https://ghbtns.com/github-btn.html?user=mauriciopoppe&repo=function-plot&type=star&count=true" frameborder="0" scrolling="0" width="150" height="20" title="GitHub"></iframe>
         <!--twitter-->
         <a href="https://twitter.com/share" class="twitter-share-button" data-via="mauricio_poppe">Tweet</a>
         <script>!function(d,s,id){var
@@ -139,7 +139,13 @@
 <script src="js/plugins.js"></script>
 
 <!-- app -->
-<script src="function-plot.js"></script>
+<script>
+  if (window.location.origin.indexOf('localhost') > -1) {
+    document.write('<script src="js/function-plot.js"><\/script>')
+  } else {
+    document.write('<script src="js/function-plot.js"><\/script>')
+  }
+</script>
 <script src="js/site.js"></script>
 
 <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
