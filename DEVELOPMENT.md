@@ -1,7 +1,5 @@
 ## Development
 
-**Requires Node 6!**
-
 After cloning the repo and running `npm install`
 
 ```sh
@@ -9,8 +7,8 @@ node site.js    // generate the examples shown on index.html
 npm start
 ```
 
-Main page: `http://localhost:9966/site`
-Development page: `http://localhost:9966/site/playground.html`
+Main page: `http://localhost:9966/`
+Development page: `http://localhost:9966/playground.html`
 
 Deploy steps:
 

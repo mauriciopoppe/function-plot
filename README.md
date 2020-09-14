@@ -23,30 +23,20 @@ is evaluated again with the new bounds, result: infinite graphs!
 
 [**examples on observablehq.com**](https://beta.observablehq.com/@liuyao12/function-plot), thanks to [@liuyao12](https://github.com/liuyao12)
 
-## Quickstart
+## Installation
 
 ```sh
-npm install d3@3 function-plot
+npm install function-plot
 ```
 
-## Usage with browserify
-
-```js
-window.d3 = require('d3');
-const functionPlot = require('function-plot');
-functionPlot({
-  // options below
-})
-```
-
-## Example
+## Examples
 
 All the available options are described in the [`homepage`](http://mauriciopoppe.github.io/function-plot/)
 
 ## API
 
 ```
-var functionPlot = require('function-plot');
+import functionPlot from 'function-plot'
 ```
 
 ### `instance = functionPlot(options)`
@@ -216,7 +206,7 @@ When the `definite-integral` plugin is included the instance will fire the follo
 ### Evaluate a function at some value `x`
 
 ```javascript
-var y = functionPlot.eval.builtIn(datum, fnProperty, scope)
+const y = functionPlot.$eval.builtIn(datum, fnProperty, scope)
 ```
 
 Where `datum` is an object that has a function to be evaluated in the property `fnProperty` ,
@@ -225,41 +215,30 @@ to eval this function we need an `x` value which is sent through the scope
 e.g.
 
 ```javascript
-var datum = {
+const datum = {
   fn: 'x^2'
 }
-var scope = {
+const scope = {
   x: 2
 }
-var y = functionPlot.eval.builtIn(datum, 'fn', scope)
+const y = functionPlot.$eval.builtIn(datum, 'fn', scope)
 ```
 
 Every element of the `data` property sent to `functionPlot` is saved on `instance.options.data`,
 if you want to get the evaluated values of all the elements here run
 
 ```javascript
-var instance = functionPlot( ... )
+const instance = functionPlot( ... )
 instance.options.data.forEach(function (datum) {
-  var datum = {
+  const datum = {
     fn: 'x^2'
   }
-  var scope = {
+  const scope = {
     // a value for x
     x: 2
   }
-  var y = functionPlot.eval.builtIn(datum, 'fn', scope)
+  const y = functionPlot.$eval.builtIn(datum, 'fn', scope)
 }
-```
-
-### Programmatic zoom
-
-Just call `instance.programmaticZoom` with the desired `x` and `y` domains
-
-```javascript
-var instance = functionPlot( ... )
-var xDomain = [-3, 3]
-var yDomain = [-1.897, 1.897]
-instance.programmaticZoom(xDomain, yDomain)
 ```
 
 ### Maintain aspect ratio
@@ -269,16 +248,16 @@ the aspect ratio between the axes
 
 ```javascript
 function computeYScale (width, height, xScale) {
-  var xDiff = xScale[1] - xScale[0]
-  var yDiff = height * xDiff / width
+  const xDiff = xScale[1] - xScale[0]
+  const yDiff = height * xDiff / width
   return [-yDiff / 2, yDiff / 2]
 }
 
-var width = 800
-var height = 400
+const width = 800
+const height = 400
 
 // desired xDomain values
-var xScale = [-10, 10]
+const xScale = [-10, 10]
 
 functionPlot({
   width: width,
@@ -300,14 +279,14 @@ functionPlot({
 ### Changing the format of the values shown on the axes
 
 ```javascript
-var instance = functionPlot({
+const instance = functionPlot({
   target: '#complex-plane',
   xLabel: 'real',
   yLabel: 'imaginary'
 })
 // old format
-var format = instance.meta.yAxis.tickFormat()
-var imaginaryFormat = function (d) {
+const format = instance.meta.yAxis.tickFormat()
+const imaginaryFormat = function (d) {
   // new format = old format + ' i' for imaginary
   return format(d) + ' i'
 }
