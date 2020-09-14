@@ -45,7 +45,6 @@
     ]
   },
   "dependencies": {
-    "@babel/preset-env": "^7.11.5",
     "built-in-math-eval": "^0.3.0",
     "clamp": "^1.0.1",
     "d3-axis": "^2.0.0",
@@ -62,6 +61,7 @@
     "logspace": "1.0.1"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.11.5",
     "@typescript-eslint/eslint-plugin": "^2.24.0",
     "@typescript-eslint/parser": "^2.24.0",
     "babel-eslint": "^10.1.0",

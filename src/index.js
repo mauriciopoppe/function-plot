@@ -20,7 +20,6 @@ require('./polyfills')
 const cache = []
 const d3Scale = { linear: d3ScaleLinear, log: d3ScaleLog }
 
-
 class Chart extends EventEmitter {
   constructor(options) {
     super()
@@ -135,7 +134,7 @@ class Chart extends EventEmitter {
   internalVars() {
     const self = this
 
-    let margin = this.meta.margin = { left: 30, right: 30, top: 20, bottom: 20 }
+    let margin = this.meta.margin = { left: 40, right: 20, top: 20, bottom: 20 }
     // margin = this.meta.margin = {left: 0, right: 0, top: 20, bottom: 20}
     // if there's a title make the top margin bigger
     if (this.options.title) {
@@ -610,6 +609,7 @@ function functionPlot (options) {
 
   let instance = cache[options.id]
   if (!instance) {
+    console.log("instance !")
     instance = new Chart(options)
   }
   return instance.build()
