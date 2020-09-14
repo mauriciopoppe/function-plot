@@ -619,5 +619,8 @@ function functionPlot (options) {
   return instance.build()
 }
 
+functionPlot.globals = globals
+functionPlot.$eval = $eval
+functionPlot.graphTypes = graphTypes
+
 export default functionPlot
-export { $eval, globals, graphTypes }
