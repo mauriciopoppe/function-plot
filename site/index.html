@@ -23,7 +23,7 @@
   <link rel="stylesheet" href="css/main.css">
 
 </head>
-<body>
+<>
 <!--[if lt IE 8]>
 <p class="browserupgrade">You are using an <strong>outdated</strong> browser.
   Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
@@ -60,10 +60,6 @@
     whenever the graph scale is modified the function is evaluated again with
     the new bounds, result: infinite graphs!
   </p>
-  <p class="center-block">
-    <iframe src="https://codesandbox.io/embed/l6k20jrlm" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
-  </p>
-
   <p>
     <b>Function Plot</b> unlike other plotters that use $n$-equally spaced points joined by line segments
     uses <a href="https://github.com/mauriciopoppe/interval-arithmetic">interval-arithmetic</a> to
@@ -115,7 +111,20 @@
 
   </div>
 
+<p class="center-block">
+  <iframe src="https://codesandbox.io/embed/function-plot-forked-15xiy?fontsize=14&hidenavigation=1&theme=light"
+          style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
+          title="function-plot"
+          allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+          sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+  ></iframe>
+</p>
+
 <section><div class="container">Examples</div></section>
+
+<p class="container">
+  Check additional examples in this ObservableHQ Notebook! <a target="_blank" href="https://observablehq.com/@mauriciopoppe/function-plot" ><img src="https://user-images.githubusercontent.com/1616682/93041565-a9a84980-f601-11ea-900e-4e6809b5fa96.png" /></a>
+</p>
 
   <div class="content">
     <div id="examples"></div>
