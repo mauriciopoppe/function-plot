@@ -7,7 +7,7 @@
 //   }]
 // })
 
-functionPlot({
+window.f = functionPlot({
   target: '#playground',
   data: [
     {

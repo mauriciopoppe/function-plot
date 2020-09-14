@@ -5,7 +5,6 @@ import { axisLeft as d3AxisLeft, axisBottom as d3AxisBottom } from 'd3-axis'
 import { zoom as d3Zoom, zoomIdentity as d3ZoomIdentity } from 'd3-zoom'
 import { select as d3Select, pointer as d3Pointer } from 'd3-selection'
 import { interpolateRound as d3InterpolateRound } from 'd3-interpolate'
-import extend from 'extend'
 import events from 'events'
 
 import annotations from './helpers/annotations'
@@ -25,17 +24,13 @@ function functionPlot (options) {
   options = options || {}
   options.data = options.data || []
 
-  // globals
-  let width, height
-  let margin
-  let zoomBehavior
-
   function Chart () {
     const n = Math.random()
     const letter = String.fromCharCode(Math.floor(n * 26) + 97)
     this.id = options.id = letter + n.toString(16).substr(2)
     this.linkedGraphs = [this]
     this.options = options
+    this.meta = null
     cache[this.id] = this
     this.setUpEventListeners()
   }
@@ -65,9 +60,9 @@ function functionPlot (options) {
     const floatFormat = d3Format('~e')
     const format = function (scale) {
       return function (d) {
-        if (Math.abs(d) < 1 && d !== 0) {
-          if (Math.abs(d) < 0.05) return floatFormat(d)
-          return d
+        const isInteger = d === +d && d === (d | 0)
+        if (!isInteger) {
+          return floatFormat(d)
         }
         return integerFormat(d)
       }
@@ -76,7 +71,7 @@ function functionPlot (options) {
     function computeYScale (xScale) {
       // assumes that xScale is a linear scale
       const xDiff = xScale[1] - xScale[0]
-      return height * xDiff / width
+      return self.meta.height * xDiff / self.meta.width
     }
 
     options.xAxis = options.xAxis || {}
@@ -120,16 +115,16 @@ function functionPlot (options) {
 
     this.meta.xScale = d3Scale[options.xAxis.type]()
       .domain(xDomain)
-      .range(options.xAxis.invert ? [width, 0] : [0, width])
+      .range(options.xAxis.invert ? [this.meta.width, 0] : [0, this.meta.width])
     this.meta.yScale = d3Scale[options.yAxis.type]()
       .domain(yDomain)
-      .range(options.yAxis.invert ? [0, height] : [height, 0])
+      .range(options.yAxis.invert ? [0, this.meta.height] : [this.meta.height, 0])
 
     this.meta.xAxis = d3AxisBottom(this.meta.xScale)
-      .tickSize(options.grid ? -height : 0)
+      .tickSize(options.grid ? -this.meta.height : 0)
       .tickFormat(format(this.meta.xScale))
     this.meta.yAxis = d3AxisLeft(this.meta.yScale)
-      .tickSize(options.grid ? -width : 0)
+      .tickSize(options.grid ? -this.meta.width : 0)
       .tickFormat(format(this.meta.yScale))
 
     this.line = d3Line()
@@ -142,19 +137,19 @@ function functionPlot (options) {
     // measurements and other derived data
     this.meta = {}
 
-    margin = this.meta.margin = { left: 30, right: 30, top: 20, bottom: 20 }
+    let margin = this.meta.margin = { left: 30, right: 30, top: 20, bottom: 20 }
     // margin = this.meta.margin = {left: 0, right: 0, top: 20, bottom: 20}
     // if there's a title make the top margin bigger
     if (options.title) {
       this.meta.margin.top = 40
     }
     // inner width/height
-    width = this.meta.width = (options.width || globals.DEFAULT_WIDTH) -
+    this.meta.width = (options.width || globals.DEFAULT_WIDTH) -
       margin.left - margin.right
-    height = this.meta.height = (options.height || globals.DEFAULT_HEIGHT) -
+    this.meta.height = (options.height || globals.DEFAULT_HEIGHT) -
       margin.top - margin.bottom
 
-    zoomBehavior = this.meta.zoomBehavior = d3Zoom()
+    this.meta.zoomBehavior = d3Zoom()
       .on('zoom', function onZoom (ev, target) {
         self.emit('all:zoom', ev, target)
       })
@@ -175,8 +170,8 @@ function functionPlot (options) {
 
     // enter + update
     root.merge(this.root.enter)
-      .attr('width', width + margin.left + margin.right)
-      .attr('height', height + margin.top + margin.bottom)
+      .attr('width', this.meta.width + this.meta.margin.left + this.meta.margin.right)
+      .attr('height', this.meta.height + this.meta.margin.top + this.meta.margin.bottom)
 
     this.buildTitle()
     this.buildLegend()
@@ -189,7 +184,7 @@ function functionPlot (options) {
     this.draw()
 
     // helper to detect the closest fn to the cursor's current abscissa
-    const tip = this.tip = mousetip(extend(options.tip, { owner: this }))
+    const tip = this.tip = mousetip(Object.assign(options.tip || {}, { owner: this }))
     this.canvas.merge(this.canvas.enter)
       .call(tip)
 
@@ -209,8 +204,8 @@ function functionPlot (options) {
     selection.enter()
       .append('text')
       .attr('class', 'title')
-      .attr('y', margin.top / 2)
-      .attr('x', margin.left + width / 2)
+      .attr('y', this.meta.margin.top / 2)
+      .attr('x', this.meta.margin.left + this.meta.width / 2)
       .attr('font-size', 25)
       .attr('text-anchor', 'middle')
       .attr('alignment-baseline', 'middle')
@@ -230,8 +225,8 @@ function functionPlot (options) {
     // update + enter
     this.root.merge(this.root.enter)
       .select('.top-right-legend')
-      .attr('y', margin.top / 2)
-      .attr('x', width + margin.left)
+      .attr('y', this.meta.margin.top / 2)
+      .attr('x', this.meta.width + this.meta.margin.left)
   }
 
   Chart.prototype.buildCanvas = function () {
@@ -265,8 +260,8 @@ function functionPlot (options) {
     // enter + update
     this.canvas.merge(this.canvas.enter)
       .selectAll('.clip')
-      .attr('width', width)
-      .attr('height', height)
+      .attr('width', this.meta.width)
+      .attr('height', this.meta.height)
 
     // marker clip (for vectors)
     this.markerId = this.id + '-marker'
@@ -296,7 +291,7 @@ function functionPlot (options) {
     // update
     this.canvas.merge(this.canvas.enter)
       .select('.x.axis')
-      .attr('transform', 'translate(0,' + height + ')')
+      .attr('transform', 'translate(0,' + this.meta.height + ')')
       .call(this.meta.xAxis)
     this.canvas.merge(this.canvas.enter)
       .select('.y.axis')
@@ -319,8 +314,8 @@ function functionPlot (options) {
       .attr('text-anchor', 'end')
 
     xLabel.merge(xLabelEnter)
-      .attr('x', width)
-      .attr('y', height - 6)
+      .attr('x', this.meta.width)
+      .attr('y', this.meta.height - 6)
       .text(function (d) { return d })
 
     xLabel.exit().remove()
@@ -356,7 +351,7 @@ function functionPlot (options) {
     const canvas = this.canvas
 
     canvas.merge(canvas.enter)
-      .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+      .attr('transform', 'translate(' + this.meta.margin.left + ',' + this.meta.margin.top + ')')
 
     const content = this.content = canvas.merge(canvas.enter)
       .selectAll(':scope > g.content')
@@ -430,8 +425,8 @@ function functionPlot (options) {
     // enter
     this.draggable = this.canvas.enter
       .append('rect')
-      .call(zoomBehavior)
-      .call(zoomBehavior.transform, d3ZoomIdentity)
+      .call(this.meta.zoomBehavior)
+      .call(this.meta.zoomBehavior.transform, d3ZoomIdentity)
       .attr('class', 'zoom-and-drag')
       .style('fill', 'none')
       .style('pointer-events', 'all')
@@ -439,8 +434,8 @@ function functionPlot (options) {
     // update
     this.canvas.merge(this.canvas.enter)
       .select('.zoom-and-drag')
-      .attr('width', width)
-      .attr('height', height)
+      .attr('width', this.meta.width)
+      .attr('height', this.meta.height)
       .on('mouseover', function (event, target) {
         self.emit('all:mouseover', event, target)
       })
@@ -488,7 +483,7 @@ function functionPlot (options) {
   }
 
   Chart.prototype.getFontSize = function () {
-    return Math.max(Math.max(width, height) / 50, 8)
+    return Math.max(Math.max(this.meta.width, this.meta.height) / 50, 8)
   }
 
   Chart.prototype.draw = function () {
@@ -536,8 +531,7 @@ function functionPlot (options) {
         let yScaleClone = transform.rescaleY(self.meta.zoomBehavior.yScale).interpolate(d3InterpolateRound)
 
         // update the scales's metadata
-        // NOTE: setting self.meta.xScale = self.meta.zoomBehavior.xScale creates artifacts
-        // and weird lines
+        // NOTE: setting self.meta.xScale = self.meta.zoomBehavior.xScale creates artifacts and weird lines
         self.meta.xScale
           .domain(xScaleClone.domain())
           .range(xScaleClone.range())

@@ -1,6 +1,5 @@
 import builtInMathEval from 'built-in-math-eval'
 import intervalArithmeticEval from 'interval-arithmetic-eval'
-import extend from 'extend'
 
 'use strict'
 const samplers = {
@@ -90,7 +89,7 @@ function generateEvaluator (samplerName) {
     compileIfPossible(meta, property)
 
     return getCompiledExpression(meta, property).eval(
-      extend({}, meta.scope || {}, variables)
+      Object.assign({}, meta.scope || {}, variables)
     )
   }
 

@@ -1,6 +1,5 @@
 import { line as d3Line } from 'd3-shape'
 import { select as d3Select } from 'd3-selection'
-import extend from 'extend'
 import clamp from 'clamp'
 
 import utils from './utils'
@@ -8,7 +7,7 @@ import globals from './globals'
 import { builtIn as builtInEvaluator } from './helpers/eval'
 
 export default function mouseTip (config) {
-  config = extend({
+  config = Object.assign({
     xLine: false,
     yLine: false,
     renderer: function (x, y, index) {

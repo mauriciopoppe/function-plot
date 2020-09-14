@@ -1,6 +1,4 @@
-import { line as d3Line } from 'd3-shape'
 import { select as d3Select } from 'd3-selection'
-import extend from 'extend'
 
 import { builtIn as builtInEvaluator } from './eval'
 import datumDefaults from '../datum-defaults'
@@ -28,7 +26,7 @@ export default function secant (chart) {
 
     const x0 = secant.x0
     const x1 = typeof secant.x1 === 'number' ? secant.x1 : Infinity
-    extend(secant.scope, {
+    Object.assign(secant.scope, {
       x0: x0,
       x1: x1,
       y0: builtInEvaluator(d, 'fn', { x: x0 }),
