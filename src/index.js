@@ -609,7 +609,6 @@ function functionPlot (options) {
 
   let instance = cache[options.id]
   if (!instance) {
-    console.log("instance !")
     instance = new Chart(options)
   }
   return instance.build()

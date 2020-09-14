@@ -36,8 +36,12 @@ function generateEvaluator (samplerName) {
     //
     // othewise throw an error
     if (typeof expression === 'string') {
-      const compile = samplers[samplerName]
-      return compile(expression)
+      const compiled = samplers[samplerName](expression)
+      if (global.math && samplerName === 'builtIn') {
+        // if mathjs is included use its evaluate method instead
+        return { eval: compiled.evaluate }
+      }
+      return compiled
     } else if (typeof expression === 'function') {
       return { eval: expression }
     } else {
