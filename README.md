@@ -17,9 +17,8 @@ is evaluated again with the new bounds, result: infinite graphs!
 
 [![Edit l6k20jrlm](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/l6k20jrlm)
 
-[**homepage**](http://mauriciopoppe.github.io/function-plot/)
-
-[**examples on observablehq.com**](https://beta.observablehq.com/@liuyao12/function-plot), thanks to [@liuyao12](https://github.com/liuyao12)
+Examples on [![image](https://user-images.githubusercontent.com/1616682/93041565-a9a84980-f601-11ea-900e-4e6809b5fa96.png)](https://observablehq.com/@mauriciopoppe/function-plot), 
+thanks to [@liuyao12](https://github.com/liuyao12) for the initial version, you can check his own version here https://beta.observablehq.com/@liuyao12/function-plot
 
 ## Installation
 
