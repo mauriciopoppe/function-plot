@@ -20,8 +20,6 @@ require('./polyfills')
 const d3Scale = { linear: d3ScaleLinear, log: d3ScaleLog }
 
 class Chart extends EventEmitter {
-  static cache = []
-
   constructor(options) {
     super()
 
@@ -603,12 +601,13 @@ class Chart extends EventEmitter {
     })
   }
 }
+Chart.cache = []
 
 function functionPlot (options) {
   options = options || {}
   options.data = options.data || []
 
-  let instance = cache[options.id]
+  let instance = Chart.cache[options.id]
   if (!instance) {
     instance = new Chart(options)
   }

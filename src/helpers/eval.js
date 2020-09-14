@@ -39,7 +39,7 @@ function generateEvaluator (samplerName) {
       const compiled = samplers[samplerName](expression)
       if (global.math && samplerName === 'builtIn') {
         // if mathjs is included use its evaluate method instead
-        return { eval: compiled.evaluate }
+        return { eval: compiled.evaluate || compiled.eval }
       }
       return compiled
     } else if (typeof expression === 'function') {
