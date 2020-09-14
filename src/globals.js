@@ -1,10 +1,7 @@
-/**
- * Created by mauricio on 3/29/15.
- */
-'use strict'
+import { hsl as d3Hsl } from 'd3-color'
 
-var d3 = window.d3
-var Globals = {
+// var d3 = window.d3
+const Globals = {
   COLORS: [
     'steelblue',
     'red',
@@ -16,7 +13,7 @@ var Globals = {
     'magenta',
     'cyan'
   ].map(function (v) {
-    return d3.hsl(v)
+    return d3Hsl(v)
   }),
   DEFAULT_WIDTH: 550,
   DEFAULT_HEIGHT: 350,
@@ -24,6 +21,7 @@ var Globals = {
 }
 
 Globals.DEFAULT_ITERATIONS = null
-Globals.MAX_ITERATIONS = Globals.DEFAULT_WIDTH * 4
+Globals.MAX_ITERATIONS = Globals.DEFAULT_WIDTH * 10
 
-module.exports = Globals
+// module.exports.Globals = Globals
+export default Globals

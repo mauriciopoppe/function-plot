@@ -1,23 +1,20 @@
-/**
- * Created by mauricio on 3/29/15.
- */
-'use strict'
-var d3 = window.d3
+import { line as d3Line } from 'd3-shape'
+import { select as d3Select } from 'd3-selection'
+import extend from 'extend'
 
-var extend = require('extend')
-var builtInEvaluator = require('./eval').builtIn
-var datumDefaults = require('../datum-defaults')
-var polyline = require('../graph-types/polyline')
+import { builtIn as builtInEvaluator } from './eval'
+import datumDefaults from '../datum-defaults'
+import polyline from '../graph-types/polyline'
 
-module.exports = function (chart) {
-  var secantDefaults = datumDefaults({
+export default function secant (chart) {
+  const secantDefaults = datumDefaults({
     isHelper: true,
     skipTip: true,
     skipBoundsCheck: true,
     nSamples: 2,
     graphType: 'polyline'
   })
-  var secant
+  let secant
 
   function computeSlope (scope) {
     scope.m = (scope.y1 - scope.y0) / (scope.x1 - scope.x0)
@@ -29,8 +26,8 @@ module.exports = function (chart) {
     }
     secant.scope = secant.scope || {}
 
-    var x0 = secant.x0
-    var x1 = typeof secant.x1 === 'number' ? secant.x1 : Infinity
+    const x0 = secant.x0
+    const x1 = typeof secant.x1 === 'number' ? secant.x1 : Infinity
     extend(secant.scope, {
       x0: x0,
       x1: x1,
@@ -46,7 +43,7 @@ module.exports = function (chart) {
   }
 
   function setMouseListener (d, secantObject) {
-    var self = this
+    const self = this
     if (secantObject.updateOnMouseMove && !secantObject.$$mouseListener) {
       secantObject.$$mouseListener = function (x1) {
         secantObject.x1 = x1
@@ -58,11 +55,11 @@ module.exports = function (chart) {
   }
 
   function computeLines (d) {
-    var self = this
-    var data = []
+    const self = this
+    const data = []
     d.secants = d.secants || []
-    for (var i = 0; i < d.secants.length; i += 1) {
-      var secant = d.secants[i] = extend({}, secantDefaults, d.secants[i])
+    for (let i = 0; i < d.secants.length; i += 1) {
+      const secant = d.secants[i] = extend({}, secantDefaults, d.secants[i])
       // necessary to make the secant have the same color as d
       secant.index = d.index
       if (!secant.fn) {
@@ -76,21 +73,22 @@ module.exports = function (chart) {
 
   secant = function (selection) {
     selection.each(function (d) {
-      var el = d3.select(this)
-      var data = computeLines.call(selection, d)
-      var innerSelection = el.selectAll('g.secant')
+      const el = d3Select(this)
+      const data = computeLines.call(selection, d)
+      const innerSelection = el.selectAll('g.secant')
         .data(data)
 
-      innerSelection.enter()
+      const innerSelectionEnter = innerSelection.enter()
         .append('g')
         .attr('class', 'secant')
 
       // enter + update
-      innerSelection
+      innerSelection.merge(innerSelectionEnter)
         .call(polyline(chart))
 
       // change the opacity of the secants
-      innerSelection.selectAll('path')
+      innerSelection.merge(innerSelectionEnter)
+        .selectAll('path')
         .attr('opacity', 0.5)
 
       // exit

@@ -9,10 +9,13 @@
 
 functionPlot({
   target: '#playground',
-  // yAxis: { invert: true, },
-  // xAxis: { invert: true, },
   data: [
-    { fn: '2^x', sampler: 'builtIn', graphType: 'polyline'}
+    {
+      fn: 'x^2',
+      sampler: 'builtIn',
+      graphType: 'polyline',
+      nSamples: 300
+    }
   ]
 })
 

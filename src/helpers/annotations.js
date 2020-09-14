@@ -1,23 +1,20 @@
-/**
- * Created by mauricio on 3/29/15.
- */
-'use strict'
-var d3 = window.d3
+import { line as d3Line } from 'd3-shape'
+import { select as d3Select } from 'd3-selection'
 
-module.exports = function (options) {
-  var annotations
-  var xScale = options.owner.meta.xScale
-  var yScale = options.owner.meta.yScale
+export default function annotations (options) {
+  let annotations
+  const xScale = options.owner.meta.xScale
+  const yScale = options.owner.meta.yScale
 
-  var line = d3.svg.line()
+  const line = d3Line()
     .x(function (d) { return d[0] })
     .y(function (d) { return d[1] })
 
   annotations = function (parentSelection) {
     parentSelection.each(function () {
       // join
-      var current = d3.select(this)
-      var selection = current.selectAll('g.annotations')
+      const current = d3Select(this)
+      const selection = current.selectAll('g.annotations')
         .data(function (d) { return d.annotations || [] })
 
       // enter
@@ -27,9 +24,9 @@ module.exports = function (options) {
 
       // enter + update
       // - path
-      var yRange = yScale.range()
-      var xRange = xScale.range()
-      var path = selection.selectAll('path')
+      const yRange = yScale.range()
+      const xRange = xScale.range()
+      const path = selection.selectAll('path')
         .data(function (d) {
           if (d.hasOwnProperty('x')) {
             return [ [[0, yRange[0]], [0, yRange[1]]] ]
@@ -45,7 +42,7 @@ module.exports = function (options) {
 
       // enter + update
       // - text
-      var text = selection.selectAll('text')
+      const text = selection.selectAll('text')
         .data(function (d) {
           return [{
             text: d.text || '',

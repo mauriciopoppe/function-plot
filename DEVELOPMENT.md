@@ -1,7 +1,5 @@
 ## Development
 
-**Requires Node 6!**
-
 After cloning the repo and running `npm install`
 
 ```sh
@@ -9,13 +7,17 @@ node site.js    // generate the examples shown on index.html
 npm start
 ```
 
-Main page: `http://localhost:9966/site`, development page: `http://localhost:9966/site/playground.html`
+Main page: `http://localhost:9966/`
+Development page: `http://localhost:9966/playground.html`
 
 Deploy steps:
 
-- `npm run dist` (make sure to commit the dist files after this command)
-- `npm version major|minor|patch`
+- `npm run build` (make sure to commit the dist files after this command)
 - `git push origin master`
 - `npm run deploy -- -- "Commit message"`
+
+Release steps (do deploy first):
+
+- `npm version major|minor|patch`
 - `npm publish`
 

@@ -1,42 +1,38 @@
-/*
- * function-plot
- *
- * Copyright (c) 2015 Mauricio Poppe
- * Licensed under the MIT license.
- */
-'use strict'
+import { line as d3Line } from 'd3-shape'
+import { format as d3Format } from 'd3-format'
+import { scaleLinear as d3ScaleLinear, scaleLog as d3ScaleLog } from 'd3-scale'
+import { axisLeft as d3AxisLeft, axisBottom as d3AxisBottom } from 'd3-axis'
+import { zoom as d3Zoom, zoomIdentity as d3ZoomIdentity } from 'd3-zoom'
+import { select as d3Select, pointer as d3Pointer } from 'd3-selection'
+import { interpolateRound as d3InterpolateRound } from 'd3-interpolate'
+import extend from 'extend'
+import events from 'events'
+
+import annotations from './helpers/annotations'
+import mousetip from './tip'
+import helpers from './helpers'
+import datumDefaults from './datum-defaults'
+import globals from './globals'
+import * as graphTypes from './graph-types'
+import * as $eval from './helpers/eval'
+
 require('./polyfills')
 
-var d3 = window.d3
+const cache = []
+const d3Scale = { linear: d3ScaleLinear, log: d3ScaleLog }
 
-var events = require('events')
-var extend = require('extend')
-
-var mousetip = require('./tip')
-var helpers = require('./helpers/')
-var annotations = require('./helpers/annotations')
-var datumDefaults = require('./datum-defaults')
-
-var globals
-var graphTypes
-var cache = []
-
-module.exports = function (options) {
+function functionPlot (options) {
   options = options || {}
   options.data = options.data || []
 
   // globals
-  var width, height
-  var margin
-  var zoomBehavior
-  var xScale, yScale
-  var line = d3.svg.line()
-    .x(function (d) { return xScale(d[0]) })
-    .y(function (d) { return yScale(d[1]) })
+  let width, height
+  let margin
+  let zoomBehavior
 
   function Chart () {
-    var n = Math.random()
-    var letter = String.fromCharCode(Math.floor(n * 26) + 97)
+    const n = Math.random()
+    const letter = String.fromCharCode(Math.floor(n * 26) + 97)
     this.id = options.id = letter + n.toString(16).substr(2)
     this.linkedGraphs = [this]
     this.options = options
@@ -64,21 +60,22 @@ module.exports = function (options) {
   }
 
   Chart.prototype.initializeAxes = function () {
-    var integerFormat = d3.format('s')
-    var format = function (scale) {
+    const self = this
+    const integerFormat = d3Format('~s')
+    const floatFormat = d3Format('~e')
+    const format = function (scale) {
       return function (d) {
-        var decimalFormat = scale.tickFormat(10)
-        var isInteger = d === +d && d === (d | 0)
-        // integers: d3.format('s'), see https://github.com/mbostock/d3/wiki/Formatting
-        // decimals: default d3.scale.linear() formatting see
-        //    https://github.com/mbostock/d3/blob/master/src/svg/axis.js#L29
-        return isInteger ? integerFormat(d) : decimalFormat(d)
+        if (Math.abs(d) < 1 && d !== 0) {
+          if (Math.abs(d) < 0.05) return floatFormat(d)
+          return d
+        }
+        return integerFormat(d)
       }
     }
 
     function computeYScale (xScale) {
       // assumes that xScale is a linear scale
-      var xDiff = xScale[1] - xScale[0]
+      const xDiff = xScale[1] - xScale[0]
       return height * xDiff / width
     }
 
@@ -88,12 +85,12 @@ module.exports = function (options) {
     options.yAxis = options.yAxis || {}
     options.yAxis.type = options.yAxis.type || 'linear'
 
-    var xDomain = this.meta.xDomain = (function (axis) {
+    const xDomain = this.meta.xDomain = (function (axis) {
       if (axis.domain) {
         return axis.domain
       }
       if (axis.type === 'linear') {
-        var xLimit = 12
+        const xLimit = 12
         return [-xLimit / 2, xLimit / 2]
       } else if (axis.type === 'log') {
         return [1, 10]
@@ -101,11 +98,11 @@ module.exports = function (options) {
       throw Error('axis type ' + axis.type + ' unsupported')
     })(options.xAxis)
 
-    var yDomain = this.meta.yDomain = (function (axis) {
+    const yDomain = this.meta.yDomain = (function (axis) {
       if (axis.domain) {
         return axis.domain
       }
-      var yLimit = computeYScale(xDomain)
+      const yLimit = computeYScale(xDomain)
       if (axis.type === 'linear') {
         return [-yLimit / 2, yLimit / 2]
       } else if (axis.type === 'log') {
@@ -121,25 +118,27 @@ module.exports = function (options) {
       throw Error('the pair defining the y-domain is inverted')
     }
 
-    xScale = this.meta.xScale = d3.scale[options.xAxis.type]()
+    this.meta.xScale = d3Scale[options.xAxis.type]()
       .domain(xDomain)
       .range(options.xAxis.invert ? [width, 0] : [0, width])
-    yScale = this.meta.yScale = d3.scale[options.yAxis.type]()
+    this.meta.yScale = d3Scale[options.yAxis.type]()
       .domain(yDomain)
       .range(options.yAxis.invert ? [0, height] : [height, 0])
-    this.meta.xAxis = d3.svg.axis()
-      .scale(xScale)
+
+    this.meta.xAxis = d3AxisBottom(this.meta.xScale)
       .tickSize(options.grid ? -height : 0)
-      .tickFormat(format(xScale))
-      .orient('bottom')
-    this.meta.yAxis = d3.svg.axis()
-      .scale(yScale)
+      .tickFormat(format(this.meta.xScale))
+    this.meta.yAxis = d3AxisLeft(this.meta.yScale)
       .tickSize(options.grid ? -width : 0)
-      .tickFormat(format(yScale))
-      .orient('left')
+      .tickFormat(format(this.meta.yScale))
+
+    this.line = d3Line()
+      .x(function (d) { return self.meta.xScale(d[0]) })
+      .y(function (d) { return self.meta.yScale(d[1]) })
   }
 
   Chart.prototype.internalVars = function () {
+    const self = this
     // measurements and other derived data
     this.meta = {}
 
@@ -149,20 +148,23 @@ module.exports = function (options) {
     if (options.title) {
       this.meta.margin.top = 40
     }
-
-    zoomBehavior = this.meta.zoomBehavior = d3.behavior.zoom()
-
     // inner width/height
     width = this.meta.width = (options.width || globals.DEFAULT_WIDTH) -
       margin.left - margin.right
     height = this.meta.height = (options.height || globals.DEFAULT_HEIGHT) -
       margin.top - margin.bottom
 
+    zoomBehavior = this.meta.zoomBehavior = d3Zoom()
+      .on('zoom', function onZoom (ev, target) {
+        self.emit('all:zoom', ev, target)
+      })
+
     this.initializeAxes()
   }
 
   Chart.prototype.drawGraphWrapper = function () {
-    var root = this.root = d3.select(options.target).selectAll('svg')
+    const root = this.root = d3Select(options.target)
+      .selectAll('svg')
       .data([options])
 
     // enter
@@ -171,8 +173,8 @@ module.exports = function (options) {
       .attr('class', 'function-plot')
       .attr('font-size', this.getFontSize())
 
-    // merge
-    root
+    // enter + update
+    root.merge(this.root.enter)
       .attr('width', width + margin.left + margin.right)
       .attr('height', height + margin.top + margin.bottom)
 
@@ -187,8 +189,8 @@ module.exports = function (options) {
     this.draw()
 
     // helper to detect the closest fn to the cursor's current abscissa
-    var tip = this.tip = mousetip(extend(options.tip, { owner: this }))
-    this.canvas
+    const tip = this.tip = mousetip(extend(options.tip, { owner: this }))
+    this.canvas.merge(this.canvas.enter)
       .call(tip)
 
     this.buildZoomHelper()
@@ -197,7 +199,8 @@ module.exports = function (options) {
 
   Chart.prototype.buildTitle = function () {
     // join
-    var selection = this.root.selectAll('text.title')
+    const selection = this.root.merge(this.root.enter)
+      .selectAll('text.title')
       .data(function (d) {
         return [d.title].filter(Boolean)
       })
@@ -225,25 +228,21 @@ module.exports = function (options) {
       .attr('text-anchor', 'end')
 
     // update + enter
-    this.root.select('.top-right-legend')
+    this.root.merge(this.root.enter)
+      .select('.top-right-legend')
       .attr('y', margin.top / 2)
       .attr('x', width + margin.left)
   }
 
   Chart.prototype.buildCanvas = function () {
-    var self = this
-
-    this.meta.zoomBehavior
-      .x(xScale)
-      .y(yScale)
-      .on('zoom', function onZoom () {
-        self.emit('all:zoom', d3.event.translate, d3.event.scale)
-      })
+    const self = this
 
     // enter
-    var canvas = this.canvas = this.root
+    const canvas = this.canvas = this.root.merge(this.root.enter)
       .selectAll('.canvas')
-      .data(function (d) { return [d] })
+      .data(function (d) {
+        return [d]
+      })
 
     this.canvas.enter = canvas.enter()
       .append('g')
@@ -254,15 +253,18 @@ module.exports = function (options) {
 
   Chart.prototype.buildClip = function () {
     // (so that the functions don't overflow on zoom or drag)
-    var id = this.id
-    var defs = this.canvas.enter.append('defs')
+    const id = this.id
+    const defs = this.canvas.merge(this.canvas.enter)
+      .append('defs')
+
     defs.append('clipPath')
       .attr('id', 'function-plot-clip-' + id)
       .append('rect')
       .attr('class', 'clip static-clip')
 
     // enter + update
-    this.canvas.selectAll('.clip')
+    this.canvas.merge(this.canvas.enter)
+      .selectAll('.clip')
       .attr('width', width)
       .attr('height', height)
 
@@ -285,52 +287,61 @@ module.exports = function (options) {
 
   Chart.prototype.buildAxis = function () {
     // axis creation
-    var canvasEnter = this.canvas.enter
+    const canvasEnter = this.canvas.enter
     canvasEnter.append('g')
       .attr('class', 'x axis')
     canvasEnter.append('g')
       .attr('class', 'y axis')
 
     // update
-    this.canvas.select('.x.axis')
+    this.canvas.merge(this.canvas.enter)
+      .select('.x.axis')
       .attr('transform', 'translate(0,' + height + ')')
       .call(this.meta.xAxis)
-    this.canvas.select('.y.axis')
+    this.canvas.merge(this.canvas.enter)
+      .select('.y.axis')
       .call(this.meta.yAxis)
   }
 
   Chart.prototype.buildAxisLabel = function () {
     // axis labeling
-    var xLabel, yLabel
-    var canvas = this.canvas
+    let xLabel, yLabel
+    const canvas = this.canvas
 
-    xLabel = canvas.selectAll('text.x.axis-label')
+    xLabel = canvas.merge(canvas.enter)
+      .selectAll('text.x.axis-label')
       .data(function (d) {
         return [d.xAxis.label].filter(Boolean)
       })
-    xLabel.enter()
+    const xLabelEnter = xLabel.enter()
       .append('text')
       .attr('class', 'x axis-label')
       .attr('text-anchor', 'end')
-    xLabel
+
+    xLabel.merge(xLabelEnter)
       .attr('x', width)
       .attr('y', height - 6)
       .text(function (d) { return d })
+
     xLabel.exit().remove()
 
-    yLabel = canvas.selectAll('text.y.axis-label')
+    yLabel = canvas.merge(canvas.enter)
+      .selectAll('text.y.axis-label')
       .data(function (d) {
         return [d.yAxis.label].filter(Boolean)
       })
-    yLabel.enter()
+
+    const yLabelEnter = yLabel.enter()
       .append('text')
       .attr('class', 'y axis-label')
       .attr('y', 6)
       .attr('dy', '.75em')
       .attr('text-anchor', 'end')
       .attr('transform', 'rotate(-90)')
-    yLabel
+
+    yLabel.merge(yLabelEnter)
       .text(function (d) { return d })
+
     yLabel.exit().remove()
   }
 
@@ -341,149 +352,129 @@ module.exports = function (options) {
    * redraw call `instance.draw()`
    */
   Chart.prototype.buildContent = function () {
-    var self = this
-    var canvas = this.canvas
+    const self = this
+    const canvas = this.canvas
 
-    canvas
+    canvas.merge(canvas.enter)
       .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
-      .call(zoomBehavior)
-      .each(function () {
-        var el = d3.select(this)
-        // make a copy of all the listeners available to be removed/added later
-        var listeners = [
-          'mousedown',
-          'touchstart',
-          ('onwheel' in document
-            ? 'wheel' : 'ononmousewheel' in document
-              ? 'mousewheel'
-              : 'MozMousePixelScroll')
-        ].map(function (d) { return d + '.zoom' })
-        if (!el._zoomListenersCache) {
-          listeners.forEach(function (l) {
-            el['_' + l] = el.on(l)
-          })
-          el._zoomListenersCache = true
-        }
-        function setState (state) {
-          listeners.forEach(function (l) {
-            state ? el.on(l, el['_' + l]) : el.on(l, null)
-          })
-        }
-        setState(!options.disableZoom)
-      })
 
-    var content = this.content = canvas.selectAll(':scope > g.content')
+    const content = this.content = canvas.merge(canvas.enter)
+      .selectAll(':scope > g.content')
       .data(function (d) { return [d] })
 
     // g tag clipped to hold the data
-    content.enter()
+    const contentEnter = content.enter()
       .append('g')
       .attr('clip-path', 'url(#function-plot-clip-' + this.id + ')')
       .attr('class', 'content')
 
     // helper line, x = 0
     if (options.xAxis.type === 'linear') {
-      var yOrigin = content.selectAll(':scope > path.y.origin')
-        .data([ [[0, yScale.domain()[0]], [0, yScale.domain()[1]]] ])
-      yOrigin.enter()
+      const yOrigin = content.selectAll(':scope > path.y.origin')
+        .data([ [[0, this.meta.yScale.domain()[0]], [0, this.meta.yScale.domain()[1]]] ])
+      const yOriginEnter = yOrigin.enter()
         .append('path')
         .attr('class', 'y origin')
         .attr('stroke', 'black')
         .attr('opacity', 0.2)
-      yOrigin.attr('d', line)
+      yOrigin.merge(yOriginEnter)
+        .attr('d', this.line)
     }
 
     // helper line y = 0
     if (options.yAxis.type === 'linear') {
-      var xOrigin = content.selectAll(':scope > path.x.origin')
-        .data([ [[xScale.domain()[0], 0], [xScale.domain()[1], 0]] ])
-      xOrigin.enter()
+      const xOrigin = content.selectAll(':scope > path.x.origin')
+        .data([ [[this.meta.xScale.domain()[0], 0], [this.meta.xScale.domain()[1], 0]] ])
+      const xOriginEnter = xOrigin.enter()
         .append('path')
         .attr('class', 'x origin')
         .attr('stroke', 'black')
         .attr('opacity', 0.2)
-      xOrigin.attr('d', line)
+      xOrigin.merge(xOriginEnter)
+        .attr('d', this.line)
     }
 
     // annotations
-    content
+    content.merge(contentEnter)
       .call(annotations({ owner: self }))
 
     // content construction
     // - join options.data to <g class='graph'> elements
     // - for each datum determine the sampler to use
-    var graphs = content.selectAll(':scope > g.graph')
-      .data(function (d) {
-        return d.data.map(datumDefaults)
-      })
+    const graphs = content.merge(contentEnter)
+      .selectAll(':scope > g.graph')
+      .data(d => d.data.map(datumDefaults))
 
     // enter
-    graphs
+    const graphsEnter = graphs
       .enter()
       .append('g')
       .attr('class', 'graph')
 
     // enter + update
-    graphs
+    graphs.merge(graphsEnter)
       .each(function (d, index) {
         // additional options needed in the graph-types/helpers
         d.index = index
 
-        d3.select(this)
-          .call(graphTypes[d.graphType](self))
-        d3.select(this)
-          .call(helpers(self))
+        const selection = d3Select(this)
+        selection.call(graphTypes[d.graphType](self))
+        selection.call(helpers(self))
       })
   }
 
   Chart.prototype.buildZoomHelper = function () {
     // dummy rect (detects the zoom + drag)
-    var self = this
+    const self = this
 
     // enter
     this.draggable = this.canvas.enter
       .append('rect')
+      .call(zoomBehavior)
+      .call(zoomBehavior.transform, d3ZoomIdentity)
       .attr('class', 'zoom-and-drag')
       .style('fill', 'none')
       .style('pointer-events', 'all')
 
     // update
-    this.canvas.select('.zoom-and-drag')
+    this.canvas.merge(this.canvas.enter)
+      .select('.zoom-and-drag')
       .attr('width', width)
       .attr('height', height)
-      .on('mouseover', function () {
-        self.emit('all:mouseover')
+      .on('mouseover', function (event, target) {
+        self.emit('all:mouseover', event, target)
       })
-      .on('mouseout', function () {
-        self.emit('all:mouseout')
+      .on('mouseout', function (event, target) {
+        self.emit('all:mouseout', event, target)
       })
-      .on('mousemove', function () {
-        self.emit('all:mousemove')
+      .on('mousemove', function (event, target) {
+        self.emit('all:mousemove', event, target)
       })
   }
 
   Chart.prototype.setUpPlugins = function () {
-    var plugins = options.plugins || []
-    var self = this
+    const plugins = options.plugins || []
+    const self = this
     plugins.forEach(function (plugin) {
       plugin(self)
     })
   }
 
   Chart.prototype.addLink = function () {
-    for (var i = 0; i < arguments.length; i += 1) {
+    for (let i = 0; i < arguments.length; i += 1) {
       this.linkedGraphs.push(arguments[i])
     }
   }
 
   Chart.prototype.updateAxes = function () {
-    var instance = this
-    var canvas = instance.canvas
+    const instance = this
+    const canvas = instance.canvas.merge(instance.canvas.enter)
     canvas.select('.x.axis').call(instance.meta.xAxis)
     canvas.select('.y.axis').call(instance.meta.yAxis)
 
     // updates the style of the axes
-    canvas.selectAll('.axis path, .axis line')
+    canvas
+      .selectAll('.axis path, .axis line')
       .attr('fill', 'none')
       .attr('stroke', 'black')
       .attr('shape-rendering', 'crispedges')
@@ -496,31 +487,12 @@ module.exports = function (options) {
     this.options.yAxis.domain = this.meta.yScale.domain()
   }
 
-  Chart.prototype.programmaticZoom = function (xDomain, yDomain) {
-    var instance = this
-    d3.transition()
-      .duration(750)
-      .tween('zoom', function () {
-        var ix = d3.interpolate(xScale.domain(), xDomain)
-        var iy = d3.interpolate(yScale.domain(), yDomain)
-        return function (t) {
-          zoomBehavior
-            .x(xScale.domain(ix(t)))
-            .y(yScale.domain(iy(t)))
-          instance.draw()
-        }
-      })
-      .each('end', function () {
-        instance.emit('programmatic-zoom')
-      })
-  }
-
   Chart.prototype.getFontSize = function () {
     return Math.max(Math.max(width, height) / 50, 8)
   }
 
   Chart.prototype.draw = function () {
-    var instance = this
+    const instance = this
     instance.emit('before:draw')
     instance.syncOptions()
     instance.updateAxes()
@@ -529,79 +501,106 @@ module.exports = function (options) {
   }
 
   Chart.prototype.setUpEventListeners = function () {
-    var instance = this
+    const self = this
 
-    var events = {
+
+    const events = {
       mousemove: function (coordinates) {
-        instance.tip.move(coordinates)
+        self.tip.move(coordinates)
       },
 
       mouseover: function () {
-        instance.tip.show()
+        self.tip.show()
       },
 
       mouseout: function () {
-        instance.tip.hide()
+        self.tip.hide()
       },
 
-      zoom: function (translate, scale) {
-        zoomBehavior
-          .translate(translate)
-          .scale(scale)
+      zoom: function zoom ({ transform }, target) {
+        // disable zoom
+        if (options.disableZoom) return
+
+        if (!self.meta.zoomBehavior.xScale) {
+          // the zoom behavior must work with a copy of the scale, the zoom behavior has its own state and assumes
+          // that its updating the original scale!
+          // things that failed when I tried rescaleX(self.meta.xScale), the state of self.meta.xScale was a multiplied
+          // for zoom/mousemove operations
+          //
+          // this copy should only be created once when the application starts
+          self.meta.zoomBehavior.xScale = self.meta.xScale.copy()
+          self.meta.zoomBehavior.yScale = self.meta.yScale.copy()
+        }
+
+        let xScaleClone = transform.rescaleX(self.meta.zoomBehavior.xScale).interpolate(d3InterpolateRound)
+        let yScaleClone = transform.rescaleY(self.meta.zoomBehavior.yScale).interpolate(d3InterpolateRound)
+
+        // update the scales's metadata
+        // NOTE: setting self.meta.xScale = self.meta.zoomBehavior.xScale creates artifacts
+        // and weird lines
+        self.meta.xScale
+          .domain(xScaleClone.domain())
+          .range(xScaleClone.range())
+        self.meta.yScale
+          .domain(yScaleClone.domain())
+          .range(yScaleClone.range())
+
+        // update the scales tied to the xAxis and yAxis
+        self.meta.xAxis.scale(xScaleClone)
+        self.meta.yAxis.scale(yScaleClone)
       },
 
       'tip:update': function (x, y, index) {
-        var meta = instance.root.datum().data[index]
-        var title = meta.title || ''
-        var format = meta.renderer || function (x, y) {
+        const meta = self.root.merge(self.root.enter).datum().data[index]
+        const title = meta.title || ''
+        const format = meta.renderer || function (x, y) {
           return x.toFixed(3) + ', ' + y.toFixed(3)
         }
 
-        var text = []
+        const text = []
         title && text.push(title)
         text.push(format(x, y))
 
-        instance.root.select('.top-right-legend')
+        self.root.select('.top-right-legend')
           .attr('fill', globals.COLORS[index])
           .text(text.join(' '))
       }
 
     }
 
-    var all = {
-      mousemove: function () {
-        var mouse = d3.mouse(instance.root.select('rect.zoom-and-drag').node())
-        var coordinates = {
-          x: xScale.invert(mouse[0]),
-          y: yScale.invert(mouse[1])
+    const all = {
+      mousemove: function (event, target) {
+        const mouse = d3Pointer(event)
+        const coordinates = {
+          x: self.meta.xScale.invert(mouse[0]),
+          y: self.meta.yScale.invert(mouse[1])
         }
-        instance.linkedGraphs.forEach(function (graph) {
+        self.linkedGraphs.forEach(function (graph) {
           graph.emit('before:mousemove', coordinates)
           graph.emit('mousemove', coordinates)
         })
       },
 
-      zoom: function (translate, scale) {
-        instance.linkedGraphs.forEach(function (graph, i) {
-          graph.emit('zoom', translate, scale)
+      zoom: function (event, target) {
+        self.linkedGraphs.forEach(function (graph, i) {
+          graph.emit('zoom', event, target)
           graph.draw()
         })
 
         // emit the position of the mouse to all the registered graphs
-        instance.emit('all:mousemove')
+        self.emit('all:mousemove', event, target)
       }
-
     }
 
     Object.keys(events).forEach(function (e) {
-      instance.on(e, events[e])
+      self.on(e, events[e])
       // create an event for each event existing on `events` in the form 'all:' event
       // e.g. all:mouseover all:mouseout
       // the objective is that all the linked graphs receive the same event as the current graph
-      !all[e] && instance.on('all:' + e, function () {
-        var args = Array.prototype.slice.call(arguments)
-        instance.linkedGraphs.forEach(function (graph) {
-          var localArgs = args.slice()
+      !all[e] && self.on('all:' + e, function () {
+        const args = Array.prototype.slice.call(arguments)
+        self.linkedGraphs.forEach(function (graph) {
+          const localArgs = args.slice()
           localArgs.unshift(e)
           graph.emit.apply(graph, localArgs)
         })
@@ -609,17 +608,16 @@ module.exports = function (options) {
     })
 
     Object.keys(all).forEach(function (e) {
-      instance.on('all:' + e, all[e])
+      self.on('all:' + e, all[e])
     })
   }
 
-  var instance = cache[options.id]
+  let instance = cache[options.id]
   if (!instance) {
     instance = new Chart()
   }
   return instance.build()
 }
-globals = module.exports.globals = require('./globals')
-graphTypes = module.exports.graphTypes = require('./graph-types/')
-module.exports.plugins = require('./plugins/')
-module.exports.eval = require('./helpers/eval')
+
+export default functionPlot
+export { $eval, globals, graphTypes }

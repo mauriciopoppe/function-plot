@@ -1,8 +1,8 @@
-var d3 = window.d3
-var extend = require('extend')
-var pressed = require('key-pressed')
-var keydown = require('keydown')
-var integrateSimpson = require('integrate-adaptive-simpson')
+const d3 = window.d3
+const extend = require('extend')
+const pressed = require('key-pressed')
+const keydown = require('keydown')
+
 module.exports = function (options) {
   options = extend({
     key: '<shift>',
@@ -12,55 +12,48 @@ module.exports = function (options) {
     toggle: false
   }, options)
 
-  var brush = d3.svg.brush()
-  var kd = keydown(options.key)
-  var visible = false
-  var cachedInstance
-
-  // the integrator module requires a function with a single parameter x
-  function wrapper (datum) {
-    return function (x) {
-      var functionPlot = window.functionPlot
-      return functionPlot.eval.builtIn(datum, 'fn', { x: x })
-    }
-  }
+  const brush = d3.svg.brush()
+  const kd = keydown(options.key)
+  let cachedInstance
+  let visible = false
 
   function setBrushState (visible) {
-    var brushEl = cachedInstance.canvas.selectAll('.definite-integral')
+    const brushEl = cachedInstance.canvas.selectAll('.zoom-box')
     brushEl.style('display', visible ? null : 'none')
   }
 
   function inner (instance) {
     cachedInstance = instance
     // update the brush scale with the instance scale
-    var oldDisableZoom
+    let oldDisableZoom
     brush
       .x(instance.meta.xScale)
+      .y(instance.meta.yScale)
       .on('brushstart', function () {
         if (!d3.event.sourceEvent) return
         oldDisableZoom = !!instance.options.disableZoom
         instance.options.disableZoom = true
-        // replot the samples with the option disableZoom set to true
-        instance.emit('draw')
+        // redrawing the canvas with the option disableZoom set to true
+        instance.draw()
       })
       .on('brushend', function () {
         if (!d3.event.sourceEvent) return
         instance.options.disableZoom = oldDisableZoom
 
         if (!brush.empty()) {
-          var a = brush.extent()[0]
-          var b = brush.extent()[1]
-          // iterate the data finding the value of the definite integral
-          // with bounds `a` and `b`
-          instance.options.data.forEach(function (datum, i) {
-            var value = integrateSimpson(wrapper(datum), a, b, options.tol, options.maxdepth)
-            instance.emit('definite-integral', datum, i, value, a, b)
-          })
+          const lo = brush.extent()[0]
+          const hi = brush.extent()[1]
+          const x = [lo[0], hi[0]]
+          const y = [lo[1], hi[1]]
+          instance.programmaticZoom(x, y)
         }
-        // replot the samples with the option disableZoom set to whatever it was before
-        instance.draw()
+        d3.select(this)
+          .transition()
+          .duration(1)
+          .call(brush.clear())
+          .call(brush.event)
       })
-    var brushEl = instance.canvas.append('g').attr('class', 'brush definite-integral')
+    const brushEl = instance.canvas.append('g').attr('class', 'brush zoom-box')
     brushEl
       .call(brush)
       .call(brush.event)
@@ -70,11 +63,8 @@ module.exports = function (options) {
       .attr('fill-opacity', 0.125)
       .attr('shape-rendering', 'crispEdges')
 
-    brushEl.selectAll('rect')
-      .attr('height', instance.meta.height)
-
     instance.canvas
-      .on('mousemove.definiteIntegral', function () {
+      .on('mousemove.zoombox', function () {
         // options.toggle sets the mask visibility when all the required
         // are pressed once and it's not disabled on keyup
         if (!options.toggle) {

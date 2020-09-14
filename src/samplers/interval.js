@@ -1,27 +1,23 @@
-/**
- * Created by mauricio on 5/14/15.
- */
-'use strict'
-var intervalArithmeticEval = require('interval-arithmetic-eval')
-var Interval = intervalArithmeticEval.Interval
+import intervalArithmeticEval from 'interval-arithmetic-eval'
+const Interval = intervalArithmeticEval.Interval
 
-var evaluate = require('../helpers/eval').interval
-var utils = require('../utils')
+import { interval as evaluate } from '../helpers/eval'
+import utils from '../utils'
 
 // disable the use of typed arrays in interval-arithmetic to improve the performance
 intervalArithmeticEval.policies.disableRounding()
 
 function interval1d (chart, meta, range, nSamples) {
-  var xCoords = utils.space(chart, range, nSamples)
-  var xScale = chart.meta.xScale
-  var yScale = chart.meta.yScale
-  var yMin = yScale.domain()[0]
-  var yMax = yScale.domain()[1]
-  var samples = []
-  var i
+  const xCoords = utils.space(chart, range, nSamples)
+  const xScale = chart.meta.xScale
+  const yScale = chart.meta.yScale
+  const yMin = yScale.domain()[0]
+  const yMax = yScale.domain()[1]
+  const samples = []
+  let i
   for (i = 0; i < xCoords.length - 1; i += 1) {
-    var x = { lo: xCoords[i], hi: xCoords[i + 1] }
-    var y = evaluate(meta, 'fn', { x: x })
+    const x = { lo: xCoords[i], hi: xCoords[i + 1] }
+    const y = evaluate(meta, 'fn', { x: x })
     if (!Interval.isEmpty(y) && !Interval.isWhole(y)) {
       samples.push([x, y])
     }
@@ -34,8 +30,8 @@ function interval1d (chart, meta, range, nSamples) {
   // asymptote determination
   for (i = 1; i < samples.length - 1; i += 1) {
     if (!samples[i]) {
-      var prev = samples[i - 1]
-      var next = samples[i + 1]
+      const prev = samples[i - 1]
+      const next = samples[i + 1]
       if (prev && next && !Interval.intervalsOverlap(prev[1], next[1])) {
         // case:
         //
@@ -67,28 +63,28 @@ function interval1d (chart, meta, range, nSamples) {
   return [samples]
 }
 
-var rectEps
+let rectEps
 function smallRect (x, y) {
   return Interval.width(x) < rectEps
 }
 
 function quadTree (x, y, meta) {
-  var sample = evaluate(meta, 'fn', {
+  const sample = evaluate(meta, 'fn', {
     x: x,
     y: y
   })
-  var fulfills = Interval.zeroIn(sample)
+  const fulfills = Interval.zeroIn(sample)
   if (!fulfills) { return this }
   if (smallRect(x, y)) {
     this.push([x, y])
     return this
   }
-  var midX = x.lo + (x.hi - x.lo) / 2
-  var midY = y.lo + (y.hi - y.lo) / 2
-  var east = { lo: midX, hi: x.hi }
-  var west = { lo: x.lo, hi: midX }
-  var north = { lo: midY, hi: y.hi }
-  var south = { lo: y.lo, hi: midY }
+  const midX = x.lo + (x.hi - x.lo) / 2
+  const midY = y.lo + (y.hi - y.lo) / 2
+  const east = { lo: midX, hi: x.hi }
+  const west = { lo: x.lo, hi: midX }
+  const north = { lo: midY, hi: y.hi }
+  const south = { lo: y.lo, hi: midY }
 
   quadTree.call(this, east, north, meta)
   quadTree.call(this, east, south, meta)
@@ -97,12 +93,12 @@ function quadTree (x, y, meta) {
 }
 
 function interval2d (chart, meta) {
-  var xScale = chart.meta.xScale
-  var xDomain = chart.meta.xScale.domain()
-  var yDomain = chart.meta.yScale.domain()
-  var x = { lo: xDomain[0], hi: xDomain[1] }
-  var y = { lo: yDomain[0], hi: yDomain[1] }
-  var samples = []
+  const xScale = chart.meta.xScale
+  const xDomain = chart.meta.xScale.domain()
+  const yDomain = chart.meta.yScale.domain()
+  const x = { lo: xDomain[0], hi: xDomain[1] }
+  const y = { lo: yDomain[0], hi: yDomain[1] }
+  const samples = []
   // 1 px
   rectEps = xScale.invert(1) - xScale.invert(0)
   quadTree.call(samples, x, y, meta)
@@ -110,8 +106,8 @@ function interval2d (chart, meta) {
   return [samples]
 }
 
-var sampler = function (chart, d, range, nSamples) {
-  var fnTypes = {
+const sampler = function (chart, d, range, nSamples) {
+  const fnTypes = {
     implicit: interval2d,
     linear: interval1d
   }
@@ -121,4 +117,4 @@ var sampler = function (chart, d, range, nSamples) {
   return fnTypes[d.fnType].apply(null, arguments)
 }
 
-module.exports = sampler
+export default sampler

@@ -1,11 +1,16 @@
-'use strict'
-var samplers = {
-  interval: require('interval-arithmetic-eval'),
-  builtIn: require('built-in-math-eval')
-}
-var extend = require('extend')
+import builtInMathEval from 'built-in-math-eval'
+import intervalArithmeticEval from 'interval-arithmetic-eval'
+import extend from 'extend'
 
-window.math && (samplers.builtIn = window.math.compile)
+'use strict'
+const samplers = {
+  interval: intervalArithmeticEval,
+  builtIn: builtInMathEval
+}
+
+if (global.math) {
+  samplers.builtIn = global.math.compile
+}
 
 function generateEvaluator (samplerName) {
   function doCompile (expression) {
@@ -32,7 +37,7 @@ function generateEvaluator (samplerName) {
     //
     // othewise throw an error
     if (typeof expression === 'string') {
-      var compile = samplers[samplerName]
+      const compile = samplers[samplerName]
       return compile(expression)
     } else if (typeof expression === 'function') {
       return { eval: expression }
@@ -45,9 +50,9 @@ function generateEvaluator (samplerName) {
     // compile the function using interval arithmetic, cache the result
     // so that multiple calls with the same argument don't trigger the
     // kinda expensive compilation process
-    var expression = meta[property]
-    var hiddenProperty = samplerName + '_Expression_' + property
-    var hiddenCompiled = samplerName + '_Compiled_' + property
+    const expression = meta[property]
+    const hiddenProperty = samplerName + '_Expression_' + property
+    const hiddenCompiled = samplerName + '_Compiled_' + property
     if (expression !== meta[hiddenProperty]) {
       meta[hiddenProperty] = expression
       meta[hiddenCompiled] = doCompile(expression)
@@ -92,5 +97,7 @@ function generateEvaluator (samplerName) {
   return evaluate
 }
 
-module.exports.builtIn = generateEvaluator('builtIn')
-module.exports.interval = generateEvaluator('interval')
+const builtIn = generateEvaluator('builtIn')
+const interval = generateEvaluator('interval')
+
+export { builtIn, interval }

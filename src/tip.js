@@ -1,15 +1,13 @@
-/**
- * Created by mauricio on 3/29/15.
- */
-'use strict'
-var d3 = window.d3
-var extend = require('extend')
-var utils = require('./utils')
-var clamp = require('clamp')
-var globals = require('./globals')
-var builtInEvaluator = require('./helpers/eval').builtIn
+import { line as d3Line } from 'd3-shape'
+import { select as d3Select } from 'd3-selection'
+import extend from 'extend'
+import clamp from 'clamp'
 
-module.exports = function (config) {
+import utils from './utils'
+import globals from './globals'
+import { builtIn as builtInEvaluator } from './helpers/eval'
+
+export default function mouseTip (config) {
   config = extend({
     xLine: false,
     yLine: false,
@@ -19,9 +17,9 @@ module.exports = function (config) {
     owner: null
   }, config)
 
-  var MARGIN = 20
+  const MARGIN = 20
 
-  var line = d3.svg.line()
+  const line = d3Line()
     .x(function (d) { return d[0] })
     .y(function (d) { return d[1] })
 
@@ -35,28 +33,30 @@ module.exports = function (config) {
   }
 
   function tip (selection) {
-    var innerSelection = selection.selectAll('g.tip')
+    const join = selection
+      .selectAll('g.tip')
       .data(function (d) { return [d] })
 
     // enter
-    innerSelection
+    const tipEnter = join
       .enter().append('g')
       .attr('class', 'tip')
       .attr('clip-path', 'url(#function-plot-clip-' + config.owner.id + ')')
 
     // enter + update = enter inner tip
-    tip.el = innerSelection.selectAll('g.inner-tip')
+    const tipInnerJoin = tip.join = join.merge(tipEnter)
+      .selectAll('g.inner-tip')
       .data(function (d) {
         // debugger
         return [d]
       })
 
-    tip.el.enter()
+    const tipInnerEnter = tip.enter = tipInnerJoin.enter()
       .append('g')
       .attr('class', 'inner-tip')
       .style('display', 'none')
       .each(function () {
-        var el = d3.select(this)
+        const el = d3Select(this)
         lineGenerator(el, [[0, -config.owner.meta.height - MARGIN], [0, config.owner.meta.height + MARGIN]])
           .attr('class', 'tip-x-line')
           .style('display', 'none')
@@ -68,27 +68,29 @@ module.exports = function (config) {
       })
 
     // enter + update
-    selection.selectAll('.tip-x-line').style('display', config.xLine ? null : 'none')
-    selection.selectAll('.tip-y-line').style('display', config.yLine ? null : 'none')
+    tipInnerJoin.merge(tipInnerEnter)
+      .selectAll('.tip-x-line').style('display', config.xLine ? null : 'none')
+    tipInnerJoin.merge(tipInnerEnter)
+      .selectAll('.tip-y-line').style('display', config.yLine ? null : 'none')
   }
 
   tip.move = function (coordinates) {
-    var i
-    var minDist = Infinity
-    var closestIndex = -1
-    var x, y
+    let i
+    let minDist = Infinity
+    let closestIndex = -1
+    let x, y
 
-    var el = tip.el
-    var inf = 1e8
-    var meta = config.owner.meta
-    var data = el.data()[0].data
-    var xScale = meta.xScale
-    var yScale = meta.yScale
-    var width = meta.width
-    var height = meta.height
+    const selection = tip.join.merge(tip.enter)
+    const inf = 1e8
+    const meta = config.owner.meta
+    const data = selection.datum().data
+    const xScale = meta.xScale
+    const yScale = meta.yScale
+    const width = meta.width
+    const height = meta.height
 
-    var x0 = coordinates.x
-    var y0 = coordinates.y
+    const x0 = coordinates.x
+    const y0 = coordinates.y
 
     for (i = 0; i < data.length; i += 1) {
       // skipTip=true skips the evaluation in the datum
@@ -99,13 +101,14 @@ module.exports = function (config) {
         continue
       }
 
-      var range = data[i].range || [-inf, inf]
+      const range = data[i].range || [-inf, inf]
+      let candidateY
       if (x0 > range[0] - globals.TIP_X_EPS && x0 < range[1] + globals.TIP_X_EPS) {
         try {
-          var candidateY = builtInEvaluator(data[i], 'fn', { x: x0 })
+          candidateY = builtInEvaluator(data[i], 'fn', { x: x0 })
         } catch (e) { }
         if (utils.isValidNumber(candidateY)) {
-          var tDist = Math.abs(candidateY - y0)
+          const tDist = Math.abs(candidateY - y0)
           if (tDist < minDist) {
             minDist = tDist
             closestIndex = i
@@ -124,13 +127,14 @@ module.exports = function (config) {
 
       tip.show()
       config.owner.emit('tip:update', x, y, closestIndex)
-      var clampX = clamp(x, xScale.invert(-MARGIN), xScale.invert(width + MARGIN))
-      var clampY = clamp(y, yScale.invert(height + MARGIN), yScale.invert(-MARGIN))
-      var color = utils.color(data[closestIndex], closestIndex)
-      el.attr('transform', 'translate(' + xScale(clampX) + ',' + yScale(clampY) + ')')
-      el.select('circle')
+      const clampX = clamp(x, xScale.invert(-MARGIN), xScale.invert(width + MARGIN))
+      const clampY = clamp(y, yScale.invert(height + MARGIN), yScale.invert(-MARGIN))
+      const color = utils.color(data[closestIndex], closestIndex)
+      selection.style('color', 'red')
+      selection.attr('transform', 'translate(' + xScale(clampX) + ',' + yScale(clampY) + ')')
+      selection.select('circle')
         .attr('fill', color)
-      el.select('text')
+      selection.select('text')
         .attr('fill', color)
         .text(config.renderer(x, y, closestIndex))
     } else {
@@ -139,11 +143,13 @@ module.exports = function (config) {
   }
 
   tip.show = function () {
-    this.el.style('display', null)
+    tip.join.merge(tip.enter)
+      .style('display', null)
   }
 
   tip.hide = function () {
-    this.el.style('display', 'none')
+    tip.join.merge(tip.enter)
+      .style('display', 'none')
   }
   // generations of getters/setters
   Object.keys(config).forEach(function (option) {
