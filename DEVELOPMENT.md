@@ -14,9 +14,12 @@ Development page: `http://localhost:9966/site/playground.html`
 
 Deploy steps:
 
-- `npm run dist` (make sure to commit the dist files after this command)
-- `npm version major|minor|patch`
+- `npm run build` (make sure to commit the dist files after this command)
 - `git push origin master`
 - `npm run deploy -- -- "Commit message"`
+
+Release steps (do deploy first):
+
+- `npm version major|minor|patch`
 - `npm publish`
 
