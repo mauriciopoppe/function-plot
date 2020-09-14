@@ -10,7 +10,7 @@
   "bugs": "https://github.com/mauriciopoppe/function-plot/issues",
   "homepage": "http://mauriciopoppe.github.io/function-plot/",
   "author": "Mauricio Poppe <mauricio.poppe@gmail.com>",
-  "main": "src/index.js",
+  "main": "dist/function-plot.js",
   "scripts": {
     "deploy": "gh-pages-deploy",
     "html": "node site.js",
@@ -21,14 +21,11 @@
     "test": "jest"
   },
   "files": [
-    "/dist",
-    "/src",
-    "/index.js"
+    "/dist"
   ],
   "gh-pages-deploy": {
     "prep": [
-      "dist:cp",
-      "html"
+      "build"
     ],
     "staticpath": "site"
   },
