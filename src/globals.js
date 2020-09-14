@@ -21,7 +21,7 @@ const Globals = {
 }
 
 Globals.DEFAULT_ITERATIONS = null
-Globals.MAX_ITERATIONS = Globals.DEFAULT_WIDTH * 4
+Globals.MAX_ITERATIONS = Globals.DEFAULT_WIDTH * 10
 
 // module.exports.Globals = Globals
 export default Globals

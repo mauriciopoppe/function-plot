@@ -1,7 +1,8 @@
-var d3 = window.d3
-var extend = require('extend')
-var pressed = require('key-pressed')
-var keydown = require('keydown')
+const d3 = window.d3
+const extend = require('extend')
+const pressed = require('key-pressed')
+const keydown = require('keydown')
+
 module.exports = function (options) {
   options = extend({
     key: '<shift>',
@@ -11,20 +12,20 @@ module.exports = function (options) {
     toggle: false
   }, options)
 
-  var brush = d3.svg.brush()
-  var kd = keydown(options.key)
-  var cachedInstance
-  var visible = false
+  const brush = d3.svg.brush()
+  const kd = keydown(options.key)
+  let cachedInstance
+  let visible = false
 
   function setBrushState (visible) {
-    var brushEl = cachedInstance.canvas.selectAll('.zoom-box')
+    const brushEl = cachedInstance.canvas.selectAll('.zoom-box')
     brushEl.style('display', visible ? null : 'none')
   }
 
   function inner (instance) {
     cachedInstance = instance
     // update the brush scale with the instance scale
-    var oldDisableZoom
+    let oldDisableZoom
     brush
       .x(instance.meta.xScale)
       .y(instance.meta.yScale)
@@ -40,10 +41,10 @@ module.exports = function (options) {
         instance.options.disableZoom = oldDisableZoom
 
         if (!brush.empty()) {
-          var lo = brush.extent()[0]
-          var hi = brush.extent()[1]
-          var x = [lo[0], hi[0]]
-          var y = [lo[1], hi[1]]
+          const lo = brush.extent()[0]
+          const hi = brush.extent()[1]
+          const x = [lo[0], hi[0]]
+          const y = [lo[1], hi[1]]
           instance.programmaticZoom(x, y)
         }
         d3.select(this)
@@ -52,7 +53,7 @@ module.exports = function (options) {
           .call(brush.clear())
           .call(brush.event)
       })
-    var brushEl = instance.canvas.append('g').attr('class', 'brush zoom-box')
+    const brushEl = instance.canvas.append('g').attr('class', 'brush zoom-box')
     brushEl
       .call(brush)
       .call(brush.event)

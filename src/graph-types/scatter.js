@@ -5,26 +5,26 @@ import utils from '../utils'
 import evaluate from '../evaluate'
 
 export default function scatter (chart) {
-  var xScale = chart.meta.xScale
-  var yScale = chart.meta.yScale
+  const xScale = chart.meta.xScale
+  const yScale = chart.meta.yScale
 
   function scatter (selection) {
     selection.each(function (d) {
-      var i, j
-      var index = d.index
-      var color = utils.color(d, index)
-      var evaluatedData = evaluate(chart, d)
+      let i, j
+      const index = d.index
+      const color = utils.color(d, index)
+      const evaluatedData = evaluate(chart, d)
 
       // scatter doesn't need groups, therefore each group is
       // flattened into a single array
-      var joined = []
+      const joined = []
       for (i = 0; i < evaluatedData.length; i += 1) {
         for (j = 0; j < evaluatedData[i].length; j += 1) {
           joined.push(evaluatedData[i][j])
         }
       }
 
-      var innerSelection = d3Select(this)
+      const innerSelection = d3Select(this)
         .selectAll(':scope > circle')
         .data(joined)
 

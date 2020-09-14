@@ -5,20 +5,20 @@ import { builtIn as builtInEvaluator } from './eval'
 import datumDefaults from '../datum-defaults'
 
 export default function derivative(chart) {
-  var derivativeDatum = datumDefaults({
+  const derivativeDatum = datumDefaults({
     isHelper: true,
     skipTip: true,
     skipBoundsCheck: true,
     nSamples: 2,
     graphType: 'polyline'
   })
-  var derivative
+  let derivative
 
   function computeLine (d) {
     if (!d.derivative) {
       return []
     }
-    var x0 = typeof d.derivative.x0 === 'number' ? d.derivative.x0 : Infinity
+    const x0 = typeof d.derivative.x0 === 'number' ? d.derivative.x0 : Infinity
     derivativeDatum.index = d.index
     derivativeDatum.scope = {
       m: builtInEvaluator(d.derivative, 'fn', { x: x0 }),
@@ -30,7 +30,7 @@ export default function derivative(chart) {
   }
 
   function checkAutoUpdate (d) {
-    var self = this
+    const self = this
     if (!d.derivative) {
       return
     }
@@ -52,10 +52,10 @@ export default function derivative(chart) {
 
   derivative = function (selection) {
     selection.each(function (d) {
-      var el = d3Select(this)
-      var data = computeLine.call(selection, d)
+      const el = d3Select(this)
+      const data = computeLine.call(selection, d)
       checkAutoUpdate.call(selection, d)
-      var innerSelection = el.selectAll('g.derivative')
+      const innerSelection = el.selectAll('g.derivative')
         .data(data)
 
       innerSelection.enter()

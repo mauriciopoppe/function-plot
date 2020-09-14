@@ -3,7 +3,7 @@ import intervalArithmeticEval from 'interval-arithmetic-eval'
 import extend from 'extend'
 
 'use strict'
-var samplers = {
+const samplers = {
   interval: intervalArithmeticEval,
   builtIn: builtInMathEval
 }
@@ -35,7 +35,7 @@ function generateEvaluator (samplerName) {
     //
     // othewise throw an error
     if (typeof expression === 'string') {
-      var compile = samplers[samplerName]
+      const compile = samplers[samplerName]
       return compile(expression)
     } else if (typeof expression === 'function') {
       return { eval: expression }
@@ -48,9 +48,9 @@ function generateEvaluator (samplerName) {
     // compile the function using interval arithmetic, cache the result
     // so that multiple calls with the same argument don't trigger the
     // kinda expensive compilation process
-    var expression = meta[property]
-    var hiddenProperty = samplerName + '_Expression_' + property
-    var hiddenCompiled = samplerName + '_Compiled_' + property
+    const expression = meta[property]
+    const hiddenProperty = samplerName + '_Expression_' + property
+    const hiddenCompiled = samplerName + '_Compiled_' + property
     if (expression !== meta[hiddenProperty]) {
       meta[hiddenProperty] = expression
       meta[hiddenCompiled] = doCompile(expression)
@@ -62,20 +62,20 @@ function generateEvaluator (samplerName) {
   }
 
   /**
-   * Evaluates meta[property] with `variables`
+   * Evaluates meta[property] with `constiables`
    *
    * - Compiles meta[property] if it wasn't compiled already (also with cache
    *   check)
    * - Evaluates the resulting function with the merge of meta.scope and
-   *   `variables`
+   *   `constiables`
    *
    * @param {Object} meta
    * @param {String} property
-   * @param {Object} variables
+   * @param {Object} constiables
    * @returns {Number|Array} The builtIn evaluator returns a number, the
    * interval evaluator an array
    */
-  function evaluate (meta, property, variables) {
+  function evaluate (meta, property, constiables) {
     // e.g.
     //
     //  meta: {
@@ -83,12 +83,12 @@ function generateEvaluator (samplerName) {
     //    scope: { y: 3 }
     //  }
     //  property: 'fn'
-    //  variables:  { x: 3 }
+    //  constiables:  { x: 3 }
     //
     compileIfPossible(meta, property)
 
     return getCompiledExpression(meta, property).eval(
-      extend({}, meta.scope || {}, variables)
+      extend({}, meta.scope || {}, constiables)
     )
   }
 

@@ -4,9 +4,9 @@ import evaluate from '../evaluate'
 import utils from '../utils'
 
 export default function interval (chart) {
-  var minWidthHeight
-  var xScale = chart.meta.xScale
-  var yScale = chart.meta.yScale
+  let minWidthHeight
+  const xScale = chart.meta.xScale
+  const yScale = chart.meta.yScale
 
   function clampRange (vLo, vHi, gLo, gHi) {
     // issue 69
@@ -23,12 +23,12 @@ export default function interval (chart) {
     //   })
     //
     if (gLo > gHi) {
-      var t = gLo
+      const t = gLo
       gLo = gHi
       gHi = t
     }
-    var hi = Math.min(vHi, gHi)
-    var lo = Math.max(vLo, gLo)
+    const hi = Math.min(vHi, gHi)
+    const lo = Math.max(vLo, gLo)
     if (lo > hi) {
       // no overlap
       return [-minWidthHeight, 0]
@@ -36,31 +36,31 @@ export default function interval (chart) {
     return [lo, hi]
   }
 
-  var line = function (points, closed) {
-    var path = ''
-    var range = yScale.range()
-    var minY = Math.min.apply(Math, range)
-    var maxY = Math.max.apply(Math, range)
-    for (var i = 0, length = points.length; i < length; i += 1) {
+  const line = function (points, closed) {
+    let path = ''
+    const range = yScale.range()
+    const minY = Math.min.apply(Math, range)
+    const maxY = Math.max.apply(Math, range)
+    for (let i = 0, length = points.length; i < length; i += 1) {
       if (points[i]) {
-        var x = points[i][0]
-        var y = points[i][1]
-        var yLo = y.lo
-        var yHi = y.hi
+        const x = points[i][0]
+        const y = points[i][1]
+        let yLo = y.lo
+        let yHi = y.hi
         // if options.closed is set to true then one of the bounds must be zero
         if (closed) {
           yLo = Math.min(yLo, 0)
           yHi = Math.max(yHi, 0)
         }
         // points.scaledDX is added because of the stroke-width
-        var moveX = xScale(x.lo) + points.scaledDx / 2
-        var viewportY = clampRange(
+        const moveX = xScale(x.lo) + points.scaledDx / 2
+        const viewportY = clampRange(
           minY, maxY,
           isFinite(yHi) ? yScale(yHi) : -Infinity,
           isFinite(yLo) ? yScale(yLo) : Infinity
         )
-        var vLo = viewportY[0]
-        var vHi = viewportY[1]
+        const vLo = viewportY[0]
+        const vHi = viewportY[1]
         path += ' M ' + moveX + ' ' + vLo
         path += ' v ' + Math.max(vHi - vLo, minWidthHeight)
       }
@@ -70,11 +70,11 @@ export default function interval (chart) {
 
   function plotLine (selection) {
     selection.each(function (d) {
-      var el = plotLine.el = d3Select(this)
-      var index = d.index
-      var closed = d.closed
-      var evaluatedData = evaluate(chart, d)
-      var innerSelection = el.selectAll(':scope > path.line')
+      const el = plotLine.el = d3Select(this)
+      const index = d.index
+      const closed = d.closed
+      const evaluatedData = evaluate(chart, d)
+      const innerSelection = el.selectAll(':scope > path.line')
         .data(evaluatedData)
 
       // the min height/width of the rects drawn by the path generator

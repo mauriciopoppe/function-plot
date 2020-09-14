@@ -14,7 +14,6 @@ import helpers from './helpers'
 import datumDefaults from './datum-defaults'
 import globals from './globals'
 import * as graphTypes from './graph-types'
-import plugins from './plugins'
 import * as $eval from './helpers/eval'
 
 require('./polyfills')
@@ -136,7 +135,6 @@ function functionPlot (options) {
     this.line = d3Line()
       .x(function (d) { return self.meta.xScale(d[0]) })
       .y(function (d) { return self.meta.yScale(d[1]) })
-    console.log('creating scales')
   }
 
   Chart.prototype.internalVars = function () {
@@ -156,15 +154,12 @@ function functionPlot (options) {
     height = this.meta.height = (options.height || globals.DEFAULT_HEIGHT) -
       margin.top - margin.bottom
 
-    this.initializeAxes()
-
-    // TODO: move the initialization of the zoom somewhere else
     zoomBehavior = this.meta.zoomBehavior = d3Zoom()
-      // .scaleExtent([0.5, 32])
       .on('zoom', function onZoom (ev, target) {
         self.emit('all:zoom', ev, target)
       })
 
+    this.initializeAxes()
   }
 
   Chart.prototype.drawGraphWrapper = function () {
@@ -519,26 +514,6 @@ function functionPlot (options) {
     this.options.yAxis.domain = this.meta.yScale.domain()
   }
 
-  // TODO: refactor
-  Chart.prototype.programmaticZoom = function (xDomain, yDomain) {
-    const instance = this
-    d3.transition()
-      .duration(750)
-      .tween('zoom', function () {
-        const ix = d3.interpolate(xScale.domain(), xDomain)
-        const iy = d3.interpolate(yScale.domain(), yDomain)
-        return function (t) {
-          zoomBehavior
-            .x(xScale.domain(ix(t)))
-            .y(yScale.domain(iy(t)))
-          instance.draw()
-        }
-      })
-      .each('end', function () {
-        instance.emit('programmatic-zoom')
-      })
-  }
-
   Chart.prototype.getFontSize = function () {
     return Math.max(Math.max(width, height) / 50, 8)
   }
@@ -584,9 +559,15 @@ function functionPlot (options) {
         let xScaleClone = transform.rescaleX(self.meta.zoomBehavior.xScale).interpolate(d3InterpolateRound)
         let yScaleClone = transform.rescaleY(self.meta.zoomBehavior.yScale).interpolate(d3InterpolateRound)
 
-        // update the scales
-        self.meta.xScale = xScaleClone
-        self.meta.yScale = yScaleClone
+        // update the scales's metadata
+        // NOTE: setting self.meta.xScale = self.meta.zoomBehavior.xScale creates artifacts
+        // and weird lines
+        self.meta.xScale
+          .domain(xScaleClone.domain())
+          .range(xScaleClone.range())
+        self.meta.yScale
+          .domain(yScaleClone.domain())
+          .range(yScaleClone.range())
 
         // update the scales tied to the xAxis and yAxis
         self.meta.xAxis.scale(xScaleClone)
@@ -594,7 +575,7 @@ function functionPlot (options) {
       },
 
       'tip:update': function (x, y, index) {
-        const meta = self.root.datum().data[index]
+        const meta = self.root.merge(self.root.enter).datum().data[index]
         const title = meta.title || ''
         const format = meta.renderer || function (x, y) {
           return x.toFixed(3) + ', ' + y.toFixed(3)
@@ -613,8 +594,7 @@ function functionPlot (options) {
 
     const all = {
       mousemove: function (event, target) {
-        // const mouse = d3Pointer(instance.root.select('rect.zoom-and-drag').node())
-        const mouse = d3Pointer(event, self.root.select('rect.zoom-and-drag').node())
+        const mouse = d3Pointer(event)
         const coordinates = {
           x: self.meta.xScale.invert(mouse[0]),
           y: self.meta.yScale.invert(mouse[1])
@@ -634,7 +614,6 @@ function functionPlot (options) {
         // emit the position of the mouse to all the registered graphs
         self.emit('all:mousemove', event, target)
       }
-
     }
 
     Object.keys(events).forEach(function (e) {
@@ -665,4 +644,4 @@ function functionPlot (options) {
 }
 
 export default functionPlot
-export { plugins, $eval, globals, graphTypes }
+export { $eval, globals, graphTypes }

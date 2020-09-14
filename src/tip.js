@@ -17,9 +17,9 @@ export default function mouseTip (config) {
     owner: null
   }, config)
 
-  var MARGIN = 20
+  const MARGIN = 20
 
-  var line = d3Line()
+  const line = d3Line()
     .x(function (d) { return d[0] })
     .y(function (d) { return d[1] })
 
@@ -33,7 +33,7 @@ export default function mouseTip (config) {
   }
 
   function tip (selection) {
-    var join = selection
+    const join = selection
       .selectAll('g.tip')
       .data(function (d) { return [d] })
 
@@ -51,13 +51,12 @@ export default function mouseTip (config) {
         return [d]
       })
 
-    const tipInnerEnter = tip.enter = tipInnerJoin
-      .enter()
+    const tipInnerEnter = tip.enter = tipInnerJoin.enter()
       .append('g')
       .attr('class', 'inner-tip')
       .style('display', 'none')
       .each(function () {
-        var el = d3Select(this)
+        const el = d3Select(this)
         lineGenerator(el, [[0, -config.owner.meta.height - MARGIN], [0, config.owner.meta.height + MARGIN]])
           .attr('class', 'tip-x-line')
           .style('display', 'none')
@@ -76,22 +75,22 @@ export default function mouseTip (config) {
   }
 
   tip.move = function (coordinates) {
-    var i
-    var minDist = Infinity
-    var closestIndex = -1
-    var x, y
+    let i
+    let minDist = Infinity
+    let closestIndex = -1
+    let x, y
 
-    var selection = tip.join.merge(tip.enter)
-    var inf = 1e8
-    var meta = config.owner.meta
-    var data = selection.datum()
-    var xScale = meta.xScale
-    var yScale = meta.yScale
-    var width = meta.width
-    var height = meta.height
+    const selection = tip.join.merge(tip.enter)
+    const inf = 1e8
+    const meta = config.owner.meta
+    const data = selection.datum().data
+    const xScale = meta.xScale
+    const yScale = meta.yScale
+    const width = meta.width
+    const height = meta.height
 
-    var x0 = coordinates.x
-    var y0 = coordinates.y
+    const x0 = coordinates.x
+    const y0 = coordinates.y
 
     for (i = 0; i < data.length; i += 1) {
       // skipTip=true skips the evaluation in the datum
@@ -102,13 +101,14 @@ export default function mouseTip (config) {
         continue
       }
 
-      var range = data[i].range || [-inf, inf]
+      const range = data[i].range || [-inf, inf]
+      let candidateY
       if (x0 > range[0] - globals.TIP_X_EPS && x0 < range[1] + globals.TIP_X_EPS) {
         try {
-          var candidateY = builtInEvaluator(data[i], 'fn', { x: x0 })
+          candidateY = builtInEvaluator(data[i], 'fn', { x: x0 })
         } catch (e) { }
         if (utils.isValidNumber(candidateY)) {
-          var tDist = Math.abs(candidateY - y0)
+          const tDist = Math.abs(candidateY - y0)
           if (tDist < minDist) {
             minDist = tDist
             closestIndex = i
@@ -127,9 +127,10 @@ export default function mouseTip (config) {
 
       tip.show()
       config.owner.emit('tip:update', x, y, closestIndex)
-      var clampX = clamp(x, xScale.invert(-MARGIN), xScale.invert(width + MARGIN))
-      var clampY = clamp(y, yScale.invert(height + MARGIN), yScale.invert(-MARGIN))
-      var color = utils.color(data[closestIndex], closestIndex)
+      const clampX = clamp(x, xScale.invert(-MARGIN), xScale.invert(width + MARGIN))
+      const clampY = clamp(y, yScale.invert(height + MARGIN), yScale.invert(-MARGIN))
+      const color = utils.color(data[closestIndex], closestIndex)
+      selection.style('color', 'red')
       selection.attr('transform', 'translate(' + xScale(clampX) + ',' + yScale(clampY) + ')')
       selection.select('circle')
         .attr('fill', color)

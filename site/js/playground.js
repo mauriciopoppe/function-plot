@@ -13,7 +13,12 @@ functionPlot({
   // yAxis: { invert: true, },
   // xAxis: { invert: true, },
   data: [
-    { fn: 'x^2', sampler: 'builtIn', graphType: 'polyline'}
+    {
+      fn: 'x^2',
+      sampler: 'builtIn',
+      graphType: 'polyline',
+      nSamples: 300
+    }
   ]
 })
 

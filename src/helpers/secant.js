@@ -7,14 +7,14 @@ import datumDefaults from '../datum-defaults'
 import polyline from '../graph-types/polyline'
 
 export default function secant (chart) {
-  var secantDefaults = datumDefaults({
+  const secantDefaults = datumDefaults({
     isHelper: true,
     skipTip: true,
     skipBoundsCheck: true,
     nSamples: 2,
     graphType: 'polyline'
   })
-  var secant
+  let secant
 
   function computeSlope (scope) {
     scope.m = (scope.y1 - scope.y0) / (scope.x1 - scope.x0)
@@ -26,8 +26,8 @@ export default function secant (chart) {
     }
     secant.scope = secant.scope || {}
 
-    var x0 = secant.x0
-    var x1 = typeof secant.x1 === 'number' ? secant.x1 : Infinity
+    const x0 = secant.x0
+    const x1 = typeof secant.x1 === 'number' ? secant.x1 : Infinity
     extend(secant.scope, {
       x0: x0,
       x1: x1,
@@ -43,7 +43,7 @@ export default function secant (chart) {
   }
 
   function setMouseListener (d, secantObject) {
-    var self = this
+    const self = this
     if (secantObject.updateOnMouseMove && !secantObject.$$mouseListener) {
       secantObject.$$mouseListener = function (x1) {
         secantObject.x1 = x1
@@ -55,11 +55,11 @@ export default function secant (chart) {
   }
 
   function computeLines (d) {
-    var self = this
-    var data = []
+    const self = this
+    const data = []
     d.secants = d.secants || []
-    for (var i = 0; i < d.secants.length; i += 1) {
-      var secant = d.secants[i] = extend({}, secantDefaults, d.secants[i])
+    for (let i = 0; i < d.secants.length; i += 1) {
+      const secant = d.secants[i] = extend({}, secantDefaults, d.secants[i])
       // necessary to make the secant have the same color as d
       secant.index = d.index
       if (!secant.fn) {
@@ -73,9 +73,9 @@ export default function secant (chart) {
 
   secant = function (selection) {
     selection.each(function (d) {
-      var el = d3Select(this)
-      var data = computeLines.call(selection, d)
-      var innerSelection = el.selectAll('g.secant')
+      const el = d3Select(this)
+      const data = computeLines.call(selection, d)
+      const innerSelection = el.selectAll('g.secant')
         .data(data)
 
       const innerSelectionEnter = innerSelection.enter()

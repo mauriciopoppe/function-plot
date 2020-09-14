@@ -1,7 +1,7 @@
 import globals from './globals'
 import { interval, builtIn } from './samplers'
 
-var evalTypeFn = {
+const evalTypeFn = {
   interval,
   builtIn
 }
@@ -15,10 +15,10 @@ var evalTypeFn = {
  * @returns {Array}
  */
 function computeEndpoints (chart, d) {
-  var range = d.range || [-Infinity, Infinity]
-  var scale = chart.meta.xScale
-  var start = Math.max(scale.domain()[0], range[0])
-  var end = Math.min(scale.domain()[1], range[1])
+  const range = d.range || [-Infinity, Infinity]
+  const scale = chart.meta.xScale
+  const start = Math.max(scale.domain()[0], range[0])
+  const end = Math.min(scale.domain()[1], range[1])
   return [start, end]
 }
 
@@ -31,15 +31,14 @@ function computeEndpoints (chart, d) {
  * @returns {Array}
  */
 function evaluate (chart, d) {
-  var range = computeEndpoints(chart, d)
-  var data
-  var evalFn = evalTypeFn[d.sampler]
-  var nSamples = d.nSamples || Math.min(
+  const range = computeEndpoints(chart, d)
+  const evalFn = evalTypeFn[d.sampler]
+  const nSamples = d.nSamples || Math.min(
     globals.MAX_ITERATIONS,
     globals.DEFAULT_ITERATIONS || (chart.meta.width * 2)
   )
-  // console.log(nSamples)
-  data = evalFn(chart, d, range, nSamples)
+
+  const data = evalFn(chart, d, range, nSamples)
   // NOTE: it's impossible to listen for the first eval event
   // as the event is already fired when a listener is attached
   chart.emit('eval', data, d.index, d.isHelper)

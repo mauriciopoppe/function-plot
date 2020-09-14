@@ -1,4 +1,4 @@
-module.exports = {
-  zoomBox: require('./zoom-box'),
-  definiteIntegral: require('./definite-integral')
-}
+import zoomBox from './zoom-box'
+
+export { zoomBox }
+
