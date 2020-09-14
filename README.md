@@ -31,11 +31,11 @@ npm install function-plot
 
 ## Examples
 
-All the available options are described in the [`homepage`](http://mauriciopoppe.github.io/function-plot/)
+[`All the available options are described in the homepage`](http://mauriciopoppe.github.io/function-plot/)
 
 ## API
 
-```
+```javascript
 import functionPlot from 'function-plot'
 ```
 
