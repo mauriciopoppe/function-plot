@@ -5,7 +5,7 @@ import { axisLeft as d3AxisLeft, axisBottom as d3AxisBottom } from 'd3-axis'
 import { zoom as d3Zoom, zoomIdentity as d3ZoomIdentity } from 'd3-zoom'
 import { select as d3Select, pointer as d3Pointer } from 'd3-selection'
 import { interpolateRound as d3InterpolateRound } from 'd3-interpolate'
-import events from 'events'
+import { default as EventEmitter } from 'events'
 
 import annotations from './helpers/annotations'
 import mousetip from './tip'
@@ -20,22 +20,22 @@ require('./polyfills')
 const cache = []
 const d3Scale = { linear: d3ScaleLinear, log: d3ScaleLog }
 
-function functionPlot (options) {
-  options = options || {}
-  options.data = options.data || []
 
-  function Chart () {
+class Chart extends EventEmitter {
+  constructor(options) {
+    super()
+
     const n = Math.random()
     const letter = String.fromCharCode(Math.floor(n * 26) + 97)
     this.id = options.id = letter + n.toString(16).substr(2)
+    cache[this.id] = this
+
     this.linkedGraphs = [this]
     this.options = options
-    this.meta = null
-    cache[this.id] = this
+    // computed data
+    this.meta = {}
     this.setUpEventListeners()
   }
-
-  Chart.prototype = Object.create(events.prototype)
 
   /**
    * Rebuilds the entire graph from scratch recomputing
@@ -48,13 +48,13 @@ function functionPlot (options) {
    *
    * @returns {Chart}
    */
-  Chart.prototype.build = function () {
+  build() {
     this.internalVars()
     this.drawGraphWrapper()
     return this
   }
 
-  Chart.prototype.initializeAxes = function () {
+  initializeAxes() {
     const self = this
     const integerFormat = d3Format('~s')
     const floatFormat = d3Format('~e')
@@ -74,11 +74,11 @@ function functionPlot (options) {
       return self.meta.height * xDiff / self.meta.width
     }
 
-    options.xAxis = options.xAxis || {}
-    options.xAxis.type = options.xAxis.type || 'linear'
+    this.options.xAxis = this.options.xAxis || {}
+    this.options.xAxis.type = this.options.xAxis.type || 'linear'
 
-    options.yAxis = options.yAxis || {}
-    options.yAxis.type = options.yAxis.type || 'linear'
+    this.options.yAxis = this.options.yAxis || {}
+    this.options.yAxis.type = this.options.yAxis.type || 'linear'
 
     const xDomain = this.meta.xDomain = (function (axis) {
       if (axis.domain) {
@@ -91,7 +91,7 @@ function functionPlot (options) {
         return [1, 10]
       }
       throw Error('axis type ' + axis.type + ' unsupported')
-    })(options.xAxis)
+    })(this.options.xAxis)
 
     const yDomain = this.meta.yDomain = (function (axis) {
       if (axis.domain) {
@@ -104,7 +104,7 @@ function functionPlot (options) {
         return [1, 10]
       }
       throw Error('axis type ' + axis.type + ' unsupported')
-    })(options.yAxis)
+    })(this.options.yAxis)
 
     if (xDomain[0] >= xDomain[1]) {
       throw Error('the pair defining the x-domain is inverted')
@@ -113,18 +113,18 @@ function functionPlot (options) {
       throw Error('the pair defining the y-domain is inverted')
     }
 
-    this.meta.xScale = d3Scale[options.xAxis.type]()
+    this.meta.xScale = d3Scale[this.options.xAxis.type]()
       .domain(xDomain)
-      .range(options.xAxis.invert ? [this.meta.width, 0] : [0, this.meta.width])
-    this.meta.yScale = d3Scale[options.yAxis.type]()
+      .range(this.options.xAxis.invert ? [this.meta.width, 0] : [0, this.meta.width])
+    this.meta.yScale = d3Scale[this.options.yAxis.type]()
       .domain(yDomain)
-      .range(options.yAxis.invert ? [0, this.meta.height] : [this.meta.height, 0])
+      .range(this.options.yAxis.invert ? [0, this.meta.height] : [this.meta.height, 0])
 
     this.meta.xAxis = d3AxisBottom(this.meta.xScale)
-      .tickSize(options.grid ? -this.meta.height : 0)
+      .tickSize(this.options.grid ? -this.meta.height : 0)
       .tickFormat(format(this.meta.xScale))
     this.meta.yAxis = d3AxisLeft(this.meta.yScale)
-      .tickSize(options.grid ? -this.meta.width : 0)
+      .tickSize(this.options.grid ? -this.meta.width : 0)
       .tickFormat(format(this.meta.yScale))
 
     this.line = d3Line()
@@ -132,21 +132,19 @@ function functionPlot (options) {
       .y(function (d) { return self.meta.yScale(d[1]) })
   }
 
-  Chart.prototype.internalVars = function () {
+  internalVars() {
     const self = this
-    // measurements and other derived data
-    this.meta = {}
 
     let margin = this.meta.margin = { left: 30, right: 30, top: 20, bottom: 20 }
     // margin = this.meta.margin = {left: 0, right: 0, top: 20, bottom: 20}
     // if there's a title make the top margin bigger
-    if (options.title) {
+    if (this.options.title) {
       this.meta.margin.top = 40
     }
     // inner width/height
-    this.meta.width = (options.width || globals.DEFAULT_WIDTH) -
+    this.meta.width = (this.options.width || globals.DEFAULT_WIDTH) -
       margin.left - margin.right
-    this.meta.height = (options.height || globals.DEFAULT_HEIGHT) -
+    this.meta.height = (this.options.height || globals.DEFAULT_HEIGHT) -
       margin.top - margin.bottom
 
     this.meta.zoomBehavior = d3Zoom()
@@ -157,10 +155,10 @@ function functionPlot (options) {
     this.initializeAxes()
   }
 
-  Chart.prototype.drawGraphWrapper = function () {
-    const root = this.root = d3Select(options.target)
+  drawGraphWrapper () {
+    const root = this.root = d3Select(this.options.target)
       .selectAll('svg')
-      .data([options])
+      .data([this.options])
 
     // enter
     this.root.enter = root.enter()
@@ -184,7 +182,7 @@ function functionPlot (options) {
     this.draw()
 
     // helper to detect the closest fn to the cursor's current abscissa
-    const tip = this.tip = mousetip(Object.assign(options.tip || {}, { owner: this }))
+    const tip = this.tip = mousetip(Object.assign(this.options.tip || {}, { owner: this }))
     this.canvas.merge(this.canvas.enter)
       .call(tip)
 
@@ -192,7 +190,7 @@ function functionPlot (options) {
     this.setUpPlugins()
   }
 
-  Chart.prototype.buildTitle = function () {
+  buildTitle() {
     // join
     const selection = this.root.merge(this.root.enter)
       .selectAll('text.title')
@@ -209,13 +207,13 @@ function functionPlot (options) {
       .attr('font-size', 25)
       .attr('text-anchor', 'middle')
       .attr('alignment-baseline', 'middle')
-      .text(options.title)
+      .text(this.options.title)
 
     // exit
     selection.exit().remove()
   }
 
-  Chart.prototype.buildLegend = function () {
+  buildLegend() {
     // enter
     this.root.enter
       .append('text')
@@ -229,7 +227,7 @@ function functionPlot (options) {
       .attr('x', this.meta.width + this.meta.margin.left)
   }
 
-  Chart.prototype.buildCanvas = function () {
+  buildCanvas() {
     const self = this
 
     // enter
@@ -246,7 +244,7 @@ function functionPlot (options) {
     // enter + update
   }
 
-  Chart.prototype.buildClip = function () {
+  buildClip() {
     // (so that the functions don't overflow on zoom or drag)
     const id = this.id
     const defs = this.canvas.merge(this.canvas.enter)
@@ -280,7 +278,7 @@ function functionPlot (options) {
       .attr('fill', '#777')
   }
 
-  Chart.prototype.buildAxis = function () {
+  buildAxis() {
     // axis creation
     const canvasEnter = this.canvas.enter
     canvasEnter.append('g')
@@ -298,7 +296,7 @@ function functionPlot (options) {
       .call(this.meta.yAxis)
   }
 
-  Chart.prototype.buildAxisLabel = function () {
+  buildAxisLabel() {
     // axis labeling
     let xLabel, yLabel
     const canvas = this.canvas
@@ -346,7 +344,7 @@ function functionPlot (options) {
    * Draws each of the datums stored in data.options, to do a full
    * redraw call `instance.draw()`
    */
-  Chart.prototype.buildContent = function () {
+  buildContent() {
     const self = this
     const canvas = this.canvas
 
@@ -364,7 +362,7 @@ function functionPlot (options) {
       .attr('class', 'content')
 
     // helper line, x = 0
-    if (options.xAxis.type === 'linear') {
+    if (this.options.xAxis.type === 'linear') {
       const yOrigin = content.selectAll(':scope > path.y.origin')
         .data([ [[0, this.meta.yScale.domain()[0]], [0, this.meta.yScale.domain()[1]]] ])
       const yOriginEnter = yOrigin.enter()
@@ -377,7 +375,7 @@ function functionPlot (options) {
     }
 
     // helper line y = 0
-    if (options.yAxis.type === 'linear') {
+    if (this.options.yAxis.type === 'linear') {
       const xOrigin = content.selectAll(':scope > path.x.origin')
         .data([ [[this.meta.xScale.domain()[0], 0], [this.meta.xScale.domain()[1], 0]] ])
       const xOriginEnter = xOrigin.enter()
@@ -418,7 +416,7 @@ function functionPlot (options) {
       })
   }
 
-  Chart.prototype.buildZoomHelper = function () {
+  buildZoomHelper() {
     // dummy rect (detects the zoom + drag)
     const self = this
 
@@ -447,21 +445,21 @@ function functionPlot (options) {
       })
   }
 
-  Chart.prototype.setUpPlugins = function () {
-    const plugins = options.plugins || []
+  setUpPlugins() {
+    const plugins = this.options.plugins || []
     const self = this
     plugins.forEach(function (plugin) {
       plugin(self)
     })
   }
 
-  Chart.prototype.addLink = function () {
+  addLink() {
     for (let i = 0; i < arguments.length; i += 1) {
       this.linkedGraphs.push(arguments[i])
     }
   }
 
-  Chart.prototype.updateAxes = function () {
+  updateAxes() {
     const instance = this
     const canvas = instance.canvas.merge(instance.canvas.enter)
     canvas.select('.x.axis').call(instance.meta.xAxis)
@@ -476,17 +474,17 @@ function functionPlot (options) {
       .attr('opacity', 0.1)
   }
 
-  Chart.prototype.syncOptions = function () {
+  syncOptions() {
     // update the original options yDomain and xDomain
     this.options.xAxis.domain = this.meta.xScale.domain()
     this.options.yAxis.domain = this.meta.yScale.domain()
   }
 
-  Chart.prototype.getFontSize = function () {
+  getFontSize() {
     return Math.max(Math.max(this.meta.width, this.meta.height) / 50, 8)
   }
 
-  Chart.prototype.draw = function () {
+  draw() {
     const instance = this
     instance.emit('before:draw')
     instance.syncOptions()
@@ -495,9 +493,8 @@ function functionPlot (options) {
     instance.emit('after:draw')
   }
 
-  Chart.prototype.setUpEventListeners = function () {
+  setUpEventListeners() {
     const self = this
-
 
     const events = {
       mousemove: function (coordinates) {
@@ -514,7 +511,7 @@ function functionPlot (options) {
 
       zoom: function zoom ({ transform }, target) {
         // disable zoom
-        if (options.disableZoom) return
+        if (self.options.disableZoom) return
 
         if (!self.meta.zoomBehavior.xScale) {
           // the zoom behavior must work with a copy of the scale, the zoom behavior has its own state and assumes
@@ -605,10 +602,15 @@ function functionPlot (options) {
       self.on('all:' + e, all[e])
     })
   }
+}
+
+function functionPlot (options) {
+  options = options || {}
+  options.data = options.data || []
 
   let instance = cache[options.id]
   if (!instance) {
-    instance = new Chart()
+    instance = new Chart(options)
   }
   return instance.build()
 }

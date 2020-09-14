@@ -57,7 +57,7 @@ export default function secant (chart) {
     const data = []
     d.secants = d.secants || []
     for (let i = 0; i < d.secants.length; i += 1) {
-      const secant = d.secants[i] = extend({}, secantDefaults, d.secants[i])
+      const secant = d.secants[i] = Object.assign({}, secantDefaults, d.secants[i])
       // necessary to make the secant have the same color as d
       secant.index = d.index
       if (!secant.fn) {
