@@ -7,17 +7,17 @@
 //   }]
 // })
 
-window.f = functionPlot({
-  target: '#playground',
-  data: [
-    {
-      fn: 'x^2',
-      sampler: 'builtIn',
-      graphType: 'polyline',
-      nSamples: 300
-    }
-  ]
-})
+// window.f = functionPlot({
+//   target: '#playground',
+//   data: [
+//     {
+//       fn: 'x^2',
+//       sampler: 'builtIn',
+//       graphType: 'polyline',
+//       nSamples: 300
+//     }
+//   ]
+// })
 
 // functionPlot({
 //   target: '#playground',
@@ -80,3 +80,40 @@ window.f = functionPlot({
 //    fnType: 'implicit'
 //  }]
 //});
+
+
+var options = {
+  target: '#playground',
+  data: [{
+    fn: 'x'
+  }]
+};
+$('body').append('<button id="update">update</button>')
+$('#update').click(function () {
+  if (!options.title) {
+    // add a title, a tip and change the function to y = x * x
+    options.title = 'hello world';
+    options.tip = {
+      xLine: true,
+      yLine: true
+    };
+    options.data[0] = {
+      fn: 'x * x',
+      derivative: {
+        fn: '2 * x',
+        updateOnMouseMove: true
+      }
+    }
+  } else {
+    // remove the title and the tip
+    // update the function to be y = x
+    delete options.title;
+    delete options.tip;
+    options.data[0] =  {
+      fn: 'x'
+    }
+  }
+  functionPlot(options)
+})
+// initial plot
+functionPlot(options)
