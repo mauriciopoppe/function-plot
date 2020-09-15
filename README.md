@@ -335,4 +335,4 @@ Selectors (sass)
 [npm-image]: https://img.shields.io/npm/v/function-plot.svg?style=flat
 [npm-url]: https://npmjs.org/package/function-plot
 [travis-image]: https://travis-ci.org/mauriciopoppe/function-plot.svg?branch=master
-[travis-url]: https://travis-ci.org/mauriciopoppe/function-plot.svg?branch=master
+[travis-url]: https://travis-ci.org/github/mauriciopoppe/function-plot
