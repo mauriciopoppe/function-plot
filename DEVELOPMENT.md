@@ -12,7 +12,7 @@ Development page: `http://localhost:9966/playground.html`
 
 Deploy steps:
 
-- `npm run build` (make sure to commit the dist files after this command)
+- `npm run build`
 - `git push origin master`
 - `npm run deploy -- -- "Commit message"`
 

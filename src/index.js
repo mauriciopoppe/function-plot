@@ -531,7 +531,7 @@ class Chart extends EventEmitter {
         self.tip.hide()
       },
 
-      zoom: function zoom ({ transform }, target) {
+      zoom: function zoom ({ transform }) {
         // disable zoom
         if (self.options.disableZoom) return
 
@@ -580,8 +580,12 @@ class Chart extends EventEmitter {
         })
       },
 
-      zoom: function (event, target) {
+      zoom: function (event) {
         self.linkedGraphs.forEach(function (graph, i) {
+
+          // hack to synchronize the zoom state across all the instances
+          graph.draggable.node().__zoom = self.draggable.node().__zoom
+
           graph.emit('zoom', event)
           graph.draw()
         })
