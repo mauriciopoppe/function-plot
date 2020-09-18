@@ -12,14 +12,13 @@ export default function secant (chart) {
     nSamples: 2,
     graphType: 'polyline'
   })
-  let secant
 
   function computeSlope (scope) {
     scope.m = (scope.y1 - scope.y0) / (scope.x1 - scope.x0)
   }
 
   function updateLine (d, secant) {
-    if (!secant.hasOwnProperty('x0')) {
+    if (!('x0' in secant)) {
       throw Error('secant must have the property `x0` defined')
     }
     secant.scope = secant.scope || {}
@@ -69,7 +68,7 @@ export default function secant (chart) {
     return data
   }
 
-  secant = function (selection) {
+  const secant = function (selection) {
     selection.each(function (d) {
       const el = d3Select(this)
       const data = computeLines.call(selection, d)

@@ -1,7 +1,6 @@
 import builtInMathEval from 'built-in-math-eval'
 import intervalArithmeticEval from 'interval-arithmetic-eval'
 
-'use strict'
 const samplers = {
   interval: intervalArithmeticEval,
   builtIn: builtInMathEval

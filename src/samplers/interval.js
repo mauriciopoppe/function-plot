@@ -1,8 +1,9 @@
 import intervalArithmeticEval from 'interval-arithmetic-eval'
-const Interval = intervalArithmeticEval.Interval
 
 import { interval as evaluate } from '../helpers/eval'
 import utils from '../utils'
+
+const Interval = intervalArithmeticEval.Interval
 
 // disable the use of typed arrays in interval-arithmetic to improve the performance
 intervalArithmeticEval.policies.disableRounding()

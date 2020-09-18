@@ -9,8 +9,8 @@ const utils = {
   },
 
   space: function (chart, range, n) {
-    var lo = range[0]
-    var hi = range[1]
+    const lo = range[0]
+    const hi = range[1]
     if (chart.options.xAxis.type === 'log') {
       return logspace(log10(lo), log10(hi), n)
     }
@@ -19,7 +19,7 @@ const utils = {
   },
 
   getterSetter: function (config, option) {
-    var me = this
+    const me = this
     this[option] = function (value) {
       if (!arguments.length) {
         return config[option]

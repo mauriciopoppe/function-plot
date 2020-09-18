@@ -8,7 +8,6 @@ import clamp from 'clamp'
 import utils from '../utils'
 import evaluate from '../evaluate'
 
-
 export default function polyline (chart) {
   function plotLine (selection) {
     selection.each(function (d) {

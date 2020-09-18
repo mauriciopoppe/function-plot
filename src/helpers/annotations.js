@@ -2,7 +2,6 @@ import { line as d3Line } from 'd3-shape'
 import { select as d3Select } from 'd3-selection'
 
 export default function annotations (options) {
-  let annotations
   const xScale = options.owner.meta.xScale
   const yScale = options.owner.meta.yScale
 
@@ -10,7 +9,7 @@ export default function annotations (options) {
     .x(function (d) { return d[0] })
     .y(function (d) { return d[1] })
 
-  annotations = function (parentSelection) {
+  return function (parentSelection) {
     parentSelection.each(function () {
       // join
       const current = d3Select(this)
@@ -29,9 +28,9 @@ export default function annotations (options) {
       const path = selection.merge(enter).selectAll('path')
         .data(function (d) {
           if ('x' in d) {
-            return [ [[0, yRange[0]], [0, yRange[1]]] ]
+            return [[[0, yRange[0]], [0, yRange[1]]]]
           } else {
-            return [ [[xRange[0], 0], [xRange[1], 0]] ]
+            return [[[xRange[0], 0], [xRange[1], 0]]]
           }
         })
       path.enter()
@@ -85,6 +84,4 @@ export default function annotations (options) {
         .remove()
     })
   }
-
-  return annotations
 }

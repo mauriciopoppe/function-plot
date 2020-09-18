@@ -1,12 +1,12 @@
 export default function datumDefaults (d) {
   // default graphType uses boxes i.e. 2d intervals
-  if (!(d.hasOwnProperty('graphType'))) {
+  if (!('graphType' in d)) {
     d.graphType = 'interval'
   }
 
   // if the graphType is not `interval` then the sampler is `builtIn`
   // because the interval sampler returns a box instead of a point
-  if (!(d.hasOwnProperty('sampler'))) {
+  if (!('sampler' in d)) {
     d.sampler = d.graphType !== 'interval'
       ? 'builtIn'
       : 'interval'
@@ -14,7 +14,7 @@ export default function datumDefaults (d) {
 
   // TODO: handle default fnType
   // default `fnType` is linear
-  if (!(d.hasOwnProperty('fnType'))) {
+  if (!('fnType' in d)) {
     d.fnType = 'linear'
   }
 

@@ -12,7 +12,6 @@ export default function derivative(chart) {
     nSamples: 2,
     graphType: 'polyline'
   })
-  let derivative
 
   function computeLine (d) {
     if (!d.derivative) {
@@ -50,7 +49,7 @@ export default function derivative(chart) {
     }
   }
 
-  derivative = function (selection) {
+  const derivative = function (selection) {
     selection.each(function (d) {
       const el = d3Select(this)
       const data = computeLine.call(selection, d)
