@@ -43,8 +43,8 @@ export default function secant (chart) {
   function setMouseListener (d, secantObject) {
     const self = this
     if (secantObject.updateOnMouseMove && !secantObject.$$mouseListener) {
-      secantObject.$$mouseListener = function (x1) {
-        secantObject.x1 = x1
+      secantObject.$$mouseListener = function ({ x }) {
+        secantObject.x1 = x
         updateLine(d, secantObject)
         secant(self)
       }

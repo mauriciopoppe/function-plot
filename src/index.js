@@ -2,10 +2,10 @@ import { line as d3Line } from 'd3-shape'
 import { format as d3Format } from 'd3-format'
 import { scaleLinear as d3ScaleLinear, scaleLog as d3ScaleLog } from 'd3-scale'
 import { axisLeft as d3AxisLeft, axisBottom as d3AxisBottom } from 'd3-axis'
-import { zoom as d3Zoom, zoomIdentity as d3ZoomIdentity } from 'd3-zoom'
+import { zoom as d3Zoom } from 'd3-zoom'
 import { select as d3Select, pointer as d3Pointer } from 'd3-selection'
 import { interpolateRound as d3InterpolateRound } from 'd3-interpolate'
-import { default as EventEmitter } from 'events'
+import EventEmitter from 'events'
 
 import annotations from './helpers/annotations'
 import mousetip from './tip'
@@ -54,7 +54,7 @@ class Chart extends EventEmitter {
   internalVars() {
     const self = this
 
-    let margin = this.meta.margin = { left: 40, right: 20, top: 20, bottom: 20 }
+    const margin = this.meta.margin = { left: 40, right: 20, top: 20, bottom: 20 }
     // if there's a title make the top margin bigger
     if (this.options.title) {
       this.meta.margin.top = 40
@@ -91,7 +91,7 @@ class Chart extends EventEmitter {
     const self = this
     const integerFormat = d3Format('~s')
     const floatFormat = d3Format('~e')
-    const format = function (scale) {
+    const format = function () {
       return function (d) {
         const isInteger = d === +d && d === (d | 0)
         if (!isInteger) {
@@ -251,8 +251,6 @@ class Chart extends EventEmitter {
   }
 
   buildCanvas() {
-    const self = this
-
     // enter
     const canvas = this.canvas = this.root.merge(this.root.enter)
       .selectAll('.canvas')
@@ -321,10 +319,9 @@ class Chart extends EventEmitter {
 
   buildAxisLabel() {
     // axis labeling
-    let xLabel, yLabel
     const canvas = this.canvas
 
-    xLabel = canvas.merge(canvas.enter)
+    const xLabel = canvas.merge(canvas.enter)
       .selectAll('text.x.axis-label')
       .data(function (d) {
         return [d.xAxis.label].filter(Boolean)
@@ -341,7 +338,7 @@ class Chart extends EventEmitter {
 
     xLabel.exit().remove()
 
-    yLabel = canvas.merge(canvas.enter)
+    const yLabel = canvas.merge(canvas.enter)
       .selectAll('text.y.axis-label')
       .data(function (d) {
         return [d.yAxis.label].filter(Boolean)
@@ -387,7 +384,10 @@ class Chart extends EventEmitter {
     // helper line, x = 0
     if (this.options.xAxis.type === 'linear') {
       const yOrigin = content.merge(contentEnter).selectAll(':scope > path.y.origin')
-        .data([ [[0, this.meta.yScale.domain()[0]], [0, this.meta.yScale.domain()[1]]] ])
+        .data([[
+          [0, this.meta.yScale.domain()[0]],
+          [0, this.meta.yScale.domain()[1]]
+        ]])
       const yOriginEnter = yOrigin.enter()
         .append('path')
         .attr('class', 'y origin')
@@ -400,7 +400,7 @@ class Chart extends EventEmitter {
     // helper line y = 0
     if (this.options.yAxis.type === 'linear') {
       const xOrigin = content.merge(contentEnter).selectAll(':scope > path.x.origin')
-        .data([ [[this.meta.xScale.domain()[0], 0], [this.meta.xScale.domain()[1], 0]] ])
+        .data([[[this.meta.xScale.domain()[0], 0], [this.meta.xScale.domain()[1], 0]]])
       const xOriginEnter = xOrigin.enter()
         .append('path')
         .attr('class', 'x origin')
@@ -535,8 +535,8 @@ class Chart extends EventEmitter {
         // disable zoom
         if (self.options.disableZoom) return
 
-        let xScaleClone = transform.rescaleX(self.meta.zoomBehavior.xScale).interpolate(d3InterpolateRound)
-        let yScaleClone = transform.rescaleY(self.meta.zoomBehavior.yScale).interpolate(d3InterpolateRound)
+        const xScaleClone = transform.rescaleX(self.meta.zoomBehavior.xScale).interpolate(d3InterpolateRound)
+        const yScaleClone = transform.rescaleY(self.meta.zoomBehavior.yScale).interpolate(d3InterpolateRound)
 
         // update the scales's metadata
         // NOTE: setting self.meta.xScale = self.meta.zoomBehavior.xScale creates artifacts and weird lines
@@ -548,7 +548,7 @@ class Chart extends EventEmitter {
           .range(yScaleClone.range())
       },
 
-      'tip:update': function (x, y, index) {
+      'tip:update': function ({ x, y, index }) {
         const meta = self.root.merge(self.root.enter).datum().data[index]
         const title = meta.title || ''
         const format = meta.renderer || function (x, y) {
@@ -581,8 +581,7 @@ class Chart extends EventEmitter {
       },
 
       zoom: function (event) {
-        self.linkedGraphs.forEach(function (graph, i) {
-
+        self.linkedGraphs.forEach(function (graph) {
           // hack to synchronize the zoom state across all the instances
           graph.draggable.node().__zoom = self.draggable.node().__zoom
 

@@ -10,7 +10,7 @@ export default function mouseTip (config) {
   config = Object.assign({
     xLine: false,
     yLine: false,
-    renderer: function (x, y, index) {
+    renderer: function (x, y) {
       return '(' + x.toFixed(3) + ', ' + y.toFixed(3) + ')'
     },
     owner: null
@@ -125,7 +125,7 @@ export default function mouseTip (config) {
       y = builtInEvaluator(data[closestIndex], 'fn', { x: x })
 
       tip.show()
-      config.owner.emit('tip:update', x, y, closestIndex)
+      config.owner.emit('tip:update', { x, y, index: closestIndex })
       const clampX = clamp(x, xScale.invert(-MARGIN), xScale.invert(width + MARGIN))
       const clampY = clamp(y, yScale.invert(height + MARGIN), yScale.invert(-MARGIN))
       const color = utils.color(data[closestIndex], closestIndex)
