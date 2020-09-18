@@ -18,7 +18,7 @@ export default function annotations (options) {
         .data(function (d) { return d.annotations || [] })
 
       // enter
-      selection.enter()
+      const enter = selection.enter()
         .append('g')
         .attr('class', 'annotations')
 
@@ -26,9 +26,9 @@ export default function annotations (options) {
       // - path
       const yRange = yScale.range()
       const xRange = xScale.range()
-      const path = selection.selectAll('path')
+      const path = selection.merge(enter).selectAll('path')
         .data(function (d) {
-          if (d.hasOwnProperty('x')) {
+          if ('x' in d) {
             return [ [[0, yRange[0]], [0, yRange[1]]] ]
           } else {
             return [ [[xRange[0], 0], [xRange[1], 0]] ]
@@ -42,11 +42,11 @@ export default function annotations (options) {
 
       // enter + update
       // - text
-      const text = selection.selectAll('text')
+      const text = selection.merge(enter).selectAll('text')
         .data(function (d) {
           return [{
             text: d.text || '',
-            hasX: d.hasOwnProperty('x')
+            hasX: 'x' in d
           }]
         })
       text.enter()
@@ -71,9 +71,9 @@ export default function annotations (options) {
 
       // enter + update
       // move group
-      selection
+      selection.merge(enter)
         .attr('transform', function (d) {
-          if (d.hasOwnProperty('x')) {
+          if ('x' in d) {
             return 'translate(' + xScale(d.x) + ', 0)'
           } else {
             return 'translate(0, ' + yScale(d.y) + ')'
