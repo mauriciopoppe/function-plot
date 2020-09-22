@@ -16,7 +16,7 @@ Deploy steps:
 - `git push origin master`
 - `npm run deploy -- -- "Commit message"`
 
-Release steps (do deploy first):
+Release steps **(do deploy first)**:
 
 - `npm version major|minor|patch`
 - `npm publish`

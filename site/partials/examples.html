@@ -702,4 +702,18 @@ functionPlot({
       }
     }
   }]
+})
+})
+
+$('#recipes').load('partials/recipes.html')
+$('#examples').load('partials/examples.html', function () {
+$(document).trigger('markupLoaded')
+$('pre code').each(function (i, block) {
+  hljs.highlightBlock(block)
+})
+
+$('#p-slider').on('change', function () {
+  var value = +this.value;
+  $('#p-slider-value').html(value)
+})
 })</code></pre></div></div><div class="col-md-6 center-block demos"><span id="built-in-eval-function" class="graph"></span><span id="interval-arithmetic-eval-function" class="graph"></span></div></div></div></div>

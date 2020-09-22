@@ -30,8 +30,19 @@ interface ChartMetaMargin {
 }
 
 export interface ChartMeta {
+  /**
+   * graph's left, right, top, bottom margins
+   */
   margin?: ChartMetaMargin
+
+  /**
+   * width of the canvas (minus the margins)
+   */
   width?: number
+
+  /**
+   * height of the canvas (minus the margins)
+   */
   height?: number
   zoomBehavior?: any
   xScale?: ScaleLinear<number, number> // | ScaleLogarithmic<number, number>
@@ -42,6 +53,32 @@ export interface ChartMeta {
   yDomain?: number[]
 }
 
+/**
+ * An instance can subscribe to any of the following events by doing `instance.on([eventName], callback)`,
+ * events can be triggered by doing `instance.emit([eventName][, params])`
+ *
+ * - `mouseover` fired whenever the mouse is over the canvas
+ * - `mousemove` fired whenever the mouse is moved inside the canvas, callback params: a single object `{x: number, y: number}` (in canvas space
+ coordinates)
+ * - `mouseout` fired whenever the mouse is moved outside the canvas
+ * - `before:draw` fired before drawing all the graphs
+ * - `after:draw` fired after drawing all the graphs
+ * - `zoom:scaleUpdate` fired whenever the scale of another graph is updated, callback params `xScale`, `yScale`
+ (x-scale and y-scale of another graph whose scales were updated)
+ * - `tip:update` fired whenever the tip position is updated, callback params `{x, y, index}` (in canvas
+ space coordinates, `index` is the index of the graph where the tip is on top of)
+ * - `eval` fired whenever the sampler evaluates a function, callback params `data` (an array of segment/points),
+ `index` (the index of datum in the `data` array), `isHelper` (true if the data is created for a helper e.g.
+ for the derivative/secant)
+ *
+ * The following events are dispatched to all the linked graphs
+ *
+ * - `all:mouseover` same as `mouseover` but it's dispatched in each linked graph
+ * - `all:mousemove` same as `mousemove` but it's dispatched in each linked graph
+ * - `all:mouseout` same as `mouseout` but it's dispatched in each linked graph
+ * - `all:zoom:scaleUpdate` same as `zoom:scaleUpdate` but it's dispatched in each linked graph
+ * - `all:zoom` fired whenever there's scaling/translation on the graph, dispatched on all the linked graphs
+ */
 export class Chart extends EventEmitter.EventEmitter {
   static cache: Record<string, Chart> = {}
 
@@ -49,14 +86,39 @@ export class Chart extends EventEmitter.EventEmitter {
   readonly markerId: string
   public readonly options: FunctionPlotOptions
   public meta: ChartMeta
+
+  /**
+   * Array of function-plot instances linked to the events of this instance,
+   i.e. when the zoom event is dispatched on this instance it's also dispatched on all the instances of
+   this array
+   */
   private linkedGraphs: Array<Chart>
   private line: Line<[number, number]>
 
-  private root: any
-  private tip: any
-  private canvas: any
-  private content: any
-  private draggable: any
+  /**
+   * `svg` element that holds the graph (canvas + title + axes)
+   */
+  public root: any
+
+  /**
+   * Element that holds the tip
+   */
+  public tip: any
+
+  /**
+   * `g.canvas` element that holds the area where the graphs are plotted (clipped with a mask)
+   */
+  public canvas: any
+
+  /**
+   * Element that holds the canvas where the functions are drawn
+   */
+  public content: any
+
+  /**
+   * Draggable element that receives zoom and pan events
+   */
+  public draggable: any
 
   constructor(options: FunctionPlotOptions) {
     super()
