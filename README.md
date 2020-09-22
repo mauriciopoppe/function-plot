@@ -15,7 +15,7 @@ is evaluated again with the new bounds, result: infinite graphs!
 
 [![Edit function-plot](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/muddy-cdn-ibl5x?fontsize=14&hidenavigation=1&theme=light)
 
-[![image](https://user-images.githubusercontent.com/1616682/93041565-a9a84980-f601-11ea-900e-4e6809b5fa96.png)](https://observablehq.com/@mauriciopoppe/function-plot), 
+[![image](https://user-images.githubusercontent.com/1616682/93041565-a9a84980-f601-11ea-900e-4e6809b5fa96.png)](https://observablehq.com/@mauriciopoppe/function-plot),
 
 Thanks to [@liuyao12](https://github.com/liuyao12) for the initial version of the Observable notebook, you can check his own version here https://beta.observablehq.com/@liuyao12/function-plot
 
@@ -36,7 +36,7 @@ import functionPlot from 'function-plot'
 functionPlot(options)
 ```
 
-[`All the available options are described in the docs`](http://mauriciopoppe.github.io/function-plot/docs/)
+[`All the available options are described in the docs`](https://mauriciopoppe.github.io/function-plot/docs/interfaces/_src_types_.functionplotoptions.html)
 
 ## License
 
