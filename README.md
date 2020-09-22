@@ -4,7 +4,7 @@
 [![Build Status][travis-image]][travis-url]
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-blue)](https://github.com/feross/standard)
 
-![image](https://user-images.githubusercontent.com/1616682/93912098-23060300-fcb8-11ea-823f-be8dfe9c24b9.png)
+[![image](https://user-images.githubusercontent.com/1616682/93912098-23060300-fcb8-11ea-823f-be8dfe9c24b9.png)](http://mauriciopoppe.github.io/function-plot/)
 
 Function Plot is a powerful library built on top of <a href="http://d3js.org/">D3.js</a> whose purpose
 is to render functions with little configuration (think of it as a little clone of Google's plotting
