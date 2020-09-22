@@ -1,11 +1,14 @@
-import { line as d3Line } from 'd3-shape'
+import { line as d3Line, Line } from 'd3-shape'
 import { format as d3Format } from 'd3-format'
-import { scaleLinear as d3ScaleLinear, scaleLog as d3ScaleLog } from 'd3-scale'
-import { axisLeft as d3AxisLeft, axisBottom as d3AxisBottom } from 'd3-axis'
+import { scaleLinear as d3ScaleLinear, scaleLog as d3ScaleLog, ScaleLinear, ScaleLogarithmic } from 'd3-scale'
+import { axisLeft as d3AxisLeft, axisBottom as d3AxisBottom, Axis } from 'd3-axis'
 import { zoom as d3Zoom } from 'd3-zoom'
-import { select as d3Select, pointer as d3Pointer } from 'd3-selection'
+// @ts-ignore
+import { select as d3Select, pointer as d3Pointer, Selection } from 'd3-selection'
 import { interpolateRound as d3InterpolateRound } from 'd3-interpolate'
 import EventEmitter from 'events'
+
+import { FunctionPlotOptions, FunctionPlotDatum } from './function-plot'
 
 import annotations from './helpers/annotations'
 import mousetip from './tip'
@@ -19,13 +22,49 @@ require('./polyfills')
 
 const d3Scale = { linear: d3ScaleLinear, log: d3ScaleLog }
 
-class Chart extends EventEmitter {
-  constructor(options) {
+interface ChartMetaMargin {
+  left?: number
+  right?: number
+  top?: number
+  bottom?: number
+}
+
+export interface ChartMeta {
+  margin?: ChartMetaMargin
+  width?: number
+  height?: number
+  zoomBehavior?: any
+  xScale?: ScaleLinear<number, number> // | ScaleLogarithmic<number, number>
+  yScale?: ScaleLinear<number, number> // | ScaleLogarithmic<number, number>
+  xAxis?: Axis<any>
+  yAxis?: Axis<any>
+  xDomain?: number[]
+  yDomain?: number[]
+}
+
+export class Chart extends EventEmitter.EventEmitter {
+  static cache: Record<string, Chart> = {}
+
+  private readonly id: string
+  readonly markerId: string
+  public readonly options: FunctionPlotOptions
+  public meta: ChartMeta
+  private linkedGraphs: Array<Chart>
+  private line: Line<[number, number]>
+
+  private root: any
+  private tip: any
+  private canvas: any
+  private content: any
+  private draggable: any
+
+  constructor(options: FunctionPlotOptions) {
     super()
 
     const n = Math.random()
     const letter = String.fromCharCode(Math.floor(n * 26) + 97)
     this.id = options.id = letter + n.toString(16).substr(2)
+    this.markerId = this.id + '-marker'
     Chart.cache[this.id] = this
 
     this.linkedGraphs = [this]
@@ -92,7 +131,7 @@ class Chart extends EventEmitter {
     const integerFormat = d3Format('~s')
     const floatFormat = d3Format('~e')
     const format = function () {
-      return function (d) {
+      return function (d: number) {
         const isInteger = d === +d && d === (d | 0)
         if (!isInteger) {
           return floatFormat(d)
@@ -101,7 +140,7 @@ class Chart extends EventEmitter {
       }
     }
 
-    function computeYScale (xScale) {
+    function computeYScale (xScale: number[]) {
       // assumes that xScale is a linear scale
       const xDiff = xScale[1] - xScale[0]
       return self.meta.height * xDiff / self.meta.width
@@ -165,13 +204,13 @@ class Chart extends EventEmitter {
     }
     this.meta.xAxis
       .tickSize(this.options.grid ? -this.meta.height : 0)
-      .tickFormat(format(this.meta.xScale))
+      .tickFormat(format())
     if (!this.meta.yAxis) {
       this.meta.yAxis = d3AxisLeft(this.meta.yScale)
     }
     this.meta.yAxis
       .tickSize(this.options.grid ? -this.meta.width : 0)
-      .tickFormat(format(this.meta.yScale))
+      .tickFormat(format())
 
     this.line = d3Line()
       .x(function (d) { return self.meta.xScale(d[0]) })
@@ -217,7 +256,7 @@ class Chart extends EventEmitter {
     // join
     const selection = this.root.merge(this.root.enter)
       .selectAll('text.title')
-      .data(function (d) {
+      .data(function (d: FunctionPlotOptions) {
         return [d.title].filter(Boolean)
       })
 
@@ -254,7 +293,7 @@ class Chart extends EventEmitter {
     // enter
     const canvas = this.canvas = this.root.merge(this.root.enter)
       .selectAll('.canvas')
-      .data(function (d) {
+      .data(function (d: FunctionPlotOptions) {
         return [d]
       })
 
@@ -283,7 +322,6 @@ class Chart extends EventEmitter {
       .attr('height', this.meta.height)
 
     // marker clip (for vectors)
-    this.markerId = this.id + '-marker'
     defs.append('clipPath')
       .append('marker')
       .attr('id', this.markerId)
@@ -323,7 +361,7 @@ class Chart extends EventEmitter {
 
     const xLabel = canvas.merge(canvas.enter)
       .selectAll('text.x.axis-label')
-      .data(function (d) {
+      .data(function (d: FunctionPlotOptions) {
         return [d.xAxis.label].filter(Boolean)
       })
     const xLabelEnter = xLabel.enter()
@@ -334,13 +372,13 @@ class Chart extends EventEmitter {
     xLabel.merge(xLabelEnter)
       .attr('x', this.meta.width)
       .attr('y', this.meta.height - 6)
-      .text(function (d) { return d })
+      .text(function (d: string) { return d })
 
     xLabel.exit().remove()
 
     const yLabel = canvas.merge(canvas.enter)
       .selectAll('text.y.axis-label')
-      .data(function (d) {
+      .data(function (d: FunctionPlotOptions) {
         return [d.yAxis.label].filter(Boolean)
       })
 
@@ -353,7 +391,7 @@ class Chart extends EventEmitter {
       .attr('transform', 'rotate(-90)')
 
     yLabel.merge(yLabelEnter)
-      .text(function (d) { return d })
+      .text(function (d: string) { return d })
 
     yLabel.exit().remove()
   }
@@ -373,7 +411,7 @@ class Chart extends EventEmitter {
 
     const content = this.content = canvas.merge(canvas.enter)
       .selectAll(':scope > g.content')
-      .data(function (d) { return [d] })
+      .data(function (d: FunctionPlotOptions) { return [d] })
 
     // g tag clipped to hold the data
     const contentEnter = content.enter()
@@ -419,7 +457,7 @@ class Chart extends EventEmitter {
     // - for each datum determine the sampler to use
     const graphs = content.merge(contentEnter)
       .selectAll(':scope > g.graph')
-      .data(d => d.data.map(datumDefaults))
+      .data((d: FunctionPlotOptions) => d.data.map(datumDefaults))
 
     // enter
     const graphsEnter = graphs
@@ -429,7 +467,7 @@ class Chart extends EventEmitter {
 
     // enter + update
     graphs.merge(graphsEnter)
-      .each(function (d, index) {
+      .each(function (d: FunctionPlotDatum, index: number) {
         // additional options needed in the graph-types/helpers
         d.index = index
 
@@ -450,13 +488,13 @@ class Chart extends EventEmitter {
       .attr('class', 'zoom-and-drag')
       .style('fill', 'none')
       .style('pointer-events', 'all')
-      .on('mouseover', function (event) {
+      .on('mouseover', function (event: any) {
         self.emit('all:mouseover', event)
       })
-      .on('mouseout', function (event) {
+      .on('mouseout', function (event: any) {
         self.emit('all:mouseout', event)
       })
-      .on('mousemove', function (event) {
+      .on('mousemove', function (event: any) {
         self.emit('all:mousemove', event)
       })
 
@@ -519,7 +557,7 @@ class Chart extends EventEmitter {
     const self = this
 
     const events = {
-      mousemove: function (coordinates) {
+      mousemove: function (coordinates: {x: number, y: number}) {
         self.tip.move(coordinates)
       },
 
@@ -531,7 +569,7 @@ class Chart extends EventEmitter {
         self.tip.hide()
       },
 
-      zoom: function zoom ({ transform }) {
+      zoom: function zoom ({ transform }: any) {
         // disable zoom
         if (self.options.disableZoom) return
 
@@ -548,10 +586,10 @@ class Chart extends EventEmitter {
           .range(yScaleClone.range())
       },
 
-      'tip:update': function ({ x, y, index }) {
+      'tip:update': function ({ x, y, index }: any) {
         const meta = self.root.merge(self.root.enter).datum().data[index]
         const title = meta.title || ''
-        const format = meta.renderer || function (x, y) {
+        const format = meta.renderer || function (x: number, y: number) {
           return x.toFixed(3) + ', ' + y.toFixed(3)
         }
 
@@ -568,7 +606,7 @@ class Chart extends EventEmitter {
 
     // all represents events that can be propagated to all the instances (including this one)
     const all = {
-      mousemove: function (event) {
+      mousemove: function (event: any) {
         const mouse = d3Pointer(event, self.draggable.node())
         const coordinates = {
           x: self.meta.xScale.invert(mouse[0]),
@@ -580,7 +618,7 @@ class Chart extends EventEmitter {
         })
       },
 
-      zoom: function (event) {
+      zoom: function (event: any) {
         self.linkedGraphs.forEach(function (graph) {
           // hack to synchronize the zoom state across all the instances
           graph.draggable.node().__zoom = self.draggable.node().__zoom
@@ -598,6 +636,7 @@ class Chart extends EventEmitter {
       // create an event for each event existing on `events` in the form 'all:' event
       // e.g. all:mouseover all:mouseout
       // the objective is that all the linked graphs receive the same event as the current graph
+      // @ts-ignore
       !all[e] && self.on('all:' + e, function () {
         const args = Array.prototype.slice.call(arguments)
         self.linkedGraphs.forEach(function (graph) {
@@ -607,17 +646,18 @@ class Chart extends EventEmitter {
         })
       })
 
+      // @ts-ignore
       self.on(e, events[e])
     })
 
     Object.keys(all).forEach(function (e) {
+      // @ts-ignore
       self.on('all:' + e, all[e])
     })
   }
 }
-Chart.cache = []
 
-function functionPlot (options = {}) {
+function functionPlot (options: FunctionPlotOptions = {id: null, target: null}) {
   options.data = options.data || []
   let instance = Chart.cache[options.id]
   if (!instance) {

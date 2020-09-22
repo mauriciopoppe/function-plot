@@ -1,4 +1,4 @@
-module.exports = async () => {
+module.exports = () => {
   return {
     rootDir: 'src',
     preset: 'jest-puppeteer'

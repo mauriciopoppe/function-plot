@@ -1,14 +1,17 @@
-import { select as d3Select } from 'd3-selection'
+import {select as d3Select, Selection} from 'd3-selection'
 import { hsl as d3Hsl } from 'd3-color'
 
 import utils from '../utils'
 import evaluate from '../evaluate'
 
-export default function scatter (chart) {
+import { Chart } from '../index'
+import { FunctionPlotDatum } from '../function-plot'
+
+export default function scatter (chart: Chart) {
   const xScale = chart.meta.xScale
   const yScale = chart.meta.yScale
 
-  function scatter (selection) {
+  function scatter (selection: Selection<any, FunctionPlotDatum, any, any>) {
     selection.each(function (d) {
       let i, j
       const index = d.index
@@ -32,7 +35,7 @@ export default function scatter (chart) {
         .append('circle')
 
       innerSelection.merge(innerSelectionEnter)
-        .attr('fill', d3Hsl(color.toString()).brighter(1.5))
+        .attr('fill', d3Hsl(color.toString()).brighter(1.5).hex())
         .attr('stroke', color)
         .attr('opacity', 0.7)
         .attr('r', 1)

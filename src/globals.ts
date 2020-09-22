@@ -17,7 +17,9 @@ const Globals = {
   }),
   DEFAULT_WIDTH: 550,
   DEFAULT_HEIGHT: 350,
-  TIP_X_EPS: 1
+  TIP_X_EPS: 1,
+  DEFAULT_ITERATIONS: Infinity,
+  MAX_ITERATIONS: 0
 }
 
 Globals.DEFAULT_ITERATIONS = null

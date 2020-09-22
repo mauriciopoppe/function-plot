@@ -1,10 +1,13 @@
-import { select as d3Select } from 'd3-selection'
+import { select as d3Select, Selection } from 'd3-selection'
 
-import polyline from '../graph-types/polyline'
+import { polyline } from '../graph-types/'
 import { builtIn as builtInEvaluator } from './eval'
 import datumDefaults from '../datum-defaults'
 
-export default function derivative(chart) {
+import { Chart } from "../index";
+import { FunctionPlotDatum } from '../function-plot'
+
+export default function derivative(chart: Chart) {
   const derivativeDatum = datumDefaults({
     isHelper: true,
     skipTip: true,
@@ -13,7 +16,7 @@ export default function derivative(chart) {
     graphType: 'polyline'
   })
 
-  function computeLine (d) {
+  function computeLine (d: FunctionPlotDatum) {
     if (!d.derivative) {
       return []
     }
@@ -28,13 +31,13 @@ export default function derivative(chart) {
     return [derivativeDatum]
   }
 
-  function checkAutoUpdate (d) {
+  function checkAutoUpdate (d: FunctionPlotDatum) {
     const self = this
     if (!d.derivative) {
       return
     }
     if (d.derivative.updateOnMouseMove && !d.derivative.$$mouseListener) {
-      d.derivative.$$mouseListener = function ({ x }) {
+      d.derivative.$$mouseListener = function ({ x }: any) {
         // update initial value to be the position of the mouse
         // scope's x0 will be updated on the next call to `derivative(self)`
         if (d.derivative) {
@@ -49,7 +52,7 @@ export default function derivative(chart) {
     }
   }
 
-  const derivative = function (selection) {
+  const derivative = function (selection: Selection<any, FunctionPlotDatum, any, any>) {
     selection.each(function (d) {
       const el = d3Select(this)
       const data = computeLine.call(selection, d)

@@ -1,16 +1,17 @@
 import { line as d3Line } from 'd3-shape'
-import { select as d3Select } from 'd3-selection'
+import {select as d3Select, Selection} from 'd3-selection'
 import clamp from 'clamp'
 
 import utils from './utils'
 import globals from './globals'
 import { builtIn as builtInEvaluator } from './helpers/eval'
+import { FunctionPlotTip } from './function-plot'
 
-export default function mouseTip (config) {
+export default function mouseTip (config: FunctionPlotTip) {
   config = Object.assign({
     xLine: false,
     yLine: false,
-    renderer: function (x, y) {
+    renderer: function (x: number, y: number) {
       return '(' + x.toFixed(3) + ', ' + y.toFixed(3) + ')'
     },
     owner: null
@@ -22,7 +23,7 @@ export default function mouseTip (config) {
     .x(function (d) { return d[0] })
     .y(function (d) { return d[1] })
 
-  function lineGenerator (el, data) {
+  function lineGenerator (el: Selection<any, any, any, any>, data: any) {
     return el.append('path')
       .datum(data)
       .attr('stroke', 'grey')
@@ -31,7 +32,9 @@ export default function mouseTip (config) {
       .attr('d', line)
   }
 
-  function tip (selection) {
+  let tipInnerJoin: any, tipInnerEnter: any
+
+  function tip (selection: Selection<any, any, any, any>) {
     const join = selection
       .selectAll('g.tip')
       .data(function (d) { return [d] })
@@ -43,14 +46,14 @@ export default function mouseTip (config) {
       .attr('clip-path', 'url(#function-plot-clip-' + config.owner.id + ')')
 
     // enter + update = enter inner tip
-    const tipInnerJoin = tip.join = join.merge(tipEnter)
+    tipInnerJoin = join.merge(tipEnter)
       .selectAll('g.inner-tip')
       .data(function (d) {
         // debugger
         return [d]
       })
 
-    const tipInnerEnter = tip.enter = tipInnerJoin.enter()
+    tipInnerEnter = tipInnerJoin.enter()
       .append('g')
       .attr('class', 'inner-tip')
       .style('display', 'none')
@@ -73,13 +76,13 @@ export default function mouseTip (config) {
       .selectAll('.tip-y-line').style('display', config.yLine ? null : 'none')
   }
 
-  tip.move = function (coordinates) {
+  tip.move = function (coordinates: { x: number, y: number }) {
     let i
     let minDist = Infinity
     let closestIndex = -1
     let x, y
 
-    const selection = tip.join.merge(tip.enter)
+    const selection = tipInnerJoin.merge(tipInnerEnter)
     const inf = 1e8
     const meta = config.owner.meta
     const data = selection.datum().data
@@ -126,7 +129,9 @@ export default function mouseTip (config) {
 
       tip.show()
       config.owner.emit('tip:update', { x, y, index: closestIndex })
+      // @ts-ignore
       const clampX = clamp(x, xScale.invert(-MARGIN), xScale.invert(width + MARGIN))
+      // @ts-ignore
       const clampY = clamp(y, yScale.invert(height + MARGIN), yScale.invert(-MARGIN))
       const color = utils.color(data[closestIndex], closestIndex)
       selection.style('color', 'red')
@@ -142,12 +147,12 @@ export default function mouseTip (config) {
   }
 
   tip.show = function () {
-    tip.join.merge(tip.enter)
+    tipInnerJoin.merge(tipInnerEnter)
       .style('display', null)
   }
 
   tip.hide = function () {
-    tip.join.merge(tip.enter)
+    tipInnerJoin.merge(tipInnerEnter)
       .style('display', 'none')
   }
   // generations of getters/setters

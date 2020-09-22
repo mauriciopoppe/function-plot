@@ -1,6 +1,9 @@
 import globals from './globals'
 import { interval, builtIn } from './samplers'
 
+import { Chart } from './index'
+import { FunctionPlotDatum } from './function-plot'
+
 const evalTypeFn = {
   interval,
   builtIn
@@ -14,7 +17,7 @@ const evalTypeFn = {
  * @param {Object} d An item from `data`
  * @returns {Array}
  */
-function computeEndpoints (scale, d) {
+function computeEndpoints (scale: any, d: any): [number, number] {
   const range = d.range || [-Infinity, Infinity]
   const start = Math.max(scale.domain()[0], range[0])
   const end = Math.min(scale.domain()[1], range[1])
@@ -29,7 +32,7 @@ function computeEndpoints (scale, d) {
  * @param {Object} d a.k.a a single item from `data`
  * @returns {Array}
  */
-function evaluate (chart, d) {
+function evaluate (chart: Chart, d: FunctionPlotDatum) {
   const range = computeEndpoints(chart.meta.xScale, d)
   const evalFn = evalTypeFn[d.sampler]
   const nSamples = d.nSamples || Math.min(

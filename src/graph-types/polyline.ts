@@ -1,4 +1,4 @@
-import { select as d3Select } from 'd3-selection'
+import {select as d3Select, Selection} from 'd3-selection'
 import {
   line as d3Line, area as d3Area,
   curveLinear as d3CurveLinear
@@ -8,10 +8,13 @@ import clamp from 'clamp'
 import utils from '../utils'
 import evaluate from '../evaluate'
 
-export default function polyline (chart) {
-  function plotLine (selection) {
+import { Chart } from '../index'
+import { FunctionPlotDatum } from '../function-plot'
+
+export default function polyline (chart: Chart) {
+  function plotLine (selection: Selection<any, FunctionPlotDatum, any, any>) {
     selection.each(function (d) {
-      const el = plotLine.el = d3Select(this)
+      const el = (plotLine as any).el = d3Select(this)
       const index = d.index
       const evaluatedData = evaluate(chart, d)
       const color = utils.color(d, index)
@@ -32,7 +35,7 @@ export default function polyline (chart) {
         yMin = -Infinity
       }
 
-      function y (d) {
+      function y (d: number[]) {
         return clamp(chart.meta.yScale(d[1]), yMin, yMax)
       }
 

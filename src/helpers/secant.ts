@@ -1,10 +1,13 @@
-import { select as d3Select } from 'd3-selection'
+import {select as d3Select, Selection} from 'd3-selection'
 
 import { builtIn as builtInEvaluator } from './eval'
 import datumDefaults from '../datum-defaults'
-import polyline from '../graph-types/polyline'
+import { polyline } from '../graph-types/'
 
-export default function secant (chart) {
+import { Chart } from "../index";
+import { FunctionPlotDatumScope, FunctionPlotDatum, FunctionPlotDatumSecant } from '../function-plot'
+
+export default function secant (chart: Chart) {
   const secantDefaults = datumDefaults({
     isHelper: true,
     skipTip: true,
@@ -13,11 +16,11 @@ export default function secant (chart) {
     graphType: 'polyline'
   })
 
-  function computeSlope (scope) {
+  function computeSlope (scope: FunctionPlotDatumScope) {
     scope.m = (scope.y1 - scope.y0) / (scope.x1 - scope.x0)
   }
 
-  function updateLine (d, secant) {
+  function updateLine (d: FunctionPlotDatum, secant: FunctionPlotDatumSecant) {
     if (!('x0' in secant)) {
       throw Error('secant must have the property `x0` defined')
     }
@@ -34,15 +37,15 @@ export default function secant (chart) {
     computeSlope(secant.scope)
   }
 
-  function setFn (d, secant) {
+  function setFn (d: FunctionPlotDatum, secant: FunctionPlotDatumSecant) {
     updateLine(d, secant)
     secant.fn = 'm * (x - x0) + y0'
   }
 
-  function setMouseListener (d, secantObject) {
+  function setMouseListener (d: FunctionPlotDatum, secantObject: FunctionPlotDatumSecant) {
     const self = this
     if (secantObject.updateOnMouseMove && !secantObject.$$mouseListener) {
-      secantObject.$$mouseListener = function ({ x }) {
+      secantObject.$$mouseListener = function ({ x }: any) {
         secantObject.x1 = x
         updateLine(d, secantObject)
         secant(self)
@@ -51,7 +54,7 @@ export default function secant (chart) {
     }
   }
 
-  function computeLines (d) {
+  function computeLines (d: FunctionPlotDatum) {
     const self = this
     const data = []
     d.secants = d.secants || []
@@ -68,7 +71,7 @@ export default function secant (chart) {
     return data
   }
 
-  const secant = function (selection) {
+  const secant = function (selection: Selection<any, FunctionPlotDatum, any, any>) {
     selection.each(function (d) {
       const el = d3Select(this)
       const data = computeLines.call(selection, d)

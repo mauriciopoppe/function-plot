@@ -1,4 +1,7 @@
-export default function datumDefaults (d) {
+import { FunctionPlotDatum } from './function-plot'
+
+
+export default function datumDefaults (d: FunctionPlotDatum) {
   // default graphType uses boxes i.e. 2d intervals
   if (!('graphType' in d)) {
     d.graphType = 'interval'

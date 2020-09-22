@@ -1,14 +1,19 @@
-import globals from './globals'
 import linspace from 'linspace'
 import logspace from 'logspace'
 import log10 from 'log10'
+import {HSLColor} from "d3-color";
+
+import globals from './globals'
+
+import { Chart } from './index'
+import { FunctionPlotDatum } from './function-plot'
 
 const utils = {
-  isValidNumber: function (v) {
+  isValidNumber: function (v: number) {
     return typeof v === 'number' && !isNaN(v)
   },
 
-  space: function (chart, range, n) {
+  space: function (chart: Chart, range: [number, number], n: number) {
     const lo = range[0]
     const hi = range[1]
     if (chart.options.xAxis.type === 'log') {
@@ -18,9 +23,9 @@ const utils = {
     return linspace(lo, hi, n)
   },
 
-  getterSetter: function (config, option) {
+  getterSetter: function (config: any, option: string) {
     const me = this
-    this[option] = function (value) {
+    this[option] = function (value: any) {
       if (!arguments.length) {
         return config[option]
       }
@@ -29,14 +34,14 @@ const utils = {
     }
   },
 
-  sgn: function (v) {
+  sgn: function (v: number) {
     if (v < 0) { return -1 }
     if (v > 0) { return 1 }
     return 0
   },
 
-  color: function (data, index) {
-    return data.color || globals.COLORS[index]
+  color: function (data: FunctionPlotDatum, index: number): string {
+    return data.color || globals.COLORS[index].hex()
   }
 }
 

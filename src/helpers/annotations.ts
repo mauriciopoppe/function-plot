@@ -1,7 +1,10 @@
 import { line as d3Line } from 'd3-shape'
-import { select as d3Select } from 'd3-selection'
+import {select as d3Select, Selection} from 'd3-selection'
 
-export default function annotations (options) {
+import { FunctionPlotOptions } from '../function-plot'
+import { Chart } from '../index'
+
+export default function annotations (options: { owner: Chart }) {
   const xScale = options.owner.meta.xScale
   const yScale = options.owner.meta.yScale
 
@@ -9,12 +12,12 @@ export default function annotations (options) {
     .x(function (d) { return d[0] })
     .y(function (d) { return d[1] })
 
-  return function (parentSelection) {
+  return function (parentSelection: Selection<any, FunctionPlotOptions, any, any>) {
     parentSelection.each(function () {
       // join
       const current = d3Select(this)
       const selection = current.selectAll('g.annotations')
-        .data(function (d) { return d.annotations || [] })
+        .data(function (d: FunctionPlotOptions) { return d.annotations || [] })
 
       // enter
       const enter = selection.enter()

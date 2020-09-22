@@ -6,12 +6,12 @@ const samplers = {
   builtIn: builtInMathEval
 }
 
-if (global.math) {
-  samplers.builtIn = global.math.compile
+if ((global as any).math) {
+  samplers.builtIn = (global as any).math.compile
 }
 
-function generateEvaluator (samplerName) {
-  function doCompile (expression) {
+function generateEvaluator (samplerName: 'interval' | 'builtIn') {
+  function doCompile (expression: string | { eval: (scope: any) => any }) {
     // compiles does the following
     //
     // when expression === string
@@ -36,7 +36,7 @@ function generateEvaluator (samplerName) {
     // othewise throw an error
     if (typeof expression === 'string') {
       const compiled = samplers[samplerName](expression)
-      if (global.math && samplerName === 'builtIn') {
+      if ((global as any).math && samplerName === 'builtIn') {
         // if mathjs is included use its evaluate method instead
         return { eval: compiled.evaluate || compiled.eval }
       }
@@ -48,7 +48,7 @@ function generateEvaluator (samplerName) {
     }
   }
 
-  function compileIfPossible (meta, property) {
+  function compileIfPossible (meta: any, property: string) {
     // compile the function using interval arithmetic, cache the result
     // so that multiple calls with the same argument don't trigger the
     // kinda expensive compilation process
@@ -61,7 +61,7 @@ function generateEvaluator (samplerName) {
     }
   }
 
-  function getCompiledExpression (meta, property) {
+  function getCompiledExpression (meta: any, property: string) {
     return meta[samplerName + '_Compiled_' + property]
   }
 
@@ -79,7 +79,7 @@ function generateEvaluator (samplerName) {
    * @returns {Number|Array} The builtIn evaluator returns a number, the
    * interval evaluator an array
    */
-  function evaluate (meta, property, variables) {
+  function evaluate (meta: any, property: string, variables: any) {
     // e.g.
     //
     //  meta: {
