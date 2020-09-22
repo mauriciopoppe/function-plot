@@ -5,7 +5,7 @@ import { builtIn as builtInEvaluator } from './eval'
 import datumDefaults from '../datum-defaults'
 
 import { Chart } from "../index";
-import { FunctionPlotDatum } from '../function-plot'
+import { FunctionPlotDatum } from '../types'
 
 export default function derivative(chart: Chart) {
   const derivativeDatum = datumDefaults({

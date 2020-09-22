@@ -9,7 +9,7 @@ import utils from '../utils'
 import evaluate from '../evaluate'
 
 import { Chart } from '../index'
-import { FunctionPlotDatum } from '../function-plot'
+import { FunctionPlotDatum } from '../types'
 
 export default function polyline (chart: Chart) {
   function plotLine (selection: Selection<any, FunctionPlotDatum, any, any>) {

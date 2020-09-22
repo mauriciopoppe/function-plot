@@ -4,7 +4,7 @@ import { interval as evaluate } from '../helpers/eval'
 import utils from '../utils'
 
 import { Chart } from "../index";
-import { FunctionPlotDatum } from '../function-plot'
+import { FunctionPlotDatum } from '../types'
 
 // const Interval = (intervalArithmeticEval as any).Interval
 

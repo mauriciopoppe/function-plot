@@ -10,12 +10,14 @@
   "bugs": "https://github.com/mauriciopoppe/function-plot/issues",
   "homepage": "http://mauriciopoppe.github.io/function-plot/",
   "author": "Mauricio Poppe <mauricio.poppe@gmail.com>",
-  "main": "dist/function-plot.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "deploy": "gh-pages-deploy",
     "html": "node site.js",
-    "build": "npm run html && npm run docs && npm run build:webpack && npm run build:site",
+    "build": "npx rimraf dist && npm run html && npm run docs && npm run build:types && npm run build:webpack && npm run build:site",
     "build:webpack": "NODE_ENV=production webpack",
+    "build:types": "tsc",
     "build:site": "cp dist/function-plot.js site/js/function-plot.js",
     "start": "webpack-dev-server",
     "docs": "typedoc --out site/docs src",
@@ -46,8 +48,6 @@
     ]
   },
   "dependencies": {
-    "@types/d3": "^5.7.2",
-    "@types/events": "^3.0.0",
     "built-in-math-eval": "^0.3.0",
     "clamp": "^1.0.1",
     "d3-axis": "^2.0.0",
@@ -66,6 +66,8 @@
   "devDependencies": {
     "@babel/preset-env": "^7.11.5",
     "@babel/preset-typescript": "^7.10.4",
+    "@types/d3": "^5.7.2",
+    "@types/events": "^3.0.0",
     "@typescript-eslint/eslint-plugin": "^2.34.0",
     "@typescript-eslint/parser": "^2.34.0",
     "babel-eslint": "^10.1.0",

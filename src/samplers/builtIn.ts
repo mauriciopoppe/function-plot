@@ -5,7 +5,7 @@ import utils from '../utils'
 import { builtIn as evaluate } from '../helpers/eval'
 
 import { Chart } from "../index";
-import { FunctionPlotDatum } from '../function-plot'
+import { FunctionPlotDatum } from '../types'
 
 function checkAsymptote (d0: number[], d1: number[], d: FunctionPlotDatum, sign: number, level: number): {
   asymptote: boolean,

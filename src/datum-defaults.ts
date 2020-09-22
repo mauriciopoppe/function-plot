@@ -1,4 +1,4 @@
-import { FunctionPlotDatum } from './function-plot'
+import { FunctionPlotDatum } from './types'
 
 
 export default function datumDefaults (d: FunctionPlotDatum) {

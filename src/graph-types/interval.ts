@@ -4,7 +4,7 @@ import evaluate from '../evaluate'
 import utils from '../utils'
 
 import { Chart } from '../index'
-import { Interval, FunctionPlotDatum } from '../function-plot'
+import { Interval, FunctionPlotDatum } from '../types'
 
 export default function interval (chart: Chart) {
   let minWidthHeight: number

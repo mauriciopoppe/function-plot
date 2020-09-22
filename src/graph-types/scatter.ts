@@ -5,7 +5,7 @@ import utils from '../utils'
 import evaluate from '../evaluate'
 
 import { Chart } from '../index'
-import { FunctionPlotDatum } from '../function-plot'
+import { FunctionPlotDatum } from '../types'
 
 export default function scatter (chart: Chart) {
   const xScale = chart.meta.xScale

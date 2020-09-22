@@ -1,7 +1,7 @@
 import { line as d3Line } from 'd3-shape'
 import {select as d3Select, Selection} from 'd3-selection'
 
-import { FunctionPlotOptions } from '../function-plot'
+import { FunctionPlotOptions } from '../types'
 import { Chart } from '../index'
 
 export default function annotations (options: { owner: Chart }) {

@@ -6,7 +6,7 @@ import {HSLColor} from "d3-color";
 import globals from './globals'
 
 import { Chart } from './index'
-import { FunctionPlotDatum } from './function-plot'
+import { FunctionPlotDatum } from './types'
 
 const utils = {
   isValidNumber: function (v: number) {

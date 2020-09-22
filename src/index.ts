@@ -8,7 +8,7 @@ import { select as d3Select, pointer as d3Pointer, Selection } from 'd3-selectio
 import { interpolateRound as d3InterpolateRound } from 'd3-interpolate'
 import EventEmitter from 'events'
 
-import { FunctionPlotOptions, FunctionPlotDatum } from './function-plot'
+import { FunctionPlotOptions, FunctionPlotDatum } from './types'
 
 import annotations from './helpers/annotations'
 import mousetip from './tip'

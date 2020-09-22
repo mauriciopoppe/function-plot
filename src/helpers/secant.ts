@@ -5,7 +5,7 @@ import datumDefaults from '../datum-defaults'
 import { polyline } from '../graph-types/'
 
 import { Chart } from "../index";
-import { FunctionPlotDatumScope, FunctionPlotDatum, FunctionPlotDatumSecant } from '../function-plot'
+import { FunctionPlotDatumScope, FunctionPlotDatum, FunctionPlotDatumSecant } from '../types'
 
 export default function secant (chart: Chart) {
   const secantDefaults = datumDefaults({

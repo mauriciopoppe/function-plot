@@ -2,7 +2,7 @@ import globals from './globals'
 import { interval, builtIn } from './samplers'
 
 import { Chart } from './index'
-import { FunctionPlotDatum } from './function-plot'
+import { FunctionPlotDatum } from './types'
 
 const evalTypeFn = {
   interval,

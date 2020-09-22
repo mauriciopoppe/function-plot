@@ -5,7 +5,7 @@ import clamp from 'clamp'
 import utils from './utils'
 import globals from './globals'
 import { builtIn as builtInEvaluator } from './helpers/eval'
-import { FunctionPlotTip } from './function-plot'
+import { FunctionPlotTip } from './types'
 
 export default function mouseTip (config: FunctionPlotTip) {
   config = Object.assign({
