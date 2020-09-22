@@ -91,7 +91,7 @@ export interface FunctionPlotDatumSecant {
    * Additional information available during function evaluation
    */
   scope?: FunctionPlotDatumScope
-  $$mouseListener: any
+  $$mouseListener?: any
 }
 
 export interface FunctionPlotDatumDerivative {
@@ -117,7 +117,7 @@ export interface FunctionPlotDatumDerivative {
    * Additional information available during function evaluation
    */
   scope?: FunctionPlotDatumScope
-  $$mouseListener: any
+  $$mouseListener?: any
 }
 
 export interface FunctionPlotDatum {
@@ -270,9 +270,10 @@ export interface FunctionPlotAnnotation {
 
 export interface FunctionPlotOptions {
   /**
-   * For internal usage, id
+   * @private
+   * For internal usage
    */
-  id: string
+  id?: string
 
   /**
    * A css selector or DOM node of the parent element that will contain the graph

@@ -719,7 +719,7 @@ export class Chart extends EventEmitter.EventEmitter {
   }
 }
 
-function functionPlot (options: FunctionPlotOptions = {id: null, target: null}) {
+function functionPlot (options: FunctionPlotOptions = {target: null}) {
   options.data = options.data || []
   let instance = Chart.cache[options.id]
   if (!instance) {
