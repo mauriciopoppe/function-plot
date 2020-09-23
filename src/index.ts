@@ -84,7 +84,7 @@ export class Chart extends EventEmitter.EventEmitter {
 
   private readonly id: string
   readonly markerId: string
-  public readonly options: FunctionPlotOptions
+  public options: FunctionPlotOptions
   public meta: ChartMeta
 
   /**
@@ -125,12 +125,12 @@ export class Chart extends EventEmitter.EventEmitter {
 
     const n = Math.random()
     const letter = String.fromCharCode(Math.floor(n * 26) + 97)
-    this.id = options.id = letter + n.toString(16).substr(2)
+    this.options = options
+    this.id = letter + n.toString(16).substr(2)
+    this.options.id = this.id
     this.markerId = this.id + '-marker'
     Chart.cache[this.id] = this
-
     this.linkedGraphs = [this]
-    this.options = options
     this.meta = {}
     this.setUpEventListeners()
   }
@@ -152,6 +152,24 @@ export class Chart extends EventEmitter.EventEmitter {
     return this
   }
 
+  private getDraggableNode() {
+    return d3Select(this.options.target).select('.zoom-and-drag').node()
+  }
+
+  /**
+   * The draggable container won't change across different instances of Chart,
+   * therefore multiple instances will share the draggable container, to avoid dispatching
+   * the event from the old instance grab it in runtime with this function
+   */
+  private getEmitInstance() {
+    let cachedInstance = this
+    const cachedNode = this.getDraggableNode()
+    if (cachedNode) {
+      cachedInstance = (cachedNode as any).instance
+    }
+    return cachedInstance
+  }
+
   internalVars() {
     const self = this
 
@@ -165,39 +183,19 @@ export class Chart extends EventEmitter.EventEmitter {
     this.meta.height = (this.options.height || globals.DEFAULT_HEIGHT) - margin.top - margin.bottom
 
     this.initializeAxes()
-
-    if (!this.meta.zoomBehavior) {
-      this.meta.zoomBehavior = d3Zoom()
-        .on('zoom', function onZoom (ev) {
-          self.emit('all:zoom', ev)
-        })
-      // console.log('zoom scale cache!')
-      // the zoom behavior must work with a copy of the scale, the zoom behavior has its own state and assumes
-      // that its updating the original scale!
-      // things that failed when I tried rescaleX(self.meta.xScale), the state of self.meta.xScale was a multiplied
-      // for zoom/mousemove operations
-      //
-      // this copy should only be created once when the application starts
-      self.meta.zoomBehavior.xScale = self.meta.xScale.copy()
-      self.meta.zoomBehavior.yScale = self.meta.yScale.copy()
-    }
-
-    // in the case where the original scale domains were updated (because of a change in the size of the canvas)
-    // update the range only but not the domain, the domain is going to be updated
-    self.meta.zoomBehavior.xScale.range(self.meta.xScale.range())
-    self.meta.zoomBehavior.yScale.range(self.meta.yScale.range())
   }
 
   initializeAxes() {
     const self = this
+
     const integerFormat = d3Format('~s')
     const floatFormat = d3Format('~e')
-    const format = function () {
-      return function (d: number) {
-        const isInteger = d === +d && d === (d | 0)
-        if (!isInteger) {
-          return floatFormat(d)
-        }
+    function formatter (d: number): string {
+      // take only the decimal part of the number
+      const frac = Math.abs(d) - Math.floor(Math.abs(d))
+      if (frac > 0) {
+        return d.toString()
+      } else {
         return integerFormat(d)
       }
     }
@@ -240,13 +238,6 @@ export class Chart extends EventEmitter.EventEmitter {
       throw Error('axis type ' + axis.type + ' unsupported')
     })(this.options.yAxis)
 
-    if (xDomain[0] >= xDomain[1]) {
-      throw Error('the pair defining the x-domain is inverted')
-    }
-    if (yDomain[0] >= yDomain[1]) {
-      throw Error('the pair defining the y-domain is inverted')
-    }
-
     if (!this.meta.xScale) {
       this.meta.xScale = d3Scale[this.options.xAxis.type]()
     }
@@ -266,13 +257,13 @@ export class Chart extends EventEmitter.EventEmitter {
     }
     this.meta.xAxis
       .tickSize(this.options.grid ? -this.meta.height : 0)
-      .tickFormat(format())
+      .tickFormat(formatter)
     if (!this.meta.yAxis) {
       this.meta.yAxis = d3AxisLeft(this.meta.yScale)
     }
     this.meta.yAxis
       .tickSize(this.options.grid ? -this.meta.width : 0)
-      .tickFormat(format())
+      .tickFormat(formatter)
 
     this.line = d3Line()
       .x(function (d) { return self.meta.xScale(d[0]) })
@@ -323,8 +314,10 @@ export class Chart extends EventEmitter.EventEmitter {
       })
 
     // enter
-    selection.enter()
+    const selectionEnter = selection.enter()
       .append('text')
+
+    selectionEnter.merge(selection)
       .attr('class', 'title')
       .attr('y', this.meta.margin.top / 2)
       .attr('x', this.meta.margin.left + this.meta.width / 2)
@@ -543,6 +536,26 @@ export class Chart extends EventEmitter.EventEmitter {
     // dummy rect (detects the zoom + drag)
     const self = this
 
+    if (!this.meta.zoomBehavior) {
+      this.meta.zoomBehavior = d3Zoom()
+        .on('zoom', function onZoom (ev) {
+          self.getEmitInstance().emit('all:zoom', ev)
+        })
+      // the zoom behavior must work with a copy of the scale, the zoom behavior has its own state and assumes
+      // that its updating the original scale!
+      // things that failed when I tried rescaleX(self.meta.xScale), the state of self.meta.xScale was a multiplied
+      // for zoom/mousemove operations
+      //
+      // this copy should only be created once when the application starts
+      self.meta.zoomBehavior.xScale = self.meta.xScale.copy()
+      self.meta.zoomBehavior.yScale = self.meta.yScale.copy()
+    }
+
+    // in the case where the original scale domains were updated (because of a change in the size of the canvas)
+    // update the range only but not the domain, the domain is going to be updated
+    self.meta.zoomBehavior.xScale.range(self.meta.xScale.range())
+    self.meta.zoomBehavior.yScale.range(self.meta.yScale.range())
+
     // enter
     this.canvas.enter
       .append('rect')
@@ -551,17 +564,21 @@ export class Chart extends EventEmitter.EventEmitter {
       .style('fill', 'none')
       .style('pointer-events', 'all')
       .on('mouseover', function (event: any) {
-        self.emit('all:mouseover', event)
+        self.getEmitInstance().emit('all:mouseover', event)
       })
       .on('mouseout', function (event: any) {
-        self.emit('all:mouseout', event)
+        self.getEmitInstance().emit('all:mouseout', event)
       })
       .on('mousemove', function (event: any) {
-        self.emit('all:mousemove', event)
+        self.getEmitInstance().emit('all:mousemove', event)
       })
 
     // update + enter
     this.draggable = this.canvas.merge(this.canvas.enter).select('.zoom-and-drag')
+      .call((selection: any) => {
+        // store the instance for the next run
+        selection.node().instance = self
+      })
       .attr('width', this.meta.width)
       .attr('height', this.meta.height)
   }
@@ -617,6 +634,13 @@ export class Chart extends EventEmitter.EventEmitter {
 
   setUpEventListeners() {
     const self = this
+
+    // before setting up the listeners, remove any listeners set on the previous instance, this happens because
+    // the draggable container is shared across instances
+    const prevInstance = this.getEmitInstance()
+    if (prevInstance) {
+      prevInstance.removeAllListeners()
+    }
 
     const events = {
       mousemove: function (coordinates: {x: number, y: number}) {
@@ -699,6 +723,7 @@ export class Chart extends EventEmitter.EventEmitter {
       // e.g. all:mouseover all:mouseout
       // the objective is that all the linked graphs receive the same event as the current graph
       // @ts-ignore
+
       !all[e] && self.on('all:' + e, function () {
         const args = Array.prototype.slice.call(arguments)
         self.linkedGraphs.forEach(function (graph) {

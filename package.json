@@ -21,7 +21,9 @@
     "build:site": "cp dist/function-plot.js site/js/function-plot.js",
     "start": "webpack-dev-server",
     "docs": "typedoc --out site/docs src",
-    "test": "jest"
+    "test": "jest",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "files": [
     "/dist"
@@ -64,14 +66,21 @@
     "logspace": "1.0.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.11.6",
     "@babel/preset-env": "^7.11.5",
     "@babel/preset-typescript": "^7.10.4",
+    "@storybook/addon-actions": "^6.0.21",
+    "@storybook/addon-essentials": "^6.0.21",
+    "@storybook/addon-links": "^6.0.21",
+    "@storybook/react": "^6.0.21",
     "@types/d3": "^5.7.2",
     "@types/events": "^3.0.0",
     "@typescript-eslint/eslint-plugin": "^2.34.0",
     "@typescript-eslint/parser": "^2.34.0",
     "babel-eslint": "^10.1.0",
+    "babel-loader": "^8.1.0",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
+    "core-js": "^3.6.5",
     "dox": "^0.9.0",
     "eslint": "^6.8.0",
     "eslint-config-react-app": "^5.2.0",
@@ -89,6 +98,7 @@
     "jest": "^26.4.2",
     "lodash": "^4.17.11",
     "markdown-it": "^11.0.1",
+    "react-is": "^16.13.1",
     "standard": "^12.0.1",
     "standardx": "^5.0.0",
     "ts-loader": "^8.0.4",
