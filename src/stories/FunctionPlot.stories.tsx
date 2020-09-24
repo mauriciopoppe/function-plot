@@ -23,7 +23,7 @@ PlottingACurve.args = {
 export const AdditionalOptions = Template.bind({})
 AdditionalOptions.args = {
   options: {
-    width: 580,
+    width: 600,
     height: 400,
     title: 'hello world',
     xAxis: {
