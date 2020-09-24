@@ -24,7 +24,7 @@
     "test": "jest",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "chromatic": "npx chromatic --project-token ao9f74imxel"
+    "chromatic": "npx chromatic"
   },
   "files": [
     "/dist"
