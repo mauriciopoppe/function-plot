@@ -1,0 +1,33 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { FunctionPlot, Render } from './FunctionPlot';
+import functionPlot from '../';
+window.functionPlot = functionPlot
+
+<Meta title="Logarithmic scales" component={FunctionPlot} />
+
+## Logarithmic scales
+
+The type of each axis can be configured to be logarithmic by specifying the
+type of axis to `log` inside the  `xAxis` option, note how this
+change affects the way the functions are sampled
+
+export const script = `
+functionPlot({
+  target: '#logarithmic',
+  xAxis: {
+    type: 'log',
+    domain: [0.01, 1]
+  },
+  yAxis: {
+    domain: [-100, 100]
+  },
+  grid: true,
+  data: [{
+    fn: '1/x * cos(1/x)',
+    // to make it look like a definite integral
+    closed: true
+  }]
+})
+`
+
+<Render id="logarithmic" content={script}></Render>

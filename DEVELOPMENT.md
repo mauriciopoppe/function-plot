@@ -7,8 +7,15 @@ node site.js    // generate the examples shown on index.html
 npm start
 ```
 
-Main page: `http://localhost:9966/`
-Development page: `http://localhost:9966/playground.html`
+Main page: `http://localhost:8080/`
+
+### Storybook
+
+```sh
+npm run storybook
+```
+
+## Deployment
 
 Deploy steps:
 

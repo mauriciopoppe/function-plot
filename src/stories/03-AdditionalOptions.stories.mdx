@@ -1,0 +1,42 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { FunctionPlot, Render } from './FunctionPlot';
+import functionPlot from '../';
+window.functionPlot = functionPlot
+
+<Meta title="Additional Options" component={FunctionPlot} />
+
+## Additional options
+
+Additionally the graph can have the following options defined on the top level object:
+
+- `title`: the title of the graph
+- `width`: width of the graph
+- `height`: height of the graph
+- `xAxis`
+  - `type`: the type of scale for this axis, possible values `linear|log` (default value: `'linear'`)
+   - `label`: x axis label
+   - `domain`: x axis possible values (see examples below)
+- `yAxis`: same options as `xAxis`
+- `disableZoom`: true to disable translation/scaling on the graph
+
+export const helloWorld = `
+functionPlot({
+  title: 'y = x * x',
+  target: '#quadratic-with-options',
+  width: 580,
+  height: 400,
+  disableZoom: true,
+  xAxis: {
+    label: 'x - axis',
+    domain: [-6, 6]
+  },
+  yAxis: {
+    label: 'y - axis'
+  },
+  data: [{
+    fn: 'x^2'
+  }]
+})
+`
+
+<Render id="quadratic-with-options" content={helloWorld}></Render>

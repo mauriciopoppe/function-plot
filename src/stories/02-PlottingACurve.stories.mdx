@@ -1,0 +1,31 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { FunctionPlot, Render } from './FunctionPlot';
+import functionPlot from '../';
+window.functionPlot = functionPlot
+
+<Meta title="Plotting a curve" component={FunctionPlot} />
+
+## Plotting a curve
+
+The shortest example, the function $y = x^2$ is evaluated with values inside the range
+defined by the canvas size (the default dimensions are `550x350`)
+
+The required parameters are:
+
+- `target` a selector to the node to hold the graph
+- `data` an array of objects which contain info about the functions to render
+ - `data.fn` (string) a mathematical expression to render, it's parsed and evaluated
+ using [interval-arithmetic](https://www.npmjs.com/package/interval-arithmetic-eval)
+
+The syntax of the string that represent the mathematical expression is just like ECMAScript
+however the `^` operator has been replaced with `pow` and there's no namespace for the
+functions to be evaluated
+
+export const helloWorld = `
+functionPlot({
+  target: '#hello',
+  data: [{ fn: 'x^2' }]
+})
+`
+
+<Render id="hello" content={helloWorld}></Render>

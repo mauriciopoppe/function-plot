@@ -1,0 +1,36 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { FunctionPlot, Render } from './FunctionPlot';
+import functionPlot from '../';
+window.functionPlot = functionPlot
+
+<Meta title="Number of samples" component={FunctionPlot} />
+
+## Number of samples
+
+`nSamples` determine the number of equally spaced points in which the function will be
+evaluated in the current domain, increasing it will more accurately represent the function
+using rectangles at the cost of processing speed
+
+e.g.  nSamples = 100
+
+$$
+domain = [-5, 5] \\\
+values = -5, -4.9, -4.8, \ldots, 4.8, 4.9, 5.0
+$$
+
+$$
+domain = [-10, 10] \\\
+values = -10, -9.8, -9.6, \ldots, 9.6, 9.8, 10
+$$
+
+export const script = `
+functionPlot({
+  target: '#samples',
+  data: [{
+    fn: 'sin(x)',
+    nSamples: 1000
+  }]
+})
+`
+
+<Render id="samples" content={script}></Render>

@@ -1,0 +1,37 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { FunctionPlot, Render } from './FunctionPlot';
+import functionPlot from '../';
+window.functionPlot = functionPlot
+
+<Meta title="Graph Types" component={FunctionPlot} />
+
+## Types of graph
+
+There are three ways to represent a function in `function-plot`
+
+- `polyline` where $f(x)$ is evaluated with some $x$ values, after the evaluation the points are joined with line segments using
+   `<path>`s
+- `scatter` where $f(x)$ is evaluated with some $x$ values, after the evaluation the points are represented by `<circle>`s
+- `interval` where $f(x)$ is evaluated with intervals instead of a single point, after the evaluation 2d rects
+  are painted on the screen (done using the `<path>` svg element)
+
+Set the type of graph you want to render in the option `graphType` (defaults to `interval`)
+
+export const script = `
+functionPlot({
+  target: '#graph-types',
+  data: [{
+    fn: '-sqrt(-x)',
+    nSamples: 100,
+    graphType: 'scatter'
+  }, {
+    fn: 'sqrt(x)',
+    graphType: 'polyline'
+  }, {
+    fn: 'x^2',
+    graphType: 'interval'
+  }]
+})
+`
+
+<Render id="graph-types" content={script}></Render>

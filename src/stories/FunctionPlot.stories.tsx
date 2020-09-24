@@ -4,7 +4,7 @@ import { Story, Meta } from '@storybook/react'
 import { FunctionPlot, FunctionPlotProps } from './FunctionPlot'
 
 export default {
-  title: 'Examples/Hello World',
+  title: 'Examples',
   component: FunctionPlot,
   argTypes: {
     options: { control: 'object' }
@@ -13,8 +13,8 @@ export default {
 
 const Template: Story<FunctionPlotProps> = (args) => <FunctionPlot {...args} />
 
-export const HelloWorld = Template.bind({});
-HelloWorld.args = {
+export const PlottingACurve = Template.bind({});
+PlottingACurve.args = {
   options: {
     data: [{ fn: 'x^2' }]
   }
@@ -38,4 +38,3 @@ AdditionalOptions.args = {
     }]
   }
 }
-

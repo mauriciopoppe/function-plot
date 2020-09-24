@@ -1,0 +1,38 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { FunctionPlot, Render } from './FunctionPlot';
+import functionPlot from '../';
+window.functionPlot = functionPlot
+
+<Meta title="Secants" component={FunctionPlot} />
+
+## Secants
+
+If a data object has a `secants` array, then each object will be used to compute
+secant lines between two points belonging to the function, additionally if `updateOnMouseMove`
+is a property set to `true` in the object then $(x_0, f(x_0))$ will be used as an anchored point
+and $(x_1, f(x_1))$ will be computed dynamically based on the mouse abscissa
+
+Available options for each object:
+
+- `x0` the abscissa of the first point
+- `x1` *(optional if `updateOnMouseMove` is set) the abscissa of the second point
+- `updateOnMouseMove` (optional) if set to `true` `x1` will be computed dynamically based on the current
+position of the mouse
+
+export const script = `
+functionPlot({
+  target: '#secant',
+  yAxis: {domain: [-1, 9]},
+  xAxis: {domain: [-3, 3]},
+  data: [{
+    fn: 'x^2',
+    secants: [
+      { x0: 1, x1: 3 },
+      { x0: 1, x1: 2.5 },
+      { x0: 1, x1: 2 }
+    ]
+  }]
+})
+`
+
+<Render id="secant" content={script}></Render>
