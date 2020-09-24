@@ -576,8 +576,10 @@ export class Chart extends EventEmitter.EventEmitter {
     // update + enter
     this.draggable = this.canvas.merge(this.canvas.enter).select('.zoom-and-drag')
       .call((selection: any) => {
-        // store the instance for the next run
-        selection.node().instance = self
+        if (selection.node()) {
+          // store the instance for the next run
+          selection.node().instance = self
+        }
       })
       .attr('width', this.meta.width)
       .attr('height', this.meta.height)
