@@ -3,7 +3,7 @@
 [![NPM][npm-image]][npm-url]
 [![Build Status][travis-image]][travis-url]
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-blue)](https://github.com/feross/standard)
-
+[![storybook](https://camo.githubusercontent.com/4c64e07178937065fd61d9ba90de13291394dd56/68747470733a2f2f63646e2e6a7364656c6976722e6e65742f67682f73746f7279626f6f6b6a732f6272616e64406d61737465722f62616467652f62616467652d73746f7279626f6f6b2e737667)](https://www.chromatic.com/component?appId=5f6ab5a952e6b600226e8eaa&name=Examples)
 [![image](https://user-images.githubusercontent.com/1616682/93912098-23060300-fcb8-11ea-823f-be8dfe9c24b9.png)](http://mauriciopoppe.github.io/function-plot/)
 
 Function Plot is a powerful library built on top of <a href="http://d3js.org/">D3.js</a> whose purpose
