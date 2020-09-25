@@ -7,9 +7,15 @@ env:
 sudo: false
 node_js:
 - '12'
+
 install:
 - npm install
+
+before_script:
+  - "curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/fossas/fossa-cli/master/install.sh | sudo bash"
 script:
 - npm test
 - npm run build
 - npm run chromatic
+- fossa init
+- fossa analyze
