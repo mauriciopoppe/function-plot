@@ -7,6 +7,7 @@
   <a href="https://travis-ci.org/github/mauriciopoppe/function-plot">
     <img src="https://travis-ci.org/mauriciopoppe/function-plot.svg?branch=master" alt="Build Status">
   </a>
+<a href="https://app.fossa.com/projects/git%2Bgithub.com%2Fmauriciopoppe%2Ffunction-plot?ref=badge_shield" alt="FOSSA Status"><img src="https://app.fossa.com/api/projects/git%2Bgithub.com%2Fmauriciopoppe%2Ffunction-plot.svg?type=shield"/></a>
   <a href="https://github.com/feross/standard">
     <img src="https://img.shields.io/badge/code%20style-standard-blue" alt="js-standard-style">
   </a>
@@ -52,3 +53,6 @@ functionPlot(options)
 ## License
 
 2015-2020 MIT © Mauricio Poppe
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fmauriciopoppe%2Ffunction-plot.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fmauriciopoppe%2Ffunction-plot?ref=badge_large)
