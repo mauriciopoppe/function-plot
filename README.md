@@ -4,8 +4,8 @@
   <a href="https://npmjs.org/package/function-plot">
     <img src="https://img.shields.io/npm/v/function-plot.svg?style=flat" alt="NPM">
   </a>
-  <a href="https://travis-ci.org/github/mauriciopoppe/function-plot">
-    <img src="https://travis-ci.org/mauriciopoppe/function-plot.svg?branch=master" alt="Build Status">
+  <a href="https://travis-ci.com/github/mauriciopoppe/function-plot">
+    <img src="https://travis-ci.com/mauriciopoppe/function-plot.svg?branch=master" alt="Build Status">
   </a>
 <a href="https://app.fossa.com/projects/git%2Bgithub.com%2Fmauriciopoppe%2Ffunction-plot?ref=badge_shield" alt="FOSSA Status"><img src="https://app.fossa.com/api/projects/git%2Bgithub.com%2Fmauriciopoppe%2Ffunction-plot.svg?type=shield"/></a>
   <a href="https://github.com/feross/standard">
