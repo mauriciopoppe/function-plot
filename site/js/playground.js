@@ -1,11 +1,15 @@
 'use strict';
 
-// functionPlot({
-//   target: '#playground',
-//   data: [{
-//     fn: 'x^2'
-//   }]
-// })
+functionPlot({
+  target: '#playground',
+  data: [{
+    fn: 'x^2',
+    graphType: 'polyline',
+    attr: {
+      'stroke-width': 10
+    }
+  }]
+})
 
 // window.f = functionPlot({
 //   target: '#playground',
@@ -82,38 +86,38 @@
 //});
 
 
-var options = {
-  target: '#playground',
-  data: [{
-    fn: 'x'
-  }]
-};
-$('body').append('<button id="update">update</button>')
-$('#update').click(function () {
-  if (!options.title) {
-    // add a title, a tip and change the function to y = x * x
-    options.title = 'hello world';
-    options.tip = {
-      xLine: true,
-      yLine: true
-    };
-    options.data[0] = {
-      fn: 'x * x',
-      derivative: {
-        fn: '2 * x',
-        updateOnMouseMove: true
-      }
-    }
-  } else {
-    // remove the title and the tip
-    // update the function to be y = x
-    delete options.title;
-    delete options.tip;
-    options.data[0] =  {
-      fn: 'x'
-    }
-  }
-  functionPlot(options)
-})
-// initial plot
-functionPlot(options)
+// var options = {
+//   target: '#playground',
+//   data: [{
+//     fn: 'x'
+//   }]
+// };
+// $('body').append('<button id="update">update</button>')
+// $('#update').click(function () {
+//   if (!options.title) {
+//     // add a title, a tip and change the function to y = x * x
+//     options.title = 'hello world';
+//     options.tip = {
+//       xLine: true,
+//       yLine: true
+//     };
+//     options.data[0] = {
+//       fn: 'x * x',
+//       derivative: {
+//         fn: '2 * x',
+//         updateOnMouseMove: true
+//       }
+//     }
+//   } else {
+//     // remove the title and the tip
+//     // update the function to be y = x
+//     delete options.title;
+//     delete options.tip;
+//     options.data[0] =  {
+//       fn: 'x'
+//     }
+//   }
+//   functionPlot(options)
+// })
+// // initial plot
+// functionPlot(options)
