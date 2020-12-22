@@ -89,14 +89,21 @@ export default function interval (chart: Chart) {
         .attr('fill', 'none')
 
       // enter + update
-      innerSelection.merge(innerSelectionEnter)
+      const selection = innerSelection.merge(innerSelectionEnter)
         .attr('stroke-width', minWidthHeight)
         .attr('stroke', utils.color(d, index) as any)
         .attr('opacity', closed ? 0.5 : 1)
         .attr('d', function (d: Interval[][]) {
           return line(d, closed)
         })
-        .attr(d.attr)
+
+      if (d.attr) {
+        for (let k in d.attr) {
+          if(d.attr.hasOwnProperty(k)) {
+            selection.attr(k, d.attr[k])
+          }
+        }
+      }
 
       innerSelection.exit().remove()
     })
