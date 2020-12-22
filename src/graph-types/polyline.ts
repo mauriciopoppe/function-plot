@@ -79,7 +79,9 @@ export default function polyline (chart: Chart) {
 
           if (d.attr) {
             for (let k in d.attr) {
-              path.attr(k, d.attr[k])
+              if(d.attr.hasOwnProperty(k)) {
+                path.attr(k, d.attr[k])
+              }
             }
           }
         })

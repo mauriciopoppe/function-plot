@@ -34,14 +34,21 @@ export default function scatter (chart: Chart) {
       const innerSelectionEnter = innerSelection.enter()
         .append('circle')
 
-      innerSelection.merge(innerSelectionEnter)
+      const selection = innerSelection.merge(innerSelectionEnter)
         .attr('fill', d3Hsl(color.toString()).brighter(1.5).hex())
         .attr('stroke', color)
         .attr('opacity', 0.7)
         .attr('r', 1)
         .attr('cx', function (d) { return xScale(d[0]) })
-        .attr('cy', function (d) { return yScale(d[1]) })
-        .attr(d.attr)
+        .attr('cy', function (d) { return yScale(d[1]) });
+
+      if (d.attr) {
+        for (let k in d.attr) {
+          if(d.attr.hasOwnProperty(k)) {
+            selection.attr(k, d.attr[k])
+          }
+        }
+      }
 
       innerSelection.exit().remove()
     })
