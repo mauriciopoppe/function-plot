@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+	<meta charset="UTF-8">
+	<title>demo</title>
+  <style>
+    body {
+      font: 10px sans-serif;
+    }
+    .function-plot .top-right-legend {
+      font-size: 10px;
+    }
+    #playground {
+      width: 550px;
+      margin: 100px auto;
+    }
+  </style>
+</head>
+<body>
+  <div id="playground"></div>
+
+  <script src="js/vendor/jquery-1.11.2.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/1.5.2/math.min.js"></script>
+  <script src="function-plot.js"></script>
+  <script src="js/playground.js"></script>
+  <script>  $(document).trigger('markupLoaded'); </script>
+</body>
+</html>
