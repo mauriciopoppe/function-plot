@@ -76,11 +76,15 @@ export default function polyline (chart: Chart) {
                 : null
             })
             .attr('d', pathD)
+
+          if (d.attr) {
+            for (let k in d.attr) {
+              if(d.attr.hasOwnProperty(k)) {
+                path.attr(k, d.attr[k])
+              }
+            }
+          }
         })
-        // .attr(d => {
-        //   if (d) console.log(d)
-        //   d.attr
-        // })
 
       // exit
       innerSelection.exit().remove()
