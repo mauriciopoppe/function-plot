@@ -1,7 +1,6 @@
 import linspace from 'linspace'
 import logspace from 'logspace'
 import log10 from 'log10'
-import {HSLColor} from "d3-color";
 
 import globals from './globals'
 
