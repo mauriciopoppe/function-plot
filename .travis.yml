@@ -3,7 +3,7 @@ env:
   matrix:
   - CI=true
   global:
-    secure: PVWxNcBRCDT2i2oRGyMvBWfDOjPPorIxX+qMklVnladDx4U2pOVxFYTJoCPnscahpfIuzmhY+sRRtyeHrL97rUBOsOUDhiWb1/IkPMsp353crh1dTH6dHN0bcj6O6ASAnExsQoy85uwM3re5VBFGug/T3kMLLUu9VubNDMgFOTY=
+    secure: "BqwfHv/op/227TSe4T6MtZrhef9/J6YyGM2mhgvAs0TPa3L8RpCUglORJwGfSFfvdEG18UV8VRyhLSng1/ItlrN5PaAS7nJf9PHj+g8ezG6d0R7Kak56jJa9itaoOiS6c4K21n1ICeXKL/tP2zQXxhVwQeDavfLxfepyfdGqK7Y="
 sudo: false
 node_js:
 - '12'
