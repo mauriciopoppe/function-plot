@@ -1,13 +1,19 @@
-import linspace from 'linspace'
-import logspace from 'logspace'
-import log10 from 'log10'
-
 import globals from './globals'
 
 import { Chart } from './index'
 import { FunctionPlotDatum } from './types'
 
 const utils = {
+
+  linspace: function (lo: number, hi: number, n: number): number[] {
+    const step = (hi - lo) / (n - 1);
+    return Array.from({length: n}, (val, i) => lo + step * i)
+  },
+
+  logspace: function (lo: number, hi: number, n: number): number[] {
+    return this.linspace(lo,hi,n).map((x: number) => Math.pow(10,x));
+  },
+
   isValidNumber: function (v: number) {
     return typeof v === 'number' && !isNaN(v)
   },
@@ -16,10 +22,10 @@ const utils = {
     const lo = range[0]
     const hi = range[1]
     if (chart.options.xAxis.type === 'log') {
-      return logspace(log10(lo), log10(hi), n)
+      return this.logspace(Math.log10(lo), Math.log10(hi), n)
     }
     // default is linear
-    return linspace(lo, hi, n)
+    return this.linspace(lo, hi, n)
   },
 
   getterSetter: function (config: any, option: string) {

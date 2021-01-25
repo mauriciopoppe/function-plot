@@ -1,5 +1,4 @@
 import clamp from 'clamp'
-import linspace from 'linspace'
 
 import utils from '../utils'
 import { builtIn as evaluate } from '../helpers/eval'
@@ -22,7 +21,7 @@ function checkAsymptote (d0: number[], d1: number[], d: FunctionPlotDatum, sign:
   const n = 10
   const x0 = d0[0]
   const x1 = d1[0]
-  const samples = linspace(x0, x1, n)
+  const samples = utils.linspace(x0, x1, n)
   let oldY, oldX
   for (let i = 0; i < n; i += 1) {
     const x = samples[i]
