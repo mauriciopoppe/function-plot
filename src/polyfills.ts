@@ -8,7 +8,9 @@
 // src: http://stackoverflow.com/questions/6481612/queryselector-search-immediate-children
 
 /*eslint-disable */
-;(function (doc, proto) {
+
+if (typeof window !== 'undefined')
+(function (doc, proto) {
   try { // check if browser supports :scope natively
     doc.querySelector(':scope body')
   } catch (err) { // polyfill native methods if it doesn't
