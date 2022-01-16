@@ -97,7 +97,7 @@
     "jade": "^1.9.2",
     "jest": "^26.4.2",
     "lodash": "^4.17.11",
-    "markdown-it": "^11.0.1",
+    "markdown-it": "^12.3.2",
     "prism-react-renderer": "^1.1.1",
     "prismjs": "^1.21.0",
     "react-is": "^16.13.1",
