@@ -278,7 +278,7 @@ export interface FunctionPlotOptions {
   /**
    * A css selector or DOM node of the parent element that will contain the graph
    */
-  target: string
+  target: string | HTMLElement
 
   /**
    * The chart title

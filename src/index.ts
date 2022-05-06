@@ -153,7 +153,7 @@ export class Chart extends EventEmitter.EventEmitter {
   }
 
   private getDraggableNode() {
-    return d3Select(this.options.target).select('.zoom-and-drag').node()
+    return d3Select(this.options.target as any).select('.zoom-and-drag').node()
   }
 
   /**
@@ -271,7 +271,7 @@ export class Chart extends EventEmitter.EventEmitter {
   }
 
   drawGraphWrapper () {
-    const root = this.root = d3Select(this.options.target)
+    const root = this.root = d3Select(this.options.target as any)
       .selectAll('svg')
       .data([this.options])
 
