@@ -22,7 +22,7 @@ jobs:
         run: npm run build
 
       - name: Publish to Chromatic
-        if: github.event_name != "pull_request"
+        if: github.event_name != 'pull_request'
         uses: chromaui/action@v1
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
