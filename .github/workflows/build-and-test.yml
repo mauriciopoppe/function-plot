@@ -10,6 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
       - uses: actions/setup-node@v3.1.1
 
       - name: Install dependencies
@@ -30,4 +33,4 @@ jobs:
       - name: Run Fossa and upload data
         uses: fossa-contrib/fossa-action@v1
         with:
-          fossa-api-key: abcdefghijklmnopqrstuvwxyz
+          fossa-api-key: ${{ secrets.FOSSA_API_KEY }}
