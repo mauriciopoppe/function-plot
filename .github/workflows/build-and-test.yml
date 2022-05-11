@@ -8,10 +8,13 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+
+    env:
+      CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+      FOSSA_API_KEY: ${{ secrets.FOSSA_API_KEY }}
+
     steps:
       - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
 
       - uses: actions/setup-node@v3.1.1
 
@@ -25,12 +28,13 @@ jobs:
         run: npm run build
 
       - name: Publish to Chromatic
-        if: github.event_name != 'pull_request'
+        if: env.CHROMATIC_PROJECT_TOKEN != ''
         uses: chromaui/action@v1
         with:
-          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          projectToken: ${{ env.CHROMATIC_PROJECT_TOKEN }}
 
       - name: Run Fossa and upload data
+        if: env.FOSSA_API_KEY != ''
         uses: fossa-contrib/fossa-action@v1
         with:
-          fossa-api-key: ${{ secrets.FOSSA_API_KEY }}
+          fossa-api-key: ${{ env.FOSSA_API_KEY }}
