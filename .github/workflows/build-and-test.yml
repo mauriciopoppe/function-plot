@@ -8,15 +8,13 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-    
+
     env:
       CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
       FOSSA_API_KEY: ${{ secrets.FOSSA_API_KEY }}
 
     steps:
       - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
 
       - uses: actions/setup-node@v3.1.1
 
