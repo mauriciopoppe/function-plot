@@ -12,8 +12,7 @@
     "baseUrl": ".",
     "paths": {
       "*": [
-        "node_modules/*",
-        "src/types/*"
+        "node_modules/*"
       ]
     },
     "jsx": "react"
@@ -21,8 +20,7 @@
   "include": [
     "src/**/*"
   ],
-  "typedocOptions": {
-    "mode": "modules",
-    "out": "docs"
-  }
+  "exclude": [
+    "src/stories/**/*",
+  ],
 }

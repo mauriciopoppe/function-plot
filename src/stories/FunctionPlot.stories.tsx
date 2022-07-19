@@ -1,5 +1,5 @@
 import React from 'react'
-import { Story, Meta } from '@storybook/react'
+import { Story, Meta } from '@storybook/react/types-6-0'
 
 import { FunctionPlot, FunctionPlotProps } from './FunctionPlot'
 
@@ -11,7 +11,7 @@ export default {
   }
 } as Meta;
 
-const Template: Story<FunctionPlotProps> = (args) => <FunctionPlot {...args} />
+const Template: Story<FunctionPlotProps> = (args: any) => <FunctionPlot {...args} />
 
 export const PlottingACurve = Template.bind({});
 PlottingACurve.args = {

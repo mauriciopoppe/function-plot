@@ -21,7 +21,7 @@
     "build:types": "tsc",
     "build:site": "cp dist/function-plot.js site/js/function-plot.js",
     "start": "webpack-dev-server",
-    "docs": "typedoc --out site/docs src",
+    "docs": "typedoc --out site/docs src/index.ts",
     "test": "jest",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
@@ -62,7 +62,7 @@
     "d3-selection": "^2.0.0",
     "d3-shape": "^2.0.0",
     "d3-zoom": "^2.0.0",
-    "interval-arithmetic-eval": "^0.4.7"
+    "interval-arithmetic-eval": "^0.4.8"
   },
   "devDependencies": {
     "@babel/core": "^7.11.6",
@@ -94,6 +94,7 @@
     "eslint-plugin-react-hooks": "^1.7.0",
     "eslint-plugin-standard": "^4.0.1",
     "gh-pages-deploy": "^0.5.1",
+    "html-webpack-plugin": "^5.5.0",
     "jade": "^1.9.2",
     "jest": "^26.4.2",
     "lodash": "^4.17.11",
@@ -104,10 +105,10 @@
     "react-simple-code-editor": "^0.11.0",
     "standard": "^12.0.1",
     "standardx": "^5.0.0",
-    "ts-loader": "^8.0.4",
-    "typedoc": "^0.19.2",
-    "typescript": "^4.0.3",
-    "webpack": "^4.44.1",
+    "ts-loader": "^9.3.1",
+    "typedoc": "^0.23.8",
+    "typescript": "^4.7.4",
+    "webpack": "^5.73.0",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0"
   },
