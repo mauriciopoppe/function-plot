@@ -20,7 +20,10 @@ import * as $eval from './helpers/eval'
 
 require('./polyfills')
 
-const d3Scale = { linear: d3ScaleLinear, log: d3ScaleLog }
+const d3Scale: {
+  linear: () => ScaleLinear<number, number>,
+  log: () => ScaleLogarithmic<number, number>
+} = { linear: d3ScaleLinear, log: d3ScaleLog }
 
 interface ChartMetaMargin {
   left?: number
@@ -190,7 +193,7 @@ export class Chart extends EventEmitter.EventEmitter {
 
     const integerFormat = d3Format('~s')
     const floatFormat = d3Format('~e')
-    function formatter (d: number): string {
+    function formatter(d: number): string {
       // take only the decimal part of the number
       const frac = Math.abs(d) - Math.floor(Math.abs(d))
       if (frac > 0) {
@@ -200,7 +203,7 @@ export class Chart extends EventEmitter.EventEmitter {
       }
     }
 
-    function computeYScale (xScale: number[]) {
+    function computeYScale(xScale: number[]) {
       // assumes that xScale is a linear scale
       const xDiff = xScale[1] - xScale[0]
       return self.meta.height * xDiff / self.meta.width
@@ -239,7 +242,6 @@ export class Chart extends EventEmitter.EventEmitter {
     })(this.options.yAxis)
 
     if (!this.meta.xScale) {
-      // @ts-ignore can't properly perform type-checking
       this.meta.xScale = d3Scale[this.options.xAxis.type]()
     }
     this.meta.xScale
@@ -248,7 +250,6 @@ export class Chart extends EventEmitter.EventEmitter {
       .range(this.options.xAxis.invert ? [this.meta.width, 0] : [0, this.meta.width])
 
     if (!this.meta.yScale) {
-      // @ts-ignore can't properly perform type-checking
       this.meta.yScale = d3Scale[this.options.yAxis.type]()
     }
     this.meta.yScale
@@ -274,7 +275,7 @@ export class Chart extends EventEmitter.EventEmitter {
       .y(function (d) { return self.meta.yScale(d[1]) })
   }
 
-  drawGraphWrapper () {
+  drawGraphWrapper() {
     const root = this.root = d3Select(this.options.target as any)
       .selectAll('svg')
       .data([this.options])
@@ -542,7 +543,7 @@ export class Chart extends EventEmitter.EventEmitter {
 
     if (!this.meta.zoomBehavior) {
       this.meta.zoomBehavior = d3Zoom()
-        .on('zoom', function onZoom (ev) {
+        .on('zoom', function onZoom(ev) {
           self.getEmitInstance().emit('all:zoom', ev)
         })
       // the zoom behavior must work with a copy of the scale, the zoom behavior has its own state and assumes
@@ -649,7 +650,7 @@ export class Chart extends EventEmitter.EventEmitter {
     }
 
     const events = {
-      mousemove: function (coordinates: {x: number, y: number}) {
+      mousemove: function (coordinates: { x: number, y: number }) {
         self.tip.move(coordinates)
       },
 
@@ -661,7 +662,7 @@ export class Chart extends EventEmitter.EventEmitter {
         self.tip.hide()
       },
 
-      zoom: function zoom ({ transform }: any) {
+      zoom: function zoom({ transform }: any) {
         // disable zoom
         if (self.options.disableZoom) return
 
@@ -752,7 +753,7 @@ export class Chart extends EventEmitter.EventEmitter {
   }
 }
 
-function functionPlot (options: FunctionPlotOptions = {target: null}) {
+function functionPlot(options: FunctionPlotOptions = { target: null }) {
   options.data = options.data || []
   let instance = Chart.cache[options.id]
   if (!instance) {
