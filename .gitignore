@@ -4,6 +4,8 @@
 /site/partials/recipes.html
 /site/docs/
 
+yarn-error.log
+
 # Created by https://www.gitignore.io
 .DS_Store
 ### Node ###

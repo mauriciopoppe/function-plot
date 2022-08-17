@@ -45,8 +45,8 @@ export interface ChartMeta {
    */
   height?: number
   zoomBehavior?: any
-  xScale?: ScaleLinear<number, number> // | ScaleLogarithmic<number, number>
-  yScale?: ScaleLinear<number, number> // | ScaleLogarithmic<number, number>
+  xScale?: ScaleLinear<number, number> | ScaleLogarithmic<number, number>
+  yScale?: ScaleLinear<number, number> | ScaleLogarithmic<number, number>
   xAxis?: Axis<any>
   yAxis?: Axis<any>
   xDomain?: number[]
@@ -239,17 +239,21 @@ export class Chart extends EventEmitter.EventEmitter {
     })(this.options.yAxis)
 
     if (!this.meta.xScale) {
+      // @ts-ignore can't properly perform type-checking
       this.meta.xScale = d3Scale[this.options.xAxis.type]()
     }
     this.meta.xScale
       .domain(xDomain)
+      // @ts-ignore domain always returns typeof this.meta.xDomain
       .range(this.options.xAxis.invert ? [this.meta.width, 0] : [0, this.meta.width])
 
     if (!this.meta.yScale) {
+      // @ts-ignore can't properly perform type-checking
       this.meta.yScale = d3Scale[this.options.yAxis.type]()
     }
     this.meta.yScale
       .domain(yDomain)
+      // @ts-ignore domain always returns typeof this.meta.yDomain
       .range(this.options.yAxis.invert ? [0, this.meta.height] : [this.meta.height, 0])
 
     if (!this.meta.xAxis) {
@@ -668,9 +672,11 @@ export class Chart extends EventEmitter.EventEmitter {
         // NOTE: setting self.meta.xScale = self.meta.zoomBehavior.xScale creates artifacts and weird lines
         self.meta.xScale
           .domain(xScaleClone.domain())
+          // @ts-ignore domain always returns typeof this.meta.yDomain
           .range(xScaleClone.range())
         self.meta.yScale
           .domain(yScaleClone.domain())
+          // @ts-ignore domain always returns typeof this.meta.yDomain
           .range(yScaleClone.range())
       },
 
