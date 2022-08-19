@@ -298,9 +298,6 @@ export class Chart extends EventEmitter.EventEmitter {
     this.buildAxis()
     this.buildAxisLabel()
 
-    // draw each datum after the wrapper was set up
-    this.draw()
-
     // helper to detect the closest fn to the cursor's current abscissa
     const tip = this.tip = mousetip(Object.assign(this.options.tip || {}, { owner: this }))
     this.canvas.merge(this.canvas.enter)
@@ -308,6 +305,9 @@ export class Chart extends EventEmitter.EventEmitter {
 
     this.buildZoomHelper()
     this.setUpPlugins()
+
+    // draw each datum after the wrapper and plugins were set up
+    this.draw()
   }
 
   buildTitle() {
