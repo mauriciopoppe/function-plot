@@ -1,12 +1,18 @@
-name: release
+name: Release
 
 on:
   release:
     types: [published]
 
+permissions:
+  contents: write
+
 jobs:
-  publish:
+  package:
+    name: Publish package
     runs-on: ubuntu-latest
+    outputs:
+      deployment-status: ${{ steps.deploy.outputs.deployment-status }}
     steps:
       - uses: actions/checkout@v2
 
@@ -21,11 +27,31 @@ jobs:
       - name: Bump version
         run: node .github/bump-version.js ${{ github.event.release.tag_name }}
 
-      - name: Build
-        run: NODE_ENV=production npm run build
+      - name: Build package and docs
+        run: |
+          npm run build
+          npm run site
 
-      - name: Publish
+      - name: Publish package
         run: npm publish --dry-run
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Deploy to GitHub Pages
+        id: deploy
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: site
+
+  docs:
+    name: Publish docs
+    needs: package
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check deployment status
+        run: |
+          if ["${{ needs.package.outputs.deployment-status }}" == "failed" ]; then
+            exit 1
+          fi
 

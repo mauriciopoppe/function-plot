@@ -13,13 +13,8 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "deploy": "gh-pages-deploy",
-    "html": "node site.js",
-    "prepare": "npm run build",
-    "build": "npx rimraf dist && npm run html && npm run docs && npm run build:types && npm run build:webpack && npm run build:site",
-    "build:webpack": "NODE_ENV=production webpack",
-    "build:types": "tsc",
-    "build:site": "cp dist/function-plot.js site/js/function-plot.js",
+    "build": "NODE_ENV=production webpack",
+    "site": "node site.js && cp dist/function-plot.js site/js/function-plot.js",
     "start": "webpack-dev-server",
     "docs": "typedoc --out site/docs src/index.ts",
     "test": "jest",
@@ -30,12 +25,6 @@
   "files": [
     "/dist"
   ],
-  "gh-pages-deploy": {
-    "prep": [
-      "build"
-    ],
-    "staticpath": "site"
-  },
   "keywords": [
     "function-plot",
     "function",
@@ -93,7 +82,6 @@
     "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-react-hooks": "^1.7.0",
     "eslint-plugin-standard": "^4.0.1",
-    "gh-pages-deploy": "^0.5.1",
     "html-webpack-plugin": "^5.5.0",
     "jade": "^1.9.2",
     "jest": "^26.4.2",
