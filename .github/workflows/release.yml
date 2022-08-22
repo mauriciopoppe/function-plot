@@ -33,7 +33,7 @@ jobs:
           npm run site
 
       - name: Publish package
-        run: npm publish --dry-run
+        run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -46,7 +46,6 @@ jobs:
   docs:
     name: Publish docs
     needs: package
-    if: always()
     runs-on: ubuntu-latest
     steps:
       - name: Check deployment status
