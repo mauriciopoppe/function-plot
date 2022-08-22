@@ -14,9 +14,8 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "NODE_ENV=production webpack",
-    "site": "node site.js && cp dist/function-plot.js site/js/function-plot.js",
+    "site": "node site.js && cp dist/function-plot.js site/js/function-plot.js && typedoc --out site/docs src/index.ts",
     "start": "webpack-dev-server",
-    "docs": "typedoc --out site/docs src/index.ts",
     "test": "jest",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
