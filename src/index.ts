@@ -303,11 +303,13 @@ export class Chart extends EventEmitter.EventEmitter {
     this.canvas.merge(this.canvas.enter)
       .call(tip)
 
-    this.buildZoomHelper()
     this.setUpPlugins()
 
     // draw each datum after the wrapper and plugins were set up
     this.draw()
+
+    // zoom helper on top
+    this.buildZoomHelper()
   }
 
   buildTitle() {
