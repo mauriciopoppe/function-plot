@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    if: github.ref_type == "branch"
+    if: github.ref_type == 'branch'
     runs-on: ubuntu-latest
 
     steps:
@@ -25,7 +25,7 @@ jobs:
         run: npm run build
 
   test:
-    if: github.ref_type == "branch"
+    if: github.ref_type == 'branch'
     runs-on: ubuntu-latest
 
     steps:
@@ -40,7 +40,7 @@ jobs:
         run: npm run test
 
   analyze:
-    if: github.ref_type == "branch"
+    if: github.ref_type == 'branch'
     runs-on: ubuntu-latest
 
     env:
