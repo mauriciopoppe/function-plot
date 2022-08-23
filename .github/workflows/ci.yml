@@ -2,13 +2,13 @@ name: CI
 
 on:
   push:
+    branches:
+      - '**'
   pull_request:
-    types: [opened, reopened, synchronize]
 
 jobs:
   build:
     name: Build ⚙️
-    if: github.ref_type == 'branch'
     runs-on: ubuntu-latest
 
     steps:
@@ -27,7 +27,6 @@ jobs:
 
   test:
     name: Test 🧪
-    if: github.ref_type == 'branch'
     runs-on: ubuntu-latest
 
     steps:
@@ -43,7 +42,6 @@ jobs:
 
   analyze:
     name: Analyze 📈
-    if: github.ref_type == 'branch'
     runs-on: ubuntu-latest
 
     env:
