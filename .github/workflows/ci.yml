@@ -53,6 +53,11 @@ jobs:
         with:
           fetch-depth: 0
 
+      - uses: actions/setup-node@v3
+
+      - name: Install dependencies
+        run: npm install
+
       - name: Publish to Chromatic
         if: env.CHROMATIC_PROJECT_TOKEN != ''
         uses: chromaui/action@v1

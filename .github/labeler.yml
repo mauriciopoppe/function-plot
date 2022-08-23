@@ -1,0 +1,25 @@
+documentation:
+  - 'README.md'
+  - 'DEVELOPMENT.md'
+
+src:
+  - 'src/**/*'
+  - '!src/stories/*'
+
+storybook:
+  - '.storybook/*'
+  - 'src/stories/*'
+
+site:
+  - 'site/**'
+  - 'site.js'
+
+tests:
+  - 'src/**/*.test.js'
+  - 'jest.config.js'
+
+automation:
+  - '.github/workflows/*'
+
+invalid:
+  - 'LICENSE'

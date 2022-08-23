@@ -1,0 +1,14 @@
+name: Labeler
+
+on: pull_request_target
+
+jobs:
+  label:
+    name: Label
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Labeler
+        uses: actions/labeler@v4.0.0
+        with:
+          repo-token: ${{ github.token }}
