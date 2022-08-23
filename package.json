@@ -10,7 +10,7 @@
   "bugs": "https://github.com/mauriciopoppe/function-plot/issues",
   "homepage": "http://mauriciopoppe.github.io/function-plot/",
   "author": "Mauricio Poppe <mauricio.poppe@gmail.com>",
-  "main": "dist/index.js",
+  "main": "dist/function-plot.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "NODE_ENV=production webpack",
