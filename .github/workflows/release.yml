@@ -1,0 +1,56 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  package:
+    name: Publish package
+    runs-on: ubuntu-latest
+    outputs:
+      deployment-status: ${{ steps.deploy.outputs.deployment-status }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Bump version
+        run: node .github/bump-version.js ${{ github.event.release.tag_name }}
+
+      - name: Build package and docs
+        run: |
+          npm run build
+          npm run site
+
+      - name: Publish package
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Deploy to GitHub Pages
+        id: deploy
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: site
+
+  docs:
+    name: Publish docs
+    needs: package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check deployment status
+        run: |
+          if ["${{ needs.package.outputs.deployment-status }}" == "failed" ]; then
+            exit 1
+          fi
+

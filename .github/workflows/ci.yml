@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  build:
+    name: Build ⚙️
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v3
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Test
+        run: npm run test
+
+      - name: Build
+        run: npm run build
+
+  test:
+    name: Test 🧪
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v3
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Test
+        run: npm run test
+
+  analyze:
+    name: Analyze 📈
+    runs-on: ubuntu-latest
+
+    env:
+      CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+      FOSSA_API_KEY: ${{ secrets.FOSSA_API_KEY }}
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v3
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Publish to Chromatic
+        if: env.CHROMATIC_PROJECT_TOKEN != ''
+        uses: chromaui/action@v1
+        with:
+          projectToken: ${{ env.CHROMATIC_PROJECT_TOKEN }}
+
+      - name: Run Fossa and upload data
+        if: env.FOSSA_API_KEY != ''
+        uses: fossa-contrib/fossa-action@v1
+        with:
+          fossa-api-key: ${{ env.FOSSA_API_KEY }}
