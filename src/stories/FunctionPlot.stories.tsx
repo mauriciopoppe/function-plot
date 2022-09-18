@@ -20,6 +20,19 @@ PlottingACurve.args = {
   }
 }
 
+export const XPowerFloat = Template.bind({});
+XPowerFloat.args = {
+  options: {
+    data: [
+      {
+        fn: 'x^(2/3)',
+        nSamples: 1600,
+        graphType: 'polyline',
+      }
+    ]
+  }
+}
+
 export const AdditionalOptions = Template.bind({})
 AdditionalOptions.args = {
   options: {
