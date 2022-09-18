@@ -12,7 +12,7 @@ module.exports = {
     libraryTarget: 'umd'
   },
   devServer: {
-    contentBase: './site'
+    static: './site'
   },
   module: {
     rules: [
