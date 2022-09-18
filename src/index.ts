@@ -20,7 +20,10 @@ import * as $eval from './helpers/eval'
 
 require('./polyfills')
 
-const d3Scale = { linear: d3ScaleLinear, log: d3ScaleLog }
+const d3Scale: {
+  linear: () => ScaleLinear<number, number>,
+  log: () => ScaleLogarithmic<number, number>
+} = { linear: d3ScaleLinear, log: d3ScaleLog }
 
 interface ChartMetaMargin {
   left?: number
@@ -45,8 +48,8 @@ export interface ChartMeta {
    */
   height?: number
   zoomBehavior?: any
-  xScale?: ScaleLinear<number, number> // | ScaleLogarithmic<number, number>
-  yScale?: ScaleLinear<number, number> // | ScaleLogarithmic<number, number>
+  xScale?: ScaleLinear<number, number> | ScaleLogarithmic<number, number>
+  yScale?: ScaleLinear<number, number> | ScaleLogarithmic<number, number>
   xAxis?: Axis<any>
   yAxis?: Axis<any>
   xDomain?: number[]
@@ -190,7 +193,7 @@ export class Chart extends EventEmitter.EventEmitter {
 
     const integerFormat = d3Format('~s')
     const floatFormat = d3Format('~e')
-    function formatter (d: number): string {
+    function formatter(d: number): string {
       // take only the decimal part of the number
       const frac = Math.abs(d) - Math.floor(Math.abs(d))
       if (frac > 0) {
@@ -200,7 +203,7 @@ export class Chart extends EventEmitter.EventEmitter {
       }
     }
 
-    function computeYScale (xScale: number[]) {
+    function computeYScale(xScale: number[]) {
       // assumes that xScale is a linear scale
       const xDiff = xScale[1] - xScale[0]
       return self.meta.height * xDiff / self.meta.width
@@ -243,6 +246,7 @@ export class Chart extends EventEmitter.EventEmitter {
     }
     this.meta.xScale
       .domain(xDomain)
+      // @ts-ignore domain always returns typeof this.meta.xDomain
       .range(this.options.xAxis.invert ? [this.meta.width, 0] : [0, this.meta.width])
 
     if (!this.meta.yScale) {
@@ -250,6 +254,7 @@ export class Chart extends EventEmitter.EventEmitter {
     }
     this.meta.yScale
       .domain(yDomain)
+      // @ts-ignore domain always returns typeof this.meta.yDomain
       .range(this.options.yAxis.invert ? [0, this.meta.height] : [this.meta.height, 0])
 
     if (!this.meta.xAxis) {
@@ -270,7 +275,7 @@ export class Chart extends EventEmitter.EventEmitter {
       .y(function (d) { return self.meta.yScale(d[1]) })
   }
 
-  drawGraphWrapper () {
+  drawGraphWrapper() {
     const root = this.root = d3Select(this.options.target as any)
       .selectAll('svg')
       .data([this.options])
@@ -293,16 +298,18 @@ export class Chart extends EventEmitter.EventEmitter {
     this.buildAxis()
     this.buildAxisLabel()
 
-    // draw each datum after the wrapper was set up
-    this.draw()
-
     // helper to detect the closest fn to the cursor's current abscissa
     const tip = this.tip = mousetip(Object.assign(this.options.tip || {}, { owner: this }))
     this.canvas.merge(this.canvas.enter)
       .call(tip)
 
-    this.buildZoomHelper()
     this.setUpPlugins()
+
+    // draw each datum after the wrapper and plugins were set up
+    this.draw()
+
+    // zoom helper on top
+    this.buildZoomHelper()
   }
 
   buildTitle() {
@@ -538,7 +545,7 @@ export class Chart extends EventEmitter.EventEmitter {
 
     if (!this.meta.zoomBehavior) {
       this.meta.zoomBehavior = d3Zoom()
-        .on('zoom', function onZoom (ev) {
+        .on('zoom', function onZoom(ev) {
           self.getEmitInstance().emit('all:zoom', ev)
         })
       // the zoom behavior must work with a copy of the scale, the zoom behavior has its own state and assumes
@@ -645,7 +652,7 @@ export class Chart extends EventEmitter.EventEmitter {
     }
 
     const events = {
-      mousemove: function (coordinates: {x: number, y: number}) {
+      mousemove: function (coordinates: { x: number, y: number }) {
         self.tip.move(coordinates)
       },
 
@@ -657,7 +664,7 @@ export class Chart extends EventEmitter.EventEmitter {
         self.tip.hide()
       },
 
-      zoom: function zoom ({ transform }: any) {
+      zoom: function zoom({ transform }: any) {
         // disable zoom
         if (self.options.disableZoom) return
 
@@ -668,9 +675,11 @@ export class Chart extends EventEmitter.EventEmitter {
         // NOTE: setting self.meta.xScale = self.meta.zoomBehavior.xScale creates artifacts and weird lines
         self.meta.xScale
           .domain(xScaleClone.domain())
+          // @ts-ignore domain always returns typeof this.meta.yDomain
           .range(xScaleClone.range())
         self.meta.yScale
           .domain(yScaleClone.domain())
+          // @ts-ignore domain always returns typeof this.meta.yDomain
           .range(yScaleClone.range())
       },
 
@@ -746,7 +755,7 @@ export class Chart extends EventEmitter.EventEmitter {
   }
 }
 
-function functionPlot (options: FunctionPlotOptions = {target: null}) {
+function functionPlot(options: FunctionPlotOptions = { target: null }) {
   options.data = options.data || []
   let instance = Chart.cache[options.id]
   if (!instance) {

@@ -4,6 +4,10 @@
 /site/partials/recipes.html
 /site/docs/
 
+# ignore yarn files (this repo uses npm)
+yarn-error.log
+yarn.log
+
 # Created by https://www.gitignore.io
 .DS_Store
 ### Node ###
