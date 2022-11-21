@@ -46,7 +46,8 @@ const utils = {
   },
 
   color: function (data: FunctionPlotDatum, index: number): string {
-    return data.color || globals.COLORS[index].hex()
+    let indexModLenColor = index % globals.COLORS.length
+    return data.color || globals.COLORS[indexModLenColor].hex()
   }
 }
 
