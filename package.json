@@ -13,7 +13,8 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "deploy": "gh-pages-deploy",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d site",
     "html": "node site.js",
     "prepare": "npm run build",
     "build": "npx rimraf dist && npm run html && npm run docs && npm run build:types && npm run build:webpack && npm run build:site",
@@ -30,12 +31,6 @@
   "files": [
     "/dist"
   ],
-  "gh-pages-deploy": {
-    "prep": [
-      "build"
-    ],
-    "staticpath": "site"
-  },
   "keywords": [
     "function-plot",
     "function",
@@ -98,7 +93,7 @@
     "eslint-plugin-react": "^7.31.8",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-standard": "^4.1.0",
-    "gh-pages-deploy": "^0.5.1",
+    "gh-pages": "^4.0.0",
     "html-webpack-plugin": "^5.5.0",
     "jade": "^1.9.2",
     "jest": "^29.0.3",

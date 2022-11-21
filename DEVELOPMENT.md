@@ -19,9 +19,7 @@ npm run storybook
 
 Deploy steps:
 
-- `npm run build`
-- `git push origin master`
-- `npm run deploy -- -- "Commit message"`
+- `npm run deploy`
 
 Release steps **(do deploy first)**:
 
