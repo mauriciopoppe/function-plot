@@ -18,7 +18,7 @@ import globals from './globals'
 import * as graphTypes from './graph-types'
 import * as $eval from './helpers/eval'
 
-require('./polyfills')
+import './polyfills'
 
 const d3Scale: {
   linear: () => ScaleLinear<number, number>,
