@@ -6,12 +6,27 @@ const samplers = {
   builtIn: builtInMathEval
 }
 
-if ((global as any).math) {
-  samplers.builtIn = (global as any).math.compile
+// getMathJS returns checks if mathjs is loaded.
+function getMathJS(): { compile: any } | null {
+  if (typeof global === 'object' && 'math' in global) {
+    // @ts-ignore
+    return global['math'] as any
+  }
+  if (typeof window === 'object' && 'math' in window) {
+    // @ts-ignore
+    return window['math']
+  }
+  return null
 }
 
-function generateEvaluator (samplerName: 'interval' | 'builtIn') {
-  function doCompile (expression: string | { eval: (scope: any) => any }) {
+let mathJS = getMathJS()
+if (mathJS) {
+  // override the built-in module with mathjs's compile
+  samplers.builtIn = mathJS.compile
+}
+
+function generateEvaluator(samplerName: 'interval' | 'builtIn') {
+  function doCompile(expression: string | { eval: (scope: any) => any }) {
     // compiles does the following
     //
     // when expression === string
@@ -36,7 +51,7 @@ function generateEvaluator (samplerName: 'interval' | 'builtIn') {
     // othewise throw an error
     if (typeof expression === 'string') {
       const compiled = samplers[samplerName](expression)
-      if ((global as any).math && samplerName === 'builtIn') {
+      if (mathJS && samplerName === 'builtIn') {
         // if mathjs is included use its evaluate method instead
         return { eval: compiled.evaluate || compiled.eval }
       }
@@ -48,7 +63,7 @@ function generateEvaluator (samplerName: 'interval' | 'builtIn') {
     }
   }
 
-  function compileIfPossible (meta: any, property: string) {
+  function compileIfPossible(meta: any, property: string) {
     // compile the function using interval arithmetic, cache the result
     // so that multiple calls with the same argument don't trigger the
     // kinda expensive compilation process
@@ -61,7 +76,7 @@ function generateEvaluator (samplerName: 'interval' | 'builtIn') {
     }
   }
 
-  function getCompiledExpression (meta: any, property: string) {
+  function getCompiledExpression(meta: any, property: string) {
     return meta[samplerName + '_Compiled_' + property]
   }
 
@@ -79,7 +94,7 @@ function generateEvaluator (samplerName: 'interval' | 'builtIn') {
    * @returns {Number|Array} The builtIn evaluator returns a number, the
    * interval evaluator an array
    */
-  function evaluate (meta: any, property: string, variables: any) {
+  function evaluate(meta: any, property: string, variables: any) {
     // e.g.
     //
     //  meta: {
@@ -91,9 +106,7 @@ function generateEvaluator (samplerName: 'interval' | 'builtIn') {
     //
     compileIfPossible(meta, property)
 
-    return getCompiledExpression(meta, property).eval(
-      Object.assign({}, meta.scope || {}, variables)
-    )
+    return getCompiledExpression(meta, property).eval(Object.assign({}, meta.scope || {}, variables))
   }
 
   return evaluate
