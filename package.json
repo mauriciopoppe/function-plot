@@ -72,7 +72,7 @@
     "@storybook/addon-actions": "^6.5.12",
     "@storybook/addon-essentials": "^6.5.12",
     "@storybook/addon-links": "^6.5.12",
-    "@storybook/react": "^6.5.12",
+    "@storybook/react": "^7.0.5",
     "@types/d3": "^7.4.0",
     "@types/events": "^3.0.0",
     "@typescript-eslint/eslint-plugin": "^5.37.0",
