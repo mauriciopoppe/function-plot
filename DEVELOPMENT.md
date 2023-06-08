@@ -9,12 +9,6 @@ npm start
 
 Main page: `http://localhost:8080/`
 
-### Storybook
-
-```sh
-npm run storybook
-```
-
 ## Deployment
 
 Deploy steps:
