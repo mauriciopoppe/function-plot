@@ -1,6 +1,3 @@
-import { ScaleLinear, ScaleLogarithmic } from 'd3-scale'
-import { Chart } from './index'
-
 export interface Interval {
   lo: number
   hi: number
@@ -13,7 +10,7 @@ export interface FunctionPlotOptionsAxis {
   domain?: number[]
 
   /**
-   * The type of axis (either {@link ScaleLinear} or {@link ScaleLogarithmic}
+   * The type of axis
    */
   type?: 'linear' | 'log'
 
@@ -62,7 +59,7 @@ export interface FunctionPlotDatumScope {
  * - when `fnType: 'polar'`, a string expressed in terms of `theta`
  * - when `fnType: 'parametric'`, a string expressed in terms of `t`
  */
-type Function = string | ((scope: FunctionPlotDatumScope) => any)
+export type Function = string | ((scope: FunctionPlotDatumScope) => any)
 
 export interface FunctionPlotDatumSecant {
   /**
@@ -248,7 +245,6 @@ export interface FunctionPlotDatum {
    * True to bypass the range limits, used for helper functions
    */
   skipBoundsCheck?: boolean
-
 }
 
 export interface FunctionPlotAnnotation {

@@ -45,11 +45,11 @@ import functionPlot from 'function-plot'
 functionPlot(options)
 ```
 
-[`All the available options are described in the docs`](https://mauriciopoppe.github.io/function-plot/docs/interfaces/_src_types_.functionplotoptions.html)
+[`All the available options are described in the docs`](https://mauriciopoppe.github.io/function-plot/functions/functionPlot-1)
 
 ## License
 
-2015-2022 MIT © Mauricio Poppe
+2015-2023 MIT © Mauricio Poppe
 
 
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fmauriciopoppe%2Ffunction-plot.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fmauriciopoppe%2Ffunction-plot?ref=badge_large)
