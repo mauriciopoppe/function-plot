@@ -45,7 +45,7 @@ import functionPlot from 'function-plot'
 functionPlot(options)
 ```
 
-[`All the available options are described in the docs`](https://mauriciopoppe.github.io/function-plot/docs/functions/default-1)
+[`All the available options are described in the docs`](https://mauriciopoppe.github.io/function-plot/docs/functions/default-1.html)
 
 ## License
 
