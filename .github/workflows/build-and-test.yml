@@ -10,7 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
       FOSSA_API_KEY: ${{ secrets.FOSSA_API_KEY }}
 
     steps:
@@ -28,12 +27,6 @@ jobs:
 
       - name: Build
         run: npm run build
-
-      - name: Publish to Chromatic
-        if: env.CHROMATIC_PROJECT_TOKEN != ''
-        uses: chromaui/action@v1
-        with:
-          projectToken: ${{ env.CHROMATIC_PROJECT_TOKEN }}
 
       - name: Run Fossa and upload data
         if: env.FOSSA_API_KEY != ''
