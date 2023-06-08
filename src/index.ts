@@ -20,10 +20,10 @@ import * as $eval from './helpers/eval'
 
 import './polyfills'
 
-const d3Scale: {
-  linear: () => ScaleLinear<number, number>
-  log: () => ScaleLogarithmic<number, number>
-} = { linear: d3ScaleLinear, log: d3ScaleLog }
+function getD3Scale(type: 'linear' | 'log') {
+  if (type === 'linear') return d3ScaleLinear
+  return d3ScaleLog
+}
 
 export interface ChartMetaMargin {
   left?: number
@@ -241,7 +241,7 @@ export class Chart extends EventEmitter.EventEmitter {
     })(this.options.yAxis))
 
     if (!this.meta.xScale) {
-      this.meta.xScale = d3Scale[this.options.xAxis.type]()
+      this.meta.xScale = getD3Scale(this.options.xAxis.type)()
     }
     this.meta.xScale
       .domain(xDomain)
@@ -249,7 +249,7 @@ export class Chart extends EventEmitter.EventEmitter {
       .range(this.options.xAxis.invert ? [this.meta.width, 0] : [0, this.meta.width])
 
     if (!this.meta.yScale) {
-      this.meta.yScale = d3Scale[this.options.yAxis.type]()
+      this.meta.yScale = getD3Scale(this.options.yAxis.type)()
     }
     this.meta.yScale
       .domain(yDomain)
@@ -783,7 +783,7 @@ export class Chart extends EventEmitter.EventEmitter {
  *
  * @param options The options sent to Chart
  */
-export function functionPlot(options: FunctionPlotOptions = { target: null }) {
+export default function functionPlot(options: FunctionPlotOptions = { target: null }) {
   options.data = options.data || []
   let instance = Chart.cache[options.id]
   if (!instance) {
