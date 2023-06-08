@@ -17,7 +17,7 @@ const evalTypeFn = {
  * @param {Object} d An item from `data`
  * @returns {Array}
  */
-function computeEndpoints (scale: any, d: any): [number, number] {
+function computeEndpoints(scale: any, d: any): [number, number] {
   const range = d.range || [-Infinity, Infinity]
   const start = Math.max(scale.domain()[0], range[0])
   const end = Math.min(scale.domain()[1], range[1])
@@ -30,15 +30,12 @@ function computeEndpoints (scale: any, d: any): [number, number] {
  *
  * @param {Object} chart Chart instance which is orchestrating this sampling operation
  * @param {Object} d a.k.a a single item from `data`
- * @returns {Array}
+ * @returns [number, number]
  */
-function evaluate (chart: Chart, d: FunctionPlotDatum) {
+function evaluate(chart: Chart, d: FunctionPlotDatum) {
   const range = computeEndpoints(chart.meta.xScale, d)
   const evalFn = evalTypeFn[d.sampler]
-  const nSamples = d.nSamples || Math.min(
-    globals.MAX_ITERATIONS,
-    globals.DEFAULT_ITERATIONS || (chart.meta.width * 2)
-  )
+  const nSamples = d.nSamples || Math.min(globals.MAX_ITERATIONS, globals.DEFAULT_ITERATIONS || chart.meta.width * 2)
 
   const data = evalFn(chart, d, range, nSamples)
   // NOTE: it's impossible to listen for the first eval event

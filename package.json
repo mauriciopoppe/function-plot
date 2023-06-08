@@ -22,10 +22,10 @@
     "build:types": "tsc",
     "build:site": "cp dist/function-plot.js site/js/function-plot.js",
     "start": "webpack-dev-server",
-    "docs": "typedoc --out site/docs src/index.ts",
+    "docs": "typedoc --excludeExternals --externalPattern \"**/node_modules/**\" --out site/docs src/index.ts",
     "test": "jest",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook",
+    "build-storybook": "NODE_OPTIONS=--openssl-legacy-provider build-storybook",
     "chromatic": "npx chromatic"
   },
   "files": [
@@ -72,6 +72,7 @@
     "@storybook/addon-actions": "^6.5.12",
     "@storybook/addon-essentials": "^6.5.12",
     "@storybook/addon-links": "^6.5.12",
+    "@storybook/addon-postcss": "^2.0.0",
     "@storybook/react": "^6.5.12",
     "@types/d3": "^7.4.0",
     "@types/events": "^3.0.0",
@@ -111,12 +112,6 @@
     "webpack": "^5.74.0",
     "webpack-cli": "^4.10.0",
     "webpack-dev-server": "^4.11.0"
-  },
-  "eslintConfig": {
-    "rules": {
-      "no-unused-vars": "off",
-      "@typescript-eslint/no-unused-vars": "error"
-    }
   },
   "standardx": {
     "parser": "@typescript-eslint/parser",

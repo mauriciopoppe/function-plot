@@ -4,7 +4,7 @@ import { scaleLinear as d3ScaleLinear, scaleLog as d3ScaleLog, ScaleLinear, Scal
 import { axisLeft as d3AxisLeft, axisBottom as d3AxisBottom, Axis } from 'd3-axis'
 import { zoom as d3Zoom } from 'd3-zoom'
 // @ts-ignore
-import { select as d3Select, pointer as d3Pointer, Selection } from 'd3-selection'
+import { select as d3Select, pointer as d3Pointer } from 'd3-selection'
 import { interpolateRound as d3InterpolateRound } from 'd3-interpolate'
 import EventEmitter from 'events'
 
@@ -21,11 +21,11 @@ import * as $eval from './helpers/eval'
 import './polyfills'
 
 const d3Scale: {
-  linear: () => ScaleLinear<number, number>,
+  linear: () => ScaleLinear<number, number>
   log: () => ScaleLogarithmic<number, number>
 } = { linear: d3ScaleLinear, log: d3ScaleLog }
 
-interface ChartMetaMargin {
+export interface ChartMetaMargin {
   left?: number
   right?: number
   top?: number
@@ -147,7 +147,7 @@ export class Chart extends EventEmitter.EventEmitter {
    * After this is done it does a complete redraw of all the datums,
    * if only the datums need to be redrawn call `instance.draw()` instead
    *
-   * @returns {Chart}
+   * @returns Chart
    */
   build() {
     this.internalVars()
@@ -156,7 +156,9 @@ export class Chart extends EventEmitter.EventEmitter {
   }
 
   private getDraggableNode() {
-    return d3Select(this.options.target as any).select('.zoom-and-drag').node()
+    return d3Select(this.options.target as any)
+      .select('.zoom-and-drag')
+      .node()
   }
 
   /**
@@ -174,9 +176,7 @@ export class Chart extends EventEmitter.EventEmitter {
   }
 
   internalVars() {
-    const self = this
-
-    const margin = this.meta.margin = { left: 40, right: 20, top: 20, bottom: 20 }
+    const margin = (this.meta.margin = { left: 40, right: 20, top: 20, bottom: 20 })
     // if there's a title make the top margin bigger
     if (this.options.title) {
       this.meta.margin.top = 40
@@ -192,7 +192,6 @@ export class Chart extends EventEmitter.EventEmitter {
     const self = this
 
     const integerFormat = d3Format('~s')
-    const floatFormat = d3Format('~e')
     function formatter(d: number): string {
       // take only the decimal part of the number
       const frac = Math.abs(d) - Math.floor(Math.abs(d))
@@ -206,7 +205,7 @@ export class Chart extends EventEmitter.EventEmitter {
     function computeYScale(xScale: number[]) {
       // assumes that xScale is a linear scale
       const xDiff = xScale[1] - xScale[0]
-      return self.meta.height * xDiff / self.meta.width
+      return (self.meta.height * xDiff) / self.meta.width
     }
 
     this.options.xAxis = this.options.xAxis || {}
@@ -215,7 +214,7 @@ export class Chart extends EventEmitter.EventEmitter {
     this.options.yAxis = this.options.yAxis || {}
     this.options.yAxis.type = this.options.yAxis.type || 'linear'
 
-    const xDomain = this.meta.xDomain = (function (axis) {
+    const xDomain = (this.meta.xDomain = (function (axis) {
       if (axis.domain) {
         return axis.domain
       }
@@ -226,9 +225,9 @@ export class Chart extends EventEmitter.EventEmitter {
         return [1, 10]
       }
       throw Error('axis type ' + axis.type + ' unsupported')
-    })(this.options.xAxis)
+    })(this.options.xAxis))
 
-    const yDomain = this.meta.yDomain = (function (axis) {
+    const yDomain = (this.meta.yDomain = (function (axis) {
       if (axis.domain) {
         return axis.domain
       }
@@ -239,7 +238,7 @@ export class Chart extends EventEmitter.EventEmitter {
         return [1, 10]
       }
       throw Error('axis type ' + axis.type + ' unsupported')
-    })(this.options.yAxis)
+    })(this.options.yAxis))
 
     if (!this.meta.xScale) {
       this.meta.xScale = d3Scale[this.options.xAxis.type]()
@@ -260,34 +259,35 @@ export class Chart extends EventEmitter.EventEmitter {
     if (!this.meta.xAxis) {
       this.meta.xAxis = d3AxisBottom(this.meta.xScale)
     }
-    this.meta.xAxis
-      .tickSize(this.options.grid ? -this.meta.height : 0)
-      .tickFormat(formatter)
+    this.meta.xAxis.tickSize(this.options.grid ? -this.meta.height : 0).tickFormat(formatter)
     if (!this.meta.yAxis) {
       this.meta.yAxis = d3AxisLeft(this.meta.yScale)
     }
-    this.meta.yAxis
-      .tickSize(this.options.grid ? -this.meta.width : 0)
-      .tickFormat(formatter)
+    this.meta.yAxis.tickSize(this.options.grid ? -this.meta.width : 0).tickFormat(formatter)
 
     this.line = d3Line()
-      .x(function (d) { return self.meta.xScale(d[0]) })
-      .y(function (d) { return self.meta.yScale(d[1]) })
+      .x(function (d) {
+        return self.meta.xScale(d[0])
+      })
+      .y(function (d) {
+        return self.meta.yScale(d[1])
+      })
   }
 
   drawGraphWrapper() {
-    const root = this.root = d3Select(this.options.target as any)
+    const root = (this.root = d3Select(this.options.target as any)
       .selectAll('svg')
-      .data([this.options])
+      .data([this.options]))
 
     // enter
-    this.root.enter = root.enter()
-      .append('svg')
+    // prettier-ignore
+    this.root.enter = root.enter().append('svg')
       .attr('class', 'function-plot')
       .attr('font-size', this.getFontSize())
 
     // enter + update
-    root.merge(this.root.enter)
+    root
+      .merge(this.root.enter)
       .attr('width', this.meta.width + this.meta.margin.left + this.meta.margin.right)
       .attr('height', this.meta.height + this.meta.margin.top + this.meta.margin.bottom)
 
@@ -299,9 +299,8 @@ export class Chart extends EventEmitter.EventEmitter {
     this.buildAxisLabel()
 
     // helper to detect the closest fn to the cursor's current abscissa
-    const tip = this.tip = mousetip(Object.assign(this.options.tip || {}, { owner: this }))
-    this.canvas.merge(this.canvas.enter)
-      .call(tip)
+    const tip = (this.tip = mousetip(Object.assign(this.options.tip || {}, { owner: this })))
+    this.canvas.merge(this.canvas.enter).call(tip)
 
     this.setUpPlugins()
 
@@ -314,17 +313,18 @@ export class Chart extends EventEmitter.EventEmitter {
 
   buildTitle() {
     // join
-    const selection = this.root.merge(this.root.enter)
+    const selection = this.root
+      .merge(this.root.enter)
       .selectAll('text.title')
       .data(function (d: FunctionPlotOptions) {
         return [d.title].filter(Boolean)
       })
 
     // enter
-    const selectionEnter = selection.enter()
-      .append('text')
+    const selectionEnter = selection.enter().append('text')
 
-    selectionEnter.merge(selection)
+    selectionEnter
+      .merge(selection)
       .attr('class', 'title')
       .attr('y', this.meta.margin.top / 2)
       .attr('x', this.meta.margin.left + this.meta.width / 2)
@@ -339,13 +339,11 @@ export class Chart extends EventEmitter.EventEmitter {
 
   buildLegend() {
     // enter
-    this.root.enter
-      .append('text')
-      .attr('class', 'top-right-legend')
-      .attr('text-anchor', 'end')
+    this.root.enter.append('text').attr('class', 'top-right-legend').attr('text-anchor', 'end')
 
     // update + enter
-    this.root.merge(this.root.enter)
+    this.root
+      .merge(this.root.enter)
       .select('.top-right-legend')
       .attr('y', this.meta.margin.top / 2)
       .attr('x', this.meta.width + this.meta.margin.left)
@@ -353,15 +351,14 @@ export class Chart extends EventEmitter.EventEmitter {
 
   buildCanvas() {
     // enter
-    const canvas = this.canvas = this.root.merge(this.root.enter)
+    const canvas = (this.canvas = this.root
+      .merge(this.root.enter)
       .selectAll('.canvas')
       .data(function (d: FunctionPlotOptions) {
         return [d]
-      })
+      }))
 
-    this.canvas.enter = canvas.enter()
-      .append('g')
-      .attr('class', 'canvas')
+    this.canvas.enter = canvas.enter().append('g').attr('class', 'canvas')
 
     // enter + update
   }
@@ -369,22 +366,24 @@ export class Chart extends EventEmitter.EventEmitter {
   buildClip() {
     // (so that the functions don't overflow on zoom or drag)
     const id = this.id
-    const defs = this.canvas.enter
-      .append('defs')
+    const defs = this.canvas.enter.append('defs')
 
-    defs.append('clipPath')
+    defs
+      .append('clipPath')
       .attr('id', 'function-plot-clip-' + id)
       .append('rect')
       .attr('class', 'clip static-clip')
 
     // enter + update
-    this.canvas.merge(this.canvas.enter)
+    this.canvas
+      .merge(this.canvas.enter)
       .selectAll('.clip')
       .attr('width', this.meta.width)
       .attr('height', this.meta.height)
 
     // marker clip (for vectors)
-    defs.append('clipPath')
+    defs
+      .append('clipPath')
       .append('marker')
       .attr('id', this.markerId)
       .attr('viewBox', '0 -5 10 10')
@@ -402,49 +401,52 @@ export class Chart extends EventEmitter.EventEmitter {
   buildAxis() {
     // axis creation
     const canvasEnter = this.canvas.enter
-    canvasEnter.append('g')
-      .attr('class', 'x axis')
-    canvasEnter.append('g')
-      .attr('class', 'y axis')
+    canvasEnter.append('g').attr('class', 'x axis')
+    canvasEnter.append('g').attr('class', 'y axis')
 
     // update
-    this.canvas.merge(this.canvas.enter)
+    this.canvas
+      .merge(this.canvas.enter)
       .select('.x.axis')
       .attr('transform', 'translate(0,' + this.meta.height + ')')
       .call(this.meta.xAxis)
-    this.canvas.merge(this.canvas.enter)
-      .select('.y.axis')
-      .call(this.meta.yAxis)
+    this.canvas.merge(this.canvas.enter).select('.y.axis').call(this.meta.yAxis)
   }
 
   buildAxisLabel() {
     // axis labeling
     const canvas = this.canvas
 
-    const xLabel = canvas.merge(canvas.enter)
+    const xLabel = canvas
+      .merge(canvas.enter)
       .selectAll('text.x.axis-label')
       .data(function (d: FunctionPlotOptions) {
         return [d.xAxis.label].filter(Boolean)
       })
-    const xLabelEnter = xLabel.enter()
-      .append('text')
+    // prettier-ignore
+    const xLabelEnter = xLabel.enter().append('text')
       .attr('class', 'x axis-label')
       .attr('text-anchor', 'end')
 
-    xLabel.merge(xLabelEnter)
+    xLabel
+      .merge(xLabelEnter)
       .attr('x', this.meta.width)
       .attr('y', this.meta.height - 6)
-      .text(function (d: string) { return d })
+      .text(function (d: string) {
+        return d
+      })
 
     xLabel.exit().remove()
 
-    const yLabel = canvas.merge(canvas.enter)
+    const yLabel = canvas
+      .merge(canvas.enter)
       .selectAll('text.y.axis-label')
       .data(function (d: FunctionPlotOptions) {
         return [d.yAxis.label].filter(Boolean)
       })
 
-    const yLabelEnter = yLabel.enter()
+    const yLabelEnter = yLabel
+      .enter()
       .append('text')
       .attr('class', 'y axis-label')
       .attr('y', 6)
@@ -452,8 +454,9 @@ export class Chart extends EventEmitter.EventEmitter {
       .attr('text-anchor', 'end')
       .attr('transform', 'rotate(-90)')
 
-    yLabel.merge(yLabelEnter)
-      .text(function (d: string) { return d })
+    yLabel.merge(yLabelEnter).text(function (d: string) {
+      return d
+    })
 
     yLabel.exit().remove()
   }
@@ -468,75 +471,87 @@ export class Chart extends EventEmitter.EventEmitter {
     const self = this
     const canvas = this.canvas
 
-    canvas.merge(canvas.enter)
+    canvas
+      .merge(canvas.enter)
       .attr('transform', 'translate(' + this.meta.margin.left + ',' + this.meta.margin.top + ')')
 
-    const content = this.content = canvas.merge(canvas.enter)
+    const content = (this.content = canvas
+      .merge(canvas.enter)
       .selectAll(':scope > g.content')
-      .data(function (d: FunctionPlotOptions) { return [d] })
+      .data(function (d: FunctionPlotOptions) {
+        return [d]
+      }))
 
     // g tag clipped to hold the data
-    const contentEnter = content.enter()
+    const contentEnter = content
+      .enter()
       .append('g')
       .attr('clip-path', 'url(#function-plot-clip-' + this.id + ')')
       .attr('class', 'content')
 
     // helper line, x = 0
     if (this.options.xAxis.type === 'linear') {
-      const yOrigin = content.merge(contentEnter).selectAll(':scope > path.y.origin')
-        .data([[
-          [0, this.meta.yScale.domain()[0]],
-          [0, this.meta.yScale.domain()[1]]
-        ]])
-      const yOriginEnter = yOrigin.enter()
+      const yOrigin = content
+        .merge(contentEnter)
+        .selectAll(':scope > path.y.origin')
+        .data([
+          [
+            [0, this.meta.yScale.domain()[0]],
+            [0, this.meta.yScale.domain()[1]]
+          ]
+        ])
+      const yOriginEnter = yOrigin
+        .enter()
         .append('path')
         .attr('class', 'y origin')
         .attr('stroke', 'black')
         .attr('opacity', 0.2)
-      yOrigin.merge(yOriginEnter)
-        .attr('d', this.line)
+      yOrigin.merge(yOriginEnter).attr('d', this.line)
     }
 
     // helper line y = 0
     if (this.options.yAxis.type === 'linear') {
-      const xOrigin = content.merge(contentEnter).selectAll(':scope > path.x.origin')
-        .data([[[this.meta.xScale.domain()[0], 0], [this.meta.xScale.domain()[1], 0]]])
-      const xOriginEnter = xOrigin.enter()
+      const xOrigin = content
+        .merge(contentEnter)
+        .selectAll(':scope > path.x.origin')
+        .data([
+          [
+            [this.meta.xScale.domain()[0], 0],
+            [this.meta.xScale.domain()[1], 0]
+          ]
+        ])
+      const xOriginEnter = xOrigin
+        .enter()
         .append('path')
         .attr('class', 'x origin')
         .attr('stroke', 'black')
         .attr('opacity', 0.2)
-      xOrigin.merge(xOriginEnter)
-        .attr('d', this.line)
+      xOrigin.merge(xOriginEnter).attr('d', this.line)
     }
 
     // annotations
-    content.merge(contentEnter)
-      .call(annotations({ owner: self }))
+    content.merge(contentEnter).call(annotations({ owner: self }))
 
     // content construction
     // - join options.data to <g class='graph'> elements
     // - for each datum determine the sampler to use
-    const graphs = content.merge(contentEnter)
+    const graphs = content
+      .merge(contentEnter)
       .selectAll(':scope > g.graph')
       .data((d: FunctionPlotOptions) => d.data.map(datumDefaults))
 
     // enter
-    const graphsEnter = graphs
-      .enter()
-      .append('g')
-      .attr('class', 'graph')
+    const graphsEnter = graphs.enter().append('g').attr('class', 'graph')
 
     // enter + update
-    graphs.merge(graphsEnter)
-      .each(function (d: FunctionPlotDatum, index: number) {
-        // additional options needed in the graph-types/helpers
-        d.index = index
+    graphs.merge(graphsEnter).each(function (d: FunctionPlotDatum, index: number) {
+      // additional options needed in the graph-types/helpers
+      d.index = index
 
-        const selection = d3Select(this)
-        selection.call(graphTypes[d.graphType](self))
-        selection.call(helpers(self))
-      })
+      const selection = d3Select(this)
+      selection.call(graphTypes[d.graphType](self))
+      selection.call(helpers(self))
+    })
   }
 
   buildZoomHelper() {
@@ -544,10 +559,9 @@ export class Chart extends EventEmitter.EventEmitter {
     const self = this
 
     if (!this.meta.zoomBehavior) {
-      this.meta.zoomBehavior = d3Zoom()
-        .on('zoom', function onZoom(ev) {
-          self.getEmitInstance().emit('all:zoom', ev)
-        })
+      this.meta.zoomBehavior = d3Zoom().on('zoom', function onZoom(ev) {
+        self.getEmitInstance().emit('all:zoom', ev)
+      })
       // the zoom behavior must work with a copy of the scale, the zoom behavior has its own state and assumes
       // that its updating the original scale!
       // things that failed when I tried rescaleX(self.meta.xScale), the state of self.meta.xScale was a multiplied
@@ -581,7 +595,9 @@ export class Chart extends EventEmitter.EventEmitter {
       })
 
     // update + enter
-    this.draggable = this.canvas.merge(this.canvas.enter).select('.zoom-and-drag')
+    this.draggable = this.canvas
+      .merge(this.canvas.enter)
+      .select('.zoom-and-drag')
       .call((selection: any) => {
         if (selection.node()) {
           // store the instance for the next run
@@ -652,7 +668,7 @@ export class Chart extends EventEmitter.EventEmitter {
     }
 
     const events = {
-      mousemove: function (coordinates: { x: number, y: number }) {
+      mousemove: function (coordinates: { x: number; y: number }) {
         self.tip.move(coordinates)
       },
 
@@ -686,19 +702,18 @@ export class Chart extends EventEmitter.EventEmitter {
       'tip:update': function ({ x, y, index }: any) {
         const meta = self.root.merge(self.root.enter).datum().data[index]
         const title = meta.title || ''
-        const format = meta.renderer || function (x: number, y: number) {
-          return x.toFixed(3) + ', ' + y.toFixed(3)
-        }
+        const format =
+          meta.renderer ||
+          function (x: number, y: number) {
+            return x.toFixed(3) + ', ' + y.toFixed(3)
+          }
 
         const text = []
         title && text.push(title)
         text.push(format(x, y))
 
-        self.root.select('.top-right-legend')
-          .attr('fill', globals.COLORS[index])
-          .text(text.join(' '))
+        self.root.select('.top-right-legend').attr('fill', globals.COLORS[index]).text(text.join(' '))
       }
-
     }
 
     // all represents events that can be propagated to all the instances (including this one)
@@ -735,14 +750,15 @@ export class Chart extends EventEmitter.EventEmitter {
       // the objective is that all the linked graphs receive the same event as the current graph
       // @ts-ignore
 
-      !all[e] && self.on('all:' + e, function () {
-        const args = Array.prototype.slice.call(arguments)
-        self.linkedGraphs.forEach(function (graph) {
-          const localArgs = args.slice()
-          localArgs.unshift(e)
-          graph.emit.apply(graph, localArgs)
+      !all[e] &&
+        self.on('all:' + e, function () {
+          const args = Array.prototype.slice.call(arguments)
+          self.linkedGraphs.forEach(function (graph) {
+            const localArgs = args.slice()
+            localArgs.unshift(e)
+            graph.emit.apply(graph, localArgs)
+          })
         })
-      })
 
       // @ts-ignore
       self.on(e, events[e])
@@ -755,7 +771,19 @@ export class Chart extends EventEmitter.EventEmitter {
   }
 }
 
-function functionPlot(options: FunctionPlotOptions = { target: null }) {
+/**
+ * functionPlot is a function plotter of 2d functions.
+ *
+ * functionPlot creates an instance of {@link Chart} with the param options
+ * and immediately calls {@link Chart#build} on it.
+ *
+ * `options` is augmented with additional internal computed data,
+ * therefore, if you want to rerender graphs it's important to reuse
+ * the same object to preserve state across builds.
+ *
+ * @param options The options sent to Chart
+ */
+export function functionPlot(options: FunctionPlotOptions = { target: null }) {
   options.data = options.data || []
   let instance = Chart.cache[options.id]
   if (!instance) {
@@ -768,4 +796,11 @@ functionPlot.globals = globals
 functionPlot.$eval = $eval
 functionPlot.graphTypes = graphTypes
 
-export default functionPlot
+export * from './types'
+export {
+  interval as GraphTypeInterval,
+  polyline as GraphTypePolyline,
+  scatter as GraphTypeScatter
+} from './graph-types'
+export * from './helpers'
+export { builtIn as EvalBuiltIn, interval as EvalInterval } from './helpers/eval'

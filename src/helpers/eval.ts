@@ -10,16 +10,16 @@ const samplers = {
 function getMathJS(): { compile: any } | null {
   if (typeof global === 'object' && 'math' in global) {
     // @ts-ignore
-    return global['math'] as any
+    return global.math as any
   }
   if (typeof window === 'object' && 'math' in window) {
     // @ts-ignore
-    return window['math']
+    return window.math
   }
   return null
 }
 
-let mathJS = getMathJS()
+const mathJS = getMathJS()
 if (mathJS) {
   // override the built-in module with mathjs's compile
   samplers.builtIn = mathJS.compile
@@ -48,7 +48,7 @@ function generateEvaluator(samplerName: 'interval' | 'builtIn') {
     //      eval: expression
     //    }
     //
-    // othewise throw an error
+    // otherwise throw an error
     if (typeof expression === 'string') {
       const compiled = samplers[samplerName](expression)
       if (mathJS && samplerName === 'builtIn') {
@@ -88,13 +88,12 @@ function generateEvaluator(samplerName: 'interval' | 'builtIn') {
    * - Evaluates the resulting function with the merge of meta.scope and
    *   `variables`
    *
-   * @param {Object} meta
-   * @param {String} property
-   * @param {Object} variables
-   * @returns {Number|Array} The builtIn evaluator returns a number, the
-   * interval evaluator an array
+   * @param meta
+   * @param property
+   * @param variables
+   * @returns The builtIn evaluator returns a number, the interval evaluator an array
    */
-  function evaluate(meta: any, property: string, variables: any) {
+  function evaluate(meta: any, property: string, variables: object) {
     // e.g.
     //
     //  meta: {
