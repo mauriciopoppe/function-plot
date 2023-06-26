@@ -8,6 +8,7 @@ npm start
 ```
 
 Main page: `http://localhost:8080/`
+Sandbox page: `http://localhost:8080/playground.html`
 
 ## Deployment
 
