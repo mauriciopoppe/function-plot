@@ -1,4 +1,4 @@
-import {select as d3Select, Selection} from 'd3-selection'
+import { select as d3Select, Selection } from 'd3-selection'
 import { hsl as d3Hsl } from 'd3-color'
 
 import utils from '../utils'
@@ -7,11 +7,11 @@ import evaluate from '../evaluate'
 import { Chart } from '../index'
 import { FunctionPlotDatum } from '../types'
 
-export default function scatter (chart: Chart) {
+export default function scatter(chart: Chart) {
   const xScale = chart.meta.xScale
   const yScale = chart.meta.yScale
 
-  function scatter (selection: Selection<any, FunctionPlotDatum, any, any>) {
+  function scatter(selection: Selection<any, FunctionPlotDatum, any, any>) {
     selection.each(function (d) {
       let i, j
       const index = d.index
@@ -27,26 +27,33 @@ export default function scatter (chart: Chart) {
         }
       }
 
-      const innerSelection = d3Select(this)
-        .selectAll(':scope > circle')
-        .data(joined)
+      const innerSelection = d3Select(this).selectAll(':scope > circle').data(joined)
 
-      const innerSelectionEnter = innerSelection.enter()
-        .append('circle')
+      const cls = `scatter scatter-${index}`
+      const innerSelectionEnter = innerSelection.enter().append('circle').attr('class', cls)
 
-      const selection = innerSelection.merge(innerSelectionEnter)
+      const selection = innerSelection
+        .merge(innerSelectionEnter)
         .attr('fill', d3Hsl(color.toString()).brighter(1.5).hex())
         .attr('stroke', color)
         .attr('opacity', 0.7)
         .attr('r', 1)
-        .attr('cx', function (d) { return xScale(d[0]) })
-        .attr('cy', function (d) { return yScale(d[1]) });
+        .attr('cx', function (d) {
+          return xScale(d[0])
+        })
+        .attr('cy', function (d) {
+          return yScale(d[1])
+        })
 
       if (d.attr) {
-        for (let k in d.attr) {
-          if(d.attr.hasOwnProperty(k)) {
-            selection.attr(k, d.attr[k])
+        for (const k in d.attr) {
+          // If the attribute to modify is class then append the default class
+          // or otherwise the d3 selection won't work.
+          let val = d.attr[k]
+          if (k === 'class') {
+            val = `${cls} ${d.attr[k]}`
           }
+          selection.attr(k, val)
         }
       }
 

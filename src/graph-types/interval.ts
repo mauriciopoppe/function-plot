@@ -1,4 +1,4 @@
-import {select as d3Select, Selection} from 'd3-selection'
+import { select as d3Select, Selection } from 'd3-selection'
 
 import evaluate from '../evaluate'
 import utils from '../utils'
@@ -6,12 +6,12 @@ import utils from '../utils'
 import { Chart } from '../index'
 import { Interval, FunctionPlotDatum } from '../types'
 
-export default function interval (chart: Chart) {
+export default function interval(chart: Chart) {
   let minWidthHeight: number
   const xScale = chart.meta.xScale
   const yScale = chart.meta.yScale
 
-  function clampRange (vLo: number, vHi: number, gLo: number, gHi: number) {
+  function clampRange(vLo: number, vHi: number, gLo: number, gHi: number) {
     // issue 69
     // by adding the option `invert` to both the xAxis and the `yAxis`
     // it might be possible that after the transformation to canvas space
@@ -58,7 +58,8 @@ export default function interval (chart: Chart) {
         // points.scaledDX is added because of the stroke-width
         const moveX = xScale(x.lo) + (points as any).scaledDx / 2
         const viewportY = clampRange(
-          minY, maxY,
+          minY,
+          maxY,
           isFinite(yHi) ? yScale(yHi) : -Infinity,
           isFinite(yLo) ? yScale(yLo) : Infinity
         )
@@ -71,25 +72,23 @@ export default function interval (chart: Chart) {
     return path
   }
 
-  function plotLine (selection: Selection<any, FunctionPlotDatum, any, any>) {
+  function plotLine(selection: Selection<any, FunctionPlotDatum, any, any>) {
     selection.each(function (d) {
-      const el = (plotLine as any).el = d3Select(this)
+      const el = ((plotLine as any).el = d3Select(this))
       const index = d.index
       const closed = d.closed
       const evaluatedData = evaluate(chart, d)
-      const innerSelection = el.selectAll(':scope > path.line')
-        .data(evaluatedData)
+      const innerSelection = el.selectAll(':scope > path.line').data(evaluatedData)
 
       // the min height/width of the rects drawn by the path generator
       minWidthHeight = Math.max(evaluatedData[0].scaledDx, 1)
 
-      const innerSelectionEnter = innerSelection.enter()
-        .append('path')
-        .attr('class', 'line line-' + index)
-        .attr('fill', 'none')
+      const cls = `line line-${index}`
+      const innerSelectionEnter = innerSelection.enter().append('path').attr('class', cls).attr('fill', 'none')
 
       // enter + update
-      const selection = innerSelection.merge(innerSelectionEnter)
+      const selection = innerSelection
+        .merge(innerSelectionEnter)
         .attr('stroke-width', minWidthHeight)
         .attr('stroke', utils.color(d, index) as any)
         .attr('opacity', closed ? 0.5 : 1)
@@ -98,10 +97,14 @@ export default function interval (chart: Chart) {
         })
 
       if (d.attr) {
-        for (let k in d.attr) {
-          if(d.attr.hasOwnProperty(k)) {
-            selection.attr(k, d.attr[k])
+        for (const k in d.attr) {
+          // If the attribute to modify is class then append the default class
+          // or otherwise the d3 selection won't work.
+          let val = d.attr[k]
+          if (k === 'class') {
+            val = `${cls} ${d.attr[k]}`
           }
+          selection.attr(k, val)
         }
       }
 
