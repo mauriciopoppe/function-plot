@@ -43,7 +43,7 @@ export default function polyline(chart: Chart) {
         .y(y)
       const area = d3Area()
         .x(function (d) {
-          return chart.meta.yScale(d[0])
+          return chart.meta.xScale(d[0])
         })
         .y0(chart.meta.yScale(0))
         .y1(y)
