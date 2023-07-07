@@ -31,8 +31,16 @@ export default function polyline(chart: Chart) {
         yMin = -Infinity
       }
 
+      const dataLength: number = evaluatedData[0].length;
+      const firstRange = evaluatedData[0];
       function y(d: number[]) {
         return clamp(chart.meta.yScale(d[1]), yMin, yMax)
+      }
+      function x0(d : number[]) {
+        return clamp(chart.meta.xScale(firstRange[dataLength - 1][0]), yMin, yMax)
+      }
+      function y0(d : number[]) {
+        return clamp(chart.meta.yScale(firstRange[dataLength - 1][1]), yMin, yMax)
       }
 
       const line = d3Line()
@@ -42,10 +50,11 @@ export default function polyline(chart: Chart) {
         })
         .y(y)
       const area = d3Area()
-        .x(function (d) {
+        .x0(x0)
+        .x1(function (d) {
           return chart.meta.xScale(d[0])
         })
-        .y0(chart.meta.yScale(0))
+        .y0(y0)
         .y1(y)
 
       const cls = `line line-${index}`
