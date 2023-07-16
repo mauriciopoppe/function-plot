@@ -1,14 +1,16 @@
-'use strict';
+'use strict'
 
 functionPlot({
   target: '#playground',
-  data: [{
-    fn: 'x^2',
-    graphType: 'polyline',
-    attr: {
-      'stroke-width': 10
+  data: [
+    {
+      fn: 'x^2',
+      graphType: 'polyline',
+      attr: {
+        class: 'hello'
+      }
     }
-  }]
+  ]
 })
 
 // window.f = functionPlot({
@@ -84,7 +86,6 @@ functionPlot({
 //    fnType: 'implicit'
 //  }]
 //});
-
 
 // var options = {
 //   target: '#playground',

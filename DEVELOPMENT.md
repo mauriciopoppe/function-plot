@@ -16,7 +16,7 @@ Deploy steps:
 
 - `npm run deploy`
 
-Release steps **(do deploy first)**:
+Release steps:
 
-- `npm version major|minor|patch`
-- `npm publish`
+- Do deploy steps first
+- `np major|minor|patch`
