@@ -15,7 +15,7 @@
 
 ---
 
-Function Plot is a powerful library built on top of <a href="http://d3js.org/">D3.js</a> whose purpose
+function-plot is a powerful library built on top of <a href="http://d3js.org/">D3.js</a> whose purpose
 is to render functions with little configuration, think of it as a little clone of Google's plotting
 utility: [y = x * x](https://www.google.com/webhp?sourceid=chrome-instant&ion=1&espv=2&es_th=1&ie=UTF-8#q=y+%3D+x+%5E+2)
 
@@ -36,20 +36,26 @@ npm install function-plot
 
 ## Examples
 
-[`Examples in the homepage`](http://mauriciopoppe.github.io/function-plot/)
-
-## API
-
 ```javascript
 import functionPlot from 'function-plot'
-functionPlot(options)
+functionPlot({
+  target: '#root',
+  data: [{
+    fn: 'x^2',
+    derivative: {
+      fn: '2*x',
+      updateOnMouseMove: true
+    }
+  }]
+})
 ```
 
-[`All the available options are described in the docs`](https://mauriciopoppe.github.io/function-plot/docs/functions/default-1.html)
+[`Check more examples in the homepage`](http://mauriciopoppe.github.io/function-plot/)
+
+[`Check the available options in the docs`](https://mauriciopoppe.github.io/function-plot/docs/functions/default-1.html)
 
 ## License
 
 2015-2023 MIT © Mauricio Poppe
-
 
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fmauriciopoppe%2Ffunction-plot.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fmauriciopoppe%2Ffunction-plot?ref=badge_large)
