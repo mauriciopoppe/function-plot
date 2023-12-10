@@ -34,7 +34,7 @@ Thanks to [@liuyao12](https://github.com/liuyao12) for the initial version of th
 npm install function-plot
 ```
 
-## Examples
+## Usage
 
 ```javascript
 import functionPlot from 'function-plot'
