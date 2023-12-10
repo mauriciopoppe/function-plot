@@ -27,7 +27,7 @@
 </p>
 
 <hr>
-<p>Function Plot is a powerful library built on top of <a href="http://d3js.org/">D3.js</a> whose purpose
+<p>function-plot is a powerful library built on top of <a href="http://d3js.org/">D3.js</a> whose purpose
 is to render functions with little configuration, think of it as a little clone of Google&#39;s plotting
 utility: <a href="https://www.google.com/webhp?sourceid=chrome-instant&ion=1&espv=2&es_th=1&ie=UTF-8#q=y+%3D+x+%5E+2">y = x * x</a></p>
 <p>The library currently supports interactive line charts and scatterplots, whenever the graph scale is modified the function
@@ -42,17 +42,13 @@ is evaluated again with the new bounds, result: infinite graphs!</p>
 <pre><code class="language-sh"><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-2">install</span><span class="hl-1"> </span><span class="hl-2">function-plot</span>
 </code></pre>
 
-<a href="#examples" id="examples" style="color: inherit; text-decoration: none;">
-  <h2>Examples</h2>
+<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
+  <h2>Usage</h2>
 </a>
-<p><a href="http://mauriciopoppe.github.io/function-plot/"><code>Examples in the homepage</code></a></p>
-
-<a href="#api" id="api" style="color: inherit; text-decoration: none;">
-  <h2>API</h2>
-</a>
-<pre><code class="language-javascript"><span class="hl-3">import</span><span class="hl-1"> </span><span class="hl-4">functionPlot</span><span class="hl-1"> </span><span class="hl-3">from</span><span class="hl-1"> </span><span class="hl-2">&#39;function-plot&#39;</span><br/><span class="hl-0">functionPlot</span><span class="hl-1">(</span><span class="hl-4">options</span><span class="hl-1">)</span>
+<pre><code class="language-javascript"><span class="hl-3">import</span><span class="hl-1"> </span><span class="hl-4">functionPlot</span><span class="hl-1"> </span><span class="hl-3">from</span><span class="hl-1"> </span><span class="hl-2">&#39;function-plot&#39;</span><br/><span class="hl-0">functionPlot</span><span class="hl-1">({</span><br/><span class="hl-1">  </span><span class="hl-4">target:</span><span class="hl-1"> </span><span class="hl-2">&#39;#root&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-4">data:</span><span class="hl-1"> [{</span><br/><span class="hl-1">    </span><span class="hl-4">fn:</span><span class="hl-1"> </span><span class="hl-2">&#39;x^2&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-4">derivative:</span><span class="hl-1"> {</span><br/><span class="hl-1">      </span><span class="hl-4">fn:</span><span class="hl-1"> </span><span class="hl-2">&#39;2*x&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-4">updateOnMouseMove:</span><span class="hl-1"> </span><span class="hl-5">true</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">  }]</span><br/><span class="hl-1">})</span>
 </code></pre>
-<p><a href="https://mauriciopoppe.github.io/function-plot/docs/functions/default-1.html"><code>All the available options are described in the docs</code></a></p>
+<p><a href="http://mauriciopoppe.github.io/function-plot/"><code>Check more examples in the homepage</code></a></p>
+<p><a href="https://mauriciopoppe.github.io/function-plot/docs/functions/default-1.html"><code>Check the available options in the docs</code></a></p>
 
 <a href="#license" id="license" style="color: inherit; text-decoration: none;">
   <h2>License</h2>
