@@ -1,6 +1,5 @@
 import globals from './globals'
 
-import { Chart } from './index'
 import { FunctionPlotDatum } from './types'
 
 const utils = {
@@ -17,10 +16,10 @@ const utils = {
     return typeof v === 'number' && !isNaN(v)
   },
 
-  space: function (chart: Chart, range: [number, number], n: number) {
+  space: function (type: string, range: [number, number], n: number) {
     const lo = range[0]
     const hi = range[1]
-    if (chart.options.xAxis.type === 'log') {
+    if (type === 'log') {
       return this.logspace(Math.log10(lo), Math.log10(hi), n)
     }
     // default is linear

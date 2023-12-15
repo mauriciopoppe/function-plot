@@ -1,18 +1,15 @@
 import intervalArithmeticEval, { Interval } from 'interval-arithmetic-eval'
+import { Chart } from '../chart'
+import { FunctionPlotDatum } from '../types'
 
 import { interval as evaluate } from '../helpers/eval'
 import utils from '../utils'
-
-import { Chart } from '../index'
-import { FunctionPlotDatum } from '../types'
-
-// const Interval = (intervalArithmeticEval as any).Interval
 
 // disable the use of typed arrays in interval-arithmetic to improve the performance
 ;(intervalArithmeticEval as any).policies.disableRounding()
 
 function interval1d(chart: Chart, d: FunctionPlotDatum, range: [number, number], nSamples: number) {
-  const xCoords = utils.space(chart, range, nSamples)
+  const xCoords = utils.space(chart.options.xAxis.type, range, nSamples)
   const xScale = chart.meta.xScale
   const yScale = chart.meta.yScale
   const yMin = yScale.domain()[0]
