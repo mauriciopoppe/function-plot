@@ -4,6 +4,12 @@
 /site/partials/recipes.html
 /site/docs/
 
+# puppeteer cache
+.cache
+
+# jest-image-snapshot diff output
+__diff_output__
+
 # ignore yarn files (this repo uses npm)
 yarn-error.log
 yarn.log
