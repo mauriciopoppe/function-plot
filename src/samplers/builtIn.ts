@@ -3,7 +3,7 @@ import clamp from 'clamp'
 import utils from '../utils'
 import { builtIn as evaluate } from '../helpers/eval'
 
-import { Chart } from '../index'
+import { Chart } from '../chart'
 import { FunctionPlotDatum } from '../types'
 
 function checkAsymptote(
@@ -106,7 +106,7 @@ function split(chart: Chart, d: FunctionPlotDatum, data: number[][]) {
 }
 
 function linear(chart: Chart, d: FunctionPlotDatum, range: [number, number], n: number) {
-  const allX = utils.space(chart, range, n)
+  const allX = utils.space(chart.options.xAxis.type, range, n)
   const yDomain = chart.meta.yScale.domain()
   const yDomainMargin = yDomain[1] - yDomain[0]
   const yMin = yDomain[0] - yDomainMargin * 1e5
@@ -114,7 +114,7 @@ function linear(chart: Chart, d: FunctionPlotDatum, range: [number, number], n: 
   let data = []
   for (let i = 0; i < allX.length; i += 1) {
     const x = allX[i]
-    const y = evaluate(d, 'fn', { x: x })
+    const y = evaluate(d, 'fn', { x })
     if (utils.isValidNumber(x) && utils.isValidNumber(y)) {
       data.push([x, clamp(y, yMin, yMax)])
     }
@@ -127,7 +127,7 @@ function parametric(chart: Chart, d: FunctionPlotDatum, range: [number, number],
   // range is mapped to canvas coordinates from the input
   // for parametric plots the range will tell the start/end points of the `t` param
   const parametricRange = d.range || [0, 2 * Math.PI]
-  const tCoords = utils.space(chart, parametricRange, nSamples)
+  const tCoords = utils.space(chart.options.xAxis.type, parametricRange, nSamples)
   const samples = []
   for (let i = 0; i < tCoords.length; i += 1) {
     const t = tCoords[i]
@@ -142,7 +142,7 @@ function polar(chart: Chart, d: FunctionPlotDatum, range: [number, number], nSam
   // range is mapped to canvas coordinates from the input
   // for polar plots the range will tell the start/end points of the `theta` param
   const polarRange = d.range || [-Math.PI, Math.PI]
-  const thetaSamples = utils.space(chart, polarRange, nSamples)
+  const thetaSamples = utils.space(chart.options.xAxis.type, polarRange, nSamples)
   const samples = []
   for (let i = 0; i < thetaSamples.length; i += 1) {
     const theta = thetaSamples[i]
