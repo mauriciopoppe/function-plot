@@ -1,7 +1,23 @@
-import { hsl as d3Hsl } from 'd3-color'
+import { hsl as d3Hsl, HSLColor } from 'd3-color'
 
-// var d3 = window.d3
-const Globals = {
+import { GraphTypeBuilder } from './graph-types/types'
+
+type TGlobals = {
+  COLORS: Array<HSLColor>
+  DEFAULT_WIDTH: number
+  DEFAULT_HEIGHT: number
+  DEFAULT_ITERATIONS: number
+  MAX_ITERATIONS: number
+  TIP_X_EPS: number
+
+  /**
+   * graphTypes are the graph types registered in functionPlot,
+   * to register a new graphType use `registerGraphType`
+   */
+  graphTypes: { [key: string]: GraphTypeBuilder }
+}
+
+const Globals: TGlobals = {
   COLORS: [
     'steelblue',
     'red',
@@ -17,13 +33,20 @@ const Globals = {
   }),
   DEFAULT_WIDTH: 550,
   DEFAULT_HEIGHT: 350,
+  DEFAULT_ITERATIONS: null,
   TIP_X_EPS: 1,
-  DEFAULT_ITERATIONS: Infinity,
-  MAX_ITERATIONS: 0
+  MAX_ITERATIONS: 0,
+  graphTypes: {}
 }
 
-Globals.DEFAULT_ITERATIONS = null
 Globals.MAX_ITERATIONS = Globals.DEFAULT_WIDTH * 10
 
-// module.exports.Globals = Globals
+function registerGraphType(graphType: string, graphTypeBulder: GraphTypeBuilder) {
+  if (Object.hasOwn(Globals.graphTypes, graphType)) {
+    throw new Error(`registerGraphType: graphType ${graphType} is already registered.`)
+  }
+  Globals.graphTypes[graphType] = graphTypeBulder
+}
+
+export { registerGraphType }
 export default Globals

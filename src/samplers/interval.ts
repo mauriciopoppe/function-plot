@@ -1,17 +1,17 @@
-import intervalArithmeticEval, {Interval} from 'interval-arithmetic-eval'
+import intervalArithmeticEval, { Interval } from 'interval-arithmetic-eval'
 
 import { interval as evaluate } from '../helpers/eval'
 import utils from '../utils'
 
-import { Chart } from "../index";
+import { Chart } from '../index'
 import { FunctionPlotDatum } from '../types'
 
 // const Interval = (intervalArithmeticEval as any).Interval
 
 // disable the use of typed arrays in interval-arithmetic to improve the performance
-(intervalArithmeticEval as any).policies.disableRounding()
+;(intervalArithmeticEval as any).policies.disableRounding()
 
-function interval1d (chart: Chart, d: FunctionPlotDatum, range: [number, number], nSamples: number) {
+function interval1d(chart: Chart, d: FunctionPlotDatum, range: [number, number], nSamples: number) {
   const xCoords = utils.space(chart, range, nSamples)
   const xScale = chart.meta.xScale
   const yScale = chart.meta.yScale
@@ -21,7 +21,7 @@ function interval1d (chart: Chart, d: FunctionPlotDatum, range: [number, number]
   let i
   for (i = 0; i < xCoords.length - 1; i += 1) {
     const x = { lo: xCoords[i], hi: xCoords[i + 1] }
-    const y = evaluate(d, 'fn', { x: x })
+    const y = evaluate(d, 'fn', { x })
     if (!Interval.isEmpty(y) && !Interval.isWhole(y)) {
       samples.push([x, y])
     }
@@ -63,22 +63,21 @@ function interval1d (chart: Chart, d: FunctionPlotDatum, range: [number, number]
     }
   }
 
-  (samples as any).scaledDx = xScale(xCoords[1]) - xScale(xCoords[0])
+  ;(samples as any).scaledDx = xScale(xCoords[1]) - xScale(xCoords[0])
   return [samples]
 }
 
 let rectEps: number
-function smallRect (x: Interval, y: Interval) {
+function smallRect(x: Interval, y: Interval) {
   return Interval.width(x) < rectEps
 }
 
-function quadTree (x: Interval, y: Interval, meta: FunctionPlotDatum) {
-  const sample = evaluate(meta, 'fn', {
-    x: x,
-    y: y
-  })
+function quadTree(x: Interval, y: Interval, meta: FunctionPlotDatum) {
+  const sample = evaluate(meta, 'fn', { x, y })
   const fulfills = Interval.zeroIn(sample)
-  if (!fulfills) { return this }
+  if (!fulfills) {
+    return this
+  }
   if (smallRect(x, y)) {
     this.push([x, y])
     return this
@@ -96,7 +95,7 @@ function quadTree (x: Interval, y: Interval, meta: FunctionPlotDatum) {
   quadTree.call(this, west, south, meta)
 }
 
-function interval2d (chart: Chart, meta: FunctionPlotDatum) {
+function interval2d(chart: Chart, meta: FunctionPlotDatum) {
   const xScale = chart.meta.xScale
   const xDomain = chart.meta.xScale.domain()
   const yDomain = chart.meta.yScale.domain()
@@ -115,7 +114,7 @@ const sampler = function (chart: Chart, d: FunctionPlotDatum, range: [number, nu
     implicit: interval2d,
     linear: interval1d
   }
-  if (!(fnTypes.hasOwnProperty(d.fnType))) {
+  if (!Object.hasOwn(fnTypes, d.fnType)) {
     throw Error(d.fnType + ' is not supported in the `interval` sampler')
   }
   // @ts-ignore

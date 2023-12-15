@@ -4,14 +4,13 @@ import { Chart } from './index'
 import { FunctionPlotDatum } from './types'
 
 const utils = {
-
   linspace: function (lo: number, hi: number, n: number): number[] {
-    const step = (hi - lo) / (n - 1);
-    return Array.from({length: n}, (val, i) => lo + step * i)
+    const step = (hi - lo) / (n - 1)
+    return Array.from({ length: n }, (_, i) => lo + step * i)
   },
 
   logspace: function (lo: number, hi: number, n: number): number[] {
-    return this.linspace(lo,hi,n).map((x: number) => Math.pow(10,x));
+    return this.linspace(lo, hi, n).map((x: number) => Math.pow(10, x))
   },
 
   isValidNumber: function (v: number) {
@@ -40,13 +39,17 @@ const utils = {
   },
 
   sgn: function (v: number) {
-    if (v < 0) { return -1 }
-    if (v > 0) { return 1 }
+    if (v < 0) {
+      return -1
+    }
+    if (v > 0) {
+      return 1
+    }
     return 0
   },
 
   color: function (data: FunctionPlotDatum, index: number): string {
-    let indexModLenColor = index % globals.COLORS.length
+    const indexModLenColor = index % globals.COLORS.length
     return data.color || globals.COLORS[indexModLenColor].hex()
   }
 }

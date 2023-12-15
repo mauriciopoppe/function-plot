@@ -3,20 +3,22 @@ import clamp from 'clamp'
 import utils from '../utils'
 import { builtIn as evaluate } from '../helpers/eval'
 
-import { Chart } from "../index";
+import { Chart } from '../index'
 import { FunctionPlotDatum } from '../types'
 
-function checkAsymptote (d0: number[], d1: number[], d: FunctionPlotDatum, sign: number, level: number): {
-  asymptote: boolean,
+function checkAsymptote(
   d0: number[],
+  d1: number[],
+  d: FunctionPlotDatum,
+  sign: number,
+  level: number
+): {
+  asymptote: boolean
+  d0: number[]
   d1: number[]
 } {
   if (!level) {
-    return {
-      asymptote: true,
-      d0: d0,
-      d1: d1
-    }
+    return { asymptote: true, d0, d1 }
   }
   const n = 10
   const x0 = d0[0]
@@ -25,7 +27,7 @@ function checkAsymptote (d0: number[], d1: number[], d: FunctionPlotDatum, sign:
   let oldY, oldX
   for (let i = 0; i < n; i += 1) {
     const x = samples[i]
-    const y = evaluate(d, 'fn', { x: x })
+    const y = evaluate(d, 'fn', { x })
 
     if (i && oldY) {
       const deltaY = y - oldY
@@ -37,11 +39,7 @@ function checkAsymptote (d0: number[], d1: number[], d: FunctionPlotDatum, sign:
     oldY = y
     oldX = x
   }
-  return {
-    asymptote: false,
-    d0: d0,
-    d1: d1
-  }
+  return { asymptote: false, d0, d1 }
 }
 
 /**
@@ -52,7 +50,7 @@ function checkAsymptote (d0: number[], d1: number[], d: FunctionPlotDatum, sign:
  * @param data
  * @returns {Array[]}
  */
-function split (chart: Chart, d: FunctionPlotDatum, data: number[][]) {
+function split(chart: Chart, d: FunctionPlotDatum, data: number[][]) {
   let i, oldSign
   let deltaX
   let st = []
@@ -67,7 +65,7 @@ function split (chart: Chart, d: FunctionPlotDatum, data: number[][]) {
     oldSign = utils.sgn(data[1][1] - data[0][1])
   }
 
-  function updateY (d: number[]) {
+  function updateY(d: number[]) {
     d[1] = Math.min(d[1], yMax)
     d[1] = Math.max(d[1], yMin)
     return d
@@ -80,11 +78,13 @@ function split (chart: Chart, d: FunctionPlotDatum, data: number[][]) {
     const deltaY = y1 - y0
     const newSign = utils.sgn(deltaY)
     // make a new set if:
-    if (// utils.sgn(y1) * utils.sgn(y0) < 0 && // there's a change in the evaluated values sign
+    if (
+      // utils.sgn(y1) * utils.sgn(y0) < 0 && // there's a change in the evaluated values sign
       // there's a change in the slope sign
       oldSign !== newSign &&
       // the slope is bigger to some value (according to the current zoom scale)
-      Math.abs(deltaY / deltaX) > 1 / 1) {
+      Math.abs(deltaY / deltaX) > 1 / 1
+    ) {
       // retest this section again and determine if it's an asymptote
       const check = checkAsymptote(data[i - 1], data[i], d, newSign, 3)
       if (check.asymptote) {
@@ -105,10 +105,10 @@ function split (chart: Chart, d: FunctionPlotDatum, data: number[][]) {
   return sets
 }
 
-function linear (chart: Chart, d: FunctionPlotDatum, range: [number, number], n: number) {
+function linear(chart: Chart, d: FunctionPlotDatum, range: [number, number], n: number) {
   const allX = utils.space(chart, range, n)
   const yDomain = chart.meta.yScale.domain()
-  const yDomainMargin = (yDomain[1] - yDomain[0])
+  const yDomainMargin = yDomain[1] - yDomain[0]
   const yMin = yDomain[0] - yDomainMargin * 1e5
   const yMax = yDomain[1] + yDomainMargin * 1e5
   let data = []
@@ -123,7 +123,7 @@ function linear (chart: Chart, d: FunctionPlotDatum, range: [number, number], n:
   return data
 }
 
-function parametric (chart: Chart, d: FunctionPlotDatum, range: [number, number], nSamples: number) {
+function parametric(chart: Chart, d: FunctionPlotDatum, range: [number, number], nSamples: number) {
   // range is mapped to canvas coordinates from the input
   // for parametric plots the range will tell the start/end points of the `t` param
   const parametricRange = d.range || [0, 2 * Math.PI]
@@ -131,14 +131,14 @@ function parametric (chart: Chart, d: FunctionPlotDatum, range: [number, number]
   const samples = []
   for (let i = 0; i < tCoords.length; i += 1) {
     const t = tCoords[i]
-    const x = evaluate(d, 'x', { t: t })
-    const y = evaluate(d, 'y', { t: t })
+    const x = evaluate(d, 'x', { t })
+    const y = evaluate(d, 'y', { t })
     samples.push([x, y])
   }
   return [samples]
 }
 
-function polar (chart: Chart, d: FunctionPlotDatum, range: [number, number], nSamples: number) {
+function polar(chart: Chart, d: FunctionPlotDatum, range: [number, number], nSamples: number) {
   // range is mapped to canvas coordinates from the input
   // for polar plots the range will tell the start/end points of the `theta` param
   const polarRange = d.range || [-Math.PI, Math.PI]
@@ -146,7 +146,7 @@ function polar (chart: Chart, d: FunctionPlotDatum, range: [number, number], nSa
   const samples = []
   for (let i = 0; i < thetaSamples.length; i += 1) {
     const theta = thetaSamples[i]
-    const r = evaluate(d, 'r', { theta: theta })
+    const r = evaluate(d, 'r', { theta })
     const x = r * Math.cos(theta)
     const y = r * Math.sin(theta)
     samples.push([x, y])
@@ -154,25 +154,22 @@ function polar (chart: Chart, d: FunctionPlotDatum, range: [number, number], nSa
   return [samples]
 }
 
-function points (chart: Chart, d: FunctionPlotDatum, range: [number, number], nSamples: number) {
+function points(chart: Chart, d: FunctionPlotDatum, range: [number, number], nSamples: number) {
   return [d.points]
 }
 
-function vector (chart: Chart, d: FunctionPlotDatum, range: [number, number], nSamples: number) {
+function vector(chart: Chart, d: FunctionPlotDatum, range: [number, number], nSamples: number) {
   d.offset = d.offset || [0, 0]
-  return [[
-    d.offset,
-    [d.vector[0] + d.offset[0], d.vector[1] + d.offset[1]]
-  ]]
+  return [[d.offset, [d.vector[0] + d.offset[0], d.vector[1] + d.offset[1]]]]
 }
 
 const sampler = function (chart: Chart, d: FunctionPlotDatum, range: [number, number], nSamples: number) {
   const fnTypes = {
-    parametric: parametric,
-    polar: polar,
-    points: points,
-    vector: vector,
-    linear: linear
+    parametric,
+    polar,
+    points,
+    vector,
+    linear
   }
   if (!(d.fnType in fnTypes)) {
     throw Error(d.fnType + ' is not supported in the `builtIn` sampler')

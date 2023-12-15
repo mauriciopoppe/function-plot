@@ -15,7 +15,8 @@
         "node_modules/*"
       ]
     },
-    "jsx": "react"
+    "jsx": "react",
+    "lib": ["es2022", "dom"]
   },
   "include": [
     "src/**/*"
