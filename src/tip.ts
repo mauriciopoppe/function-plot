@@ -1,5 +1,5 @@
 import { line as d3Line } from 'd3-shape'
-import {select as d3Select, Selection} from 'd3-selection'
+import { select as d3Select, Selection } from 'd3-selection'
 import clamp from 'clamp'
 
 import utils from './utils'
@@ -7,24 +7,32 @@ import globals from './globals'
 import { builtIn as builtInEvaluator } from './helpers/eval'
 import { FunctionPlotTip } from './types'
 
-export default function mouseTip (config: FunctionPlotTip) {
-  config = Object.assign({
-    xLine: false,
-    yLine: false,
-    renderer: function (x: number, y: number) {
-      return '(' + x.toFixed(3) + ', ' + y.toFixed(3) + ')'
+export default function mouseTip(config: FunctionPlotTip) {
+  config = Object.assign(
+    {
+      xLine: false,
+      yLine: false,
+      renderer: function (x: number, y: number) {
+        return '(' + x.toFixed(3) + ', ' + y.toFixed(3) + ')'
+      },
+      owner: null
     },
-    owner: null
-  }, config)
+    config
+  )
 
   const MARGIN = 20
 
   const line = d3Line()
-    .x(function (d) { return d[0] })
-    .y(function (d) { return d[1] })
+    .x(function (d) {
+      return d[0]
+    })
+    .y(function (d) {
+      return d[1]
+    })
 
-  function lineGenerator (el: Selection<any, any, any, any>, data: any) {
-    return el.append('path')
+  function lineGenerator(el: Selection<any, any, any, any>, data: any) {
+    return el
+      .append('path')
       .datum(data)
       .attr('stroke', 'grey')
       .attr('stroke-dasharray', '5,5')
@@ -34,35 +42,44 @@ export default function mouseTip (config: FunctionPlotTip) {
 
   let tipInnerJoin: any, tipInnerEnter: any
 
-  function tip (selection: Selection<any, any, any, any>) {
-    const join = selection
-      .selectAll('g.tip')
-      .data(function (d) { return [d] })
+  function tip(selection: Selection<any, any, any, any>) {
+    const join = selection.selectAll('g.tip').data(function (d) {
+      return [d]
+    })
 
     // enter
     const tipEnter = join
-      .enter().append('g')
+      .enter()
+      .append('g')
       .attr('class', 'tip')
       .attr('clip-path', 'url(#function-plot-clip-' + config.owner.id + ')')
 
     // enter + update = enter inner tip
-    tipInnerJoin = join.merge(tipEnter)
+    tipInnerJoin = join
+      .merge(tipEnter)
       .selectAll('g.inner-tip')
       .data(function (d) {
         // debugger
         return [d]
       })
 
-    tipInnerEnter = tipInnerJoin.enter()
+    tipInnerEnter = tipInnerJoin
+      .enter()
       .append('g')
       .attr('class', 'inner-tip')
       .style('display', 'none')
       .each(function () {
         const el = d3Select(this)
-        lineGenerator(el, [[0, -config.owner.meta.height - MARGIN], [0, config.owner.meta.height + MARGIN]])
+        lineGenerator(el, [
+          [0, -config.owner.meta.height - MARGIN],
+          [0, config.owner.meta.height + MARGIN]
+        ])
           .attr('class', 'tip-x-line')
           .style('display', 'none')
-        lineGenerator(el, [[-config.owner.meta.width - MARGIN, 0], [config.owner.meta.width + MARGIN, 0]])
+        lineGenerator(el, [
+          [-config.owner.meta.width - MARGIN, 0],
+          [config.owner.meta.width + MARGIN, 0]
+        ])
           .attr('class', 'tip-y-line')
           .style('display', 'none')
         el.append('circle').attr('r', 3)
@@ -70,13 +87,17 @@ export default function mouseTip (config: FunctionPlotTip) {
       })
 
     // enter + update
-    tipInnerJoin.merge(tipInnerEnter)
-      .selectAll('.tip-x-line').style('display', config.xLine ? null : 'none')
-    tipInnerJoin.merge(tipInnerEnter)
-      .selectAll('.tip-y-line').style('display', config.yLine ? null : 'none')
+    tipInnerJoin
+      .merge(tipInnerEnter)
+      .selectAll('.tip-x-line')
+      .style('display', config.xLine ? null : 'none')
+    tipInnerJoin
+      .merge(tipInnerEnter)
+      .selectAll('.tip-y-line')
+      .style('display', config.yLine ? null : 'none')
   }
 
-  tip.move = function (coordinates: { x: number, y: number }) {
+  tip.move = function (coordinates: { x: number; y: number }) {
     let i
     let minDist = Infinity
     let closestIndex = -1
@@ -108,7 +129,7 @@ export default function mouseTip (config: FunctionPlotTip) {
       if (x0 > range[0] - globals.TIP_X_EPS && x0 < range[1] + globals.TIP_X_EPS) {
         try {
           candidateY = builtInEvaluator(data[i], 'fn', { x: x0 })
-        } catch (e) { }
+        } catch (e) {}
         if (utils.isValidNumber(candidateY)) {
           const tDist = Math.abs(candidateY - y0)
           if (tDist < minDist) {
@@ -125,7 +146,7 @@ export default function mouseTip (config: FunctionPlotTip) {
         x = Math.max(x, data[closestIndex].range[0])
         x = Math.min(x, data[closestIndex].range[1])
       }
-      y = builtInEvaluator(data[closestIndex], 'fn', { x: x })
+      y = builtInEvaluator(data[closestIndex], 'fn', { x })
 
       tip.show()
       config.owner.emit('tip:update', { x, y, index: closestIndex })
@@ -136,24 +157,19 @@ export default function mouseTip (config: FunctionPlotTip) {
       const color = utils.color(data[closestIndex], closestIndex)
       selection.style('color', 'red')
       selection.attr('transform', 'translate(' + xScale(clampX) + ',' + yScale(clampY) + ')')
-      selection.select('circle')
-        .attr('fill', color)
-      selection.select('text')
-        .attr('fill', color)
-        .text(config.renderer(x, y, closestIndex))
+      selection.select('circle').attr('fill', color)
+      selection.select('text').attr('fill', color).text(config.renderer(x, y, closestIndex))
     } else {
       tip.hide()
     }
   }
 
   tip.show = function () {
-    tipInnerJoin.merge(tipInnerEnter)
-      .style('display', null)
+    tipInnerJoin.merge(tipInnerEnter).style('display', null)
   }
 
   tip.hide = function () {
-    tipInnerJoin.merge(tipInnerEnter)
-      .style('display', 'none')
+    tipInnerJoin.merge(tipInnerEnter).style('display', 'none')
   }
   // generations of getters/setters
   Object.keys(config).forEach(function (option) {

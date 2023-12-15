@@ -1,7 +1,6 @@
 import { FunctionPlotDatum } from './types'
 
-
-export default function datumDefaults (d: FunctionPlotDatum) {
+export default function datumDefaults(d: FunctionPlotDatum) {
   // default graphType uses boxes i.e. 2d intervals
   if (!('graphType' in d)) {
     d.graphType = 'interval'
@@ -10,9 +9,7 @@ export default function datumDefaults (d: FunctionPlotDatum) {
   // if the graphType is not `interval` then the sampler is `builtIn`
   // because the interval sampler returns a box instead of a point
   if (!('sampler' in d)) {
-    d.sampler = d.graphType !== 'interval'
-      ? 'builtIn'
-      : 'interval'
+    d.sampler = d.graphType !== 'interval' ? 'builtIn' : 'interval'
   }
 
   // TODO: handle default fnType
