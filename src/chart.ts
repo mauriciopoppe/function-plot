@@ -534,7 +534,9 @@ export class Chart extends EventEmitter.EventEmitter {
     const graphs = content
       .merge(contentEnter)
       .selectAll(':scope > g.graph')
-      .data((d: FunctionPlotOptions) => d.data.map(datumDefaults))
+      .data((d: FunctionPlotOptions) => {
+        return d.data.map(datumDefaults)
+      })
 
     // enter
     const graphsEnter = graphs.enter().append('g').attr('class', 'graph')
@@ -548,6 +550,9 @@ export class Chart extends EventEmitter.EventEmitter {
       selection.call(globals.graphTypes[d.graphType](self))
       selection.call(helpers(self))
     })
+
+    // exit
+    graphs.exit().remove()
   }
 
   buildZoomHelper() {
