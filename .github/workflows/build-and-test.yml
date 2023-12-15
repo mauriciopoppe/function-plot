@@ -6,11 +6,24 @@ on:
     types: [opened, reopened, synchronize]
 
 jobs:
-  build-and-test:
+  build:
     runs-on: ubuntu-latest
 
-    env:
-      FOSSA_API_KEY: ${{ secrets.FOSSA_API_KEY }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v3.1.1
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+  test:
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
@@ -25,11 +38,28 @@ jobs:
       - name: Test
         run: npm run test
 
-      - name: Build
-        run: npm run build
+      - name: Archive test artifacst
+        uses: actions/upload-artifact@v3
+        with:
+          name: test images
+          path: |
+            test/e2e/**/*.png
+
+
+  license:
+    runs-on: ubuntu-latest
+
+    env:
+      FOSSA_API_KEY: ${{ secrets.FOSSA_API_KEY }}
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Run Fossa and upload data
         if: env.FOSSA_API_KEY != ''
         uses: fossa-contrib/fossa-action@v1
         with:
           fossa-api-key: ${{ env.FOSSA_API_KEY }}
+
