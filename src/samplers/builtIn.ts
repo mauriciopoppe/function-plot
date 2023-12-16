@@ -3,8 +3,8 @@ import clamp from 'clamp'
 import utils from '../utils'
 import { builtIn as evaluate } from '../helpers/eval'
 
-import { Chart } from '../chart'
-import { FunctionPlotDatum } from '../types'
+import { FunctionPlotDatum, FunctionPlotScale } from '../types'
+import { SamplerParams, SamplerFn } from './types'
 
 function checkAsymptote(
   d0: number[],
@@ -45,17 +45,15 @@ function checkAsymptote(
 /**
  * Splits the evaluated data into arrays, each array is separated by any asymptote found
  * through the process of detecting slope/sign brusque changes
- * @param chart
- * @param d
- * @param data
+ *
  * @returns {Array[]}
  */
-function split(chart: Chart, d: FunctionPlotDatum, data: number[][]) {
+function split(d: FunctionPlotDatum, data: number[][], yScale: FunctionPlotScale): Array<any> {
   let i, oldSign
   let deltaX
   let st = []
   const sets = []
-  const domain = chart.meta.yScale.domain()
+  const domain = yScale.domain()
   const yMin = domain[0]
   const yMax = domain[1]
 
@@ -105,48 +103,48 @@ function split(chart: Chart, d: FunctionPlotDatum, data: number[][]) {
   return sets
 }
 
-function linear(chart: Chart, d: FunctionPlotDatum, range: [number, number], n: number) {
-  const allX = utils.space(chart.options.xAxis.type, range, n)
-  const yDomain = chart.meta.yScale.domain()
+function linear(samplerParams: SamplerParams): Array<any> {
+  const allX = utils.space(samplerParams.xAxis, samplerParams.range, samplerParams.nSamples)
+  const yDomain = samplerParams.yScale.domain()
   const yDomainMargin = yDomain[1] - yDomain[0]
   const yMin = yDomain[0] - yDomainMargin * 1e5
   const yMax = yDomain[1] + yDomainMargin * 1e5
   let data = []
   for (let i = 0; i < allX.length; i += 1) {
     const x = allX[i]
-    const y = evaluate(d, 'fn', { x })
+    const y = evaluate(samplerParams.d, 'fn', { x })
     if (utils.isValidNumber(x) && utils.isValidNumber(y)) {
       data.push([x, clamp(y, yMin, yMax)])
     }
   }
-  data = split(chart, d, data)
+  data = split(samplerParams.d, data, samplerParams.yScale)
   return data
 }
 
-function parametric(chart: Chart, d: FunctionPlotDatum, range: [number, number], nSamples: number) {
+function parametric(samplerParams: SamplerParams): Array<any> {
   // range is mapped to canvas coordinates from the input
   // for parametric plots the range will tell the start/end points of the `t` param
-  const parametricRange = d.range || [0, 2 * Math.PI]
-  const tCoords = utils.space(chart.options.xAxis.type, parametricRange, nSamples)
+  const parametricRange = samplerParams.d.range || [0, 2 * Math.PI]
+  const tCoords = utils.space(samplerParams.xAxis, parametricRange, samplerParams.nSamples)
   const samples = []
   for (let i = 0; i < tCoords.length; i += 1) {
     const t = tCoords[i]
-    const x = evaluate(d, 'x', { t })
-    const y = evaluate(d, 'y', { t })
+    const x = evaluate(samplerParams.d, 'x', { t })
+    const y = evaluate(samplerParams.d, 'y', { t })
     samples.push([x, y])
   }
   return [samples]
 }
 
-function polar(chart: Chart, d: FunctionPlotDatum, range: [number, number], nSamples: number) {
+function polar(samplerParams: SamplerParams): Array<any> {
   // range is mapped to canvas coordinates from the input
   // for polar plots the range will tell the start/end points of the `theta` param
-  const polarRange = d.range || [-Math.PI, Math.PI]
-  const thetaSamples = utils.space(chart.options.xAxis.type, polarRange, nSamples)
+  const polarRange = samplerParams.d.range || [-Math.PI, Math.PI]
+  const thetaSamples = utils.space(samplerParams.xAxis, polarRange, samplerParams.nSamples)
   const samples = []
   for (let i = 0; i < thetaSamples.length; i += 1) {
     const theta = thetaSamples[i]
-    const r = evaluate(d, 'r', { theta })
+    const r = evaluate(samplerParams.d, 'r', { theta })
     const x = r * Math.cos(theta)
     const y = r * Math.sin(theta)
     samples.push([x, y])
@@ -154,16 +152,17 @@ function polar(chart: Chart, d: FunctionPlotDatum, range: [number, number], nSam
   return [samples]
 }
 
-function points(chart: Chart, d: FunctionPlotDatum, range: [number, number], nSamples: number) {
-  return [d.points]
+function points(samplerParams: SamplerParams): Array<any> {
+  return [samplerParams.d.points]
 }
 
-function vector(chart: Chart, d: FunctionPlotDatum, range: [number, number], nSamples: number) {
+function vector(sampleParams: SamplerParams): Array<any> {
+  const d = sampleParams.d
   d.offset = d.offset || [0, 0]
   return [[d.offset, [d.vector[0] + d.offset[0], d.vector[1] + d.offset[1]]]]
 }
 
-const sampler = function (chart: Chart, d: FunctionPlotDatum, range: [number, number], nSamples: number) {
+const sampler: SamplerFn = function sampler(samplerParams: SamplerParams): Array<any> {
   const fnTypes = {
     parametric,
     polar,
@@ -171,11 +170,11 @@ const sampler = function (chart: Chart, d: FunctionPlotDatum, range: [number, nu
     vector,
     linear
   }
-  if (!(d.fnType in fnTypes)) {
-    throw Error(d.fnType + ' is not supported in the `builtIn` sampler')
+  if (!(samplerParams.d.fnType in fnTypes)) {
+    throw Error(samplerParams.d.fnType + ' is not supported in the `builtIn` sampler')
   }
   // @ts-ignore
-  return fnTypes[d.fnType].apply(null, arguments)
+  return fnTypes[samplerParams.d.fnType].apply(null, arguments)
 }
 
 export default sampler

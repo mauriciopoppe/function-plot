@@ -1,6 +1,6 @@
 import { line as d3Line, Line } from 'd3-shape'
 import { format as d3Format } from 'd3-format'
-import { scaleLinear as d3ScaleLinear, scaleLog as d3ScaleLog, ScaleLinear, ScaleLogarithmic } from 'd3-scale'
+import { scaleLinear as d3ScaleLinear, scaleLog as d3ScaleLog } from 'd3-scale'
 import { axisLeft as d3AxisLeft, axisBottom as d3AxisBottom, Axis } from 'd3-axis'
 import { zoom as d3Zoom } from 'd3-zoom'
 // @ts-ignore
@@ -8,7 +8,7 @@ import { select as d3Select, pointer as d3Pointer } from 'd3-selection'
 import { interpolateRound as d3InterpolateRound } from 'd3-interpolate'
 import EventEmitter from 'events'
 
-import { FunctionPlotOptions, FunctionPlotDatum } from './types'
+import { FunctionPlotOptions, FunctionPlotDatum, FunctionPlotScale } from './types'
 
 import annotations from './helpers/annotations'
 import mousetip from './tip'
@@ -39,8 +39,8 @@ export interface ChartMeta {
    */
   height?: number
   zoomBehavior?: any
-  xScale?: ScaleLinear<number, number> | ScaleLogarithmic<number, number>
-  yScale?: ScaleLinear<number, number> | ScaleLogarithmic<number, number>
+  xScale?: FunctionPlotScale
+  yScale?: FunctionPlotScale
   xAxis?: Axis<any>
   yAxis?: Axis<any>
   xDomain?: number[]

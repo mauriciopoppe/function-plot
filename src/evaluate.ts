@@ -1,13 +1,11 @@
 import globals from './globals'
-import { interval, builtIn } from './samplers'
+import interval from './samplers/interval'
+import builtIn from './samplers/builtIn'
 
 import { Chart } from './index'
 import { FunctionPlotDatum } from './types'
 
-const evalTypeFn = {
-  interval,
-  builtIn
-}
+type SamplerTypeFn = typeof interval | typeof builtIn
 
 /**
  * Computes the endpoints x_lo, x_hi of the range
@@ -34,10 +32,27 @@ function computeEndpoints(scale: any, d: any): [number, number] {
  */
 function evaluate(chart: Chart, d: FunctionPlotDatum) {
   const range = computeEndpoints(chart.meta.xScale, d)
-  const evalFn = evalTypeFn[d.sampler]
+
+  let samplerFn: SamplerTypeFn
+  if (d.sampler === 'builtIn') {
+    samplerFn = builtIn
+  } else if (d.sampler === 'interval') {
+    samplerFn = interval
+  } else {
+    throw new Error(`Invalid sampler function ${d.sampler}`)
+  }
+
   const nSamples = d.nSamples || Math.min(globals.MAX_ITERATIONS, globals.DEFAULT_ITERATIONS || chart.meta.width * 2)
 
-  const data = evalFn(chart, d, range, nSamples)
+  const data = samplerFn({
+    d,
+    range,
+    xScale: chart.meta.xScale,
+    yScale: chart.meta.yScale,
+    xAxis: chart.options.xAxis,
+    yAxis: chart.options.yAxis,
+    nSamples
+  })
   // NOTE: it's impossible to listen for the first eval event
   // as the event is already fired when a listener is attached
   chart.emit('eval', data, d.index, d.isHelper)

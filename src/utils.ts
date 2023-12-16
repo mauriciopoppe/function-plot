@@ -1,6 +1,6 @@
 import globals from './globals'
 
-import { FunctionPlotDatum } from './types'
+import { FunctionPlotDatum, FunctionPlotOptionsAxis } from './types'
 
 const utils = {
   linspace: function (lo: number, hi: number, n: number): number[] {
@@ -16,10 +16,10 @@ const utils = {
     return typeof v === 'number' && !isNaN(v)
   },
 
-  space: function (type: string, range: [number, number], n: number) {
+  space: function (axis: FunctionPlotOptionsAxis, range: [number, number], n: number) {
     const lo = range[0]
     const hi = range[1]
-    if (type === 'log') {
+    if (axis.type === 'log') {
       return this.logspace(Math.log10(lo), Math.log10(hi), n)
     }
     // default is linear
