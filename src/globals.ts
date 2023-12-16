@@ -2,7 +2,7 @@ import { hsl as d3Hsl, HSLColor } from 'd3-color'
 
 import { GraphTypeBuilder } from './graph-types/types'
 
-type TGlobals = {
+export type TGlobals = {
   COLORS: Array<HSLColor>
   DEFAULT_WIDTH: number
   DEFAULT_HEIGHT: number

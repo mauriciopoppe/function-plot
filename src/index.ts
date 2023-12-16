@@ -1,7 +1,7 @@
 import './polyfills'
 
 import { FunctionPlotOptions } from './types'
-import { Chart } from './chart'
+import { Chart, ChartMeta, ChartMetaMargin } from './chart'
 
 import globals, { registerGraphType } from './globals'
 import { polyline, interval, scatter, text } from './graph-types'
@@ -39,12 +39,14 @@ functionPlot.$eval = $eval
 functionPlot.graphTypes = { interval, polyline, scatter }
 
 export * from './types'
-export { Chart }
+export { Chart, ChartMeta, ChartMetaMargin }
 export { registerGraphType }
 export { builtIn as EvalBuiltIn, interval as EvalInterval } from './helpers/eval'
+export { TGlobals } from './globals'
 export {
   interval as GraphTypeInterval,
   polyline as GraphTypePolyline,
   scatter as GraphTypeScatter
 } from './graph-types'
+export { GraphTypePlotter, GraphTypeBuilder } from './graph-types/types'
 export * from './helpers'
