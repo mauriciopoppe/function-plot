@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+	<meta charset="UTF-8">
+	<title>Function Plot</title>
+  <link rel="stylesheet" type="text/css" rel="noopener" target="_blank" href="./css/reset.css">
+<style>
+body, text {
+    font-family: Arial, sans-serif;
+    color: black;
+    font-size: 14px;
+}
+</style>
+</head>
+<body>
+  <div id="playground"></div>
+  <script src="function-plot.js"></script>
+<script>
+(function() {
+    functionPlot({
+        target: "#playground",
+        data: [
+            {
+                fn: "x^2"
+            }
+        ]
+    })
+})()
+</script>
+</body>
+</html>
