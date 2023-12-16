@@ -1,28 +1,58 @@
+<!-- This page is used for tests purposes, think twice before making changes in <body> -->
 <!DOCTYPE html>
 <html>
 <head lang="en">
 	<meta charset="UTF-8">
-	<title>demo</title>
-  <style>
-    body {
-      font: 10px sans-serif;
-    }
-    .function-plot .top-right-legend {
-      font-size: 10px;
-    }
-    #playground {
-      width: 550px;
-      margin: 100px auto;
-    }
-  </style>
+	<title>Function Plot</title>
+  <link rel="stylesheet" type="text/css" rel="noopener" target="_blank" href="./css/reset.css">
+<style>
+body, text {
+    font-family: Arial, sans-serif;
+    color: black;
+    font-size: 14px;
+}
+</style>
 </head>
 <body>
   <div id="playground"></div>
-
-  <script src="js/vendor/jquery-1.11.2.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/1.5.2/math.min.js"></script>
   <script src="function-plot.js"></script>
-  <script src="js/playground.js"></script>
-  <script>  $(document).trigger('markupLoaded'); </script>
+<script>
+(function () {
+functionPlot({
+  target: '#playground',
+  xAxis: {
+    type: 'log',
+    domain: [0.01, 1]
+  },
+  yAxis: {
+    domain: [-100, 100]
+  },
+  grid: true,
+  data: [{
+    fn: '1/x * cos(1/x)',
+    // to make it look like a definite integral
+    closed: true
+  }]
+})
+functionPlot({
+  target: '#playground',
+  data: [
+    {
+      graphType: "text",
+      location: [1, 1],
+      text: "hello world"
+    },
+    {
+      graphType: "text",
+      location: [-1, -1],
+      text: "foo bar",
+      attr: {
+        'text-anchor': 'end'
+      }
+    },
+  ]
+})
+})()
+</script>
 </body>
 </html>
