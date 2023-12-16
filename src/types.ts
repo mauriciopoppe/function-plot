@@ -1,7 +1,11 @@
+import { ScaleLinear, ScaleLogarithmic } from 'd3-scale'
+
 export interface Interval {
   lo: number
   hi: number
 }
+
+export type FunctionPlotScale = ScaleLinear<number, number> | ScaleLogarithmic<number, number>
 
 export interface FunctionPlotOptionsAxis {
   /**
@@ -304,12 +308,12 @@ export interface FunctionPlotOptions {
   /**
    * The x-axis domain, internally state used to preserve the x-domain across multiple calls to function plot
    */
-  xDomain?: number[]
+  xDomain?: [number, number]
 
   /**
    * The y-axis domain, internally state used to preserve the y-domain across multiple calls to function plot
    */
-  yDomain?: number[]
+  yDomain?: [number, number]
 
   /**
    * The tip configuration
