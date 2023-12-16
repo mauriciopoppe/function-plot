@@ -154,7 +154,7 @@ export interface FunctionPlotDatum {
   /**
    * The type of function to render
    */
-  fnType?: 'linear' | 'parametric' | 'implicit' | 'polar' | 'points' | 'vector'
+  fnType?: 'linear' | 'parametric' | 'implicit' | 'polar' | 'points' | 'vector' | string
 
   /**
    * The sampler to take samples from `range`, available values are `interval|builtIn`
@@ -224,12 +224,22 @@ export interface FunctionPlotDatum {
   /**
    * An array of 2-number array which hold the coordinates of the points to render when `fnType: 'vector'`
    */
-  vector?: number[]
+  vector?: [number, number]
 
   /**
    * Vector offset when `fnType: 'vector'`
    */
   offset?: number[]
+
+  /**
+   * An array of 2-number array for the position of the text when `fnType: 'text'`
+   */
+  location?: [number, number]
+
+  /**
+   * Used as text if `graphType: 'text'`
+   */
+  text?: string
 
   // helper data
   /**

@@ -34,7 +34,7 @@ export default function Scatter(chart: Chart) {
 
       const selection = innerSelection
         .merge(innerSelectionEnter)
-        .attr('fill', d3Hsl(color.toString()).brighter(1.5).hex())
+        .attr('fill', d3Hsl(color.toString()).brighter(1.5).formatHex())
         .attr('stroke', color)
         .attr('opacity', 0.7)
         .attr('r', 1)

@@ -4,13 +4,14 @@ import { FunctionPlotOptions } from './types'
 import { Chart } from './chart'
 
 import globals, { registerGraphType } from './globals'
-import { polyline, interval, scatter } from './graph-types'
+import { polyline, interval, scatter, text } from './graph-types'
 import * as $eval from './helpers/eval'
 
 // register common graphTypes on library load.
 registerGraphType('polyline', polyline)
 registerGraphType('interval', interval)
 registerGraphType('scatter', scatter)
+registerGraphType('text', text)
 
 /**
  * functionPlot is a function plotter of 2d functions.

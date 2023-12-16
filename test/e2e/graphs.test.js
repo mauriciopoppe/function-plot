@@ -193,4 +193,29 @@ functionPlot({
     const image = await page.screenshot()
     expect(image).toMatchImageSnapshot(matchSnapshotConfig)
   })
+
+  it('should render text', async () => {
+    await page.evaluate(`
+functionPlot({
+  target: '#playground',
+  data: [
+    {
+      graphType: "text",
+      location: [1, 1],
+      text: "hello world"
+    },
+    {
+      graphType: "text",
+      location: [-1, -1],
+      text: "foo bar",
+      attr: {
+        'text-anchor': 'end'
+      }
+    },
+  ]
+})
+    `)
+    const image = await page.screenshot()
+    expect(image).toMatchImageSnapshot(matchSnapshotConfig)
+  })
 })
