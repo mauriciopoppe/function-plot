@@ -1,6 +1,5 @@
 import { line as d3Line } from 'd3-shape'
 import { select as d3Select, Selection } from 'd3-selection'
-import clamp from 'clamp'
 
 import utils from './utils'
 import globals from './globals'
@@ -104,7 +103,6 @@ export default function mouseTip(config: FunctionPlotTip) {
     let x, y
 
     const selection = tipInnerJoin.merge(tipInnerEnter)
-    const inf = 1e8
     const meta = config.owner.meta
     const data = selection.datum().data
     const xScale = meta.xScale
@@ -124,7 +122,7 @@ export default function mouseTip(config: FunctionPlotTip) {
         continue
       }
 
-      const range = data[i].range || [-inf, inf]
+      const range = data[i].range || [-utils.infinity(), utils.infinity()]
       let candidateY
       if (x0 > range[0] - globals.TIP_X_EPS && x0 < range[1] + globals.TIP_X_EPS) {
         try {
@@ -151,9 +149,9 @@ export default function mouseTip(config: FunctionPlotTip) {
       tip.show()
       config.owner.emit('tip:update', { x, y, index: closestIndex })
       // @ts-ignore
-      const clampX = clamp(x, xScale.invert(-MARGIN), xScale.invert(width + MARGIN))
+      const clampX = utils.clamp(x, xScale.invert(-MARGIN), xScale.invert(width + MARGIN))
       // @ts-ignore
-      const clampY = clamp(y, yScale.invert(height + MARGIN), yScale.invert(-MARGIN))
+      const clampY = utils.clamp(y, yScale.invert(height + MARGIN), yScale.invert(-MARGIN))
       const color = utils.color(data[closestIndex], closestIndex)
       selection.style('color', 'red')
       selection.attr('transform', 'translate(' + xScale(clampX) + ',' + yScale(clampY) + ')')

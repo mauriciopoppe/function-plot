@@ -7,7 +7,7 @@ import evaluate from '../evaluate'
 import { Chart } from '../index'
 import { FunctionPlotDatum } from '../types'
 
-export default function scatter(chart: Chart) {
+export default function Scatter(chart: Chart) {
   const xScale = chart.meta.xScale
   const yScale = chart.meta.yScale
 
@@ -27,7 +27,7 @@ export default function scatter(chart: Chart) {
         }
       }
 
-      const innerSelection = d3Select(this).selectAll(':scope > circle').data(joined)
+      const innerSelection = d3Select(this).selectAll(':scope > circle.scatter').data(joined)
 
       const cls = `scatter scatter-${index}`
       const innerSelectionEnter = innerSelection.enter().append('circle').attr('class', cls)

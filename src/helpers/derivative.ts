@@ -3,8 +3,9 @@ import { select as d3Select, Selection } from 'd3-selection'
 import { polyline } from '../graph-types/'
 import { builtIn as builtInEvaluator } from './eval'
 import datumDefaults from '../datum-defaults'
+import utils from '../utils'
 
-import { Chart } from "../index";
+import { Chart } from '../index'
 import { FunctionPlotDatum } from '../types'
 
 export default function derivative(chart: Chart) {
@@ -16,22 +17,22 @@ export default function derivative(chart: Chart) {
     graphType: 'polyline'
   })
 
-  function computeLine (d: FunctionPlotDatum) {
+  function computeLine(d: FunctionPlotDatum) {
     if (!d.derivative) {
       return []
     }
-    const x0 = typeof d.derivative.x0 === 'number' ? d.derivative.x0 : Infinity
+    const x0 = typeof d.derivative.x0 === 'number' ? d.derivative.x0 : utils.infinity()
     derivativeDatum.index = d.index
     derivativeDatum.scope = {
       m: builtInEvaluator(d.derivative, 'fn', { x: x0 }),
-      x0: x0,
+      x0,
       y0: builtInEvaluator(d, 'fn', { x: x0 })
     }
     derivativeDatum.fn = 'm * (x - x0) + y0'
     return [derivativeDatum]
   }
 
-  function checkAutoUpdate (d: FunctionPlotDatum) {
+  function checkAutoUpdate(d: FunctionPlotDatum) {
     const self = this
     if (!d.derivative) {
       return
@@ -57,22 +58,16 @@ export default function derivative(chart: Chart) {
       const el = d3Select(this)
       const data = computeLine.call(selection, d)
       checkAutoUpdate.call(selection, d)
-      const innerSelection = el.selectAll('g.derivative')
-        .data(data)
+      const innerSelection = el.selectAll('g.derivative').data(data)
 
-      const innerSelectionEnter = innerSelection.enter()
-        .append('g')
-        .attr('class', 'derivative')
+      const innerSelectionEnter = innerSelection.enter().append('g').attr('class', 'derivative')
 
       // enter + update
-      innerSelection.merge(innerSelectionEnter)
-        .call(polyline(chart))
+      innerSelection.merge(innerSelectionEnter).call(polyline(chart))
 
       // update
       // change the opacity of the line
-      innerSelection.merge(innerSelectionEnter)
-        .selectAll('path')
-        .attr('opacity', 0.5)
+      innerSelection.merge(innerSelectionEnter).selectAll('path').attr('opacity', 0.5)
 
       innerSelection.exit().remove()
     })
