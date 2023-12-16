@@ -1,49 +1,55 @@
-'use strict';
+'use strict'
 $(document).on('markupLoaded', function () {
-  var functionPlot = window.functionPlot;
-  var a, b, c;
-  var f, fp;
+  var functionPlot = window.functionPlot
+  var a, b, c
+  var f, fp
 
   functionPlot({
     target: '#description-sample',
-    yAxis: {domain: [-1, 9]},
+    yAxis: { domain: [-1, 9] },
     tip: {
       renderer: function () {}
     },
     grid: true,
-    data: [{
-      fn: 'x^2',
-      derivative: {
-        fn: '2 * x',
-        updateOnMouseMove: true
+    data: [
+      {
+        fn: 'x^2',
+        derivative: {
+          fn: '2 * x',
+          updateOnMouseMove: true
+        }
       }
-    }]
+    ]
   })
 
   functionPlot({
     target: '#description-sin-exp-x-naive',
-    yAxis: {domain: [-4, 4]},
-    xAxis: {domain: [-2, 6]},
+    yAxis: { domain: [-4, 4] },
+    xAxis: { domain: [-2, 6] },
     tip: {
       renderer: function () {}
     },
-    data: [{
-      fn: 'sin(exp(x))',
-      nSamples: 5000,
-      graphType: 'polyline'
-    }]
+    data: [
+      {
+        fn: 'sin(exp(x))',
+        nSamples: 5000,
+        graphType: 'polyline'
+      }
+    ]
   })
 
   functionPlot({
     target: '#description-sin-exp-x',
-    yAxis: {domain: [-4, 4]},
-    xAxis: {domain: [-2, 6]},
+    yAxis: { domain: [-4, 4] },
+    xAxis: { domain: [-2, 6] },
     tip: {
       renderer: function () {}
     },
-    data: [{
-      fn: 'sin(exp(x))'
-    }]
+    data: [
+      {
+        fn: 'sin(exp(x))'
+      }
+    ]
   })
 
   /**
@@ -65,9 +71,11 @@ $(document).on('markupLoaded', function () {
    */
   functionPlot({
     target: '#quadratic',
-    data: [{
-      fn: 'x^2'
-    }]
+    data: [
+      {
+        fn: 'x^2'
+      }
+    ]
   })
 
   /**
@@ -99,9 +107,11 @@ $(document).on('markupLoaded', function () {
     yAxis: {
       label: 'y - axis'
     },
-    data: [{
-      fn: 'x^2'
-    }]
+    data: [
+      {
+        fn: 'x^2'
+      }
+    ]
   })
 
   /**
@@ -118,12 +128,8 @@ $(document).on('markupLoaded', function () {
       label: 'imaginary'
     },
     grid: true,
-    data: [
-      { fn: 'sqrt(1 - x * x)' },
-      { fn: '-sqrt(1 - x * x)' }
-    ]
+    data: [{ fn: 'sqrt(1 - x * x)' }, { fn: '-sqrt(1 - x * x)' }]
   })
-
 
   /**
    * ### Domain
@@ -143,11 +149,13 @@ $(document).on('markupLoaded', function () {
    */
   functionPlot({
     target: '#domain',
-    yAxis: {domain: [-1, 1]},
-    xAxis: {domain: [8, 24]},
-    data: [{
-      fn: 'sin(x)'
-    }]
+    yAxis: { domain: [-1, 1] },
+    xAxis: { domain: [8, 24] },
+    data: [
+      {
+        fn: 'sin(x)'
+      }
+    ]
   })
 
   /**
@@ -172,10 +180,12 @@ $(document).on('markupLoaded', function () {
    */
   functionPlot({
     target: '#samples',
-    data: [{
-      fn: 'sin(x)',
-      nSamples: 1000
-    }]
+    data: [
+      {
+        fn: 'sin(x)',
+        nSamples: 1000
+      }
+    ]
   })
 
   /**
@@ -192,19 +202,25 @@ $(document).on('markupLoaded', function () {
    */
   functionPlot({
     target: '#annotations',
-    yAxis: {domain: [-1, 9]},
-    data: [{
-      fn: 'x^2'
-    }],
-    annotations: [{
-      x: -1
-    }, {
-      x: 1,
-      text: 'x = 1'
-    }, {
-      y: 2,
-      text: 'y = 2'
-    }]
+    yAxis: { domain: [-1, 9] },
+    data: [
+      {
+        fn: 'x^2'
+      }
+    ],
+    annotations: [
+      {
+        x: -1
+      },
+      {
+        x: 1,
+        text: 'x = 1'
+      },
+      {
+        y: 2,
+        text: 'y = 2'
+      }
+    ]
   })
 
   /**
@@ -220,12 +236,14 @@ $(document).on('markupLoaded', function () {
    */
   functionPlot({
     target: '#closed',
-    xAxis: {domain: [-2, 12]},
-    data: [{
-      fn: '3 + sin(x)',
-      range: [2, 8],
-      closed: true
-    }]
+    xAxis: { domain: [-2, 12] },
+    data: [
+      {
+        fn: '3 + sin(x)',
+        range: [2, 8],
+        closed: true
+      }
+    ]
   })
 
   /**
@@ -245,11 +263,13 @@ $(document).on('markupLoaded', function () {
       domain: [-100, 100]
     },
     grid: true,
-    data: [{
-      fn: '1/x * cos(1/x)',
-      // to make it look like a definite integral
-      closed: true
-    }]
+    data: [
+      {
+        fn: '1/x * cos(1/x)',
+        // to make it look like a definite integral
+        closed: true
+      }
+    ]
   })
 
   /**
@@ -265,13 +285,7 @@ $(document).on('markupLoaded', function () {
    */
   functionPlot({
     target: '#multiple',
-    data: [
-      { fn: 'x', color: 'pink' },
-      { fn: '-x' },
-      { fn: 'x * x' },
-      { fn: 'x * x * x' },
-      { fn: 'x * x * x * x' }
-    ]
+    data: [{ fn: 'x', color: 'pink' }, { fn: '-x' }, { fn: 'x * x' }, { fn: 'x * x * x' }, { fn: 'x * x * x * x' }]
   })
 
   /**
@@ -289,17 +303,21 @@ $(document).on('markupLoaded', function () {
    */
   functionPlot({
     target: '#graph-types',
-    data: [{
-      fn: '-sqrt(-x)',
-      nSamples: 100,
-      graphType: 'scatter'
-    }, {
-      fn: 'sqrt(x)',
-      graphType: 'polyline'
-    }, {
-      fn: 'x^2',
-      graphType: 'interval'
-    }]
+    data: [
+      {
+        fn: '-sqrt(-x)',
+        nSamples: 100,
+        graphType: 'scatter'
+      },
+      {
+        fn: 'sqrt(x)',
+        graphType: 'polyline'
+      },
+      {
+        fn: 'x^2',
+        graphType: 'interval'
+      }
+    ]
   })
 
   /**
@@ -320,8 +338,8 @@ $(document).on('markupLoaded', function () {
   functionPlot({
     target: '#tip',
     tip: {
-      xLine: true,    // dashed line parallel to y = 0
-      yLine: true,    // dashed line parallel to x = 0
+      xLine: true, // dashed line parallel to y = 0
+      yLine: true, // dashed line parallel to x = 0
       renderer: function (x, y, index) {
         // the returning value will be shown in the tip
       }
@@ -347,9 +365,11 @@ $(document).on('markupLoaded', function () {
    */
   functionPlot({
     target: '#root-finding',
-    data: [{
-      fn: 'nthRoot(x, 3)^2'
-    }]
+    data: [
+      {
+        fn: 'nthRoot(x, 3)^2'
+      }
+    ]
   })
 
   /**
@@ -369,16 +389,18 @@ $(document).on('markupLoaded', function () {
    */
   functionPlot({
     target: '#secant',
-    yAxis: {domain: [-1, 9]},
-    xAxis: {domain: [-3, 3]},
-    data: [{
-      fn: 'x^2',
-      secants: [
-        { x0: 1, x1: 3 },
-        { x0: 1, x1: 2.5 },
-        { x0: 1, x1: 2 }
-      ]
-    }]
+    yAxis: { domain: [-1, 9] },
+    xAxis: { domain: [-3, 3] },
+    data: [
+      {
+        fn: 'x^2',
+        secants: [
+          { x0: 1, x1: 3 },
+          { x0: 1, x1: 2.5 },
+          { x0: 1, x1: 2 }
+        ]
+      }
+    ]
   })
 
   /**
@@ -390,16 +412,21 @@ $(document).on('markupLoaded', function () {
   functionPlot({
     target: '#secant-update',
     yDomain: [-1, 9],
-    data: [{
-      fn: 'x^2',
-      secants: [{
-        x0: 2,
-        updateOnMouseMove: true
-      }, {
-        x0: -2,
-        updateOnMouseMove: true
-      }]
-    }]
+    data: [
+      {
+        fn: 'x^2',
+        secants: [
+          {
+            x0: 2,
+            updateOnMouseMove: true
+          },
+          {
+            x0: -2,
+            updateOnMouseMove: true
+          }
+        ]
+      }
+    ]
   })
 
   /**
@@ -419,14 +446,16 @@ $(document).on('markupLoaded', function () {
    */
   functionPlot({
     target: '#derivative',
-    yAxis: {domain: [-1, 9]},
-    data: [{
-      fn: 'x^2',
-      derivative: {
-        fn: '2 * x',
-        x0: 2
+    yAxis: { domain: [-1, 9] },
+    data: [
+      {
+        fn: 'x^2',
+        derivative: {
+          fn: '2 * x',
+          x0: 2
+        }
       }
-    }]
+    ]
   })
 
   /**
@@ -438,14 +467,16 @@ $(document).on('markupLoaded', function () {
    */
   functionPlot({
     target: '#derivative-update',
-    yAxis: {domain: [-1, 9]},
-    data: [{
-      fn: 'x^2',
-      derivative: {
-        fn: '2 * x',
-        updateOnMouseMove: true
+    yAxis: { domain: [-1, 9] },
+    data: [
+      {
+        fn: 'x^2',
+        derivative: {
+          fn: '2 * x',
+          updateOnMouseMove: true
+        }
       }
-    }]
+    ]
   })
 
   /**
@@ -456,19 +487,22 @@ $(document).on('markupLoaded', function () {
    */
   functionPlot({
     target: '#derivative-update-multiple',
-    data: [{
-      fn: 'x * x',
-      derivative: {
-        fn: '2 * x',
-        updateOnMouseMove: true
+    data: [
+      {
+        fn: 'x * x',
+        derivative: {
+          fn: '2 * x',
+          updateOnMouseMove: true
+        }
+      },
+      {
+        fn: 'x * x * x',
+        derivative: {
+          fn: '3 * x * x',
+          updateOnMouseMove: true
+        }
       }
-    }, {
-      fn: 'x * x * x',
-      derivative: {
-        fn: '3 * x * x',
-        updateOnMouseMove: true
-      }
-    }]
+    ]
   })
 
   /**
@@ -484,13 +518,13 @@ $(document).on('markupLoaded', function () {
   a = functionPlot({
     target: '#linked-a',
     height: 250,
-    xAxis: {domain: [-10, 10]},
+    xAxis: { domain: [-10, 10] },
     data: [{ fn: 'x * x' }]
   })
   b = functionPlot({
     target: '#linked-b',
     height: 250,
-    xAxis: {domain: [-10, 10]},
+    xAxis: { domain: [-10, 10] },
     data: [{ fn: '2 * x' }]
   })
   a.addLink(b)
@@ -510,19 +544,19 @@ $(document).on('markupLoaded', function () {
   a = functionPlot({
     target: '#linked-a-multiple',
     height: 250,
-    xAxis: {domain: [-10, 10]},
+    xAxis: { domain: [-10, 10] },
     data: [{ fn: 'x * x' }]
   })
   b = functionPlot({
     target: '#linked-b-multiple',
     height: 250,
-    xAxis: {domain: [-10, 10]},
+    xAxis: { domain: [-10, 10] },
     data: [{ fn: '2 * x' }]
   })
   c = functionPlot({
     target: '#linked-c-multiple',
     height: 250,
-    xAxis: {domain: [-10, 10]},
+    xAxis: { domain: [-10, 10] },
     data: [{ fn: '2' }]
   })
   a.addLink(b, c)
@@ -541,18 +575,20 @@ $(document).on('markupLoaded', function () {
    */
   var options = {
     target: '#quadratic-update',
-    data: [{
-      fn: 'x'
-    }]
-  };
+    data: [
+      {
+        fn: 'x'
+      }
+    ]
+  }
   $('#update').click(function () {
     if (!options.title) {
       // add a title, a tip and change the function to y = x * x
-      options.title = 'hello world';
+      options.title = 'hello world'
       options.tip = {
         xLine: true,
         yLine: true
-      };
+      }
       options.data[0] = {
         fn: 'x * x',
         derivative: {
@@ -563,9 +599,9 @@ $(document).on('markupLoaded', function () {
     } else {
       // remove the title and the tip
       // update the function to be y = x
-      delete options.title;
-      delete options.tip;
-      options.data[0] =  {
+      delete options.title
+      delete options.tip
+      options.data[0] = {
         fn: 'x'
       }
     }
@@ -583,13 +619,15 @@ $(document).on('markupLoaded', function () {
    */
   functionPlot({
     target: '#function-continuity',
-    data: [{
-      fn: '1 / x',
-      derivative: {
-        fn: '-1 / x / x',
-        updateOnMouseMove: true
+    data: [
+      {
+        fn: '1 / x',
+        derivative: {
+          fn: '-1 / x / x',
+          updateOnMouseMove: true
+        }
       }
-    }]
+    ]
   })
 
   /**
@@ -599,13 +637,15 @@ $(document).on('markupLoaded', function () {
    */
   functionPlot({
     target: '#function-continuity-tan-x',
-    data: [{
-      fn: 'tan(x)',
-      derivative: {
-        fn: '1 / (cos(x) ^ 2)',
-        updateOnMouseMove: true
+    data: [
+      {
+        fn: 'tan(x)',
+        derivative: {
+          fn: '1 / (cos(x) ^ 2)',
+          updateOnMouseMove: true
+        }
       }
-    }]
+    ]
   })
 
   /**
@@ -633,12 +673,9 @@ $(document).on('markupLoaded', function () {
    */
   functionPlot({
     target: '#circle-explicit',
-    yAxis: {domain: [-1.897959183, 1.897959183]},
-    xAxis: {domain: [-3, 3]},
-    data: [
-      { fn: 'sqrt(1 - x * x)' },
-      { fn: '-sqrt(1 - x * x)' }
-    ]
+    yAxis: { domain: [-1.897959183, 1.897959183] },
+    xAxis: { domain: [-3, 3] },
+    data: [{ fn: 'sqrt(1 - x * x)' }, { fn: '-sqrt(1 - x * x)' }]
   })
 
   /**
@@ -669,14 +706,16 @@ $(document).on('markupLoaded', function () {
    */
   functionPlot({
     target: '#parametric-circle',
-    yAxis: {domain: [-1.897959183, 1.897959183]},
-    xAxis: {domain: [-3, 3]},
-    data: [{
-      x: 'cos(t)',
-      y: 'sin(t)',
-      fnType: 'parametric',
-      graphType: 'polyline'
-    }]
+    yAxis: { domain: [-1.897959183, 1.897959183] },
+    xAxis: { domain: [-3, 3] },
+    data: [
+      {
+        x: 'cos(t)',
+        y: 'sin(t)',
+        fnType: 'parametric',
+        graphType: 'polyline'
+      }
+    ]
   })
 
   /**
@@ -693,15 +732,17 @@ $(document).on('markupLoaded', function () {
    */
   functionPlot({
     target: '#butterfly-curve',
-    yAxis: {domain: [-4.428571429, 4.428571429]},
-    xAxis: {domain: [-7, 7]},
-    data: [{
-      x: 'sin(t) * (exp(cos(t)) - 2 cos(4t) - sin(t/12)^5)',
-      y: 'cos(t) * (exp(cos(t)) - 2 cos(4t) - sin(t/12)^5)',
-      range: [-10 * Math.PI, 10 * Math.PI],
-      fnType: 'parametric',
-      graphType: 'polyline'
-    }]
+    yAxis: { domain: [-4.428571429, 4.428571429] },
+    xAxis: { domain: [-7, 7] },
+    data: [
+      {
+        x: 'sin(t) * (exp(cos(t)) - 2 cos(4t) - sin(t/12)^5)',
+        y: 'cos(t) * (exp(cos(t)) - 2 cos(4t) - sin(t/12)^5)',
+        range: [-10 * Math.PI, 10 * Math.PI],
+        fnType: 'parametric',
+        graphType: 'polyline'
+      }
+    ]
   })
 
   /**
@@ -731,18 +772,20 @@ $(document).on('markupLoaded', function () {
    */
   functionPlot({
     target: '#polar-circle',
-    yAxis: {domain: [-1.897959183, 1.897959183]},
-    xAxis: {domain: [-3, 3]},
-    data: [{
-      r: 'r0 * cos(theta - gamma) + sqrt(a^2 - r0^2 * (sin(theta - gamma))^2)',
-      scope: {
-        a: 1,
-        r0: 0,
-        gamma: 0
-      },
-      fnType: 'polar',
-      graphType: 'polyline'
-    }]
+    yAxis: { domain: [-1.897959183, 1.897959183] },
+    xAxis: { domain: [-3, 3] },
+    data: [
+      {
+        r: 'r0 * cos(theta - gamma) + sqrt(a^2 - r0^2 * (sin(theta - gamma))^2)',
+        scope: {
+          a: 1,
+          r0: 0,
+          gamma: 0
+        },
+        fnType: 'polar',
+        graphType: 'polyline'
+      }
+    ]
   })
 
   /**
@@ -756,13 +799,15 @@ $(document).on('markupLoaded', function () {
    */
   functionPlot({
     target: '#polar-complex',
-    yAxis: {domain: [-1.897959183, 1.897959183]},
-    xAxis: {domain: [-3, 3]},
-    data: [{
-      r: '2 * sin(4 theta)',
-      fnType: 'polar',
-      graphType: 'polyline'
-    }]
+    yAxis: { domain: [-1.897959183, 1.897959183] },
+    xAxis: { domain: [-3, 3] },
+    data: [
+      {
+        r: '2 * sin(4 theta)',
+        fnType: 'polar',
+        graphType: 'polyline'
+      }
+    ]
   })
 
   /**
@@ -791,12 +836,14 @@ $(document).on('markupLoaded', function () {
    */
   functionPlot({
     target: '#circle-implicit',
-    yAxis: {domain: [-1.897959183, 1.897959183]},
-    xAxis: {domain: [-3, 3]},
-    data: [{
-      fn: 'x * x + y * y - 1',
-      fnType: 'implicit'
-    }]
+    yAxis: { domain: [-1.897959183, 1.897959183] },
+    xAxis: { domain: [-3, 3] },
+    data: [
+      {
+        fn: 'x * x + y * y - 1',
+        fnType: 'implicit'
+      }
+    ]
   })
 
   /**
@@ -813,13 +860,15 @@ $(document).on('markupLoaded', function () {
    */
   functionPlot({
     target: '#implicit-complex',
-    yAxis: {domain: [-3.795918366, 3.795918366]},
-    xAxis: {domain: [-6, 6]},
+    yAxis: { domain: [-3.795918366, 3.795918366] },
+    xAxis: { domain: [-6, 6] },
     disableZoom: true,
-    data: [{
-      fn: 'cos(PI * x) - cos(PI * y)',
-      fnType: 'implicit'
-    }]
+    data: [
+      {
+        fn: 'cos(PI * x) - cos(PI * y)',
+        fnType: 'implicit'
+      }
+    ]
   })
 
   /**
@@ -834,31 +883,35 @@ $(document).on('markupLoaded', function () {
    */
   functionPlot({
     target: '#points',
-    data: [{
-      points: [
-        [1, 1],
-        [2, 1],
-        [2, 2],
-        [1, 2],
-        [1, 1]
-      ],
-      fnType: 'points',
-      graphType: 'scatter'
-    }]
+    data: [
+      {
+        points: [
+          [1, 1],
+          [2, 1],
+          [2, 2],
+          [1, 2],
+          [1, 1]
+        ],
+        fnType: 'points',
+        graphType: 'scatter'
+      }
+    ]
   })
   functionPlot({
     target: '#polyline',
-    data: [{
-      points: [
-        [1, 1],
-        [2, 1],
-        [2, 2],
-        [1, 2],
-        [1, 1]
-      ],
-      fnType: 'points',
-      graphType: 'polyline'
-    }]
+    data: [
+      {
+        points: [
+          [1, 1],
+          [2, 1],
+          [2, 2],
+          [1, 2],
+          [1, 1]
+        ],
+        fnType: 'points',
+        graphType: 'polyline'
+      }
+    ]
   })
 
   /**
@@ -873,14 +926,44 @@ $(document).on('markupLoaded', function () {
    */
   functionPlot({
     target: '#vector',
-    xAxis: {domain: [-3, 8]},
+    xAxis: { domain: [-3, 8] },
     grid: true,
-    data: [{
-      vector: [2, 1],
-      offset: [1, 2],
-      graphType: 'polyline',
-      fnType: 'vector'
-    }]
+    data: [
+      {
+        vector: [2, 1],
+        offset: [1, 2],
+        graphType: 'polyline',
+        fnType: 'vector'
+      }
+    ]
+  })
+
+  /**
+   * ### Text
+   *
+   * To render text set the following on each datum
+   *
+   * - `graphType: 'text'`
+   * - `location` {Array} The location of the text, an array with 2 elements.
+   * - `text` {string} The text to display.
+   */
+  functionPlot({
+    target: '#text',
+    data: [
+      {
+        graphType: 'text',
+        location: [1, 1],
+        text: 'hello world'
+      },
+      {
+        graphType: 'text',
+        location: [-1, -1],
+        text: 'foo bar',
+        attr: {
+          'text-anchor': 'end'
+        }
+      }
+    ]
   })
 
   /**
@@ -904,20 +987,24 @@ $(document).on('markupLoaded', function () {
   functionPlot({
     target: '#sampler-mathjs',
     disableZoom: true,
-    data: [{
-      fn: 'gamma(x)',
-      sampler: 'builtIn',
-      graphType: 'polyline'
-    }]
+    data: [
+      {
+        fn: 'gamma(x)',
+        sampler: 'builtIn',
+        graphType: 'polyline'
+      }
+    ]
   })
   functionPlot({
     target: '#sampler-tan-mathjs',
-    data: [{
-      fn: 'tan(x)',
-      nSamples: 4000,
-      sampler: 'builtIn',
-      graphType: 'polyline'
-    }]
+    data: [
+      {
+        fn: 'tan(x)',
+        nSamples: 4000,
+        sampler: 'builtIn',
+        graphType: 'polyline'
+      }
+    ]
   })
 
   /**
@@ -950,40 +1037,46 @@ $(document).on('markupLoaded', function () {
    */
   functionPlot({
     target: '#built-in-eval-function',
-    data: [{
-      // force the use of builtIn math
-      graphType: 'polyline',
-      fn: function (scope) {
-        // scope.x = Number
-        var x = scope.x
-        return x * x
+    data: [
+      {
+        // force the use of builtIn math
+        graphType: 'polyline',
+        fn: function (scope) {
+          // scope.x = Number
+          var x = scope.x
+          return x * x
+        }
+      },
+      {
+        fnType: 'polar',
+        graphType: 'polyline',
+        r: function (scope) {
+          // scope.theta = number
+          var r0 = 0
+          var a = 1
+          var gamma = 0
+          return (
+            r0 * Math.cos(scope.theta - gamma) + Math.sqrt(a * a - r0 * r0 * Math.pow(Math.sin(scope.theta - gamma), 2))
+          )
+        }
       }
-    }, {
-      fnType: 'polar',
-      graphType: 'polyline',
-      r: function (scope) {
-        // scope.theta = number
-        var r0 = 0
-        var a = 1
-        var gamma = 0
-        return r0 * Math.cos(scope.theta - gamma) +
-          Math.sqrt(a * a - r0 * r0 * Math.pow(Math.sin(scope.theta - gamma), 2))
-      }
-    }]
+    ]
   })
   functionPlot({
     target: '#interval-arithmetic-eval-function',
-    data: [{
-      // uses interval arithmetic by default
-      fn: function (scope) {
-        // scope.x = {lo: Number, hi: number}
-        // simulate a line e.g. y = x
-        return {
-          lo: scope.x.lo,
-          hi: scope.x.hi
+    data: [
+      {
+        // uses interval arithmetic by default
+        fn: function (scope) {
+          // scope.x = {lo: Number, hi: number}
+          // simulate a line e.g. y = x
+          return {
+            lo: scope.x.lo,
+            hi: scope.x.hi
+          }
         }
       }
-    }]
+    ]
   })
 })
 
@@ -995,7 +1088,7 @@ $('#examples').load('partials/examples.html', function () {
   })
 
   $('#p-slider').on('change', function () {
-    var value = +this.value;
+    var value = +this.value
     $('#p-slider-value').html(value)
   })
 })
