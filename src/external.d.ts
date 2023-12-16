@@ -1,7 +1,3 @@
-declare module 'clamp' {
-  export default function clamp(lo: number, hi: number, n: number): number
-}
-
 declare module 'built-in-math-eval' {
   export default function eval(expr: string): any
 }

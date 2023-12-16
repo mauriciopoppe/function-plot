@@ -1,6 +1,5 @@
 import { select as d3Select, Selection } from 'd3-selection'
 import { line as d3Line, area as d3Area, curveLinear as d3CurveLinear } from 'd3-shape'
-import clamp from 'clamp'
 
 import utils from '../utils'
 import evaluate from '../evaluate'
@@ -27,12 +26,12 @@ export default function polyline(chart: Chart) {
       yMax += diff * 1e6
       yMin -= diff * 1e6
       if (d.skipBoundsCheck) {
-        yMax = Infinity
-        yMin = -Infinity
+        yMax = utils.infinity()
+        yMin = -utils.infinity()
       }
 
       function y(d: number[]) {
-        return clamp(chart.meta.yScale(d[1]), yMin, yMax)
+        return utils.clamp(chart.meta.yScale(d[1]), yMin, yMax)
       }
 
       const line = d3Line()

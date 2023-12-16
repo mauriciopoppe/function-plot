@@ -44,7 +44,6 @@
   },
   "dependencies": {
     "built-in-math-eval": "^0.3.0",
-    "clamp": "^1.0.1",
     "d3-axis": "^3.0.0",
     "d3-color": "^3.1.0",
     "d3-format": "^3.1.0",

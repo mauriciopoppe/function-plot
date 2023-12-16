@@ -47,9 +47,22 @@ const utils = {
     return 0
   },
 
+  clamp: function (v: number, vMin: number, vMax: number) {
+    if (v < vMin) return vMin
+    if (v > vMax) return vMax
+    return v
+  },
+
   color: function (data: FunctionPlotDatum, index: number): string {
     const indexModLenColor = index % globals.COLORS.length
     return data.color || globals.COLORS[indexModLenColor].hex()
+  },
+
+  /**
+   * Infinity is a value that is close to Infinity but not Infinity, it can fit in a JS number.
+   */
+  infinity: function (): number {
+    return 9007199254740991
   }
 }
 

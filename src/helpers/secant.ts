@@ -3,6 +3,7 @@ import { select as d3Select, Selection } from 'd3-selection'
 import { builtIn as builtInEvaluator } from './eval'
 import datumDefaults from '../datum-defaults'
 import { polyline } from '../graph-types/'
+import utils from '../utils'
 
 import { Chart } from '../index'
 import { FunctionPlotDatumScope, FunctionPlotDatum, FunctionPlotDatumSecant } from '../types'
@@ -27,7 +28,7 @@ export default function secant(chart: Chart) {
     secant.scope = secant.scope || {}
 
     const x0 = secant.x0
-    const x1 = typeof secant.x1 === 'number' ? secant.x1 : Infinity
+    const x1 = typeof secant.x1 === 'number' ? secant.x1 : utils.infinity()
     Object.assign(secant.scope, {
       x0,
       x1,

@@ -1,22 +1,26 @@
-import clamp from 'clamp'
-
 import utils from '../utils'
 import { builtIn as evaluate } from '../helpers/eval'
 
 import { FunctionPlotDatum, FunctionPlotScale } from '../types'
 import { SamplerParams, SamplerFn } from './types'
 
+type Asymptote = {
+  asymptote: boolean
+  d0: [number, number]
+  d1: [number, number]
+}
+
+type EvalResultSingle = [number, number]
+type EvalResultGroup = Array<EvalResultSingle>
+type EvalResult = Array<EvalResultGroup>
+
 function checkAsymptote(
-  d0: number[],
-  d1: number[],
+  d0: [number, number],
+  d1: [number, number],
   d: FunctionPlotDatum,
   sign: number,
   level: number
-): {
-  asymptote: boolean
-  d0: number[]
-  d1: number[]
-} {
+): Asymptote {
   if (!level) {
     return { asymptote: true, d0, d1 }
   }
@@ -29,7 +33,7 @@ function checkAsymptote(
     const x = samples[i]
     const y = evaluate(d, 'fn', { x })
 
-    if (i && oldY) {
+    if (oldY) {
       const deltaY = y - oldY
       const newSign = utils.sgn(deltaY)
       if (newSign === sign) {
@@ -48,77 +52,84 @@ function checkAsymptote(
  *
  * @returns {Array[]}
  */
-function split(d: FunctionPlotDatum, data: number[][], yScale: FunctionPlotScale): Array<any> {
-  let i, oldSign
-  let deltaX
-  let st = []
-  const sets = []
-  const domain = yScale.domain()
-  const yMin = domain[0]
-  const yMax = domain[1]
+function split(d: FunctionPlotDatum, data: EvalResultGroup, yScale: FunctionPlotScale): EvalResult {
+  let oldSign
+  const evalResult: EvalResult = []
+  const yMin = yScale.domain()[0] - utils.infinity()
+  const yMax = yScale.domain()[1] + utils.infinity()
 
-  if (data[0]) {
-    st.push(data[0])
-    deltaX = data[1][0] - data[0][0]
-    oldSign = utils.sgn(data[1][1] - data[0][1])
-  }
+  let evalGroup: EvalResultGroup = [data[0]]
 
-  function updateY(d: number[]) {
-    d[1] = Math.min(d[1], yMax)
-    d[1] = Math.max(d[1], yMin)
-    return d
-  }
-
-  i = 1
+  let i = 1
+  let deltaX = utils.infinity()
   while (i < data.length) {
-    const y0 = data[i - 1][1]
-    const y1 = data[i][1]
-    const deltaY = y1 - y0
+    const yOld = data[i - 1][1]
+    const yNew = data[i][1]
+    const deltaY = yNew - yOld
     const newSign = utils.sgn(deltaY)
     // make a new set if:
     if (
+      // we have at least 2 entries (so that we can compute deltaY)
+      evalGroup.length >= 2 &&
       // utils.sgn(y1) * utils.sgn(y0) < 0 && // there's a change in the evaluated values sign
       // there's a change in the slope sign
       oldSign !== newSign &&
       // the slope is bigger to some value (according to the current zoom scale)
-      Math.abs(deltaY / deltaX) > 1 / 1
+      Math.abs(deltaY / deltaX) > 1
     ) {
       // retest this section again and determine if it's an asymptote
       const check = checkAsymptote(data[i - 1], data[i], d, newSign, 3)
       if (check.asymptote) {
-        st.push(updateY(check.d0))
-        sets.push(st)
-        st = [updateY(check.d1)]
+        // data[i-1] has an updated [x,y], it was already added to a group (in a previous iteration)
+        // we just need to update the yCoordinate
+        data[i - 1][0] = check.d0[0]
+        data[i - 1][1] = utils.clamp(check.d0[1], yMin, yMax)
+        evalResult.push(evalGroup)
+
+        // data[i] has an updated [x,y], create a new group with it.
+        data[i][0] = check.d1[0]
+        data[i][1] = utils.clamp(check.d1[1], yMin, yMax)
+        evalGroup = [data[i]]
+      } else {
+        // false alarm, it's not an asymptote
+        evalGroup.push(data[i])
       }
+    } else {
+      evalGroup.push(data[i])
     }
-    oldSign = newSign
-    st.push(data[i])
+
+    // wait for at least 2 entries in the group before computing deltaX.
+    if (evalGroup.length > 1) {
+      deltaX = evalGroup[evalGroup.length - 1][0] - evalGroup[evalGroup.length - 2][0]
+      oldSign = newSign
+    }
     ++i
   }
 
-  if (st.length) {
-    sets.push(st)
+  if (evalGroup.length) {
+    evalResult.push(evalGroup)
   }
 
-  return sets
+  return evalResult
 }
 
-function linear(samplerParams: SamplerParams): Array<any> {
+function linear(samplerParams: SamplerParams): EvalResult {
   const allX = utils.space(samplerParams.xAxis, samplerParams.range, samplerParams.nSamples)
   const yDomain = samplerParams.yScale.domain()
-  const yDomainMargin = yDomain[1] - yDomain[0]
-  const yMin = yDomain[0] - yDomainMargin * 1e5
-  const yMax = yDomain[1] + yDomainMargin * 1e5
-  let data = []
+  // const yDomainMargin = yDomain[1] - yDomain[0]
+  const yMin = yDomain[0] - utils.infinity()
+  const yMax = yDomain[1] + utils.infinity()
+  const data: Array<[number, number]> = []
   for (let i = 0; i < allX.length; i += 1) {
     const x = allX[i]
-    const y = evaluate(samplerParams.d, 'fn', { x })
+    let y = evaluate(samplerParams.d, 'fn', { x })
     if (utils.isValidNumber(x) && utils.isValidNumber(y)) {
-      data.push([x, clamp(y, yMin, yMax)])
+      y = utils.clamp(y, yMin, yMax)
+      data.push([x, y])
     }
   }
-  data = split(samplerParams.d, data, samplerParams.yScale)
-  return data
+  const splitData = split(samplerParams.d, data, samplerParams.yScale)
+  return splitData
 }
 
 function parametric(samplerParams: SamplerParams): Array<any> {

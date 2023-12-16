@@ -3,19 +3,14 @@ import interval from './samplers/interval'
 import builtIn from './samplers/builtIn'
 
 import { Chart } from './index'
-import { FunctionPlotDatum } from './types'
+import { FunctionPlotDatum, FunctionPlotScale } from './types'
 
 type SamplerTypeFn = typeof interval | typeof builtIn
 
 /**
- * Computes the endpoints x_lo, x_hi of the range
- * from which the sampler will take samples
- *
- * @param {Object} scale
- * @param {Object} d An item from `data`
- * @returns {Array}
+ * Computes the endpoints x_lo, x_hi of the range in d.range from which the sampler will take samples.
  */
-function computeEndpoints(scale: any, d: any): [number, number] {
+function computeEndpoints(scale: FunctionPlotScale, d: FunctionPlotDatum): [number, number] {
   const range = d.range || [-Infinity, Infinity]
   const start = Math.max(scale.domain()[0], range[0])
   const end = Math.min(scale.domain()[1], range[1])
