@@ -9,17 +9,19 @@ import { SamplerParams, SamplerFn } from './types'
 // disable the use of typed arrays in interval-arithmetic to improve the performance
 ;(intervalArithmeticEval as any).policies.disableRounding()
 
-function interval1d(samplerParams: SamplerParams): Array<any> {
-  const xCoords = utils.space(samplerParams.xAxis, samplerParams.range, samplerParams.nSamples)
-  const xScale = samplerParams.xScale
-  const yScale = samplerParams.yScale
-  const yMin = yScale.domain()[0]
-  const yMax = yScale.domain()[1]
-  const samples = []
+type SamplerResultSingle = [Interval, Interval]
+type SamplerResultGroup = Array<SamplerResultSingle> | null
+type SamplerResult = Array<SamplerResultGroup>
+
+function interval1d({ d, xAxis, range, nSamples, xScale, yScale }: SamplerParams): SamplerResult {
+  const xCoords = utils.space(xAxis, range, nSamples)
+  const yMin = yScale.domain()[0] - utils.infinity()
+  const yMax = yScale.domain()[1] + utils.infinity()
+  const samples: SamplerResultGroup = []
   let i
   for (i = 0; i < xCoords.length - 1; i += 1) {
     const x = { lo: xCoords[i], hi: xCoords[i + 1] }
-    const y = evaluate(samplerParams.d, 'fn', { x })
+    const y = evaluate(d, 'fn', { x })
     if (!Interval.isEmpty(y) && !Interval.isWhole(y)) {
       samples.push([x, y])
     }
@@ -66,7 +68,7 @@ function interval1d(samplerParams: SamplerParams): Array<any> {
 }
 
 let rectEps: number
-function smallRect(x: Interval, y: Interval) {
+function smallRect(x: Interval, _: Interval) {
   return Interval.width(x) < rectEps
 }
 
@@ -93,30 +95,29 @@ function quadTree(x: Interval, y: Interval, d: FunctionPlotDatum) {
   quadTree.call(this, west, south, d)
 }
 
-function interval2d(samplerParams: SamplerParams): Array<any> {
+function interval2d(samplerParams: SamplerParams): SamplerResult {
   const xScale = samplerParams.xScale
   const xDomain = samplerParams.xScale.domain()
   const yDomain = samplerParams.yScale.domain()
   const x = { lo: xDomain[0], hi: xDomain[1] }
   const y = { lo: yDomain[0], hi: yDomain[1] }
-  const samples: any = []
+  const samples: SamplerResultGroup = []
   // 1 px
   rectEps = xScale.invert(1) - xScale.invert(0)
   quadTree.call(samples, x, y, samplerParams.d)
-  samples.scaledDx = 1
+  ;(samples as any).scaledDx = 1
   return [samples]
 }
 
-const sampler: SamplerFn = function sampler(samplerParams: SamplerParams): Array<any> {
-  const fnTypes = {
-    implicit: interval2d,
-    linear: interval1d
+const sampler: SamplerFn = function sampler(samplerParams: SamplerParams): SamplerResult {
+  switch (samplerParams.d.fnType) {
+    case 'linear':
+      return interval1d(samplerParams)
+    case 'implicit':
+      return interval2d(samplerParams)
+    default:
+      throw new Error(samplerParams.d.fnType + ' is not supported in the `interval` sampler')
   }
-  if (!Object.hasOwn(fnTypes, samplerParams.d.fnType)) {
-    throw Error(samplerParams.d.fnType + ' is not supported in the `interval` sampler')
-  }
-  // @ts-ignore
-  return fnTypes[samplerParams.d.fnType].apply(null, arguments)
 }
 
 export default sampler

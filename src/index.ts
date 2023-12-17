@@ -5,7 +5,7 @@ import { Chart, ChartMeta, ChartMetaMargin } from './chart'
 
 import globals, { registerGraphType } from './globals'
 import { polyline, interval, scatter, text } from './graph-types'
-import * as $eval from './helpers/eval'
+import { interval as intervalEval, builtIn as builtInEval } from './helpers/eval'
 
 // register common graphTypes on library load.
 registerGraphType('polyline', polyline)
@@ -35,7 +35,10 @@ export default function functionPlot(options: FunctionPlotOptions) {
 }
 
 functionPlot.globals = globals
-functionPlot.$eval = $eval
+functionPlot.$eval = {
+  builtIn: builtInEval,
+  interval: intervalEval
+}
 functionPlot.graphTypes = { interval, polyline, scatter }
 
 export * from './types'

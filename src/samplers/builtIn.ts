@@ -10,9 +10,9 @@ type Asymptote = {
   d1: [number, number]
 }
 
-type EvalResultSingle = [number, number]
-type EvalResultGroup = Array<EvalResultSingle>
-type EvalResult = Array<EvalResultGroup>
+type SamplerResultSingle = [number, number]
+type SamplerResultGroup = Array<SamplerResultSingle>
+type SamplerResult = Array<SamplerResultGroup>
 
 function checkAsymptote(
   d0: [number, number],
@@ -49,16 +49,14 @@ function checkAsymptote(
 /**
  * Splits the evaluated data into arrays, each array is separated by any asymptote found
  * through the process of detecting slope/sign brusque changes
- *
- * @returns {Array[]}
  */
-function split(d: FunctionPlotDatum, data: EvalResultGroup, yScale: FunctionPlotScale): EvalResult {
+function split(d: FunctionPlotDatum, data: SamplerResultGroup, yScale: FunctionPlotScale): SamplerResult {
   let oldSign
-  const evalResult: EvalResult = []
+  const samplerResult: SamplerResult = []
   const yMin = yScale.domain()[0] - utils.infinity()
   const yMax = yScale.domain()[1] + utils.infinity()
 
-  let evalGroup: EvalResultGroup = [data[0]]
+  let samplerGroup: SamplerResultGroup = [data[0]]
 
   let i = 1
   let deltaX = utils.infinity()
@@ -70,7 +68,7 @@ function split(d: FunctionPlotDatum, data: EvalResultGroup, yScale: FunctionPlot
     // make a new set if:
     if (
       // we have at least 2 entries (so that we can compute deltaY)
-      evalGroup.length >= 2 &&
+      samplerGroup.length >= 2 &&
       // utils.sgn(y1) * utils.sgn(y0) < 0 && // there's a change in the evaluated values sign
       // there's a change in the slope sign
       oldSign !== newSign &&
@@ -84,36 +82,36 @@ function split(d: FunctionPlotDatum, data: EvalResultGroup, yScale: FunctionPlot
         // we just need to update the yCoordinate
         data[i - 1][0] = check.d0[0]
         data[i - 1][1] = utils.clamp(check.d0[1], yMin, yMax)
-        evalResult.push(evalGroup)
+        samplerResult.push(samplerGroup)
 
         // data[i] has an updated [x,y], create a new group with it.
         data[i][0] = check.d1[0]
         data[i][1] = utils.clamp(check.d1[1], yMin, yMax)
-        evalGroup = [data[i]]
+        samplerGroup = [data[i]]
       } else {
         // false alarm, it's not an asymptote
-        evalGroup.push(data[i])
+        samplerGroup.push(data[i])
       }
     } else {
-      evalGroup.push(data[i])
+      samplerGroup.push(data[i])
     }
 
     // wait for at least 2 entries in the group before computing deltaX.
-    if (evalGroup.length > 1) {
-      deltaX = evalGroup[evalGroup.length - 1][0] - evalGroup[evalGroup.length - 2][0]
+    if (samplerGroup.length > 1) {
+      deltaX = samplerGroup[samplerGroup.length - 1][0] - samplerGroup[samplerGroup.length - 2][0]
       oldSign = newSign
     }
     ++i
   }
 
-  if (evalGroup.length) {
-    evalResult.push(evalGroup)
+  if (samplerGroup.length) {
+    samplerResult.push(samplerGroup)
   }
 
-  return evalResult
+  return samplerResult
 }
 
-function linear(samplerParams: SamplerParams): EvalResult {
+function linear(samplerParams: SamplerParams): SamplerResult {
   const allX = utils.space(samplerParams.xAxis, samplerParams.range, samplerParams.nSamples)
   const yDomain = samplerParams.yScale.domain()
   // const yDomainMargin = yDomain[1] - yDomain[0]
@@ -132,12 +130,12 @@ function linear(samplerParams: SamplerParams): EvalResult {
   return splitData
 }
 
-function parametric(samplerParams: SamplerParams): Array<any> {
+function parametric(samplerParams: SamplerParams): SamplerResult {
   // range is mapped to canvas coordinates from the input
   // for parametric plots the range will tell the start/end points of the `t` param
   const parametricRange = samplerParams.d.range || [0, 2 * Math.PI]
   const tCoords = utils.space(samplerParams.xAxis, parametricRange, samplerParams.nSamples)
-  const samples = []
+  const samples: SamplerResultGroup = []
   for (let i = 0; i < tCoords.length; i += 1) {
     const t = tCoords[i]
     const x = evaluate(samplerParams.d, 'x', { t })
@@ -147,12 +145,12 @@ function parametric(samplerParams: SamplerParams): Array<any> {
   return [samples]
 }
 
-function polar(samplerParams: SamplerParams): Array<any> {
+function polar(samplerParams: SamplerParams): SamplerResult {
   // range is mapped to canvas coordinates from the input
   // for polar plots the range will tell the start/end points of the `theta` param
   const polarRange = samplerParams.d.range || [-Math.PI, Math.PI]
   const thetaSamples = utils.space(samplerParams.xAxis, polarRange, samplerParams.nSamples)
-  const samples = []
+  const samples: SamplerResultGroup = []
   for (let i = 0; i < thetaSamples.length; i += 1) {
     const theta = thetaSamples[i]
     const r = evaluate(samplerParams.d, 'r', { theta })
@@ -163,29 +161,31 @@ function polar(samplerParams: SamplerParams): Array<any> {
   return [samples]
 }
 
-function points(samplerParams: SamplerParams): Array<any> {
+function points(samplerParams: SamplerParams): SamplerResult {
   return [samplerParams.d.points]
 }
 
-function vector(sampleParams: SamplerParams): Array<any> {
+function vector(sampleParams: SamplerParams): SamplerResult {
   const d = sampleParams.d
   d.offset = d.offset || [0, 0]
   return [[d.offset, [d.vector[0] + d.offset[0], d.vector[1] + d.offset[1]]]]
 }
 
-const sampler: SamplerFn = function sampler(samplerParams: SamplerParams): Array<any> {
-  const fnTypes = {
-    parametric,
-    polar,
-    points,
-    vector,
-    linear
+const sampler: SamplerFn = function sampler(samplerParams: SamplerParams): SamplerResult {
+  switch (samplerParams.d.fnType) {
+    case 'linear':
+      return linear(samplerParams)
+    case 'parametric':
+      return parametric(samplerParams)
+    case 'polar':
+      return polar(samplerParams)
+    case 'vector':
+      return vector(samplerParams)
+    case 'points':
+      return points(samplerParams)
+    default:
+      throw Error(samplerParams.d.fnType + ' is not supported in the `builtIn` sampler')
   }
-  if (!(samplerParams.d.fnType in fnTypes)) {
-    throw Error(samplerParams.d.fnType + ' is not supported in the `builtIn` sampler')
-  }
-  // @ts-ignore
-  return fnTypes[samplerParams.d.fnType].apply(null, arguments)
 }
 
 export default sampler

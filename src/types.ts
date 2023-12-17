@@ -145,16 +145,17 @@ export interface FunctionPlotDatum {
   /**
    * The type of graph to render
    *
-   * - polyline: uses the builtIn sampler to render a disjoint set of lines
+   * - polyline: uses the builtIn sampler to render a disjoint set of line segments
    * - interval: uses the interval arithmetic sampler to render a disjoint set of rectangles
-   * - scatter: dotted line
+   * - scatter: uses the builtIn sampler to render a disjoint set of points
+   * - text: text
    */
-  graphType?: 'polyline' | 'interval' | 'scatter'
+  graphType?: 'polyline' | 'interval' | 'scatter' | 'text'
 
   /**
    * The type of function to render
    */
-  fnType?: 'linear' | 'parametric' | 'implicit' | 'polar' | 'points' | 'vector' | string
+  fnType?: 'linear' | 'parametric' | 'implicit' | 'polar' | 'points' | 'vector'
 
   /**
    * The sampler to take samples from `range`, available values are `interval|builtIn`
@@ -219,7 +220,7 @@ export interface FunctionPlotDatum {
   /**
    * An array of 2-number array which hold the coordinates of the points to render when `fnType: 'points'`
    */
-  points?: number[][]
+  points?: Array<[number, number]>
 
   /**
    * An array of 2-number array which hold the coordinates of the points to render when `fnType: 'vector'`
@@ -229,7 +230,7 @@ export interface FunctionPlotDatum {
   /**
    * Vector offset when `fnType: 'vector'`
    */
-  offset?: number[]
+  offset?: [number, number]
 
   /**
    * An array of 2-number array for the position of the text when `fnType: 'text'`
