@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-globals */
-import { interval } from '../helpers/eval'
+import { interval } from '../helpers/eval.mjs'
 
 self.onmessage = ({ data }) => {
   const d = data.d

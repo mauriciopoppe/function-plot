@@ -1,5 +1,5 @@
 import utils from '../utils'
-import { builtIn as evaluate } from '../helpers/eval'
+import { builtIn as evaluate } from '../helpers/eval.mjs'
 
 import { FunctionPlotDatum, FunctionPlotScale } from '../types'
 import { SamplerParams, SamplerFn } from './types'
@@ -28,7 +28,7 @@ function checkAsymptote(
   const x0 = d0[0]
   const x1 = d1[0]
   const samples = utils.linspace(x0, x1, n)
-  let oldY, oldX
+  let oldY: number, oldX: number
   for (let i = 0; i < n; i += 1) {
     const x = samples[i]
     const y = evaluate(d, 'fn', { x })
@@ -51,7 +51,7 @@ function checkAsymptote(
  * through the process of detecting slope/sign brusque changes
  */
 function split(d: FunctionPlotDatum, data: SamplerResultGroup, yScale: FunctionPlotScale): SamplerResult {
-  let oldSign
+  let oldSign: number
   const samplerResult: SamplerResult = []
   const yMin = yScale.domain()[0] - utils.infinity()
   const yMax = yScale.domain()[1] + utils.infinity()

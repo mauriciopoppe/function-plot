@@ -1,6 +1,6 @@
 import { select as d3Select, Selection } from 'd3-selection'
 
-import { builtIn as builtInEvaluator } from './eval'
+import { builtIn as builtInEvaluator } from './eval.mjs'
 import datumDefaults from '../datum-defaults'
 import { polyline } from '../graph-types/'
 import utils from '../utils'

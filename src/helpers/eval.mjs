@@ -7,10 +7,10 @@ const samplers = {
 }
 
 // getMathJS returns checks if mathjs is loaded.
-function getMathJS(): { compile: any } | null {
+function getMathJS() {
   if (typeof global === 'object' && 'math' in global) {
     // @ts-ignore
-    return global.math as any
+    return global.math
   }
   if (typeof window === 'object' && 'math' in window) {
     // @ts-ignore
@@ -25,8 +25,8 @@ if (mathJS) {
   samplers.builtIn = mathJS.compile
 }
 
-function generateEvaluator(samplerName: 'interval' | 'builtIn') {
-  function doCompile(expression: string | { eval: (scope: any) => any }) {
+function generateEvaluator(samplerName) {
+  function doCompile(expression) {
     // compiles does the following
     //
     // when expression === string
@@ -63,7 +63,7 @@ function generateEvaluator(samplerName: 'interval' | 'builtIn') {
     }
   }
 
-  function compileIfPossible(meta: any, property: string) {
+  function compileIfPossible(meta, property) {
     // compile the function using interval arithmetic, cache the result
     // so that multiple calls with the same argument don't trigger the
     // kinda expensive compilation process
@@ -76,7 +76,7 @@ function generateEvaluator(samplerName: 'interval' | 'builtIn') {
     }
   }
 
-  function getCompiledExpression(meta: any, property: string) {
+  function getCompiledExpression(meta, property) {
     return meta[samplerName + '_Compiled_' + property]
   }
 
@@ -93,7 +93,7 @@ function generateEvaluator(samplerName: 'interval' | 'builtIn') {
    * @param variables
    * @returns The builtIn evaluator returns a number, the interval evaluator an array
    */
-  function evaluate(meta: any, property: string, variables: object) {
+  function evaluate(meta, property, variables) {
     // e.g.
     //
     //  meta: {

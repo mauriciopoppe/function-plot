@@ -3,15 +3,16 @@
  * the design is at /design/pipeline.md
  */
 
-// @ts-ignore
-import Benchmark from 'benchmark'
+import { Bench } from 'tinybench'
 import { scaleLinear } from 'd3-scale'
 
+import globals from '../globals'
+import { IntervalWorkerPool } from '../samplers/interval_worker_pool'
 import { FunctionPlotDatum, FunctionPlotOptionsAxis } from '../types'
 import { createPathD } from '../graph-types/interval'
-import { syncSamplerInterval } from '../samplers/interval'
+import { asyncSamplerInterval, syncSamplerInterval } from '../samplers/interval'
 
-function createData(nSamples: number) {
+async function createData(nSamples: number, async: boolean) {
   const width = 500
   const height = 300
   const xDomain: [number, number] = [-5, 5]
@@ -33,48 +34,46 @@ function createData(nSamples: number) {
     yAxis,
     nSamples
   }
-  const data = syncSamplerInterval(samplerParams)
+  let data
+  if (async) {
+    data = await asyncSamplerInterval(samplerParams)
+  } else {
+    data = syncSamplerInterval(samplerParams)
+  }
   return { data, xScale, yScale }
 }
 
-function compileAndEval() {
-  const compileAndEval = new Benchmark.Suite()
+async function compileAndEval() {
+  const bench = new Bench()
   const nSamples = 1000
-  compileAndEval
-    .add(`compile and eval ${nSamples}`, function () {
-      createData(nSamples)
-    })
-    // add listeners
-    .on('cycle', function (event) {
-      console.log(String(event.target))
-    })
-    .on('complete', function () {
-      console.log('Fastest is ' + this.filter('fastest').map('name'))
-    })
-    .run({ async: false })
+  globals.workerPool = new IntervalWorkerPool(8)
+  bench.add(`compile and eval ${nSamples}`, async function () {
+    await createData(nSamples, false)
+  })
+  bench.add(`async compile and eval ${nSamples}`, async function () {
+    await createData(nSamples, true)
+  })
+
+  await bench.run()
+  console.table(bench.table())
 }
 
-function drawPath() {
-  const compileAndEval = new Benchmark.Suite()
+async function drawPath() {
+  const bench = new Bench()
   const nSamples = 1000
-  const { xScale, yScale, data } = createData(nSamples)
-  compileAndEval
-    .add(`drawPath ${nSamples}`, function () {
-      createPathD(xScale, yScale, 1 /* minWidthHeight, dummy = 1 */, data[0], false /* closed */)
-    })
-    // add listeners
-    .on('cycle', function (event) {
-      console.log(String(event.target))
-    })
-    .on('complete', function () {
-      console.log('Fastest is ' + this.filter('fastest').map('name'))
-    })
-    .run({ async: false })
+  const { xScale, yScale, data } = await createData(nSamples, false)
+  bench.add(`drawPath ${nSamples}`, function () {
+    createPathD(xScale, yScale, 1 /* minWidthHeight, dummy = 1 */, data[0], false /* closed */)
+  })
+
+  await bench.run()
+  console.table(bench.table())
 }
 
-function main() {
-  compileAndEval()
-  drawPath()
+async function main() {
+  await compileAndEval()
+  await drawPath()
+  await globals.workerPool.terminate()
 }
 
 main()
