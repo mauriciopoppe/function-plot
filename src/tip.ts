@@ -3,7 +3,7 @@ import { select as d3Select, Selection } from 'd3-selection'
 
 import utils from './utils'
 import globals from './globals'
-import { builtIn as builtInEvaluator } from './helpers/eval'
+import { builtIn as builtInEvaluator } from './helpers/eval.mjs'
 import { FunctionPlotTip } from './types'
 
 export default function mouseTip(config: FunctionPlotTip) {

@@ -22,13 +22,10 @@ class IntervalWorkerPool {
     this.resolves = new Map()
 
     for (let i = 0; i < nThreads; i += 1) {
-      if (Object.hasOwn(global, 'process') && process.env.JEST_WORKER_ID) {
-        continue
-      }
       // NOTE: new URL(...) cannot be a variable!
       // This is a requirement for the webpack worker loader
       const worker = new Worker(
-        new URL(/* webpackChunkName: "asyncIntervalEvaluator" */ './interval.worker.ts', import.meta.url),
+        new URL(/* webpackChunkName: "asyncIntervalEvaluator" */ './interval.worker.mjs', import.meta.url),
         { type: 'module' }
       )
       worker.onmessage = (messageEvent) => {
@@ -42,13 +39,19 @@ class IntervalWorkerPool {
     }
   }
 
+  terminate() {
+    for (let i = 0; i < this.idleWorkers.length; i += 1) {
+      this.idleWorkers[i].terminate()
+    }
+  }
+
   queue(task: IntervalTask) {
     task.nTask = this.nTasks
-    this.nTasks += 1
     this.tasks.push(task)
-    const p = new Promise((resolve) => {
+    const p = new Promise((resolve, reject) => {
       this.resolves[task.nTask] = resolve
     })
+    this.nTasks += 1
     this.drain()
     return p
   }
