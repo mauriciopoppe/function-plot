@@ -1,6 +1,6 @@
 import { select as d3Select, Selection } from 'd3-selection'
 
-import evaluate from '../evaluate'
+import { asyncIntervalEvaluate, intervalEvaluate } from '../evaluate'
 import utils from '../utils'
 
 import { Chart } from '../index'
@@ -79,11 +79,16 @@ export default function interval(chart: Chart) {
   const yScale = chart.meta.yScale
 
   function plotLine(selection: Selection<any, FunctionPlotDatum, any, any>) {
-    selection.each(function (d) {
+    selection.each(async function (d) {
       const el = ((plotLine as any).el = d3Select(this))
       const index = d.index
       const closed = d.closed
-      const evaluatedData = evaluate(chart, d)
+      let evaluatedData
+      if (d.fnType === 'linear' && typeof d.fn === 'string' && d.sampler === 'asyncInterval') {
+        evaluatedData = await asyncIntervalEvaluate(chart, d)
+      } else {
+        evaluatedData = intervalEvaluate(chart, d)
+      }
       const innerSelection = el.selectAll(':scope > path.line').data(evaluatedData)
 
       // the min height/width of the rects drawn by the path generator

@@ -1,4 +1,4 @@
-import evaluate from './evaluate'
+import { builtInEvaluate, intervalEvaluate } from './evaluate'
 import { scaleLinear as d3ScaleLinear } from 'd3-scale'
 
 const width = 200
@@ -20,7 +20,7 @@ const config = {
 describe('evaluate', () => {
   it('should eval linear functions (builtin)', () => {
     const d = { fn: 'x^2', sampler: 'builtIn', fnType: 'linear', nSamples }
-    const out = evaluate(config, d)
+    const out = builtInEvaluate(config, d)
     expect(out instanceof Array).toEqual(true)
     expect(out.length).toEqual(1)
     expect(out[0].length).toEqual(nSamples)
@@ -32,7 +32,7 @@ describe('evaluate', () => {
 
   it('should eval linear functions (interval)', () => {
     const d = { fn: 'x^2', sampler: 'interval', fnType: 'linear', nSamples }
-    const out = evaluate(config, d)
+    const out = intervalEvaluate(config, d)
     expect(out.length).toEqual(1)
     expect(out[0][0][0].lo <= -5 && out[0][0][0].hi >= -5).toBe(true)
     expect(out[0][0][1].lo <= 25 && out[0][0][1].hi >= 25).toBe(true)

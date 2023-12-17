@@ -15,44 +15,19 @@ body, text {
 </head>
 <body>
   <div id="playground"></div>
-  <script src="function-plot.js"></script>
+  <script src="./function-plot.js"></script>
 <script>
-(function () {
+functionPlot.withWebWorkers(8)
 functionPlot({
   target: '#playground',
-  xAxis: {
-    type: 'log',
-    domain: [0.01, 1]
-  },
-  yAxis: {
-    domain: [-100, 100]
-  },
-  grid: true,
-  data: [{
-    fn: '1/x * cos(1/x)',
-    // to make it look like a definite integral
-    closed: true
-  }]
-})
-functionPlot({
-  target: '#playground',
+  width: window.innerWidth,
+  height: window.innerHeight,
   data: [
-    {
-      graphType: "text",
-      location: [1, 1],
-      text: "hello world"
-    },
-    {
-      graphType: "text",
-      location: [-1, -1],
-      text: "foo bar",
-      attr: {
-        'text-anchor': 'end'
-      }
-    },
+    { fn: 'x^2', nSamples: window.innerWidth*5 },
+    { fn: 'x^2+1', nSamples: window.innerWidth*5 },
+    { fn: 'x^2+2', nSamples: window.innerWidth*5 },
   ]
 })
-})()
 </script>
 </body>
 </html>

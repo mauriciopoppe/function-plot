@@ -2,7 +2,7 @@ import { select as d3Select, Selection } from 'd3-selection'
 import { line as d3Line, area as d3Area, curveLinear as d3CurveLinear } from 'd3-shape'
 
 import utils from '../utils'
-import evaluate from '../evaluate'
+import { builtInEvaluate } from '../evaluate'
 
 import { Chart } from '../index'
 import { FunctionPlotDatum } from '../types'
@@ -12,7 +12,7 @@ export default function polyline(chart: Chart) {
     selection.each(function (d) {
       const el = ((plotLine as any).el = d3Select(this))
       const index = d.index
-      const evaluatedData = evaluate(chart, d)
+      const evaluatedData = builtInEvaluate(chart, d)
       const color = utils.color(d, index)
 
       // join

@@ -20,8 +20,7 @@
   "include": [
     "./src/**/*.ts",
     "./src/**/*.js",
-    "./src/**/*.d.ts",
-    "./node_modules/d3-color/**/*.js"
+    "./src/**/*.d.ts"
   ],
   "exclude": [
     "src/stories/**/*"

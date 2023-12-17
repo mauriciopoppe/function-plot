@@ -11,3 +11,4 @@ export type SamplerParams = {
 }
 
 export type SamplerFn = (samplerParams: SamplerParams) => Array<any>
+export type AsyncSamplerFn = (samplerParams: SamplerParams) => Promise<Array<any>>

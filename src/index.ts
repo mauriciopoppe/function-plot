@@ -1,5 +1,6 @@
 import './polyfills'
 
+import { IntervalWorkerPool } from './samplers/interval_worker_pool'
 import { FunctionPlotOptions } from './types'
 import { Chart, ChartMeta, ChartMetaMargin } from './chart'
 
@@ -12,6 +13,11 @@ registerGraphType('polyline', polyline)
 registerGraphType('interval', interval)
 registerGraphType('scatter', scatter)
 registerGraphType('text', text)
+
+// Web workers initializer.
+function withWebWorkers(nWorkers = 8) {
+  globals.workerPool = new IntervalWorkerPool(nWorkers)
+}
 
 /**
  * functionPlot is a function plotter of 2d functions.
@@ -40,10 +46,11 @@ functionPlot.$eval = {
   interval: intervalEval
 }
 functionPlot.graphTypes = { interval, polyline, scatter }
+functionPlot.withWebWorkers = withWebWorkers
 
 export * from './types'
 export { Chart, ChartMeta, ChartMetaMargin }
-export { registerGraphType }
+export { registerGraphType, withWebWorkers }
 export { builtIn as EvalBuiltIn, interval as EvalInterval } from './helpers/eval'
 export { TGlobals } from './globals'
 export {

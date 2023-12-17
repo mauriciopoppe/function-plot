@@ -9,7 +9,7 @@ import { scaleLinear } from 'd3-scale'
 
 import { FunctionPlotDatum, FunctionPlotOptionsAxis } from '../types'
 import { createPathD } from '../graph-types/interval'
-import interval from '../samplers/interval'
+import { syncSamplerInterval } from '../samplers/interval'
 
 function createData(nSamples: number) {
   const width = 500
@@ -33,7 +33,7 @@ function createData(nSamples: number) {
     yAxis,
     nSamples
   }
-  const data = interval(samplerParams)
+  const data = syncSamplerInterval(samplerParams)
   return { data, xScale, yScale }
 }
 

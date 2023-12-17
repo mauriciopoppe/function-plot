@@ -1,12 +1,14 @@
 const path = require('path')
+const isProduction = process.env.NODE_ENV === 'production'
 
 module.exports = {
   entry: './src/index.ts',
-  mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
-  devtool: process.env.NODE_ENV === 'production' ? 'nosources-source-map' : 'inline-source-map',
+  mode: isProduction ? 'production' : 'development',
+  devtool: isProduction ? 'nosources-source-map' : 'inline-source-map',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'function-plot.js',
+    chunkFilename: '[name].function-plot.js',
     library: 'functionPlot',
     libraryExport: 'default',
     libraryTarget: 'umd'
@@ -16,6 +18,10 @@ module.exports = {
   },
   module: {
     rules: [
+      // {
+      //   test: /\.worker\./,
+      //   type: 'asset/source'
+      // },
       {
         test: /\.tsx?$/,
         use: 'ts-loader',
