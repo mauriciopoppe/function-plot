@@ -1,8 +1,21 @@
-# Compile-Eval-Render Pipeline for Intervals
+# Compile-Eval-Render Pipeline
 
 > Summary of the render process that happens on every tick (pan/zoom) in the graph.
 
-As of v1.24.0 the render pipeline consists of:
+## Compile-Eval-Render pipeline for intervals
+
+Let's assume we call functionPlot with the following configuration (note that `graphType: 'interval'` is the default):
+
+```
+functionPlot({
+  target: '#playground',
+  data: [
+    { fn: 'x^2' }
+  ]
+})
+```
+
+There are multiple compute heavy steps that happen in the rendering pipeline:
 
 - Compile + Eval
   - compile `fn` to a *-eval function (see [interval-arithmetic-eval](https://github.com/mauriciopoppe/interval-arithmetic-eval)

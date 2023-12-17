@@ -9,8 +9,9 @@ import { SamplerParams, SamplerFn } from './types'
 // disable the use of typed arrays in interval-arithmetic to improve the performance
 ;(intervalArithmeticEval as any).policies.disableRounding()
 
-type SamplerResultSingle = [Interval, Interval]
-type SamplerResultGroup = Array<SamplerResultSingle> | null
+type TInterval = { lo: number; hi: number }
+type SamplerResultSingle = [TInterval, TInterval] | null
+type SamplerResultGroup = Array<SamplerResultSingle>
 type SamplerResult = Array<SamplerResultGroup>
 
 function interval1d({ d, xAxis, range, nSamples, xScale, yScale }: SamplerParams): SamplerResult {

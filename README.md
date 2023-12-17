@@ -50,9 +50,12 @@ functionPlot({
 })
 ```
 
-[`Check more examples in the homepage`](http://mauriciopoppe.github.io/function-plot/)
+## Resources
 
-[`Check the available options in the docs`](https://mauriciopoppe.github.io/function-plot/docs/functions/default-1.html)
+- [All examples in the homepage](https://mauriciopoppe.github.io/function-plot/)
+- [API docs](https://mauriciopoppe.github.io/function-plot/docs/functions/default-1.html)
+- [Want to know how it works? Read the design docs](./design/)
+  - [Render pipeline](./design/pipeline.md)
 
 ## License
 
