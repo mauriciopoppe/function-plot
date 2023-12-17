@@ -2,9 +2,10 @@ import intervalArithmeticEval, { Interval } from 'interval-arithmetic-eval'
 
 import { interval as evaluate } from '../helpers/eval'
 import utils from '../utils'
+import globals from '../globals'
 
 import { FunctionPlotDatum } from '../types'
-import { SamplerParams, SamplerFn } from './types'
+import { SamplerParams, SamplerFn, AsyncSamplerFn } from './types'
 
 // disable the use of typed arrays in interval-arithmetic to improve the performance
 ;(intervalArithmeticEval as any).policies.disableRounding()
@@ -14,13 +15,70 @@ type SamplerResultSingle = [TInterval, TInterval] | null
 type SamplerResultGroup = Array<SamplerResultSingle>
 type SamplerResult = Array<SamplerResultGroup>
 
-function interval1d({ d, xAxis, range, nSamples, xScale, yScale }: SamplerParams): SamplerResult {
-  const xCoords = utils.space(xAxis, range, nSamples)
+async function asyncInterval1d({ d, xAxis, range, nSamples, xScale, yScale }: SamplerParams): Promise<SamplerResult> {
+  const groups = 1
+  const xCoords = utils.spaceWithGroups(xAxis, range[0], range[1], nSamples, groups)
+  if (xCoords.length !== groups) {
+    throw new Error(`expecting ${xCoords.length} to equal ${groups}`)
+  }
+  const workerPoolInterval = globals.workerPool
+  const promises: Array<Promise<any>> = []
+  for (let i = 0; i < xCoords.length; i += 1) {
+    promises.push(workerPoolInterval.queue({ d, xCoords: xCoords[i] }))
+  }
+
+  const allSamples = await Promise.all(promises)
+  const samples: SamplerResultGroup = []
+  for (let i = 0; i < allSamples.length; i += 1) {
+    if (allSamples[i]) {
+      for (let j = 0; j < (allSamples[i] as any).length; j += 1) {
+        samples.push(allSamples[i][j])
+      }
+    }
+  }
+
+  // asymptote determination
   const yMin = yScale.domain()[0] - utils.infinity()
   const yMax = yScale.domain()[1] + utils.infinity()
+  for (let i = 1; i < samples.length - 1; i += 1) {
+    if (!samples[i]) {
+      const prev = samples[i - 1]
+      const next = samples[i + 1]
+      if (prev && next && !Interval.intervalsOverlap(prev[1], next[1])) {
+        // case:
+        //
+        //   |
+        //
+        //     |
+        //
+        //   p n
+        if (prev[1].lo > next[1].hi) {
+          prev[1].hi = Math.max(yMax, prev[1].hi)
+          next[1].lo = Math.min(yMin, next[1].lo)
+        }
+        // case:
+        //
+        //     |
+        //
+        //   |
+        //
+        //   p n
+        if (prev[1].hi < next[1].lo) {
+          prev[1].lo = Math.min(yMin, prev[1].lo)
+          next[1].hi = Math.max(yMax, next[1].hi)
+        }
+      }
+    }
+  }
+
+  ;(samples as any).scaledDx = xScale(xCoords[0][1]) - xScale(xCoords[0][0])
+  return [samples]
+}
+
+function interval1d({ d, xAxis, range, nSamples, xScale, yScale }: SamplerParams): SamplerResult {
+  const xCoords = utils.space(xAxis, range, nSamples)
   const samples: SamplerResultGroup = []
-  let i
-  for (i = 0; i < xCoords.length - 1; i += 1) {
+  for (let i = 0; i < xCoords.length - 1; i += 1) {
     const x = { lo: xCoords[i], hi: xCoords[i + 1] }
     const y = evaluate(d, 'fn', { x })
     if (!Interval.isEmpty(y) && !Interval.isWhole(y)) {
@@ -33,7 +91,9 @@ function interval1d({ d, xAxis, range, nSamples, xScale, yScale }: SamplerParams
   }
 
   // asymptote determination
-  for (i = 1; i < samples.length - 1; i += 1) {
+  const yMin = yScale.domain()[0] - utils.infinity()
+  const yMax = yScale.domain()[1] + utils.infinity()
+  for (let i = 1; i < samples.length - 1; i += 1) {
     if (!samples[i]) {
       const prev = samples[i - 1]
       const next = samples[i + 1]
@@ -110,15 +170,26 @@ function interval2d(samplerParams: SamplerParams): SamplerResult {
   return [samples]
 }
 
-const sampler: SamplerFn = function sampler(samplerParams: SamplerParams): SamplerResult {
+const syncSamplerInterval: SamplerFn = function sampler(samplerParams: SamplerParams): SamplerResult {
   switch (samplerParams.d.fnType) {
     case 'linear':
       return interval1d(samplerParams)
     case 'implicit':
       return interval2d(samplerParams)
     default:
-      throw new Error(samplerParams.d.fnType + ' is not supported in the `interval` sampler')
+      throw new Error(samplerParams.d.fnType + ' is not supported in the `interval` sync sampler')
   }
 }
 
-export default sampler
+const asyncSamplerInterval: AsyncSamplerFn = async function sampler(
+  samplerParams: SamplerParams
+): Promise<SamplerResult> {
+  switch (samplerParams.d.fnType) {
+    case 'linear':
+      return asyncInterval1d(samplerParams)
+    default:
+      throw new Error(samplerParams.d.fnType + ' is not supported in the `interval` async sampler')
+  }
+}
+
+export { syncSamplerInterval, asyncSamplerInterval }

@@ -163,7 +163,7 @@ export interface FunctionPlotDatum {
    * - **NOTE: `builtIn` should only be used when `graphType` is `polyline|scatter`**
    * - **NOTE: when math.js is included in the webpage it will be used instead of the bundled sampler**
    */
-  sampler?: 'interval' | 'builtIn'
+  sampler?: 'interval' | 'builtIn' | 'asyncInterval'
 
   /**
    * The number of values to be taken from `range` to evaluate the function, note that if interval-arithmetic is used the function

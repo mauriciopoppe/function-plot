@@ -1,4 +1,4 @@
 import builtIn from './builtIn'
-import interval from './interval'
+import { syncSamplerInterval, asyncSamplerInterval } from './interval'
 
-export { builtIn, interval }
+export { builtIn, syncSamplerInterval, asyncSamplerInterval }

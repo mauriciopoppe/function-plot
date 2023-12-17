@@ -1,20 +1,22 @@
 import globals from './globals'
-import interval from './samplers/interval'
+import { syncSamplerInterval, asyncSamplerInterval } from './samplers/interval'
 import builtIn from './samplers/builtIn'
 
 import { Chart } from './index'
 import { FunctionPlotDatum, FunctionPlotScale } from './types'
 
-type SamplerTypeFn = typeof interval | typeof builtIn
-
 /**
  * Computes the endpoints x_lo, x_hi of the range in d.range from which the sampler will take samples.
  */
-function computeEndpoints(scale: FunctionPlotScale, d: FunctionPlotDatum): [number, number] {
+function getRange(scale: FunctionPlotScale, d: FunctionPlotDatum): [number, number] {
   const range = d.range || [-Infinity, Infinity]
   const start = Math.max(scale.domain()[0], range[0])
   const end = Math.min(scale.domain()[1], range[1])
   return [start, end]
+}
+
+function getSamples(nSamples: number, chartWidth: number) {
+  return nSamples || Math.min(globals.MAX_ITERATIONS, globals.DEFAULT_ITERATIONS || chartWidth * 2)
 }
 
 /**
@@ -25,28 +27,15 @@ function computeEndpoints(scale: FunctionPlotScale, d: FunctionPlotDatum): [numb
  * @param {Object} d a.k.a a single item from `data`
  * @returns [number, number]
  */
-function evaluate(chart: Chart, d: FunctionPlotDatum) {
-  const range = computeEndpoints(chart.meta.xScale, d)
-
-  let samplerFn: SamplerTypeFn
-  if (d.sampler === 'builtIn') {
-    samplerFn = builtIn
-  } else if (d.sampler === 'interval') {
-    samplerFn = interval
-  } else {
-    throw new Error(`Invalid sampler function ${d.sampler}`)
-  }
-
-  const nSamples = d.nSamples || Math.min(globals.MAX_ITERATIONS, globals.DEFAULT_ITERATIONS || chart.meta.width * 2)
-
-  const data = samplerFn({
+function builtInEvaluate(chart: Chart, d: FunctionPlotDatum) {
+  const data = builtIn({
     d,
-    range,
+    range: getRange(chart.meta.xScale, d),
     xScale: chart.meta.xScale,
     yScale: chart.meta.yScale,
     xAxis: chart.options.xAxis,
     yAxis: chart.options.yAxis,
-    nSamples
+    nSamples: getSamples(d.nSamples, chart.meta.width)
   })
   // NOTE: it's impossible to listen for the first eval event
   // as the event is already fired when a listener is attached
@@ -54,4 +43,36 @@ function evaluate(chart: Chart, d: FunctionPlotDatum) {
   return data
 }
 
-export default evaluate
+function intervalEvaluate(chart: Chart, d: FunctionPlotDatum) {
+  const data = syncSamplerInterval({
+    d,
+    range: getRange(chart.meta.xScale, d),
+    xScale: chart.meta.xScale,
+    yScale: chart.meta.yScale,
+    xAxis: chart.options.xAxis,
+    yAxis: chart.options.yAxis,
+    nSamples: getSamples(d.nSamples, chart.meta.width)
+  })
+  // NOTE: it's impossible to listen for the first eval event
+  // as the event is already fired when a listener is attached
+  chart.emit('eval', data, d.index, d.isHelper)
+  return data
+}
+
+async function asyncIntervalEvaluate(chart: Chart, d: FunctionPlotDatum) {
+  const data = asyncSamplerInterval({
+    d,
+    range: getRange(chart.meta.xScale, d),
+    xScale: chart.meta.xScale,
+    yScale: chart.meta.yScale,
+    xAxis: chart.options.xAxis,
+    yAxis: chart.options.yAxis,
+    nSamples: getSamples(d.nSamples, chart.meta.width)
+  })
+  // NOTE: it's impossible to listen for the first eval event
+  // as the event is already fired when a listener is attached
+  chart.emit('eval', data, d.index, d.isHelper)
+  return data
+}
+
+export { builtInEvaluate, intervalEvaluate, asyncIntervalEvaluate }

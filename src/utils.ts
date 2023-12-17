@@ -26,6 +26,41 @@ const utils = {
     return this.linspace(lo, hi, n)
   },
 
+  /**
+   * Creates `n` number of samples between `lo` and `hi` where consecutive
+   * numbers are bucketed in `nGroups` groups.
+   */
+  spaceWithGroups: function (
+    axis: FunctionPlotOptionsAxis,
+    lo: number,
+    hi: number,
+    n: number,
+    nGroups: number
+  ): Array<Array<number>> {
+    if (axis.type === 'log') {
+      lo = Math.log10(lo)
+      hi = Math.log10(hi)
+    }
+    const step = (hi - lo) / (n - 1)
+    const groups: Array<Array<number>> = []
+    const maxInGroup = Math.ceil(n / nGroups)
+    let group: Array<number> = []
+    groups.push(group)
+    for (let i = 0; i < n; i += 1) {
+      let v: number = lo + step * i
+      if (axis.type === 'log') {
+        v = Math.pow(10, v)
+      }
+
+      group.push(v)
+      if (group.length === maxInGroup && groups.length < nGroups) {
+        group = [v]
+        groups.push(group)
+      }
+    }
+    return groups
+  },
+
   getterSetter: function (config: any, option: string) {
     const me = this
     this[option] = function (value: any) {

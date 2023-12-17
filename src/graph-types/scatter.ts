@@ -2,7 +2,7 @@ import { select as d3Select, Selection } from 'd3-selection'
 import { hsl as d3Hsl } from 'd3-color'
 
 import utils from '../utils'
-import evaluate from '../evaluate'
+import { builtInEvaluate } from '../evaluate'
 
 import { Chart } from '../index'
 import { FunctionPlotDatum } from '../types'
@@ -16,7 +16,7 @@ export default function Scatter(chart: Chart) {
       let i, j
       const index = d.index
       const color = utils.color(d, index)
-      const evaluatedData = evaluate(chart, d)
+      const evaluatedData = builtInEvaluate(chart, d)
 
       // scatter doesn't need groups, therefore each group is
       // flattened into a single array

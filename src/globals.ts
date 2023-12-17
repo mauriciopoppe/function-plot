@@ -1,6 +1,7 @@
 import { hsl as d3Hsl, HSLColor } from 'd3-color'
 
 import { GraphTypeBuilder } from './graph-types/types'
+import { IntervalWorkerPool } from './samplers/interval_worker_pool'
 
 export type TGlobals = {
   COLORS: Array<HSLColor>
@@ -9,6 +10,9 @@ export type TGlobals = {
   DEFAULT_ITERATIONS: number
   MAX_ITERATIONS: number
   TIP_X_EPS: number
+
+  hiddenWorkerPool?: IntervalWorkerPool
+  workerPool: IntervalWorkerPool
 
   /**
    * graphTypes are the graph types registered in functionPlot,
@@ -36,7 +40,19 @@ const Globals: TGlobals = {
   DEFAULT_ITERATIONS: null,
   TIP_X_EPS: 1,
   MAX_ITERATIONS: 0,
-  graphTypes: {}
+  graphTypes: {},
+
+  hiddenWorkerPool: null,
+  get workerPool() {
+    if (!this.hiddenWorkerPool) {
+      throw new Error('Failed to get web worker pool, did you forget to call withWebWorkers?')
+    }
+    return this.hiddenWorkerPool
+  },
+
+  set workerPool(workerPool) {
+    this.hiddenWorkerPool = workerPool
+  }
 }
 
 Globals.MAX_ITERATIONS = Globals.DEFAULT_WIDTH * 10
