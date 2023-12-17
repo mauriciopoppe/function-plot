@@ -1,13 +1,11 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "node",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "target": "es6",
-    "noImplicitAny": true,
-    "moduleResolution": "node",
     "sourceMap": true,
-    "declaration": true,
     "outDir": "dist",
     "baseUrl": ".",
     "paths": {
@@ -15,11 +13,15 @@
         "node_modules/*"
       ]
     },
+    "types": ["node", "jest"],
     "jsx": "react",
     "lib": ["es2022", "dom"]
   },
   "include": [
-    "src/**/*"
+    "./src/**/*.ts",
+    "./src/**/*.js",
+    "./src/**/*.d.ts",
+    "./node_modules/d3-color/**/*.js"
   ],
   "exclude": [
     "src/stories/**/*"
