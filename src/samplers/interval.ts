@@ -30,7 +30,7 @@ async function asyncInterval1d({
   //
   // See more useful math in the utils tests
   const step = (absHi - absLo) / (nSamples - 1)
-  const nGroups = 4
+  const nGroups = 8
   const groupSize = (nSamples - 1) / nGroups
   const promises: Array<Promise<ArrayBuffer>> = []
   const interval2dTypedArrayGroups = interval2dTypedArray(nSamples, nGroups)
@@ -100,7 +100,6 @@ async function asyncInterval1d({
     }
   }
 
-  // TODO: if we don't have xCoords find a way to fix this
   ;(samples as any).scaledDx = xScale(absLo + step) - xScale(absLo)
   return [samples]
 }
