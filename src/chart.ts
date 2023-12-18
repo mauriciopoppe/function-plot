@@ -14,7 +14,7 @@ import annotations from './helpers/annotations'
 import mousetip from './tip'
 import helpers from './helpers'
 import datumDefaults from './datum-defaults'
-import globals from './globals'
+import globals from './globals.mjs'
 
 export interface ChartMetaMargin {
   left?: number

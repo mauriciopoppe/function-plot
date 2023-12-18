@@ -1,4 +1,4 @@
-import globals from './globals'
+import globals from './globals.mjs'
 import { syncSamplerInterval, asyncSamplerInterval } from './samplers/interval'
 import builtIn from './samplers/builtIn'
 

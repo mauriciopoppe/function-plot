@@ -1,6 +1,6 @@
+import { describe, expect, it } from '@jest/globals'
 import { scaleLinear as d3ScaleLinear } from 'd3-scale'
 import { Interval } from 'interval-arithmetic-eval'
-import { describe, expect, it } from '@jest/globals'
 
 import { syncSamplerInterval } from './interval'
 

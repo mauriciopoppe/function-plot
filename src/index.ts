@@ -4,7 +4,7 @@ import { IntervalWorkerPool } from './samplers/interval_worker_pool'
 import { FunctionPlotOptions } from './types'
 import { Chart, ChartMeta, ChartMetaMargin } from './chart'
 
-import globals, { registerGraphType } from './globals'
+import globals, { registerGraphType } from './globals.mjs'
 import { polyline, interval, scatter, text } from './graph-types'
 import { interval as intervalEval, builtIn as builtInEval } from './helpers/eval.mjs'
 
@@ -52,7 +52,6 @@ export * from './types'
 export { Chart, ChartMeta, ChartMetaMargin }
 export { registerGraphType, withWebWorkers }
 export { builtIn as EvalBuiltIn, interval as EvalInterval } from './helpers/eval.mjs'
-export { TGlobals } from './globals'
 export {
   interval as GraphTypeInterval,
   polyline as GraphTypePolyline,

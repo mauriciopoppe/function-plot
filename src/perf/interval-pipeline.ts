@@ -6,7 +6,7 @@
 import { Bench } from 'tinybench'
 import { scaleLinear } from 'd3-scale'
 
-import globals from '../globals'
+import globals from '../globals.mjs'
 import { IntervalWorkerPool } from '../samplers/interval_worker_pool'
 import { FunctionPlotDatum, FunctionPlotOptionsAxis } from '../types'
 import { createPathD } from '../graph-types/interval'

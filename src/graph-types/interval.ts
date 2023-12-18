@@ -1,7 +1,7 @@
 import { select as d3Select, Selection } from 'd3-selection'
 
 import { asyncIntervalEvaluate, intervalEvaluate } from '../evaluate'
-import utils from '../utils'
+import { infinity, color } from '../utils.mjs'
 
 import { Chart } from '../index'
 import { Interval, FunctionPlotDatum, FunctionPlotScale } from '../types'
@@ -62,8 +62,8 @@ export function createPathD(
         minWidthHeight,
         minY,
         maxY,
-        isFinite(yHi) ? yScale(yHi) : -utils.infinity(),
-        isFinite(yLo) ? yScale(yLo) : utils.infinity()
+        isFinite(yHi) ? yScale(yHi) : -infinity(),
+        isFinite(yLo) ? yScale(yLo) : infinity()
       )
       const vLo = viewportY[0]
       const vHi = viewportY[1]
@@ -101,7 +101,7 @@ export default function interval(chart: Chart) {
       const selection = innerSelection
         .merge(innerSelectionEnter)
         .attr('stroke-width', minWidthHeight)
-        .attr('stroke', utils.color(d, index) as any)
+        .attr('stroke', color(d, index) as any)
         .attr('opacity', closed ? 0.5 : 1)
         .attr('d', function (d: Array<[Interval, Interval]>) {
           return createPathD(xScale, yScale, minWidthHeight, d, closed)

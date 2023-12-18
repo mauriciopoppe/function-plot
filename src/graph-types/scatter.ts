@@ -1,7 +1,7 @@
 import { select as d3Select, Selection } from 'd3-selection'
 import { hsl as d3Hsl } from 'd3-color'
 
-import utils from '../utils'
+import { color } from '../utils.mjs'
 import { builtInEvaluate } from '../evaluate'
 
 import { Chart } from '../index'
@@ -15,7 +15,7 @@ export default function Scatter(chart: Chart) {
     selection.each(function (d) {
       let i, j
       const index = d.index
-      const color = utils.color(d, index)
+      const computedColor = color(d, index)
       const evaluatedData = builtInEvaluate(chart, d)
 
       // scatter doesn't need groups, therefore each group is
@@ -34,8 +34,8 @@ export default function Scatter(chart: Chart) {
 
       const selection = innerSelection
         .merge(innerSelectionEnter)
-        .attr('fill', d3Hsl(color.toString()).brighter(1.5).formatHex())
-        .attr('stroke', color)
+        .attr('fill', d3Hsl(computedColor.toString()).brighter(1.5).formatHex())
+        .attr('stroke', computedColor)
         .attr('opacity', 0.7)
         .attr('r', 1)
         .attr('cx', function (d) {

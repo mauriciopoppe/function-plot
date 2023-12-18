@@ -10,5 +10,10 @@ export type SamplerParams = {
   nSamples: number
 }
 
+export type TInterval = { lo: number; hi: number }
+export type IntervalSamplerResultSingle = [TInterval, TInterval] | null
+export type IntervalSamplerResultGroup = Array<IntervalSamplerResultSingle>
+export type IntervalSamplerResult = Array<IntervalSamplerResultGroup>
+
 export type SamplerFn = (samplerParams: SamplerParams) => Array<any>
 export type AsyncSamplerFn = (samplerParams: SamplerParams) => Promise<Array<any>>

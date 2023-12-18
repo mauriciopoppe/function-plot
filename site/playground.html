@@ -23,9 +23,9 @@ functionPlot({
   width: window.innerWidth,
   height: window.innerHeight,
   data: [
-    { fn: 'x^2', nSamples: window.innerWidth*5 },
-    { fn: 'x^2+1', nSamples: window.innerWidth*5 },
-    { fn: 'x^2+2', nSamples: window.innerWidth*5 },
+    { fn: 'x^2', nSamples: window.innerWidth*5, sampler: 'asyncInterval' },
+    { fn: 'x^2+1', nSamples: window.innerWidth*5, sampler: 'asyncInterval' },
+    { fn: 'x^2+2', nSamples: window.innerWidth*5, sampler: 'asyncInterval' },
   ]
 })
 </script>

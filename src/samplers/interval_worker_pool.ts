@@ -3,7 +3,10 @@ import Worker from 'web-worker'
 
 interface IntervalTask {
   d: FunctionPlotDatum
-  xCoords: Array<number>
+  lo: number
+  hi: number
+  n: number
+  interval2d: Float32Array
 
   // internal
   nTask?: number
@@ -29,8 +32,8 @@ class IntervalWorkerPool {
         { type: 'module' }
       )
       worker.onmessage = (messageEvent) => {
-        const { samples, nTask } = messageEvent.data
-        this.resolves[nTask](samples)
+        const { interval2d, nTask } = messageEvent.data
+        this.resolves[nTask](interval2d)
         delete this.resolves[nTask]
         this.idleWorkers.push(worker)
         this.drain()
@@ -45,10 +48,10 @@ class IntervalWorkerPool {
     }
   }
 
-  queue(task: IntervalTask) {
+  queue(task: IntervalTask): Promise<ArrayBuffer> {
     task.nTask = this.nTasks
     this.tasks.push(task)
-    const p = new Promise((resolve, reject) => {
+    const p: Promise<ArrayBuffer> = new Promise((resolve) => {
       this.resolves[task.nTask] = resolve
     })
     this.nTasks += 1
@@ -64,7 +67,18 @@ class IntervalWorkerPool {
       const dStripped: any = {}
       dStripped.fn = task.d.fn
       dStripped.scope = task.d.scope
-      idleWorker.postMessage({ d: dStripped, xCoords: task.xCoords, nTask: task.nTask })
+      idleWorker.postMessage(
+        // prettier-ignore
+        {
+          d: dStripped,
+          lo: task.lo,
+          hi: task.hi,
+          n: task.n,
+          nTask: task.nTask,
+          interval2d: task.interval2d
+        },
+        [task.interval2d.buffer]
+      )
     }
   }
 

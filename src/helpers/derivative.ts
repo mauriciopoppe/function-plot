@@ -3,7 +3,7 @@ import { select as d3Select, Selection } from 'd3-selection'
 import { polyline } from '../graph-types/'
 import { builtIn as builtInEvaluator } from './eval.mjs'
 import datumDefaults from '../datum-defaults'
-import utils from '../utils'
+import { infinity } from '../utils.mjs'
 
 import { Chart } from '../index'
 import { FunctionPlotDatum } from '../types'
@@ -21,7 +21,7 @@ export default function derivative(chart: Chart) {
     if (!d.derivative) {
       return []
     }
-    const x0 = typeof d.derivative.x0 === 'number' ? d.derivative.x0 : utils.infinity()
+    const x0 = typeof d.derivative.x0 === 'number' ? d.derivative.x0 : infinity()
     derivativeDatum.index = d.index
     derivativeDatum.scope = {
       m: builtInEvaluator(d.derivative, 'fn', { x: x0 }),

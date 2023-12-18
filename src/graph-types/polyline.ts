@@ -1,7 +1,7 @@
 import { select as d3Select, Selection } from 'd3-selection'
 import { line as d3Line, area as d3Area, curveLinear as d3CurveLinear } from 'd3-shape'
 
-import utils from '../utils'
+import { color, infinity, clamp } from '../utils.mjs'
 import { builtInEvaluate } from '../evaluate'
 
 import { Chart } from '../index'
@@ -13,7 +13,7 @@ export default function polyline(chart: Chart) {
       const el = ((plotLine as any).el = d3Select(this))
       const index = d.index
       const evaluatedData = builtInEvaluate(chart, d)
-      const color = utils.color(d, index)
+      const computedColor = color(d, index)
 
       // join
       const innerSelection = el.selectAll(':scope > path.line').data(evaluatedData)
@@ -26,12 +26,12 @@ export default function polyline(chart: Chart) {
       yMax += diff * 1e6
       yMin -= diff * 1e6
       if (d.skipBoundsCheck) {
-        yMax = utils.infinity()
-        yMin = -utils.infinity()
+        yMax = infinity()
+        yMin = -infinity()
       }
 
       function y(d: number[]) {
-        return utils.clamp(chart.meta.yScale(d[1]), yMin, yMax)
+        return clamp(chart.meta.yScale(d[1]), yMin, yMax)
       }
 
       const line = d3Line()
@@ -60,7 +60,7 @@ export default function polyline(chart: Chart) {
         const path = d3Select(this)
         let pathD
         if (d.closed) {
-          path.attr('fill', color)
+          path.attr('fill', computedColor)
           path.attr('fill-opacity', 0.3)
           pathD = area
         } else {
@@ -68,7 +68,7 @@ export default function polyline(chart: Chart) {
           pathD = line
         }
         path
-          .attr('stroke', color)
+          .attr('stroke', computedColor)
           .attr('marker-end', function () {
             // special marker for vectors
             return d.fnType === 'vector' ? 'url(#' + chart.markerId + ')' : null
