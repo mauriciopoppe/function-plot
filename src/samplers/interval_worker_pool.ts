@@ -78,7 +78,8 @@ class IntervalWorkerPool {
     while (this.hasWork()) {
       const task = this.tasks.shift()
       if (!task.valid) {
-        return
+        this.rejects[task.nTask](new Error('This task is no longer valid'))
+        continue
       }
       const idleWorker = this.idleWorkers.shift()
 
