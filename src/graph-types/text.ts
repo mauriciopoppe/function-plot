@@ -1,7 +1,7 @@
 import { select as d3Select, Selection } from 'd3-selection'
 import { hsl as d3Hsl } from 'd3-color'
 
-import utils from '../utils'
+import { color } from '../utils.mjs'
 
 import { Chart } from '../index'
 import { FunctionPlotDatum } from '../types'
@@ -19,12 +19,12 @@ export default function Text(chart: Chart) {
       const innerSelection = d3Select(this).selectAll(':scope > text.fn-text').data([d.location])
       const innerSelectionEnter = innerSelection.enter().append('text').attr('class', `fn-text fn-text-${d.index}`)
 
-      const color = utils.color(d, d.index)
+      const computeColor = color(d, d.index)
 
       // enter + update
       const selection = innerSelection
         .merge(innerSelectionEnter)
-        .attr('fill', d3Hsl(color.toString()).brighter(1.5).formatHex())
+        .attr('fill', d3Hsl(computeColor.toString()).brighter(1.5).formatHex())
         .attr('x', (d) => xScale(d[0]))
         .attr('y', (d) => yScale(d[1]))
         .text(() => d.text)

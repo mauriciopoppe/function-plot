@@ -1,45 +1,73 @@
 import intervalArithmeticEval, { Interval } from 'interval-arithmetic-eval'
 
 import { interval as evaluate } from '../helpers/eval.mjs'
-import utils from '../utils'
-import globals from '../globals'
+import { infinity, space, interval2dTypedArray } from '../utils.mjs'
+import globals from '../globals.mjs'
 
 import { FunctionPlotDatum } from '../types'
-import { SamplerParams, SamplerFn, AsyncSamplerFn } from './types'
+import { SamplerParams, IntervalSamplerResult, IntervalSamplerResultGroup, SamplerFn, AsyncSamplerFn } from './types'
 
 // disable the use of typed arrays in interval-arithmetic to improve the performance
 ;(intervalArithmeticEval as any).policies.disableRounding()
 
-type TInterval = { lo: number; hi: number }
-type SamplerResultSingle = [TInterval, TInterval] | null
-type SamplerResultGroup = Array<SamplerResultSingle>
-type SamplerResult = Array<SamplerResultGroup>
-
-async function asyncInterval1d({ d, xAxis, range, nSamples, xScale, yScale }: SamplerParams): Promise<SamplerResult> {
-  const groups = 1
-  const xCoords = utils.spaceWithGroups(xAxis, range[0], range[1], nSamples, groups)
-  if (xCoords.length !== groups) {
-    throw new Error(`expecting ${xCoords.length} to equal ${groups}`)
-  }
+async function asyncInterval1d({
+  d,
+  xAxis,
+  range,
+  nSamples,
+  xScale,
+  yScale
+}: SamplerParams): Promise<IntervalSamplerResult> {
   const workerPoolInterval = globals.workerPool
-  const promises: Array<Promise<any>> = []
-  for (let i = 0; i < xCoords.length; i += 1) {
-    promises.push(workerPoolInterval.queue({ d, xCoords: xCoords[i] }))
+
+  const absLo = range[0]
+  const absHi = range[1]
+  // if nSamples = 4
+  //
+  // lo                 hi
+  // [#     #     #     #]
+  //   =====  <-- step
+  //
+  // See more useful math in the utils tests
+  const step = (absHi - absLo) / (nSamples - 1)
+  const nGroups = 1
+  const groupSize = (nSamples - 1) / nGroups
+  const promises: Array<Promise<ArrayBuffer>> = []
+  const interval2dTypedArrayGroups = interval2dTypedArray(nSamples, nGroups)
+  for (let i = 0; i < nGroups; i += 1) {
+    const lo = absLo + step * groupSize * i
+    const hi = absLo + step * groupSize * (i + 1)
+    // console.log('nSamples', nSamples)
+    // console.log(absLo, absHi)
+    // console.log(lo, hi)
+    // console.log('groupSize', groupSize)
+    // Transfers the typed arrays to the worker threads.
+    promises.push(workerPoolInterval.queue({ d, lo, hi, n: groupSize + 1, interval2d: interval2dTypedArrayGroups[i] }))
   }
 
-  const allSamples = await Promise.all(promises)
-  const samples: SamplerResultGroup = []
-  for (let i = 0; i < allSamples.length; i += 1) {
-    if (allSamples[i]) {
-      for (let j = 0; j < (allSamples[i] as any).length; j += 1) {
-        samples.push(allSamples[i][j])
+  const allWorkersDone = await Promise.all(promises)
+  // Transfer the typed array back to the main thread.
+  for (let i = 0; i < allWorkersDone.length; i += 1) {
+    interval2dTypedArrayGroups[i] = new Float32Array(allWorkersDone[i])
+  }
+  const samples: IntervalSamplerResultGroup = []
+  for (let i = 0; i < interval2dTypedArrayGroups.length; i += 1) {
+    const group = interval2dTypedArrayGroups[i]
+    for (let j = 0; j < group.length; j += 4) {
+      const x = { lo: group[j + 0], hi: group[j + 1] }
+      const y = { lo: group[j + 2], hi: group[j + 3] }
+      if (y.lo === -Infinity && y.hi === Infinity) {
+        // skip whole interval
+        samples.push(null)
+        continue
       }
+      samples.push([x, y])
     }
   }
 
   // asymptote determination
-  const yMin = yScale.domain()[0] - utils.infinity()
-  const yMax = yScale.domain()[1] + utils.infinity()
+  const yMin = yScale.domain()[0] - infinity()
+  const yMax = yScale.domain()[1] + infinity()
   for (let i = 1; i < samples.length - 1; i += 1) {
     if (!samples[i]) {
       const prev = samples[i - 1]
@@ -71,13 +99,14 @@ async function asyncInterval1d({ d, xAxis, range, nSamples, xScale, yScale }: Sa
     }
   }
 
-  ;(samples as any).scaledDx = xScale(xCoords[0][1]) - xScale(xCoords[0][0])
+  // TODO: if we don't have xCoords find a way to fix this
+  ;(samples as any).scaledDx = xScale(absLo + step) - xScale(absLo)
   return [samples]
 }
 
-function interval1d({ d, xAxis, range, nSamples, xScale, yScale }: SamplerParams): SamplerResult {
-  const xCoords = utils.space(xAxis, range, nSamples)
-  const samples: SamplerResultGroup = []
+function interval1d({ d, xAxis, range, nSamples, xScale, yScale }: SamplerParams): IntervalSamplerResult {
+  const xCoords = space(xAxis, range, nSamples)
+  const samples: IntervalSamplerResultGroup = []
   for (let i = 0; i < xCoords.length - 1; i += 1) {
     const x = { lo: xCoords[i], hi: xCoords[i + 1] }
     const y = evaluate(d, 'fn', { x })
@@ -91,8 +120,8 @@ function interval1d({ d, xAxis, range, nSamples, xScale, yScale }: SamplerParams
   }
 
   // asymptote determination
-  const yMin = yScale.domain()[0] - utils.infinity()
-  const yMax = yScale.domain()[1] + utils.infinity()
+  const yMin = yScale.domain()[0] - infinity()
+  const yMax = yScale.domain()[1] + infinity()
   for (let i = 1; i < samples.length - 1; i += 1) {
     if (!samples[i]) {
       const prev = samples[i - 1]
@@ -156,13 +185,13 @@ function quadTree(x: Interval, y: Interval, d: FunctionPlotDatum) {
   quadTree.call(this, west, south, d)
 }
 
-function interval2d(samplerParams: SamplerParams): SamplerResult {
+function interval2d(samplerParams: SamplerParams): IntervalSamplerResult {
   const xScale = samplerParams.xScale
   const xDomain = samplerParams.xScale.domain()
   const yDomain = samplerParams.yScale.domain()
   const x = { lo: xDomain[0], hi: xDomain[1] }
   const y = { lo: yDomain[0], hi: yDomain[1] }
-  const samples: SamplerResultGroup = []
+  const samples: IntervalSamplerResultGroup = []
   // 1 px
   rectEps = xScale.invert(1) - xScale.invert(0)
   quadTree.call(samples, x, y, samplerParams.d)
@@ -170,7 +199,7 @@ function interval2d(samplerParams: SamplerParams): SamplerResult {
   return [samples]
 }
 
-const syncSamplerInterval: SamplerFn = function sampler(samplerParams: SamplerParams): SamplerResult {
+const syncSamplerInterval: SamplerFn = function sampler(samplerParams: SamplerParams): IntervalSamplerResult {
   switch (samplerParams.d.fnType) {
     case 'linear':
       return interval1d(samplerParams)
@@ -183,7 +212,7 @@ const syncSamplerInterval: SamplerFn = function sampler(samplerParams: SamplerPa
 
 const asyncSamplerInterval: AsyncSamplerFn = async function sampler(
   samplerParams: SamplerParams
-): Promise<SamplerResult> {
+): Promise<IntervalSamplerResult> {
   switch (samplerParams.d.fnType) {
     case 'linear':
       return asyncInterval1d(samplerParams)

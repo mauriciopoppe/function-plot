@@ -1,8 +1,8 @@
 import { line as d3Line } from 'd3-shape'
 import { select as d3Select, Selection } from 'd3-selection'
 
-import utils from './utils'
-import globals from './globals'
+import { color, clamp, infinity, isValidNumber, getterSetter } from './utils.mjs'
+import globals from './globals.mjs'
 import { builtIn as builtInEvaluator } from './helpers/eval.mjs'
 import { FunctionPlotTip } from './types'
 
@@ -97,7 +97,6 @@ export default function mouseTip(config: FunctionPlotTip) {
   }
 
   tip.move = function (coordinates: { x: number; y: number }) {
-    let i
     let minDist = Infinity
     let closestIndex = -1
     let x, y
@@ -113,7 +112,7 @@ export default function mouseTip(config: FunctionPlotTip) {
     const x0 = coordinates.x
     const y0 = coordinates.y
 
-    for (i = 0; i < data.length; i += 1) {
+    for (let i = 0; i < data.length; i += 1) {
       // skipTip=true skips the evaluation in the datum
       // implicit equations cannot be evaluated with a single point
       // parametric equations cannot be evaluated with a single point
@@ -122,13 +121,13 @@ export default function mouseTip(config: FunctionPlotTip) {
         continue
       }
 
-      const range = data[i].range || [-utils.infinity(), utils.infinity()]
+      const range = data[i].range || [-infinity(), infinity()]
       let candidateY
       if (x0 > range[0] - globals.TIP_X_EPS && x0 < range[1] + globals.TIP_X_EPS) {
         try {
           candidateY = builtInEvaluator(data[i], 'fn', { x: x0 })
         } catch (e) {}
-        if (utils.isValidNumber(candidateY)) {
+        if (isValidNumber(candidateY)) {
           const tDist = Math.abs(candidateY - y0)
           if (tDist < minDist) {
             minDist = tDist
@@ -149,14 +148,14 @@ export default function mouseTip(config: FunctionPlotTip) {
       tip.show()
       config.owner.emit('tip:update', { x, y, index: closestIndex })
       // @ts-ignore
-      const clampX = utils.clamp(x, xScale.invert(-MARGIN), xScale.invert(width + MARGIN))
+      const clampX = clamp(x, xScale.invert(-MARGIN), xScale.invert(width + MARGIN))
       // @ts-ignore
-      const clampY = utils.clamp(y, yScale.invert(height + MARGIN), yScale.invert(-MARGIN))
-      const color = utils.color(data[closestIndex], closestIndex)
+      const clampY = clamp(y, yScale.invert(height + MARGIN), yScale.invert(-MARGIN))
+      const computedColor = color(data[closestIndex], closestIndex)
       selection.style('color', 'red')
       selection.attr('transform', 'translate(' + xScale(clampX) + ',' + yScale(clampY) + ')')
-      selection.select('circle').attr('fill', color)
-      selection.select('text').attr('fill', color).text(config.renderer(x, y, closestIndex))
+      selection.select('circle').attr('fill', computedColor)
+      selection.select('text').attr('fill', computedColor).text(config.renderer(x, y, closestIndex))
     } else {
       tip.hide()
     }
@@ -171,7 +170,7 @@ export default function mouseTip(config: FunctionPlotTip) {
   }
   // generations of getters/setters
   Object.keys(config).forEach(function (option) {
-    utils.getterSetter.call(tip, config, option)
+    getterSetter.call(tip, config, option)
   })
 
   return tip

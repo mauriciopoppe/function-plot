@@ -1,4 +1,4 @@
-import utils from '../utils'
+import { linspace, sgn, infinity, clamp, space, isValidNumber } from '../utils.mjs'
 import { builtIn as evaluate } from '../helpers/eval.mjs'
 
 import { FunctionPlotDatum, FunctionPlotScale } from '../types'
@@ -27,7 +27,7 @@ function checkAsymptote(
   const n = 10
   const x0 = d0[0]
   const x1 = d1[0]
-  const samples = utils.linspace(x0, x1, n)
+  const samples = linspace(x0, x1, n)
   let oldY: number, oldX: number
   for (let i = 0; i < n; i += 1) {
     const x = samples[i]
@@ -35,7 +35,7 @@ function checkAsymptote(
 
     if (oldY) {
       const deltaY = y - oldY
-      const newSign = utils.sgn(deltaY)
+      const newSign = sgn(deltaY)
       if (newSign === sign) {
         return checkAsymptote([oldX, oldY], [x, y], d, sign, level - 1)
       }
@@ -53,23 +53,23 @@ function checkAsymptote(
 function split(d: FunctionPlotDatum, data: SamplerResultGroup, yScale: FunctionPlotScale): SamplerResult {
   let oldSign: number
   const samplerResult: SamplerResult = []
-  const yMin = yScale.domain()[0] - utils.infinity()
-  const yMax = yScale.domain()[1] + utils.infinity()
+  const yMin = yScale.domain()[0] - infinity()
+  const yMax = yScale.domain()[1] + infinity()
 
   let samplerGroup: SamplerResultGroup = [data[0]]
 
   let i = 1
-  let deltaX = utils.infinity()
+  let deltaX = infinity()
   while (i < data.length) {
     const yOld = data[i - 1][1]
     const yNew = data[i][1]
     const deltaY = yNew - yOld
-    const newSign = utils.sgn(deltaY)
+    const newSign = sgn(deltaY)
     // make a new set if:
     if (
       // we have at least 2 entries (so that we can compute deltaY)
       samplerGroup.length >= 2 &&
-      // utils.sgn(y1) * utils.sgn(y0) < 0 && // there's a change in the evaluated values sign
+      // sgn(y1) * sgn(y0) < 0 && // there's a change in the evaluated values sign
       // there's a change in the slope sign
       oldSign !== newSign &&
       // the slope is bigger to some value (according to the current zoom scale)
@@ -81,12 +81,12 @@ function split(d: FunctionPlotDatum, data: SamplerResultGroup, yScale: FunctionP
         // data[i-1] has an updated [x,y], it was already added to a group (in a previous iteration)
         // we just need to update the yCoordinate
         data[i - 1][0] = check.d0[0]
-        data[i - 1][1] = utils.clamp(check.d0[1], yMin, yMax)
+        data[i - 1][1] = clamp(check.d0[1], yMin, yMax)
         samplerResult.push(samplerGroup)
 
         // data[i] has an updated [x,y], create a new group with it.
         data[i][0] = check.d1[0]
-        data[i][1] = utils.clamp(check.d1[1], yMin, yMax)
+        data[i][1] = clamp(check.d1[1], yMin, yMax)
         samplerGroup = [data[i]]
       } else {
         // false alarm, it's not an asymptote
@@ -112,17 +112,17 @@ function split(d: FunctionPlotDatum, data: SamplerResultGroup, yScale: FunctionP
 }
 
 function linear(samplerParams: SamplerParams): SamplerResult {
-  const allX = utils.space(samplerParams.xAxis, samplerParams.range, samplerParams.nSamples)
+  const allX = space(samplerParams.xAxis, samplerParams.range, samplerParams.nSamples)
   const yDomain = samplerParams.yScale.domain()
   // const yDomainMargin = yDomain[1] - yDomain[0]
-  const yMin = yDomain[0] - utils.infinity()
-  const yMax = yDomain[1] + utils.infinity()
+  const yMin = yDomain[0] - infinity()
+  const yMax = yDomain[1] + infinity()
   const data: Array<[number, number]> = []
   for (let i = 0; i < allX.length; i += 1) {
     const x = allX[i]
     let y = evaluate(samplerParams.d, 'fn', { x })
-    if (utils.isValidNumber(x) && utils.isValidNumber(y)) {
-      y = utils.clamp(y, yMin, yMax)
+    if (isValidNumber(x) && isValidNumber(y)) {
+      y = clamp(y, yMin, yMax)
       data.push([x, y])
     }
   }
@@ -134,7 +134,7 @@ function parametric(samplerParams: SamplerParams): SamplerResult {
   // range is mapped to canvas coordinates from the input
   // for parametric plots the range will tell the start/end points of the `t` param
   const parametricRange = samplerParams.d.range || [0, 2 * Math.PI]
-  const tCoords = utils.space(samplerParams.xAxis, parametricRange, samplerParams.nSamples)
+  const tCoords = space(samplerParams.xAxis, parametricRange, samplerParams.nSamples)
   const samples: SamplerResultGroup = []
   for (let i = 0; i < tCoords.length; i += 1) {
     const t = tCoords[i]
@@ -149,7 +149,7 @@ function polar(samplerParams: SamplerParams): SamplerResult {
   // range is mapped to canvas coordinates from the input
   // for polar plots the range will tell the start/end points of the `theta` param
   const polarRange = samplerParams.d.range || [-Math.PI, Math.PI]
-  const thetaSamples = utils.space(samplerParams.xAxis, polarRange, samplerParams.nSamples)
+  const thetaSamples = space(samplerParams.xAxis, polarRange, samplerParams.nSamples)
   const samples: SamplerResultGroup = []
   for (let i = 0; i < thetaSamples.length; i += 1) {
     const theta = thetaSamples[i]
