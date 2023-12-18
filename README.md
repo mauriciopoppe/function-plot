@@ -56,6 +56,7 @@ functionPlot({
 - [API docs](https://mauriciopoppe.github.io/function-plot/docs/functions/default-1.html)
 - [Want to know how it works? Read the design docs](./design/)
   - [Render pipeline](./design/pipeline.md)
+  - [Web workers](./design/web-workers.md)
 
 ## License
 
