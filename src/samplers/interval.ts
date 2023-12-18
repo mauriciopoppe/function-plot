@@ -30,19 +30,17 @@ async function asyncInterval1d({
   //
   // See more useful math in the utils tests
   const step = (absHi - absLo) / (nSamples - 1)
-  const nGroups = 1
+  const nGroups = 4
   const groupSize = (nSamples - 1) / nGroups
   const promises: Array<Promise<ArrayBuffer>> = []
   const interval2dTypedArrayGroups = interval2dTypedArray(nSamples, nGroups)
   for (let i = 0; i < nGroups; i += 1) {
     const lo = absLo + step * groupSize * i
     const hi = absLo + step * groupSize * (i + 1)
-    // console.log('nSamples', nSamples)
-    // console.log(absLo, absHi)
-    // console.log(lo, hi)
-    // console.log('groupSize', groupSize)
     // Transfers the typed arrays to the worker threads.
-    promises.push(workerPoolInterval.queue({ d, lo, hi, n: groupSize + 1, interval2d: interval2dTypedArrayGroups[i] }))
+    promises.push(
+      workerPoolInterval.queue({ d, nGroup: i, lo, hi, n: groupSize + 1, interval2d: interval2dTypedArrayGroups[i] })
+    )
   }
 
   const allWorkersDone = await Promise.all(promises)
@@ -56,12 +54,15 @@ async function asyncInterval1d({
     for (let j = 0; j < group.length; j += 4) {
       const x = { lo: group[j + 0], hi: group[j + 1] }
       const y = { lo: group[j + 2], hi: group[j + 3] }
-      if (y.lo === -Infinity && y.hi === Infinity) {
+      if (y.lo === Infinity && y.hi === -Infinity) {
+        // interval is empty
+        continue
+      } else if (y.lo === -Infinity && y.hi === Infinity) {
         // skip whole interval
         samples.push(null)
-        continue
+      } else {
+        samples.push([x, y])
       }
-      samples.push([x, y])
     }
   }
 
