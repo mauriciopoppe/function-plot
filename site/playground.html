@@ -20,12 +20,10 @@ body, text {
 functionPlot.withWebWorkers(8)
 functionPlot({
   target: '#playground',
-  width: window.innerWidth,
-  height: window.innerHeight,
+  // width: window.innerWidth,
+  // height: window.innerHeight,
   data: [
-    { fn: 'x^2', nSamples: 5000, sampler: 'asyncInterval' },
-    { fn: 'sin(x)', nSamples: 5000, sampler: 'asyncInterval' },
-    { fn: '1/x', nSamples: 5000, sampler: 'asyncInterval' },
+    { fn: 'sin(exp(x))', nSamples: 5000, sampler: 'asyncInterval' },
   ]
 })
 </script>
