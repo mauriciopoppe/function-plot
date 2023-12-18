@@ -22,8 +22,8 @@ self.onmessage = ({ data }) => {
     out[outIdx + 3] = y.hi
   }
   for (; outIdx < out.length; outIdx += 4) {
-    out[outIdx + 0] = 0
-    out[outIdx + 1] = 0
+    out[outIdx + 0] = Infinity
+    out[outIdx + 1] = -Infinity
     out[outIdx + 2] = Infinity
     out[outIdx + 3] = -Infinity
   }

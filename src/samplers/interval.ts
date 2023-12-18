@@ -30,25 +30,40 @@ async function asyncInterval1d({
   //
   // See more useful math in the utils tests
   const step = (absHi - absLo) / (nSamples - 1)
-  const nGroups = 8
+  const nGroups = 4
   const groupSize = (nSamples - 1) / nGroups
   const promises: Array<Promise<ArrayBuffer>> = []
   const interval2dTypedArrayGroups = interval2dTypedArray(nSamples, nGroups)
   for (let i = 0; i < nGroups; i += 1) {
+    const nGroup = i
     const lo = absLo + step * groupSize * i
     const hi = absLo + step * groupSize * (i + 1)
     // Transfers the typed arrays to the worker threads.
     promises.push(
-      workerPoolInterval.queue({ d, nGroup: i, lo, hi, n: groupSize + 1, interval2d: interval2dTypedArrayGroups[i] })
+      workerPoolInterval.queue({
+        nGroup,
+        d,
+        lo,
+        hi,
+        n: Math.ceil(groupSize),
+        interval2d: interval2dTypedArrayGroups[i]
+      })
     )
   }
 
-  const allWorkersDone = await Promise.all(promises)
+  const samples: IntervalSamplerResultGroup = []
+  let allWorkersDone: Array<ArrayBuffer>
+  try {
+    allWorkersDone = await Promise.all(promises)
+  } catch (err) {
+    // This run was invalidated by a new run.
+    ;(samples as any).scaledDx = 0
+    return [samples]
+  }
   // Transfer the typed array back to the main thread.
   for (let i = 0; i < allWorkersDone.length; i += 1) {
     interval2dTypedArrayGroups[i] = new Float32Array(allWorkersDone[i])
   }
-  const samples: IntervalSamplerResultGroup = []
   for (let i = 0; i < interval2dTypedArrayGroups.length; i += 1) {
     const group = interval2dTypedArrayGroups[i]
     for (let j = 0; j < group.length; j += 4) {
@@ -59,7 +74,7 @@ async function asyncInterval1d({
         continue
       } else if (y.lo === -Infinity && y.hi === Infinity) {
         // skip whole interval
-        samples.push(null)
+        continue
       } else {
         samples.push([x, y])
       }
