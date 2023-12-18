@@ -1,8 +1,8 @@
-document.addEventListener('markupLoaded', function () {
-  const functionPlot = window.functionPlot
-  let a, b, c
-
-  functionPlot.withWebWorkers(8)
+'use strict'
+$(document).on('markupLoaded', function () {
+  var functionPlot = window.functionPlot
+  var a, b, c
+  var f, fp
 
   functionPlot({
     target: '#description-sample',
@@ -47,9 +47,7 @@ document.addEventListener('markupLoaded', function () {
     },
     data: [
       {
-        fn: 'sin(exp(x))',
-        nSamples: 5000,
-        sampler: 'asyncInterval'
+        fn: 'sin(exp(x))'
       }
     ]
   })
@@ -255,7 +253,7 @@ document.addEventListener('markupLoaded', function () {
    * type of axis to `log` inside the  `xAxis` option, note how this
    * change affects the way the functions are sampled
    */
-  functionPlot({
+  var instance = functionPlot({
     target: '#logarithmic',
     xAxis: {
       type: 'log',
@@ -575,7 +573,7 @@ document.addEventListener('markupLoaded', function () {
    *
    *    <button id="update" class="btn btn-primary">Update</button>
    */
-  const options = {
+  var options = {
     target: '#quadratic-update',
     data: [
       {
@@ -583,7 +581,7 @@ document.addEventListener('markupLoaded', function () {
       }
     ]
   }
-  document.querySelector('#update').addEventListener('click', function () {
+  $('#update').click(function () {
     if (!options.title) {
       // add a title, a tip and change the function to y = x * x
       options.title = 'hello world'
