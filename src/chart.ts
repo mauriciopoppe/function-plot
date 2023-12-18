@@ -95,6 +95,11 @@ export class Chart extends EventEmitter.EventEmitter {
   private line: Line<[number, number]>
 
   /**
+   * The number of times a function was rendered.
+   */
+  private generation: number
+
+  /**
    * `svg` element that holds the graph (canvas + title + axes)
    */
   public root: any
@@ -131,6 +136,7 @@ export class Chart extends EventEmitter.EventEmitter {
     Chart.cache[this.id] = this
     this.linkedGraphs = [this]
     this.meta = {}
+    this.generation = 0
     this.setUpEventListeners()
   }
 
@@ -555,10 +561,15 @@ export class Chart extends EventEmitter.EventEmitter {
       // additional options needed in the graph-types/helpers
       d.index = index
 
+      // (hidden property)
+      // @ts-ignore
+      d.generation = self.generation
+
       const selection = d3Select(this)
       selection.call(globals.graphTypes[d.graphType](self))
       selection.call(helpers(self))
     })
+    this.generation += 1
   }
 
   buildZoomHelper() {

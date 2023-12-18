@@ -45,7 +45,7 @@ async function createData(nSamples: number, async: boolean) {
 
 async function compileAndEval() {
   const bench = new Bench()
-  const nSamples = 1000
+  const nSamples = 1800 /* window.innerWidth */
   globals.workerPool = new IntervalWorkerPool(8)
   bench.add(`compile and eval ${nSamples}`, async function () {
     await createData(nSamples, false)

@@ -6,9 +6,11 @@ interface IntervalTask {
   lo: number
   hi: number
   n: number
+  nGroup: number
   interval2d: Float32Array
 
   // internal
+  valid?: boolean
   nTask?: number
 }
 
@@ -16,6 +18,7 @@ class IntervalWorkerPool {
   private tasks: Array<IntervalTask>
   private idleWorkers: Array<Worker>
   private resolves: Map<number, (value: any) => void>
+  private rejects: Map<number, (value: any) => void>
   private nTasks: number
 
   constructor(nThreads: number) {
@@ -23,6 +26,7 @@ class IntervalWorkerPool {
     this.idleWorkers = []
     this.tasks = []
     this.resolves = new Map()
+    this.rejects = new Map()
 
     for (let i = 0; i < nThreads; i += 1) {
       // NOTE: new URL(...) cannot be a variable!
@@ -50,9 +54,20 @@ class IntervalWorkerPool {
 
   queue(task: IntervalTask): Promise<ArrayBuffer> {
     task.nTask = this.nTasks
+    task.valid = true
+
+    for (let i = 0; i < this.tasks.length; i += 1) {
+      if (this.tasks[i].d.index === task.d.index && this.tasks[i].nGroup === task.nGroup) {
+        this.tasks[i].valid = false
+      }
+    }
+
+    // new task
     this.tasks.push(task)
-    const p: Promise<ArrayBuffer> = new Promise((resolve) => {
+
+    const p: Promise<ArrayBuffer> = new Promise((resolve, reject) => {
       this.resolves[task.nTask] = resolve
+      this.rejects[task.nTask] = reject
     })
     this.nTasks += 1
     this.drain()
@@ -62,8 +77,12 @@ class IntervalWorkerPool {
   drain() {
     while (this.hasWork()) {
       const task = this.tasks.shift()
+      if (!task.valid) {
+        return
+      }
       const idleWorker = this.idleWorkers.shift()
 
+      // console.log(`working on task ${task.nTask}`)
       const dStripped: any = {}
       dStripped.fn = task.d.fn
       dStripped.scope = task.d.scope

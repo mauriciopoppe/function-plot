@@ -24,8 +24,8 @@ self.onmessage = ({ data }) => {
   for (; outIdx < out.length; outIdx += 4) {
     out[outIdx + 0] = 0
     out[outIdx + 1] = 0
-    out[outIdx + 2] = -Infinity
-    out[outIdx + 3] = Infinity
+    out[outIdx + 2] = Infinity
+    out[outIdx + 3] = -Infinity
   }
   self.postMessage({ interval2d: out, nTask }, [out.buffer])
 }
