@@ -149,7 +149,7 @@ instead of a polyline, for example we can render a <a href="http://mathworld.wol
 })</code></pre></div></div><div class="col-md-6 center-block demos"><span id="closed" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Logarithmic scales</h3>
 <p>The type of each axis can be configured to be logarithmic by specifying the 
 type of axis to <code>log</code> inside the  <code>xAxis</code> option, note how this 
-change affects the way the functions are sampled</p></div><div class="code"><pre><code class="javascript">var instance = functionPlot({
+change affects the way the functions are sampled</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#logarithmic',
   xAxis: {
     type: 'log',
@@ -390,7 +390,7 @@ a.addLink(b, c)
 b.addLink(a, c)
 c.addLink(a, b)</code></pre></div></div><div class="col-md-6 center-block demos"><span id="linked-a-multiple" class="graph"></span><span id="linked-b-multiple" class="graph"></span><span id="linked-c-multiple" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Update</h3>
 <p>To update a graphic one needs to call <code>functionPlot</code> on the same target 
-element with <em>any</em> object that is configured properly</p></div><div class="code"><pre><code class="javascript">var options = {
+element with <em>any</em> object that is configured properly</p></div><div class="code"><pre><code class="javascript">const options = {
   target: '#quadratic-update',
   data: [
     {
@@ -398,7 +398,7 @@ element with <em>any</em> object that is configured properly</p></div><div class
     }
   ]
 }
-$('#update').click(function () {
+document.querySelector('#update').addEventListener('click', function () {
   if (!options.title) {
     // add a title, a tip and change the function to y = x * x
     options.title = 'hello world'
