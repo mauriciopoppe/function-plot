@@ -44,7 +44,7 @@ export class IntervalWorkerPool {
     this.tasks = []
     this.resolves = new Map()
     this.rejects = new Map()
-    this.backpressure = BackpressureStrategy.InvalidateSeenMap
+    this.backpressure = BackpressureStrategy.InvalidateSeenScan
     this.taskIdToIdx = new Map()
 
     for (let i = 0; i < nThreads; i += 1) {
