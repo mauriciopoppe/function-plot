@@ -62,7 +62,7 @@ function getD3Scale(type: 'linear' | 'log') {
  * - `mouseout` fired whenever the mouse is moved outside the canvas
  * - `before:draw` fired before drawing all the graphs
  * - `after:draw` fired after drawing all the graphs
- * - `zoom:scaleUpdate` fired whenever the scale of another graph is updated, callback params `xScale`, `yScale`
+ * - `zoom` fired whenever there's scaling/translation on the graph
  (x-scale and y-scale of another graph whose scales were updated)
  * - `tip:update` fired whenever the tip position is updated, callback params `{x, y, index}` (in canvas
  space coordinates, `index` is the index of the graph where the tip is on top of)
@@ -75,7 +75,6 @@ function getD3Scale(type: 'linear' | 'log') {
  * - `all:mouseover` same as `mouseover` but it's dispatched in each linked graph
  * - `all:mousemove` same as `mousemove` but it's dispatched in each linked graph
  * - `all:mouseout` same as `mouseout` but it's dispatched in each linked graph
- * - `all:zoom:scaleUpdate` same as `zoom:scaleUpdate` but it's dispatched in each linked graph
  * - `all:zoom` fired whenever there's scaling/translation on the graph, dispatched on all the linked graphs
  */
 export class Chart extends EventEmitter.EventEmitter {
