@@ -1080,20 +1080,4 @@ function onSiteDependenciesLoaded() {
       }
     ]
   })
-
-  // Important to leave the space before this line!
-  // It's because the script site.cjs parses this file to create the examples
 }
-
-$('#recipes').load('partials/recipes.html')
-$('#examples').load('partials/examples.html', function () {
-  onSiteDependenciesLoaded()
-  $('pre code').each(function (i, block) {
-    hljs.highlightBlock(block)
-  })
-
-  $('#p-slider').on('change', function () {
-    var value = +this.value
-    $('#p-slider-value').html(value)
-  })
-})

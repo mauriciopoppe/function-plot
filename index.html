@@ -100,13 +100,15 @@
   <div class="container">Playground</div>
 </section>
 
+
 <p class="center-block">
-  <iframe src="https://codesandbox.io/embed/muddy-cdn-ibl5x?fontsize=14&hidenavigation=1&theme=light"
-          style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
-          title="muddy-cdn-ibl5x"
-          allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
-          sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
-  ></iframe>
+    <iframe
+            src="https://codesandbox.io/embed/ibl5x?view=Editor+%2B+Preview&module=%2Fsrc%2Findex.tsx&hidenavigation=1&theme=light"
+     style="width:100%; height: 500px; border:0; border-radius: 4px; overflow:hidden;"
+     title="muddy-cdn-ibl5x"
+     allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+     sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+   ></iframe>
 </p>
 
 <section>
@@ -199,6 +201,21 @@
   }
 </script>
 <script src="js/site.js"></script>
+<script>
+$('#recipes').load('partials/recipes.html')
+$('#examples').load('partials/examples.html', function () {
+  // declared in js/site.js
+  onSiteDependenciesLoaded()
+  $('pre code').each(function (i, block) {
+    hljs.highlightBlock(block)
+  })
+
+  $('#p-slider').on('change', function () {
+    var value = +this.value
+    $('#p-slider-value').html(value)
+  })
+})
+</script>
 <script type="text/javascript"
 src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 <script type="text/x-mathjax-config">

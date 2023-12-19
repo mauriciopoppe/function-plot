@@ -5720,18 +5720,32 @@ var browser = __webpack_require__(4763);
 var browser_default = /*#__PURE__*/__webpack_require__.n(browser);
 ;// CONCATENATED MODULE: ./src/samplers/interval_worker_pool.ts
 
+var BackpressureStrategy;
+(function (BackpressureStrategy) {
+    BackpressureStrategy["None"] = "none";
+    BackpressureStrategy["InvalidateSeenScan"] = "invalidateSeenScan";
+    BackpressureStrategy["InvalidateSeenMap"] = "invalidateSeenMap";
+    BackpressureStrategy["InvalidateSeenLimit"] = "invalidateSeenLimit";
+})(BackpressureStrategy || (BackpressureStrategy = {}));
+function getTaskId(task) {
+    return task.d.index * 1000 + task.nGroup;
+}
 class IntervalWorkerPool {
     tasks;
     idleWorkers;
     resolves;
     rejects;
+    taskIdToIdx;
     nTasks;
+    backpressure;
     constructor(nThreads) {
         this.nTasks = 0;
         this.idleWorkers = [];
         this.tasks = [];
         this.resolves = new Map();
         this.rejects = new Map();
+        this.backpressure = BackpressureStrategy.InvalidateSeenScan;
+        this.taskIdToIdx = new Map();
         for (let i = 0; i < nThreads; i += 1) {
             // NOTE: new URL(...) cannot be a variable!
             // This is a requirement for the webpack worker loader
@@ -5746,6 +5760,10 @@ class IntervalWorkerPool {
             this.idleWorkers.push(worker);
         }
     }
+    setBackpressure(backpressure) {
+        this.backpressure = backpressure;
+        return this;
+    }
     terminate() {
         for (let i = 0; i < this.idleWorkers.length; i += 1) {
             this.idleWorkers[i].terminate();
@@ -5754,13 +5772,43 @@ class IntervalWorkerPool {
     queue(task) {
         task.nTask = this.nTasks;
         task.valid = true;
-        for (let i = 0; i < this.tasks.length; i += 1) {
-            if (this.tasks[i].d.index === task.d.index && this.tasks[i].nGroup === task.nGroup) {
+        if (this.backpressure === BackpressureStrategy.None) {
+            // push a new task to the queue regardless of its capacity.
+            this.tasks.push(task);
+        }
+        // invalidate cache with a linear scan.
+        if (this.backpressure === BackpressureStrategy.InvalidateSeenScan) {
+            // push a new task after invalidating all the previous ones
+            for (let i = 0; i < this.tasks.length; i += 1) {
+                if (getTaskId(this.tasks[i]) === getTaskId(task)) {
+                    this.tasks[i].valid = false;
+                }
+            }
+            this.tasks.push(task);
+        }
+        // invalidate backpressure with map
+        if (this.backpressure === BackpressureStrategy.InvalidateSeenMap) {
+            // push a new task after invalidating all the previous ones (with a map)
+            const taskId = getTaskId(task);
+            if (!this.taskIdToIdx.has(taskId)) {
+                this.taskIdToIdx.set(taskId, []);
+            }
+            const oldTasks = this.taskIdToIdx.get(taskId);
+            while (oldTasks.length > 0) {
+                const oldTask = oldTasks.shift();
+                oldTask.valid = false;
+            }
+            oldTasks.push(task);
+            this.tasks.push(task);
+        }
+        // invalidate cache with capacity
+        if (this.backpressure === BackpressureStrategy.InvalidateSeenLimit) {
+            // keep the capacity bounded to at most 100 items
+            for (let i = this.tasks.length - 100; i >= 0; i -= 1) {
                 this.tasks[i].valid = false;
             }
+            this.tasks.push(task);
         }
-        // new task
-        this.tasks.push(task);
         const p = new Promise((resolve, reject) => {
             this.resolves[task.nTask] = resolve;
             this.rejects[task.nTask] = reject;
@@ -5799,7 +5847,6 @@ class IntervalWorkerPool {
         return this.tasks.length > 0 && this.idleWorkers.length > 0;
     }
 }
-
 
 ;// CONCATENATED MODULE: ./node_modules/d3-shape/src/array.js
 var slice = Array.prototype.slice;
@@ -11116,27 +11163,6 @@ function annotations(options) {
 ;// CONCATENATED MODULE: ./src/globals.mjs
 
 
-// import { GraphTypeBuilder } from './graph-types/types'
-// import { IntervalWorkerPool } from './samplers/interval_worker_pool'
-//
-// export type TGlobals = {
-//   COLORS: Array<HSLColor>
-//   DEFAULT_WIDTH: number
-//   DEFAULT_HEIGHT: number
-//   DEFAULT_ITERATIONS: number
-//   MAX_ITERATIONS: number
-//   TIP_X_EPS: number
-//
-//   hiddenWorkerPool?: IntervalWorkerPool
-//   workerPool: IntervalWorkerPool
-//
-//   /**
-//    * graphTypes are the graph types registered in functionPlot,
-//    * to register a new graphType use `registerGraphType`
-//    */
-//   graphTypes: { [key: string]: GraphTypeBuilder }
-// }
-//
 const Globals = {
   COLORS: [
     'steelblue',
@@ -11685,10 +11711,11 @@ function mouseTip(config) {
 
 
 interval_arithmetic_eval_default().policies.disableRounding();
-async function asyncInterval1d({ d, xAxis, range, nSamples, xScale, yScale }) {
+async function asyncInterval1d({ d, xAxis, range, nSamples, nGroups, xScale, yScale }) {
     const workerPoolInterval = globals.workerPool;
     const absLo = range[0];
     const absHi = range[1];
+    nGroups = nGroups || 4;
     // if nSamples = 4
     //
     // lo                 hi
@@ -11697,7 +11724,6 @@ async function asyncInterval1d({ d, xAxis, range, nSamples, xScale, yScale }) {
     //
     // See more useful math in the utils tests
     const step = (absHi - absLo) / (nSamples - 1);
-    const nGroups = 4;
     const groupSize = (nSamples - 1) / nGroups;
     const promises = [];
     const interval2dTypedArrayGroups = interval2dTypedArray(nSamples, nGroups);
@@ -11917,13 +11943,18 @@ function checkAsymptote(d0, d1, d, sign, level) {
  * through the process of detecting slope/sign brusque changes
  */
 function split(d, data, yScale) {
-    let oldSign;
+    if (data.length === 0) {
+        // This case is possible when the function didn't render any valid points
+        // e.g. when evaluating sqrt(x) with all negative values.
+        return [];
+    }
     const samplerResult = [];
     const yMin = yScale.domain()[0] - infinity();
     const yMax = yScale.domain()[1] + infinity();
     let samplerGroup = [data[0]];
     let i = 1;
     let deltaX = infinity();
+    let oldSign;
     while (i < data.length) {
         const yOld = data[i - 1][1];
         const yNew = data[i][1];
@@ -12127,8 +12158,6 @@ function polyline(chart) {
             const index = d.index;
             const evaluatedData = builtInEvaluate(chart, d);
             const computedColor = utils_color(d, index);
-            // join
-            const innerSelection = el.selectAll(':scope > path.line').data(evaluatedData);
             const yRange = chart.meta.yScale.range();
             let yMax = yRange[0];
             let yMin = yRange[1];
@@ -12155,6 +12184,8 @@ function polyline(chart) {
             })
                 .y0(chart.meta.yScale(0))
                 .y1(y);
+            // join
+            const innerSelection = el.selectAll(':scope > path.line').data(evaluatedData);
             const cls = `line line-${index}`;
             const innerSelectionEnter = innerSelection
                 .enter()
@@ -12610,7 +12641,7 @@ function getD3Scale(type) {
  * - `mouseout` fired whenever the mouse is moved outside the canvas
  * - `before:draw` fired before drawing all the graphs
  * - `after:draw` fired after drawing all the graphs
- * - `zoom:scaleUpdate` fired whenever the scale of another graph is updated, callback params `xScale`, `yScale`
+ * - `zoom` fired whenever there's scaling/translation on the graph
  (x-scale and y-scale of another graph whose scales were updated)
  * - `tip:update` fired whenever the tip position is updated, callback params `{x, y, index}` (in canvas
  space coordinates, `index` is the index of the graph where the tip is on top of)
@@ -12623,7 +12654,6 @@ function getD3Scale(type) {
  * - `all:mouseover` same as `mouseover` but it's dispatched in each linked graph
  * - `all:mousemove` same as `mousemove` but it's dispatched in each linked graph
  * - `all:mouseout` same as `mouseout` but it's dispatched in each linked graph
- * - `all:zoom:scaleUpdate` same as `zoom:scaleUpdate` but it's dispatched in each linked graph
  * - `all:zoom` fired whenever there's scaling/translation on the graph, dispatched on all the linked graphs
  */
 class Chart extends (events_default()).EventEmitter {
@@ -12674,7 +12704,7 @@ class Chart extends (events_default()).EventEmitter {
         Chart.cache[this.id] = this;
         this.linkedGraphs = [this];
         this.meta = {};
-        this.generation = 0;
+        this.generation = 1;
         this.setUpEventListeners();
     }
     /**
@@ -13105,11 +13135,6 @@ class Chart extends (events_default()).EventEmitter {
             plugin(self);
         });
     }
-    addLink() {
-        for (let i = 0; i < arguments.length; i += 1) {
-            this.linkedGraphs.push(arguments[i]);
-        }
-    }
     updateAxes() {
         const instance = this;
         const canvas = instance.canvas.merge(instance.canvas.enter);
@@ -13126,8 +13151,8 @@ class Chart extends (events_default()).EventEmitter {
     syncOptions() {
         // update the original options yDomain and xDomain, this is done so that next calls to functionPlot()
         // with the same object preserve some of the computed state
-        this.options.xAxis.domain = this.meta.xScale.domain();
-        this.options.yAxis.domain = this.meta.yScale.domain();
+        this.options.xAxis.domain = [this.meta.xScale.domain()[0], this.meta.xScale.domain()[1]];
+        this.options.yAxis.domain = [this.meta.yScale.domain()[0], this.meta.yScale.domain()[1]];
     }
     getFontSize() {
         return Math.max(Math.max(this.meta.width, this.meta.height) / 50, 8);
@@ -13148,7 +13173,7 @@ class Chart extends (events_default()).EventEmitter {
         if (prevInstance) {
             prevInstance.removeAllListeners();
         }
-        const events = {
+        const eventsThisInstance = {
             mousemove: function (coordinates) {
                 self.tip.move(coordinates);
             },
@@ -13189,7 +13214,7 @@ class Chart extends (events_default()).EventEmitter {
             }
         };
         // all represents events that can be propagated to all the instances (including this one)
-        const all = {
+        const eventsAllInstances = {
             mousemove: function (event) {
                 const mouse = pointer(event, self.draggable.node());
                 const coordinates = {
@@ -13212,27 +13237,53 @@ class Chart extends (events_default()).EventEmitter {
                 self.emit('all:mousemove', event);
             }
         };
-        Object.keys(events).forEach(function (e) {
-            // create an event for each event existing on `events` in the form 'all:' event
-            // e.g. all:mouseover all:mouseout
-            // the objective is that all the linked graphs receive the same event as the current graph
-            // @ts-ignore
-            !all[e] &&
-                self.on('all:' + e, function () {
-                    const args = Array.prototype.slice.call(arguments);
-                    self.linkedGraphs.forEach(function (graph) {
-                        const localArgs = args.slice();
-                        localArgs.unshift(e);
-                        graph.emit.apply(graph, localArgs);
-                    });
+        // set listeners for this instance.
+        for (const [event, callback] of Object.entries(eventsThisInstance)) {
+            this.on(event, callback);
+        }
+        // set listeners for all instances.
+        for (const [event, callback] of Object.entries(eventsAllInstances)) {
+            this.on(`all:${event}`, callback);
+        }
+        for (const [event] of Object.entries(eventsThisInstance)) {
+            if (!Object.hasOwn(eventsAllInstances, event)) {
+                // create an event for each event existing on `eventsThisInstance` in the form 'all:' event
+                // e.g. all:mouseover all:mouseout
+                // the objective is that all the linked graphs receive the same event as the current graph
+                this.on(`all:${event}`, function (...args) {
+                    for (let i = 0; i < this.linkedGraphs.length; i += 1) {
+                        const graph = this.linkedGraphs[i];
+                        graph.emit(event, ...args);
+                    }
                 });
-            // @ts-ignore
-            self.on(e, events[e]);
-        });
-        Object.keys(all).forEach(function (e) {
-            // @ts-ignore
-            self.on('all:' + e, all[e]);
-        });
+            }
+        }
+    }
+    addLink(...args) {
+        for (let i = 0; i < args.length; i += 1) {
+            this.linkedGraphs.push(args[i]);
+        }
+    }
+    /**
+     * Removes a linked graph.
+     */
+    removeLink(instance) {
+        const idx = this.linkedGraphs.indexOf(instance);
+        if (idx > -1) {
+            this.linkedGraphs = this.linkedGraphs.splice(idx, 1);
+        }
+    }
+    /**
+     * Destroys this instance of functionPlot,
+     * if you added this to other instances through `addLink` make
+     * sure you remove the links from the other instances to this
+     * instance using `removeLink`.
+     */
+    destroy() {
+        this.removeAllListeners();
+        src_select(this.options.target)
+            .selectAll('svg')
+            .remove();
     }
 }
 
