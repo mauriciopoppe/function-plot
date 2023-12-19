@@ -12,14 +12,31 @@ interface IntervalTask {
   // internal
   valid?: boolean
   nTask?: number
+
+  // backpressure is the algorithm to use when there
+  // are a lot of tasks pending in the queue
+  backpressure?: 'invalidate' | 'none'
 }
 
-class IntervalWorkerPool {
+export enum BackpressureStrategy {
+  None = 'none',
+  InvalidateSeenScan = 'invalidateSeenScan',
+  InvalidateSeenMap = 'invalidateSeenMap',
+  InvalidateSeenLimit = 'invalidateSeenLimit'
+}
+
+function getTaskId(task: IntervalTask) {
+  return task.d.index * 1000 + task.nGroup
+}
+
+export class IntervalWorkerPool {
   private tasks: Array<IntervalTask>
   private idleWorkers: Array<Worker>
   private resolves: Map<number, (value: any) => void>
   private rejects: Map<number, (value: any) => void>
+  private taskIdToIdx: Map<number, Array<IntervalTask>>
   private nTasks: number
+  private backpressure: BackpressureStrategy
 
   constructor(nThreads: number) {
     this.nTasks = 0
@@ -27,6 +44,8 @@ class IntervalWorkerPool {
     this.tasks = []
     this.resolves = new Map()
     this.rejects = new Map()
+    this.backpressure = BackpressureStrategy.InvalidateSeenMap
+    this.taskIdToIdx = new Map()
 
     for (let i = 0; i < nThreads; i += 1) {
       // NOTE: new URL(...) cannot be a variable!
@@ -46,6 +65,11 @@ class IntervalWorkerPool {
     }
   }
 
+  setBackpressure(backpressure: BackpressureStrategy): IntervalWorkerPool {
+    this.backpressure = backpressure
+    return this
+  }
+
   terminate() {
     for (let i = 0; i < this.idleWorkers.length; i += 1) {
       this.idleWorkers[i].terminate()
@@ -56,14 +80,46 @@ class IntervalWorkerPool {
     task.nTask = this.nTasks
     task.valid = true
 
-    for (let i = 0; i < this.tasks.length; i += 1) {
-      if (this.tasks[i].d.index === task.d.index && this.tasks[i].nGroup === task.nGroup) {
-        this.tasks[i].valid = false
-      }
+    if (this.backpressure === BackpressureStrategy.None) {
+      // push a new task to the queue regardless of its capacity.
+      this.tasks.push(task)
     }
 
-    // new task
-    this.tasks.push(task)
+    // invalidate cache with a linear scan.
+    if (this.backpressure === BackpressureStrategy.InvalidateSeenScan) {
+      // push a new task after invalidating all the previous ones
+      for (let i = 0; i < this.tasks.length; i += 1) {
+        if (getTaskId(this.tasks[i]) === getTaskId(task)) {
+          this.tasks[i].valid = false
+        }
+      }
+      this.tasks.push(task)
+    }
+
+    // invalidate backpressure with map
+    if (this.backpressure === BackpressureStrategy.InvalidateSeenMap) {
+      // push a new task after invalidating all the previous ones (with a map)
+      const taskId = getTaskId(task)
+      if (!this.taskIdToIdx.has(taskId)) {
+        this.taskIdToIdx.set(taskId, [])
+      }
+      const oldTasks = this.taskIdToIdx.get(taskId)
+      while (oldTasks.length > 0) {
+        const oldTask = oldTasks.shift()
+        oldTask.valid = false
+      }
+      oldTasks.push(task)
+      this.tasks.push(task)
+    }
+
+    // invalidate cache with capacity
+    if (this.backpressure === BackpressureStrategy.InvalidateSeenLimit) {
+      // keep the capacity bounded to at most 100 items
+      for (let i = this.tasks.length - 100; i >= 0; i -= 1) {
+        this.tasks[i].valid = false
+      }
+      this.tasks.push(task)
+    }
 
     const p: Promise<ArrayBuffer> = new Promise((resolve, reject) => {
       this.resolves[task.nTask] = resolve
@@ -108,5 +164,3 @@ class IntervalWorkerPool {
     return this.tasks.length > 0 && this.idleWorkers.length > 0
   }
 }
-
-export { IntervalWorkerPool }

@@ -7,7 +7,7 @@ import { Bench } from 'tinybench'
 import { scaleLinear } from 'd3-scale'
 
 import globals from '../globals.mjs'
-import { IntervalWorkerPool } from '../samplers/interval_worker_pool'
+import { IntervalWorkerPool, BackpressureStrategy } from '../samplers/interval_worker_pool'
 import { FunctionPlotDatum, FunctionPlotOptionsAxis } from '../types'
 import { createPathD } from '../graph-types/interval'
 import { asyncSamplerInterval, syncSamplerInterval } from '../samplers/interval'
@@ -21,7 +21,8 @@ async function createData(nSamples: number, nGroups: number, async: boolean) {
   const yScale = scaleLinear().domain(yDomain).range([height, 0])
   const d: FunctionPlotDatum = {
     fn: '1/x',
-    fnType: 'linear'
+    fnType: 'linear',
+    index: 1
   }
   const xAxis: FunctionPlotOptionsAxis = { type: 'linear' }
   const yAxis: FunctionPlotOptionsAxis = { type: 'linear' }
@@ -45,9 +46,6 @@ async function createData(nSamples: number, nGroups: number, async: boolean) {
 }
 
 async function compileAndEval() {
-  // setup workerPool
-  globals.workerPool = new IntervalWorkerPool(8)
-
   const nSamplesToTest = [350, 750, 1800, 3600]
   const nGroupsToTest = [4, 8, 12]
   for (const nSamples of nSamplesToTest) {
@@ -65,6 +63,41 @@ async function compileAndEval() {
   }
 }
 
+/**
+ * consecutiveEval tests the scenario seen only in prod wherewe issue lots of
+ * eval operations consecutively putting a lot of pressure on the task queue.
+ */
+async function consecutiveEval() {
+  const bench = new Bench()
+  const nSamples = 1000
+  const nGroups = 16
+  const iterations = 64
+
+  const backpressure = [
+    BackpressureStrategy.InvalidateSeenLimit,
+    BackpressureStrategy.InvalidateSeenScan,
+    BackpressureStrategy.None,
+    BackpressureStrategy.InvalidateSeenMap
+  ]
+
+  for (const bp of backpressure) {
+    bench.add(
+      `nSamples=${nSamples} nGroups=${nGroups} iterations=${iterations} backpressure=${bp} consecutive eval`,
+      async function () {
+        globals.workerPool.setBackpressure(bp)
+        const promises = []
+        for (let i = 0; i < iterations; i += 1) {
+          promises.push(createData(nSamples, nGroups, true))
+        }
+        await Promise.all(promises)
+      }
+    )
+  }
+
+  await bench.run()
+  console.table(bench.table())
+}
+
 async function drawPath() {
   const bench = new Bench()
   const nSamples = 1000
@@ -78,7 +111,9 @@ async function drawPath() {
 }
 
 async function main() {
+  globals.workerPool = new IntervalWorkerPool(8)
   await compileAndEval()
+  await consecutiveEval()
   await drawPath()
   await globals.workerPool.terminate()
 }
