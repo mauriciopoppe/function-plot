@@ -17,7 +17,7 @@ functions to be evaluated</p></div><div class="code"><pre><code class="javascrip
       fn: 'x^2'
     }
   ]
-})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="quadratic" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Additional options</h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="quadratic"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Additional options</h3>
 <p>Additionally the graph can have the following options defined on the top level object:</p>
 <ul>
 <li><code>title</code>: the title of the graph</li>
@@ -48,7 +48,7 @@ functions to be evaluated</p></div><div class="code"><pre><code class="javascrip
       fn: 'x^2'
     }
   ]
-})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="quadratic-with-options" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Grid</h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="quadratic-with-options"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Grid</h3>
 <p>Set <code>grid: true</code> in the options sent to function plot</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#grid',
   xAxis: {
@@ -59,7 +59,7 @@ functions to be evaluated</p></div><div class="code"><pre><code class="javascrip
   },
   grid: true,
   data: [{ fn: 'sqrt(1 - x * x)' }, { fn: '-sqrt(1 - x * x)' }]
-})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="grid" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Domain</h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="grid"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Domain</h3>
 <p>The domains of both axes can be changed with the following configurations:</p>
 <ul>
 <li><code>xDomain</code>, defaults to <code>[-7, 7]</code></li>
@@ -79,7 +79,7 @@ evenly to the $\pm y$ axis</p></div><div class="code"><pre><code class="javascri
       fn: 'sin(x)'
     }
   ]
-})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="domain" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Number of samples</h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="domain"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Number of samples</h3>
 <p><code>nSamples</code> determine the number of equally spaced points in which the function will be 
 evaluated in the current domain, increasing it will more accurately represent the function 
 using rectangles at the cost of processing speed</p>
@@ -99,7 +99,7 @@ $$</p></div><div class="code"><pre><code class="javascript">functionPlot({
       nSamples: 1000
     }
   ]
-})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="samples" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Annotations</h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="samples"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Annotations</h3>
 <p>Parallel lines to the y-axis or x-axis can be set in the <code>annotations</code> option:</p>
 <ul>
 <li><code>x</code>: x coordinate of a line parallel to the y-axis</li>
@@ -128,7 +128,7 @@ will raise an exception</p></div><div class="code"><pre><code class="javascript"
       text: 'y = 2'
     }
   ]
-})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="annotations" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Range and closed path</h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="annotations"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Range and closed path</h3>
 <p>The <code>x</code> values of the function will be taken from the current viewport limits, 
 however you can define a custom range so that the function is evaluated only within this 
 range, this works really nice with the <code>closed</code> option which will will render an area graph 
@@ -146,7 +146,7 @@ instead of a polyline, for example we can render a <a href="http://mathworld.wol
       closed: true
     }
   ]
-})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="closed" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Logarithmic scales</h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="closed"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Logarithmic scales</h3>
 <p>The type of each axis can be configured to be logarithmic by specifying the 
 type of axis to <code>log</code> inside the  <code>xAxis</code> option, note how this 
 change affects the way the functions are sampled</p></div><div class="code"><pre><code class="javascript">functionPlot({
@@ -166,7 +166,7 @@ change affects the way the functions are sampled</p></div><div class="code"><pre
       closed: true
     }
   ]
-})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="logarithmic" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Multiple graphs</h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="logarithmic"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Multiple graphs</h3>
 <p><code>data</code> as seen in the examples above is an array, which means that multiple 
 functions can be rendered in the same graph</p>
 <p>You can also change the color of each graph, by default the colors are set from 
@@ -174,7 +174,7 @@ functions can be rendered in the same graph</p>
 in each datum</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#multiple',
   data: [{ fn: 'x', color: 'pink' }, { fn: '-x' }, { fn: 'x * x' }, { fn: 'x * x * x' }, { fn: 'x * x * x * x' }]
-})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="multiple" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Graph types</h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="multiple"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Graph types</h3>
 <p>There are three ways to represent a function in <code>function-plot</code></p>
 <ul>
 <li><code>polyline</code> where $f(x)$ is evaluated with some $x$ values, after the evaluation the points are joined with line segments using 
@@ -200,7 +200,7 @@ are painted on the screen (done using the <code>&lt;path&gt;</code> svg element)
       graphType: 'interval'
     }
   ]
-})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="graph-types" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Tip</h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="graph-types"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Tip</h3>
 <p>The little circle that has the x-coordinate of the mouse position is called 
 a &quot;tip&quot;, the following options can be configured:</p>
 <ul>
@@ -227,7 +227,7 @@ that holds the info of the function to render</p></div><div class="code"><pre><c
       skipTip: true
     }
   ]
-})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="tip" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>nth-root</h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="tip"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>nth-root</h3>
 <p>Plotting roots can be a challenging problem, most plotters will actually 
 analyze expression of the type $x^{\tfrac{a}{b}}$, particularly they will 
 analyze the denominator of the exponent (to plot in the negative x-axis), 
@@ -239,7 +239,7 @@ function to solve these issues</p></div><div class="code"><pre><code class="java
       fn: 'nthRoot(x, 3)^2'
     }
   ]
-})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="root-finding" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Secants</h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="root-finding"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Secants</h3>
 <p>If a data object has a <code>secants</code> array, then each object will be used to compute 
 secant lines between two points belonging to the function, additionally if <code>updateOnMouseMove</code> 
 is a property set to <code>true</code> in the object then $(x_0, f(x_0))$ will be used as an anchored point 
@@ -264,7 +264,7 @@ position of the mouse</li>
       ]
     }
   ]
-})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="secant" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Secants <br> <div class="small">Dynamic secant lines</div></h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="secant"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Secants <br> <div class="small">Dynamic secant lines</div></h3>
 <p>An example where <code>updateOnMouseMove</code> is set in two secant lines, each line will be computed on the 
 dynamically based on the current position of the mouse</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#secant-update',
@@ -284,7 +284,7 @@ dynamically based on the current position of the mouse</p></div><div class="code
       ]
     }
   ]
-})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="secant-update" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Derivative</h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="secant-update"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Derivative</h3>
 <p>If a data object has a <code>derivative</code> object then its property <code>fn</code> will be used to compute 
 the equation of the line tangent to the point <code>x0</code>, i.e. the point $(x_0, f(x_0))$ 
 (the derivative is a function which gives the slope of the tangent line at any derivable point)</p>
@@ -307,7 +307,7 @@ position of the mouse</li>
       }
     }
   ]
-})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="derivative" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Derivative <br> <div class="small">Tangent line on mouse's position</div></h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="derivative"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Derivative <br> <div class="small">Tangent line on mouse's position</div></h3>
 <p>if <code>updateOnMouseMove</code> is set to true then tangent line is computed whenever the mouse is moved 
 inside the canvas (let $x_0$ be the mouse's abscissa then the tangent line to the point 
 $(x_0, f(x_0))$ is computed whenever the position of the mouse changes)</p></div><div class="code"><pre><code class="javascript">functionPlot({
@@ -322,7 +322,7 @@ $(x_0, f(x_0))$ is computed whenever the position of the mouse changes)</p></div
       }
     }
   ]
-})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="derivative-update" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Derivative <br> <div class="small">Multiple tangent lines</div></h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="derivative-update"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Derivative <br> <div class="small">Multiple tangent lines</div></h3>
 <p>An example of a graph with multiple functions, each function is configured with 
 a <code>derivative</code> object with auto update of the slope as described above</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#derivative-update-multiple',
@@ -342,7 +342,7 @@ a <code>derivative</code> object with auto update of the slope as described abov
       }
     }
   ]
-})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="derivative-update-multiple" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Linked graphs</h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="derivative-update-multiple"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Linked graphs</h3>
 <p>Multiple graphs can be linked, when the tip's position, graph scale or 
 graph translate properties are modified on the original graph the linked 
 graphs are signaled with the same events, in the following example <code>a</code> 
@@ -360,7 +360,7 @@ b = functionPlot({
   xAxis: { domain: [-10, 10] },
   data: [{ fn: '2 * x' }]
 })
-a.addLink(b)</code></pre></div></div><div class="col-md-6 center-block demos"><span id="linked-a" class="graph"></span><span id="linked-b" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Linked graphs <div class="small">Multiple</div></h3>
+a.addLink(b)</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="linked-a"></span><span class="graph" id="linked-b"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Linked graphs <div class="small">Multiple</div></h3>
 <p>Since the <code>zoom</code> event is dispatched to all the linked graphs, one can 
 set as many linked graphs as wanted and all of them will perform the same 
 zoom operation, in the following example these functions are plotted:</p>
@@ -388,7 +388,7 @@ c = functionPlot({
 })
 a.addLink(b, c)
 b.addLink(a, c)
-c.addLink(a, b)</code></pre></div></div><div class="col-md-6 center-block demos"><span id="linked-a-multiple" class="graph"></span><span id="linked-b-multiple" class="graph"></span><span id="linked-c-multiple" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Update</h3>
+c.addLink(a, b)</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="linked-a-multiple"></span><span class="graph" id="linked-b-multiple"></span><span class="graph" id="linked-c-multiple"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Update</h3>
 <p>To update a graphic one needs to call <code>functionPlot</code> on the same target 
 element with <em>any</em> object that is configured properly</p></div><div class="code"><pre><code class="javascript">const options = {
   target: '#quadratic-update',
@@ -425,7 +425,7 @@ document.querySelector('#update').addEventListener('click', function () {
   functionPlot(options)
 })
 // initial plot
-functionPlot(options)</code></pre></div></div><div class="col-md-6 center-block demos"><span id="quadratic-update" class="graph"></span><div>
+functionPlot(options)</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="quadratic-update"></span><div>
    <button id="update" class="btn btn-primary">Update</button></div></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Function continuity</h3>
 <p>Some functions are not defined under some range of values, for example 
 the function $f(x) = \frac{1}{x}$ is undefined when $x = 0$, the library identifies 
@@ -440,7 +440,7 @@ these kind of peaks and there's no need to explicitly tell these asymptotes</p><
       }
     }
   ]
-})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="function-continuity" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Function continuity <div class="small">$tan(x)$</div></h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="function-continuity"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Function continuity <div class="small">$tan(x)$</div></h3>
 <p>Plotting $f(x) = tan(x)$ which has many vertical asymptotes</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#function-continuity-tan-x',
   data: [
@@ -452,7 +452,7 @@ these kind of peaks and there's no need to explicitly tell these asymptotes</p><
       }
     }
   ]
-})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="function-continuity-tan-x" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h2>The tale of a circle</h2>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="function-continuity-tan-x"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h2>The tale of a circle</h2>
 <p>Consider plotting the function</p>
 <p>$$ 
 x^2 + y^2 = 1 
@@ -470,7 +470,7 @@ $$</p></div><div class="code"><pre><code class="javascript">functionPlot({
   yAxis: { domain: [-1.897959183, 1.897959183] },
   xAxis: { domain: [-3, 3] },
   data: [{ fn: 'sqrt(1 - x * x)' }, { fn: '-sqrt(1 - x * x)' }]
-})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="circle-explicit" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Parametric equations</h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="circle-explicit"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Parametric equations</h3>
 <p>The original equation of the circle $x^2 + y^2 = 1$ can be parametrized as</p>
 <p>$$ 
 x = cos(t) \\ 
@@ -501,7 +501,7 @@ instead of rectangles generated by the interval-arithmetic sampler set
       graphType: 'polyline'
     }
   ]
-})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="parametric-circle" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Parametric Equations    <div class="small">Butterfly curve</div></h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="parametric-circle"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Parametric Equations    <div class="small">Butterfly curve</div></h3>
 <p>Let's render the famous equation of the butterfly curve using parametric equations, 
 the equations are:</p>
 <p>$$ 
@@ -520,7 +520,7 @@ $$</p></div><div class="code"><pre><code class="javascript">functionPlot({
       graphType: 'polyline'
     }
   ]
-})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="butterfly-curve" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Polar equations</h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="butterfly-curve"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Polar equations</h3>
 <p>The original equation of the circle $x^2 + y^2 = 1$ can be expressed with the 
 following polar equation</p>
 <p>$$ 
@@ -554,7 +554,7 @@ instead of rectangles generated by the interval-arithmetic sampler set
       graphType: 'polyline'
     }
   ]
-})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="polar-circle" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Polar equations   <div class="small">Polar rose</div></h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="polar-circle"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Polar equations   <div class="small">Polar rose</div></h3>
 <p>Rendering the equation of the polar rose</p>
 <p>$$ 
 r = 2 sin(4 \theta) 
@@ -569,7 +569,7 @@ $$</p></div><div class="code"><pre><code class="javascript">functionPlot({
       graphType: 'polyline'
     }
   ]
-})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="polar-complex" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Implicit functions</h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="polar-complex"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Implicit functions</h3>
 <p>The equation of a circle of radius 1 $x^2 + y^2 = 1$ expressed in an explicit way is:</p>
 <p>$$ 
 y = \sqrt{1 - x^2} \quad and \quad y = -\sqrt{1 - x^2} 
@@ -595,7 +595,7 @@ $$</p>
       fnType: 'implicit'
     }
   ]
-})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="circle-implicit" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Implicit function   <div class="small">complex implicit functions</div></h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="circle-implicit"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Implicit function   <div class="small">complex implicit functions</div></h3>
 <p>Consider the following equation</p>
 <p>$$ 
 cos(\pi x) = cos(\pi y) 
@@ -612,7 +612,7 @@ of functions, however for a finite region of the plane a finite number of functi
       fnType: 'implicit'
     }
   ]
-})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="implicit-complex" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Points and polylines</h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="implicit-complex"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Points and polylines</h3>
 <p>To plot a collection of points or a polyline the following options are required:</p>
 <ul>
 <li><code>points</code> An array of coordinates, each coordinate is represented by a 2-element array</li>
@@ -649,7 +649,7 @@ functionPlot({
       graphType: 'polyline'
     }
   ]
-})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="points" class="graph"></span><span id="polyline" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Vectors</h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="points"></span><span class="graph" id="polyline"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Vectors</h3>
 <p>To render 2d vectors set the following on each datum</p>
 <ul>
 <li><code>vector</code> {Array} the vector itself</li>
@@ -668,7 +668,7 @@ functionPlot({
       fnType: 'vector'
     }
   ]
-})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="vector" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Text</h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="vector"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Text</h3>
 <p>To render text set the following on each datum</p>
 <ul>
 <li><code>graphType: 'text'</code></li>
@@ -691,7 +691,7 @@ functionPlot({
       }
     }
   ]
-})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="text" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Advanced: sampler</h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="text"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Advanced: sampler</h3>
 <p><code>function-plot</code> uses interval-arithmetic math by default, unfortunately some functions are 
 not implemented yet because of the underlying complexity, for this reason you can always 
 evaluate a function with <img style="width: 50px; height: 15px" src="img/mathjs_330x100.png"/>, 
@@ -724,7 +724,7 @@ functionPlot({
       graphType: 'polyline'
     }
   ]
-})</code></pre></div></div><div class="col-md-6 center-block demos"><span id="sampler-mathjs" class="graph"></span><span id="sampler-tan-mathjs" class="graph"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Advanced: property evaluation</h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="sampler-mathjs"></span><span class="graph" id="sampler-tan-mathjs"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Advanced: property evaluation</h3>
 <p>All of the examples above used a string in the property to evaluate e.g.</p>
 <pre><code> // n
  functionPlot({
@@ -786,5 +786,4 @@ functionPlot({
     }
   ]
 })
-
-}</code></pre></div></div><div class="col-md-6 center-block demos"><span id="built-in-eval-function" class="graph"></span><span id="interval-arithmetic-eval-function" class="graph"></span></div></div></div></div>
+}</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="built-in-eval-function"></span><span class="graph" id="interval-arithmetic-eval-function"></span></div></div></div></div>
