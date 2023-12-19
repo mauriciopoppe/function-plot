@@ -1080,6 +1080,9 @@ function onSiteDependenciesLoaded() {
       }
     ]
   })
+
+  // Important to leave the space before this line!
+  // It's because the script site.cjs parses this file to create the examples
 }
 
 $('#recipes').load('partials/recipes.html')
