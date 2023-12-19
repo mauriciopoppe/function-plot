@@ -218,4 +218,30 @@ functionPlot({
     const image = await page.screenshot()
     expect(image).toMatchImageSnapshot(matchSnapshotConfig)
   })
+
+  it('should destroy the svg node on destroy', async () => {
+    await page.evaluate(`
+const instance = functionPlot({
+  target: '#playground',
+  data: [
+    {
+      graphType: "text",
+      location: [1, 1],
+      text: "hello world"
+    },
+    {
+      graphType: "text",
+      location: [-1, -1],
+      text: "foo bar",
+      attr: {
+        'text-anchor': 'end'
+      }
+    },
+  ]
+});
+instance.destroy()
+    `)
+    const image = await page.screenshot()
+    expect(image).toMatchImageSnapshot(matchSnapshotConfig)
+  })
 })

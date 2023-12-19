@@ -634,12 +634,6 @@ export class Chart extends EventEmitter.EventEmitter {
     })
   }
 
-  addLink() {
-    for (let i = 0; i < arguments.length; i += 1) {
-      this.linkedGraphs.push(arguments[i])
-    }
-  }
-
   updateAxes() {
     const instance = this
     const canvas = instance.canvas.merge(instance.canvas.enter)
@@ -685,7 +679,9 @@ export class Chart extends EventEmitter.EventEmitter {
       prevInstance.removeAllListeners()
     }
 
-    const events = {
+    type EventsWithListener = { [key: string]: (...args: any[]) => any }
+
+    const eventsThisInstance: EventsWithListener = {
       mousemove: function (coordinates: { x: number; y: number }) {
         self.tip.move(coordinates)
       },
@@ -735,7 +731,7 @@ export class Chart extends EventEmitter.EventEmitter {
     }
 
     // all represents events that can be propagated to all the instances (including this one)
-    const all = {
+    const eventsAllInstances = {
       mousemove: function (event: any) {
         const mouse = d3Pointer(event, self.draggable.node())
         const coordinates = {
@@ -762,29 +758,56 @@ export class Chart extends EventEmitter.EventEmitter {
       }
     }
 
-    Object.keys(events).forEach(function (e) {
-      // create an event for each event existing on `events` in the form 'all:' event
-      // e.g. all:mouseover all:mouseout
-      // the objective is that all the linked graphs receive the same event as the current graph
-      // @ts-ignore
+    // set listeners for this instance.
+    for (const [event, callback] of Object.entries(eventsThisInstance)) {
+      this.on(event, callback)
+    }
 
-      !all[e] &&
-        self.on('all:' + e, function () {
-          const args = Array.prototype.slice.call(arguments)
-          self.linkedGraphs.forEach(function (graph) {
-            const localArgs = args.slice()
-            localArgs.unshift(e)
-            graph.emit.apply(graph, localArgs)
-          })
+    // set listeners for all instances.
+    for (const [event, callback] of Object.entries(eventsAllInstances)) {
+      this.on(`all:${event}`, callback)
+    }
+    for (const [event] of Object.entries(eventsThisInstance)) {
+      if (!Object.hasOwn(eventsAllInstances, event)) {
+        // create an event for each event existing on `eventsThisInstance` in the form 'all:' event
+        // e.g. all:mouseover all:mouseout
+        // the objective is that all the linked graphs receive the same event as the current graph
+        this.on(`all:${event}`, function (...args) {
+          for (let i = 0; i < this.linkedGraphs.length; i += 1) {
+            const graph = this.linkedGraphs[i]
+            graph.emit(event, ...args)
+          }
         })
+      }
+    }
+  }
 
-      // @ts-ignore
-      self.on(e, events[e])
-    })
+  addLink(...args: Chart[]) {
+    for (let i = 0; i < args.length; i += 1) {
+      this.linkedGraphs.push(args[i])
+    }
+  }
 
-    Object.keys(all).forEach(function (e) {
-      // @ts-ignore
-      self.on('all:' + e, all[e])
-    })
+  /**
+   * Removes a linked graph.
+   */
+  removeLink(instance: Chart) {
+    const idx = this.linkedGraphs.indexOf(instance)
+    if (idx > -1) {
+      this.linkedGraphs = this.linkedGraphs.splice(idx, 1)
+    }
+  }
+
+  /**
+   * Destroys this instance of functionPlot,
+   * if you added this to other instances through `addLink` make
+   * sure you remove the links from the other instances to this
+   * instance using `removeLink`.
+   */
+  destroy() {
+    this.removeAllListeners()
+    d3Select(this.options.target as any)
+      .selectAll('svg')
+      .remove()
   }
 }
