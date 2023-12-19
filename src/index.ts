@@ -15,7 +15,9 @@ registerGraphType('scatter', scatter)
 registerGraphType('text', text)
 
 // Web workers initializer.
-function withWebWorkers(nWorkers = 8) {
+function withWebWorkers(nWorkers = 8, publicPath = window.location.href) {
+  // @ts-ignore
+  global.__webpack_public_path__ = publicPath
   globals.workerPool = new IntervalWorkerPool(nWorkers)
 }
 

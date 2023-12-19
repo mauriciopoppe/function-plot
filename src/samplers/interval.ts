@@ -51,19 +51,14 @@ async function asyncInterval1d({
     )
   }
 
-  const samples: IntervalSamplerResultGroup = []
-  let allWorkersDone: Array<ArrayBuffer>
-  try {
-    allWorkersDone = await Promise.all(promises)
-  } catch (err) {
-    // This run was invalidated by a new run.
-    ;(samples as any).scaledDx = 0
-    return [samples]
-  }
-  // Transfer the typed array back to the main thread.
+  const allWorkersDone = await Promise.all(promises)
+
+  // Transfer the typed arrays back to the main thread.
   for (let i = 0; i < allWorkersDone.length; i += 1) {
     interval2dTypedArrayGroups[i] = new Float32Array(allWorkersDone[i])
   }
+
+  const samples: IntervalSamplerResultGroup = []
   for (let i = 0; i < interval2dTypedArrayGroups.length; i += 1) {
     const group = interval2dTypedArrayGroups[i]
     for (let j = 0; j < group.length; j += 4) {

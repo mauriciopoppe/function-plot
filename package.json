@@ -27,7 +27,7 @@
     "build": "npx rimraf dist && npm run html && npm run docs && npm run build:types && npm run build:webpack && npm run build:site",
     "build:webpack": "NODE_ENV=production webpack",
     "build:types": "tsc",
-    "build:site": "cp dist/*function-plot.js site/js",
+    "build:site": "cp dist/*function-plot.js site/js && cp dist/*function-plot.js.map site/js",
     "start": "webpack-dev-server",
     "docs": "typedoc --excludeExternals --externalPattern \"**/node_modules/**\" --out site/docs src/index.ts",
     "test": "NODE_OPTIONS='--experimental-vm-modules' jest",
