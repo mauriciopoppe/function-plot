@@ -4,7 +4,7 @@
 const fs = require('fs')
 const dox = require('dox')
 const _ = require('lodash')
-const jade = require('jade')
+const pug = require('pug')
 const md = require('markdown-it')({
   html: true,
   linkify: true,
@@ -47,7 +47,7 @@ function renderExamples() {
     })
 
   const output = fs.createWriteStream('./site/partials/examples.html')
-  output.write(jade.compileFile('./site/tpl/examples.jade')({ comments: parsed }))
+  output.write(pug.compileFile('./site/tpl/examples.pug')({ comments: parsed }))
   output.end()
 }
 
