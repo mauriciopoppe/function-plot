@@ -164,7 +164,7 @@ for (let i = 0; i < typedArraysFromWebWorker.length; i += 1) {
 Because we're no longer doing IO and just passing reference to array buffers
 created in main the time complexity became `O(nSamples / 4)`!
 
-### Improvement 3: Don't do work that's not needed because it's not needed anymore
+### Improvement 3: Don't do work that's no longer needed.
 
 After implementing improvement 2 in the UI I saw that if I panned or
 zoomed in/out too fast the graph would fail to keep up rendering, after some

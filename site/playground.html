@@ -18,14 +18,32 @@ body, text {
   <script src="./function-plot.js"></script>
 <script>
 functionPlot.withWebWorkers(8)
+// functionPlot({
+//   target: '#playground',
+//   width: window.innerWidth,
+//   height: window.innerHeight,
+//   data: [
+//     { fn: 'x^2', nSamples: 4000, sampler: 'asyncInterval' },
+//     { fn: 'sin(x)', nSamples: 4000, sampler: 'asyncInterval' },
+//     { fn: '1/x', nSamples: 4000, sampler: 'asyncInterval' },
+//   ]
+// })
 functionPlot({
   target: '#playground',
-  width: window.innerWidth,
-  height: window.innerHeight,
   data: [
-    { fn: 'x^2', nSamples: 4000, sampler: 'asyncInterval' },
-    { fn: 'sin(x)', nSamples: 4000, sampler: 'asyncInterval' },
-    { fn: '1/x', nSamples: 4000, sampler: 'asyncInterval' },
+    {
+      fn: '-sqrt(-x)',
+      nSamples: 100,
+      graphType: 'scatter'
+    },
+    {
+      fn: 'sqrt(x)',
+      graphType: 'polyline'
+    },
+    {
+      fn: 'x^2',
+      graphType: 'interval'
+    }
   ]
 })
 </script>

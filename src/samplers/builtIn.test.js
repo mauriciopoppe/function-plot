@@ -84,6 +84,27 @@ describe('builtIn sampler', () => {
       expect(data[0].length).toEqual(nSamples / 2) /* the 1st group should have 50 points */
       expect(data[1].length).toEqual(nSamples / 2) /* the 2nd group should have 50 points */
     })
+
+    it('should render 0 groups for sqrt(x)', () => {
+      const nSamples = 1000
+      const xDomain = [-100, -95]
+      const yDomain = [-5, 5]
+      const xScale = d3ScaleLinear().domain(xDomain).range([0, width])
+      const yScale = d3ScaleLinear().domain(yDomain).range([height, 0])
+      const samplerParams = {
+        // The square root of any point in the range [-100, -99, ..., -95] isn't
+        // defined so the evaluation should return 0 points.
+        d: { fn: 'sqrt(x)', fnType: 'linear' },
+        range: xDomain,
+        xScale,
+        yScale,
+        xAxis: { type: 'linear' },
+        nSamples
+      }
+      const data = builtIn(samplerParams)
+      expect(data instanceof Array).toEqual(true)
+      expect(data.length).toEqual(0) /* we expect 0 group of points */
+    })
   })
 
   describe('with parametric sampler', () => {

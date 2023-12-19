@@ -11,7 +11,7 @@ export interface FunctionPlotOptionsAxis {
   /**
    * Initial ends of the axis
    */
-  domain?: number[]
+  domain?: [number, number]
 
   /**
    * The type of axis
