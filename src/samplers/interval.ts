@@ -15,6 +15,7 @@ async function asyncInterval1d({
   xAxis,
   range,
   nSamples,
+  nGroups,
   xScale,
   yScale
 }: SamplerParams): Promise<IntervalSamplerResult> {
@@ -22,6 +23,7 @@ async function asyncInterval1d({
 
   const absLo = range[0]
   const absHi = range[1]
+  nGroups = nGroups || 4
   // if nSamples = 4
   //
   // lo                 hi
@@ -30,7 +32,6 @@ async function asyncInterval1d({
   //
   // See more useful math in the utils tests
   const step = (absHi - absLo) / (nSamples - 1)
-  const nGroups = 4
   const groupSize = (nSamples - 1) / nGroups
   const promises: Array<Promise<ArrayBuffer>> = []
   const interval2dTypedArrayGroups = interval2dTypedArray(nSamples, nGroups)

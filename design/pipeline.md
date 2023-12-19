@@ -19,13 +19,36 @@ There are multiple compute heavy steps that happen in the rendering pipeline:
 
 - Compile + Eval
   - compile `fn` to a *-eval function (see [interval-arithmetic-eval](https://github.com/mauriciopoppe/interval-arithmetic-eval)
-  or [built-in-math-eval](https://github.com/mauriciopoppe/built-in-math-eval))
-  - The [above is cached]() so that when `functionPlot` is invoked it isn't
-  the compilation isn't run many times.
+  or [built-in-math-eval](https://github.com/mauriciopoppe/built-in-math-eval)), the evaluated function is added to the configuration object
+  which becomes.
+
+```
+{
+  "target": "#playground",
+  "data": [
+    {
+      "fn": "x^2",
+      "interval_Expression_fn": "x^2",
+      "interval_Compiled_fn": {
+        "code": "return $$mathCodegen.functionProxy($$mathCodegen.getProperty(\"pow\", scope, ns), \"pow\")($$mathCodegen.getProperty(\"x\", scope, ns), ns.factory(2))",
+        "eval": function(scope) {
+          scope = scope || {};
+          $$processScope(scope);
+          return $$mathCodegen.functionProxy(
+            $$mathCodegen.getProperty("pow", scope, ns), "pow")($$mathCodegen.getProperty("x", scope, ns), ns.factory(2)
+          )
+        }
+      },
+    }
+  ]
+}
+```
+
+  - The [above interval_ prefixed values are cached](https://github.com/mauriciopoppe/function-plot/blob/7e885aed9a7c6adf6f40823eb457d687efc08a8a/src/helpers/eval.mjs#L73) so that when `functionPlot` is invoked the compilation isn't run many times.
   - [use `nSamples`](https://github.com/mauriciopoppe/function-plot/blob/b46e07c3281bce5b6bff00050ba3d6a16795a483/src/evaluate.ts#L40)
   to create [`nSamples` equally distinct points](https://github.com/mauriciopoppe/function-plot/blob/b46e07c3281bce5b6bff00050ba3d6a16795a483/src/samplers/interval.ts#L17),
   e.g. `[x_0, x_1, ..., x_{n_samples - 1}]`
-  - In `O(n)`, iterate over all the points and evaluate each them against the compiled function evaluator (created in the preparation stage),
+  - In `O(n)`, iterate over all the points and [evaluate](https://github.com/mauriciopoppe/function-plot/blob/317bea18fb0298d11ecbaa3da53b824a3091ed1a/src/helpers/eval.mjs#L108) each them against the compiled function evaluator (created in the preparation stage),
     return a data structure that encodes the result (`Array<Array<[Interval, Interval]> | null>`)
 - Render
   - In `O(n)` iterate over all the results and create a [`<path d={rectanglePaint} />`](https://github.com/mauriciopoppe/function-plot/blob/b46e07c3281bce5b6bff00050ba3d6a16795a483/src/graph-types/interval.ts#L96)
@@ -34,14 +57,18 @@ There are multiple compute heavy steps that happen in the rendering pipeline:
 
 ## Perf stats
 
-Using `npm run perf:pipeline`:
+Using `npm run perf:pipeline` for `fn: 1/x`:
 
 ```
-compile and eval 1000 x 1,163 ops/sec ±0.26% (98 runs sampled)
-compile and eval 1000 x 1,172 ops/sec ±0.46% (97 runs sampled)
-compile and eval 1000 x 1,164 ops/sec ±0.23% (96 runs sampled)
-
-drawPath 1000 x 8,398 ops/sec ±0.58% (99 runs sampled)
-drawPath 1000 x 8,392 ops/sec ±0.53% (97 runs sampled)
-drawPath 1000 x 8,266 ops/sec ±0.55% (96 runs sampled)
+┌─────────┬───────────────────────────────┬─────────┬────────────────────┬──────────┬─────────┐
+│ (index) │           Task Name           │ ops/sec │ Average Time (ns)  │  Margin  │ Samples │
+├─────────┼───────────────────────────────┼─────────┼────────────────────┼──────────┼─────────┤
+│    0    │    'compile and eval 1000'    │ '1,002' │ 997696.8855496896  │ '±4.88%' │   502   │
+│    1    │ 'async compile and eval 1000' │ '2,300' │ 434699.05905056576 │ '±3.51%' │  1151   │
+└─────────┴───────────────────────────────┴─────────┴────────────────────┴──────────┴─────────┘
+┌─────────┬─────────────────┬─────────┬────────────────────┬──────────┬─────────┐
+│ (index) │    Task Name    │ ops/sec │ Average Time (ns)  │  Margin  │ Samples │
+├─────────┼─────────────────┼─────────┼────────────────────┼──────────┼─────────┤
+│    0    │ 'drawPath 1000' │ '8,375' │ 119393.74110532468 │ '±1.32%' │  4188   │
+└─────────┴─────────────────┴─────────┴────────────────────┴──────────┴─────────┘
 ```

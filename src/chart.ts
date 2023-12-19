@@ -136,7 +136,7 @@ export class Chart extends EventEmitter.EventEmitter {
     Chart.cache[this.id] = this
     this.linkedGraphs = [this]
     this.meta = {}
-    this.generation = 0
+    this.generation = 1
     this.setUpEventListeners()
   }
 
