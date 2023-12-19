@@ -1,4 +1,4 @@
-document.addEventListener('markupLoaded', function () {
+function onSiteDependenciesLoaded() {
   const functionPlot = window.functionPlot
   let a, b, c
 
@@ -1080,11 +1080,11 @@ document.addEventListener('markupLoaded', function () {
       }
     ]
   })
-})
+}
 
 $('#recipes').load('partials/recipes.html')
 $('#examples').load('partials/examples.html', function () {
-  $(document).trigger('markupLoaded')
+  onSiteDependenciesLoaded()
   $('pre code').each(function (i, block) {
     hljs.highlightBlock(block)
   })
