@@ -12,7 +12,7 @@ import { FunctionPlotDatum, FunctionPlotOptionsAxis } from '../types'
 import { createPathD } from '../graph-types/interval'
 import { asyncSamplerInterval, syncSamplerInterval } from '../samplers/interval'
 
-async function createData(nSamples: number, async: boolean) {
+async function createData(nSamples: number, nGroups: number, async: boolean) {
   const width = 500
   const height = 300
   const xDomain: [number, number] = [-5, 5]
@@ -32,7 +32,8 @@ async function createData(nSamples: number, async: boolean) {
     yScale,
     xAxis,
     yAxis,
-    nSamples
+    nSamples,
+    nGroups
   }
   let data
   if (async) {
@@ -44,24 +45,30 @@ async function createData(nSamples: number, async: boolean) {
 }
 
 async function compileAndEval() {
-  const bench = new Bench()
-  const nSamples = 1800 /* window.innerWidth */
+  // setup workerPool
   globals.workerPool = new IntervalWorkerPool(8)
-  bench.add(`compile and eval ${nSamples}`, async function () {
-    await createData(nSamples, false)
-  })
-  bench.add(`async compile and eval ${nSamples}`, async function () {
-    await createData(nSamples, true)
-  })
 
-  await bench.run()
-  console.table(bench.table())
+  const nSamplesToTest = [350, 750, 1800, 3600]
+  const nGroupsToTest = [4, 8, 12]
+  for (const nSamples of nSamplesToTest) {
+    const bench = new Bench()
+    for (const nGroups of nGroupsToTest) {
+      bench.add(`nSamples=${nSamples} nGroups=${nGroups} compile and eval sync`, async function () {
+        await createData(nSamples, nGroups, false)
+      })
+      bench.add(`nSamples=${nSamples} nGroups=${nGroups} compile and eval async`, async function () {
+        await createData(nSamples, nGroups, true)
+      })
+    }
+    await bench.run()
+    console.table(bench.table())
+  }
 }
 
 async function drawPath() {
   const bench = new Bench()
   const nSamples = 1000
-  const { xScale, yScale, data } = await createData(nSamples, false)
+  const { xScale, yScale, data } = await createData(nSamples, 4, false)
   bench.add(`drawPath ${nSamples}`, function () {
     createPathD(xScale, yScale, 1 /* minWidthHeight, dummy = 1 */, data[0], false /* closed */)
   })

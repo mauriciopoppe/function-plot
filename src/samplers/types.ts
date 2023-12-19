@@ -8,6 +8,9 @@ export type SamplerParams = {
   xAxis: FunctionPlotOptionsAxis
   yAxis: FunctionPlotOptionsAxis
   nSamples: number
+
+  // The number of groups to use for split.
+  nGroups?: number
 }
 
 export type TInterval = { lo: number; hi: number }

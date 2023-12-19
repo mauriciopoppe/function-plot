@@ -1,26 +1,5 @@
 import { hsl as d3Hsl } from 'd3-color'
 
-// import { GraphTypeBuilder } from './graph-types/types'
-// import { IntervalWorkerPool } from './samplers/interval_worker_pool'
-//
-// export type TGlobals = {
-//   COLORS: Array<HSLColor>
-//   DEFAULT_WIDTH: number
-//   DEFAULT_HEIGHT: number
-//   DEFAULT_ITERATIONS: number
-//   MAX_ITERATIONS: number
-//   TIP_X_EPS: number
-//
-//   hiddenWorkerPool?: IntervalWorkerPool
-//   workerPool: IntervalWorkerPool
-//
-//   /**
-//    * graphTypes are the graph types registered in functionPlot,
-//    * to register a new graphType use `registerGraphType`
-//    */
-//   graphTypes: { [key: string]: GraphTypeBuilder }
-// }
-//
 const Globals = {
   COLORS: [
     'steelblue',
