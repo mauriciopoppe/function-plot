@@ -15,9 +15,6 @@ export default function polyline(chart: Chart) {
       const evaluatedData = builtInEvaluate(chart, d)
       const computedColor = color(d, index)
 
-      // join
-      const innerSelection = el.selectAll(':scope > path.line').data(evaluatedData)
-
       const yRange = chart.meta.yScale.range()
       let yMax = yRange[0]
       let yMin = yRange[1]
@@ -46,6 +43,9 @@ export default function polyline(chart: Chart) {
         })
         .y0(chart.meta.yScale(0))
         .y1(y)
+
+      // join
+      const innerSelection = el.selectAll(':scope > path.line').data(evaluatedData)
 
       const cls = `line line-${index}`
       const innerSelectionEnter = innerSelection

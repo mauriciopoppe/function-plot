@@ -43,8 +43,8 @@ export interface ChartMeta {
   yScale?: FunctionPlotScale
   xAxis?: Axis<any>
   yAxis?: Axis<any>
-  xDomain?: number[]
-  yDomain?: number[]
+  xDomain?: [number, number]
+  yDomain?: [number, number]
 }
 
 function getD3Scale(type: 'linear' | 'log') {
@@ -203,7 +203,7 @@ export class Chart extends EventEmitter.EventEmitter {
       }
     }
 
-    function computeYScale(xScale: number[]) {
+    function computeYScale(xScale: [number, number]) {
       // assumes that xScale is a linear scale
       const xDiff = xScale[1] - xScale[0]
       return (self.meta.height * xDiff) / self.meta.width
@@ -651,8 +651,8 @@ export class Chart extends EventEmitter.EventEmitter {
   syncOptions() {
     // update the original options yDomain and xDomain, this is done so that next calls to functionPlot()
     // with the same object preserve some of the computed state
-    this.options.xAxis.domain = this.meta.xScale.domain()
-    this.options.yAxis.domain = this.meta.yScale.domain()
+    this.options.xAxis.domain = [this.meta.xScale.domain()[0], this.meta.xScale.domain()[1]]
+    this.options.yAxis.domain = [this.meta.yScale.domain()[0], this.meta.yScale.domain()[1]]
   }
 
   getFontSize() {

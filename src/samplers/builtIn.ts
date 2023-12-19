@@ -51,7 +51,11 @@ function checkAsymptote(
  * through the process of detecting slope/sign brusque changes
  */
 function split(d: FunctionPlotDatum, data: SamplerResultGroup, yScale: FunctionPlotScale): SamplerResult {
-  let oldSign: number
+  if (data.length === 0) {
+    // This case is possible when all the function lied outside the rendering area.
+    return []
+  }
+
   const samplerResult: SamplerResult = []
   const yMin = yScale.domain()[0] - infinity()
   const yMax = yScale.domain()[1] + infinity()
@@ -60,6 +64,7 @@ function split(d: FunctionPlotDatum, data: SamplerResultGroup, yScale: FunctionP
 
   let i = 1
   let deltaX = infinity()
+  let oldSign: number
   while (i < data.length) {
     const yOld = data[i - 1][1]
     const yNew = data[i][1]
