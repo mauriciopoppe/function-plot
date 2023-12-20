@@ -18,10 +18,6 @@ module.exports = {
   },
   module: {
     rules: [
-      // {
-      //   test: /\.worker\./,
-      //   type: 'asset/source'
-      // },
       {
         test: /\.tsx?$/,
         use: 'ts-loader',

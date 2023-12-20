@@ -1,5 +1,5 @@
 import { linspace, sgn, infinity, clamp, space, isValidNumber } from '../utils.mjs'
-import { builtIn as evaluate } from '../helpers/eval.mjs'
+import { builtIn as evaluate } from './eval.mjs'
 
 import { FunctionPlotDatum, FunctionPlotScale } from '../types'
 import { SamplerParams, SamplerFn } from './types'
@@ -52,7 +52,8 @@ function checkAsymptote(
  */
 function split(d: FunctionPlotDatum, data: SamplerResultGroup, yScale: FunctionPlotScale): SamplerResult {
   if (data.length === 0) {
-    // This case is possible when all the function lied outside the rendering area.
+    // This case is possible when the function didn't render any valid points
+    // e.g. when evaluating sqrt(x) with all negative values.
     return []
   }
 

@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-globals */
-import { interval } from '../helpers/eval.mjs'
+import { interval } from './eval.mjs'
 import { linspace } from '../utils.mjs'
 
 self.onmessage = ({ data }) => {

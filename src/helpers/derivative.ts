@@ -1,7 +1,7 @@
 import { select as d3Select, Selection } from 'd3-selection'
 
 import { polyline } from '../graph-types/'
-import { builtIn as builtInEvaluator } from './eval.mjs'
+import { builtIn as builtInEvaluator } from '../samplers/eval.mjs'
 import datumDefaults from '../datum-defaults'
 import { infinity } from '../utils.mjs'
 

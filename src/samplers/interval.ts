@@ -1,6 +1,6 @@
 import intervalArithmeticEval, { Interval } from 'interval-arithmetic-eval'
 
-import { interval as evaluate } from '../helpers/eval.mjs'
+import { interval as evaluate } from './eval.mjs'
 import { infinity, space, interval2dTypedArray } from '../utils.mjs'
 import globals from '../globals.mjs'
 
