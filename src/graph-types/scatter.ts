@@ -2,7 +2,7 @@ import { select as d3Select, Selection } from 'd3-selection'
 import { hsl as d3Hsl } from 'd3-color'
 
 import { color } from '../utils.mjs'
-import { builtInEvaluate } from '../evaluate'
+import { builtInEvaluate } from '../evaluate-datum'
 
 import { Chart } from '../index'
 import { FunctionPlotDatum } from '../types'
@@ -13,7 +13,6 @@ export default function Scatter(chart: Chart) {
 
   function scatter(selection: Selection<any, FunctionPlotDatum, any, any>) {
     selection.each(function (d) {
-      let i, j
       const index = d.index
       const computedColor = color(d, index)
       const evaluatedData = builtInEvaluate(chart, d)
@@ -21,8 +20,8 @@ export default function Scatter(chart: Chart) {
       // scatter doesn't need groups, therefore each group is
       // flattened into a single array
       const joined = []
-      for (i = 0; i < evaluatedData.length; i += 1) {
-        for (j = 0; j < evaluatedData[i].length; j += 1) {
+      for (let i = 0; i < evaluatedData.length; i += 1) {
+        for (let j = 0; j < evaluatedData[i].length; j += 1) {
           joined.push(evaluatedData[i][j])
         }
       }
