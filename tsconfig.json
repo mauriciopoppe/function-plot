@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "module": "esnext",
-    "moduleResolution": "node",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "esModuleInterop": true,
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
@@ -15,7 +15,6 @@
       ]
     },
     "types": ["node", "jest"],
-    "jsx": "react",
     "lib": ["es2022", "dom"]
   },
   "include": [

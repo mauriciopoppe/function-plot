@@ -3,17 +3,16 @@ import { format as d3Format } from 'd3-format'
 import { scaleLinear as d3ScaleLinear, scaleLog as d3ScaleLog } from 'd3-scale'
 import { axisLeft as d3AxisLeft, axisBottom as d3AxisBottom, Axis } from 'd3-axis'
 import { zoom as d3Zoom } from 'd3-zoom'
-// @ts-ignore
 import { select as d3Select, pointer as d3Pointer } from 'd3-selection'
 import { interpolateRound as d3InterpolateRound } from 'd3-interpolate'
 import EventEmitter from 'events'
 
-import { FunctionPlotOptions, FunctionPlotDatum, FunctionPlotScale } from './types'
+import { FunctionPlotOptions, FunctionPlotDatum, FunctionPlotScale } from './types.js'
 
-import annotations from './helpers/annotations'
-import mousetip from './tip'
-import helpers from './helpers'
-import datumDefaults from './datum-defaults'
+import annotations from './helpers/annotations.js'
+import mousetip from './tip.js'
+import helpers from './helpers/index.js'
+import datumDefaults from './datum-defaults.js'
 import globals from './globals.mjs'
 
 export interface ChartMetaMargin {

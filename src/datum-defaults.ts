@@ -1,4 +1,4 @@
-import { FunctionPlotDatum } from './types'
+import { FunctionPlotDatum } from './types.js'
 
 export default function datumDefaults(d: FunctionPlotDatum) {
   // default graphType uses boxes i.e. 2d intervals

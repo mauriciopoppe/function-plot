@@ -7,10 +7,10 @@ import { Bench } from 'tinybench'
 import { scaleLinear } from 'd3-scale'
 
 import globals from '../globals.mjs'
-import { IntervalWorkerPool, BackpressureStrategy } from '../samplers/interval_worker_pool'
-import { FunctionPlotDatum, FunctionPlotOptionsAxis } from '../types'
-import { createPathD } from '../graph-types/interval'
-import { asyncSamplerInterval, syncSamplerInterval } from '../samplers/interval'
+import { IntervalWorkerPool, BackpressureStrategy } from '../samplers/interval_worker_pool.js'
+import { FunctionPlotDatum, FunctionPlotOptionsAxis } from '../types.js'
+import { createPathD } from '../graph-types/interval.js'
+import { asyncSamplerInterval, syncSamplerInterval } from '../samplers/interval.js'
 
 async function createData(nSamples: number, nGroups: number, async: boolean) {
   const width = 500

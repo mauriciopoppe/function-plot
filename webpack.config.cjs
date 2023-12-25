@@ -26,9 +26,12 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: ['.tsx', '.ts', '.js']
+    extensionAlias: {
+      '.js': ['.ts', '.js'],
+      '.mjs': ['.mts', '.mjs']
+    }
   },
-  optimization: {
-    minimize: false
+  stats: {
+    errorDetails: true
   }
 }

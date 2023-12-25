@@ -1,7 +1,7 @@
 import { scaleLinear as d3ScaleLinear } from 'd3-scale'
 import { expect } from '@jest/globals'
 
-import builtIn from './builtIn'
+import builtIn from './builtIn.js'
 
 const width = 200
 const height = 100

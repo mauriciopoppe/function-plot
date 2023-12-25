@@ -1,11 +1,11 @@
-import './polyfills'
+import './polyfills.js'
 
-import { IntervalWorkerPool } from './samplers/interval_worker_pool'
-import { FunctionPlotOptions } from './types'
-import { Chart, ChartMeta, ChartMetaMargin } from './chart'
+import { IntervalWorkerPool } from './samplers/interval_worker_pool.js'
+import { FunctionPlotOptions } from './types.js'
+import { Chart, ChartMeta, ChartMetaMargin } from './chart.js'
 
 import globals, { registerGraphType } from './globals.mjs'
-import { polyline, interval, scatter, text } from './graph-types'
+import { polyline, interval, scatter, text } from './graph-types/index.js'
 import { interval as intervalEval, builtIn as builtInEval } from './samplers/eval.mjs'
 
 // register common graphTypes on library load.
@@ -50,7 +50,7 @@ functionPlot.$eval = {
 functionPlot.graphTypes = { interval, polyline, scatter }
 functionPlot.withWebWorkers = withWebWorkers
 
-export * from './types'
+export * from './types.js'
 export { Chart, ChartMeta, ChartMetaMargin }
 export { registerGraphType, withWebWorkers }
 export { builtIn as EvalBuiltIn, interval as EvalInterval } from './samplers/eval.mjs'
@@ -58,6 +58,6 @@ export {
   interval as GraphTypeInterval,
   polyline as GraphTypePolyline,
   scatter as GraphTypeScatter
-} from './graph-types'
-export { GraphTypePlotter, GraphTypeBuilder } from './graph-types/types'
-export * from './helpers'
+} from './graph-types/index.js'
+export { GraphTypePlotter, GraphTypeBuilder } from './graph-types/types.js'
+export * from './helpers/index.js'

@@ -1,4 +1,4 @@
-import { FunctionPlotDatum, FunctionPlotScale, FunctionPlotOptionsAxis } from '../types'
+import { FunctionPlotDatum, FunctionPlotScale, FunctionPlotOptionsAxis } from '../types.js'
 
 export type SamplerParams = {
   d: FunctionPlotDatum

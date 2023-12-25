@@ -1,8 +1,8 @@
 import { select as d3Select, Selection } from 'd3-selection'
-import derivative from './derivative'
-import secant from './secant'
+import derivative from './derivative.js'
+import secant from './secant.js'
 
-import { Chart } from '../index'
+import { Chart } from '../index.js'
 
 export default function helpers(chart: Chart) {
   function helper(selection: Selection<any, any, any, any>) {

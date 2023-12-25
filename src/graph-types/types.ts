@@ -1,6 +1,7 @@
 import { Selection } from 'd3-selection'
-import { FunctionPlotDatum } from '../types'
-import { Chart } from '../chart'
+
+import { FunctionPlotDatum } from '../types.js'
+import { Chart } from '../chart.js'
 
 /**
  * GraphTypeBuilder is the returned Plotter instance, this function is called
