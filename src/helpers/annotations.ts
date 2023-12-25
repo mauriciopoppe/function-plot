@@ -1,8 +1,8 @@
 import { line as d3Line } from 'd3-shape'
 import { select as d3Select, Selection } from 'd3-selection'
 
-import { FunctionPlotOptions } from '../types'
-import { Chart } from '../index'
+import { FunctionPlotOptions } from '../types.js'
+import { Chart } from '../index.js'
 
 export default function annotations(options: { owner: Chart }) {
   const xScale = options.owner.meta.xScale

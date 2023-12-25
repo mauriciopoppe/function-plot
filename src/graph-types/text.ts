@@ -3,8 +3,8 @@ import { hsl as d3Hsl } from 'd3-color'
 
 import { color } from '../utils.mjs'
 
-import { Chart } from '../index'
-import { FunctionPlotDatum } from '../types'
+import { Chart } from '../index.js'
+import { FunctionPlotDatum } from '../types.js'
 
 export default function Text(chart: Chart) {
   const xScale = chart.meta.xScale

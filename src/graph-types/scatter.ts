@@ -2,10 +2,10 @@ import { select as d3Select, Selection } from 'd3-selection'
 import { hsl as d3Hsl } from 'd3-color'
 
 import { color } from '../utils.mjs'
-import { builtInEvaluate } from '../evaluate-datum'
+import { builtInEvaluate } from '../evaluate-datum.js'
 
-import { Chart } from '../index'
-import { FunctionPlotDatum } from '../types'
+import { Chart } from '../index.js'
+import { FunctionPlotDatum } from '../types.js'
 
 export default function Scatter(chart: Chart) {
   const xScale = chart.meta.xScale

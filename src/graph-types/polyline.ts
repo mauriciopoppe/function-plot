@@ -2,10 +2,10 @@ import { select as d3Select, Selection } from 'd3-selection'
 import { line as d3Line, area as d3Area, curveLinear as d3CurveLinear } from 'd3-shape'
 
 import { color, infinity, clamp } from '../utils.mjs'
-import { builtInEvaluate } from '../evaluate-datum'
+import { builtInEvaluate } from '../evaluate-datum.js'
 
-import { Chart } from '../index'
-import { FunctionPlotDatum } from '../types'
+import { Chart } from '../index.js'
+import { FunctionPlotDatum } from '../types.js'
 
 export default function polyline(chart: Chart) {
   function plotLine(selection: Selection<any, FunctionPlotDatum, any, any>) {

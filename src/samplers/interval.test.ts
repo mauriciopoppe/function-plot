@@ -2,7 +2,7 @@ import { describe, expect, it } from '@jest/globals'
 import { scaleLinear as d3ScaleLinear } from 'd3-scale'
 import { Interval } from 'interval-arithmetic-eval'
 
-import { syncSamplerInterval } from './interval'
+import { syncSamplerInterval } from './interval.js'
 
 const width = 200
 const height = 100

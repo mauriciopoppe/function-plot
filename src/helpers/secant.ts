@@ -1,12 +1,12 @@
 import { select as d3Select, Selection } from 'd3-selection'
 
 import { builtIn as builtInEvaluator } from '../samplers/eval.mjs'
-import datumDefaults from '../datum-defaults'
-import { polyline } from '../graph-types/'
+import datumDefaults from '../datum-defaults.js'
+import { polyline } from '../graph-types/index.js'
 import { infinity } from '../utils.mjs'
 
-import { Chart } from '../index'
-import { FunctionPlotDatumScope, FunctionPlotDatum, FunctionPlotDatumSecant } from '../types'
+import { Chart } from '../index.js'
+import { FunctionPlotDatumScope, FunctionPlotDatum, FunctionPlotDatumSecant } from '../types.js'
 
 export default function secant(chart: Chart) {
   const secantDefaults = datumDefaults({

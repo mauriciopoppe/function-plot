@@ -1,8 +1,8 @@
 import { linspace, sgn, infinity, clamp, space, isValidNumber } from '../utils.mjs'
 import { builtIn as evaluate } from './eval.mjs'
 
-import { FunctionPlotDatum, FunctionPlotScale } from '../types'
-import { SamplerParams, SamplerFn } from './types'
+import { FunctionPlotDatum, FunctionPlotScale } from '../types.js'
+import { SamplerParams, SamplerFn } from './types.js'
 
 type Asymptote = {
   asymptote: boolean

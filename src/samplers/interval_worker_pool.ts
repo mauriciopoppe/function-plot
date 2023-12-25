@@ -1,5 +1,6 @@
-import { FunctionPlotDatum } from '../types'
 import Worker from 'web-worker'
+
+import { FunctionPlotDatum } from '../types.js'
 
 interface IntervalTask {
   d: FunctionPlotDatum
