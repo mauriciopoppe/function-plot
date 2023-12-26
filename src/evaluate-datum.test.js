@@ -1,5 +1,5 @@
-import { builtInEvaluate, intervalEvaluate } from './evaluate'
 import { scaleLinear as d3ScaleLinear } from 'd3-scale'
+import { builtInEvaluate, intervalEvaluate } from './evaluate-datum.js'
 
 const width = 200
 const height = 100
