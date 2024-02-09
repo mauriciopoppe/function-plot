@@ -22,7 +22,8 @@
     "build:site": "cp dist/function-plot.js site/js/function-plot.js",
     "start": "webpack-dev-server",
     "docs": "typedoc --excludeExternals --externalPattern \"**/node_modules/**\" --out site/docs src/index.ts",
-    "test": "jest"
+    "test": "jest",
+    "test:types": "check-dts test/** src/**"
   },
   "files": [
     "/dist"
@@ -67,6 +68,7 @@
     "@typescript-eslint/parser": "^5.37.0",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^9.1.2",
+    "check-dts": "^0.7.2",
     "core-js": "^3.25.2",
     "dox": "^1.0.0",
     "eslint": "^8.23.1",
