@@ -149,7 +149,7 @@ export interface FunctionPlotDatum {
    * - interval: uses the interval arithmetic sampler to render a disjoint set of rectangles
    * - scatter: dotted line
    */
-  graphType?: 'polyline' | 'interval' | 'scatter'
+  graphType?: 'polyline' | 'interval' | 'scatter' | 'text'
 
   /**
    * The type of function to render
