@@ -10,6 +10,14 @@ npm start
 Main page: `http://localhost:8080/`
 Sandbox page: `http://localhost:8080/playground.html`
 
+## Tests
+
+This project is tested with unit tests and image snapshot tests.
+
+```sh
+npm run test
+```
+
 ## Deployment
 
 Deploy steps:

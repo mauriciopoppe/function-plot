@@ -143,8 +143,7 @@ export class IntervalWorkerPool {
         continue
       }
       const idleWorker = this.idleWorkers.shift()
-
-      // console.log(`working on task ${task.nTask}`)
+      // dStripped is a serializable copy of the datum `d`.
       const dStripped: any = {}
       dStripped.fn = task.d.fn
       dStripped.scope = task.d.scope
