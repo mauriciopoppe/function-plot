@@ -51,7 +51,9 @@ export class IntervalWorkerPool {
     for (let i = 0; i < nThreads; i += 1) {
       // NOTE: new URL(...) cannot be a variable!
       // This is a requirement for the webpack worker loader
+      // @ts-ignore
       const worker = new Worker(
+        // @ts-ignore
         new URL(/* webpackChunkName: "asyncIntervalEvaluator" */ './interval.worker.mjs', import.meta.url),
         { type: 'module' }
       )
