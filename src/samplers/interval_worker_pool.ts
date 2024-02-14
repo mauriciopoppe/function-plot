@@ -11,8 +11,8 @@ interface IntervalTask {
   interval2d: Float32Array
 
   // internal
-  valid?: boolean
-  nTask?: number
+  valid: boolean
+  nTask: number
 
   // backpressure is the algorithm to use when there
   // are a lot of tasks pending in the queue
@@ -27,6 +27,9 @@ export enum BackpressureStrategy {
 }
 
 function getTaskId(task: IntervalTask) {
+  if (typeof task.d.index === 'undefined') {
+    throw new Error(`invariant: datum ${task.d} must have an index set but it wasn't set.`)
+  }
   return task.d.index * 1000 + task.nGroup
 }
 

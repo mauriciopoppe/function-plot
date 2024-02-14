@@ -13,7 +13,7 @@ const matchSnapshotConfig = {
 }
 
 describe('Function Plot', () => {
-  let page
+  let page: any
 
   beforeAll(async () => {
     const browser = await puppeteer.launch({ headless: 'new' })
@@ -26,7 +26,7 @@ describe('Function Plot', () => {
     await page.goto('http://localhost:4444/jest-function-plot.html')
   })
 
-  function stripWrappingFunction(fnString) {
+  function stripWrappingFunction(fnString: string) {
     fnString = fnString.replace(/^\s*function\s*\(\)\s*\{/, '')
     fnString = fnString.replace(/\}\s*$/, '')
     return fnString

@@ -21,6 +21,7 @@ const Globals = {
   MAX_ITERATIONS: 0,
   graphTypes: {},
 
+  /** @type {null | any} */
   hiddenWorkerPool: null,
   get workerPool() {
     if (!this.hiddenWorkerPool) {

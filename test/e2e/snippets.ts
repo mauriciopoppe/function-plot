@@ -1,7 +1,8 @@
-// stub function, we aren't going to actually run the function,
-// we just need the contents of the function expressed as a string.
 import functionPlot from '../../src'
 
+// snippets is a list of tests to run in:
+// - the image snapshot tests.
+// - to test typescript types.
 const snippets = [
   {
     testName: 'should render an x^2 graph',
