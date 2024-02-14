@@ -1,6 +1,6 @@
 {
   "name": "function-plot",
-  "version": "1.25.0-0",
+  "version": "2.0.0-0",
   "description": "A simple 2d function plotter powered by d3",
   "license": "MIT",
   "repository": {
