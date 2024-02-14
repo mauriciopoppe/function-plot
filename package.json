@@ -16,8 +16,8 @@
   "jsdelivr": "dist/function-plot.js",
   "unpkg": "dist/function-plot.js",
   "exports": {
-    "default": "./dist/index.js",
-    "umd": "./dist/function-plot.js"
+    "umd": "./dist/function-plot.js",
+    "default": "./dist/index.js"
   },
   "types": "./dist/index.d.ts",
   "scripts": {
@@ -67,7 +67,8 @@
     "d3-shape": "^3.1.0",
     "d3-zoom": "^3.0.0",
     "events": "^3.3.0",
-    "interval-arithmetic-eval": "^0.5.1"
+    "interval-arithmetic-eval": "^0.5.1",
+    "web-worker": "^1.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.19.1",
@@ -118,7 +119,6 @@
     "tsx": "^4.6.2",
     "typedoc": "^0.23.15",
     "typescript": "^4.8.3",
-    "web-worker": "^1.2.0",
     "webpack": "^5.86.0",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^4.11.0"
