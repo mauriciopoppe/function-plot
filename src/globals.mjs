@@ -22,16 +22,18 @@ const Globals = {
   graphTypes: {},
 
   /** @type {null | any} */
-  hiddenWorkerPool: null,
+  _workerPool: null,
+  hasWorkerPool() {
+    return this._workerPool !== null
+  },
   get workerPool() {
-    if (!this.hiddenWorkerPool) {
+    if (!this.hasWorkerPool()) {
       throw new Error('Failed to get web worker pool, did you forget to call withWebWorkers?')
     }
-    return this.hiddenWorkerPool
+    return this._workerPool
   },
-
   set workerPool(workerPool) {
-    this.hiddenWorkerPool = workerPool
+    this._workerPool = workerPool
   }
 }
 
