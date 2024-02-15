@@ -35,6 +35,16 @@ describe('Function Plot', () => {
   snippets.forEach((snippet) => {
     it(snippet.testName, async () => {
       await page.evaluate(stripWrappingFunction(snippet.fn.toString()))
+      // When a function that's evaluated asynchronously runs
+      // it's possible that the rendering didn't happen yet.
+      //
+      // This adds an artificial spin only on functions that are labeled with [async]
+      if (snippet.testName.indexOf('[async]') >= 0) {
+        await new Promise((resolve) => {
+          setTimeout(resolve, 100)
+        })
+      }
+
       const image = await page.screenshot()
       // @ts-ignore
       expect(image).toMatchImageSnapshot(matchSnapshotConfig)

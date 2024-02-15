@@ -190,6 +190,22 @@ const snippets = [
       })
       instance.destroy()
     }
+  },
+  {
+    testName: 'should render x^2 [async]',
+    fn: function () {
+      const nSamples = 1000
+      functionPlot.withWebWorkers(8)
+      functionPlot({
+        target: '#playground',
+        data: [
+          { fn: 'x^2', sampler: 'asyncInterval', nSamples },
+          { fn: 'x^3', sampler: 'asyncInterval', nSamples },
+          { fn: '1/x', sampler: 'asyncInterval', nSamples },
+          { fn: 'sin(x)', sampler: 'asyncInterval', nSamples }
+        ]
+      })
+    }
   }
 ]
 
