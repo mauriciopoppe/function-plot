@@ -6,7 +6,7 @@ import { Chart, ChartMeta, ChartMetaMargin } from './chart.js'
 
 import globals, { registerGraphType } from './globals.mjs'
 import { polyline, interval, scatter, text } from './graph-types/index.js'
-import { interval as intervalEval, builtIn as builtInEval } from './samplers/eval.mjs'
+import { interval as intervalEval, builtIn as builtInEval, registerEvaluator } from './samplers/eval.mjs'
 
 // register common graphTypes on library load.
 registerGraphType('polyline', polyline)
@@ -53,6 +53,7 @@ functionPlot.withWebWorkers = withWebWorkers
 export * from './types.js'
 export { Chart, ChartMeta, ChartMetaMargin }
 export { registerGraphType, withWebWorkers }
+export { registerEvaluator }
 export { builtIn as EvalBuiltIn, interval as EvalInterval } from './samplers/eval.mjs'
 export {
   interval as GraphTypeInterval,

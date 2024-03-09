@@ -231,7 +231,7 @@ that holds the info of the function to render</p></div><div class="code"><pre><c
 <p>Plotting roots can be a challenging problem, most plotters will actually 
 analyze expression of the type $x^{\tfrac{a}{b}}$, particularly they will 
 analyze the denominator of the exponent (to plot in the negative x-axis), 
-interval-arithmetic and math.js come bundled with a useful <code>nthRoot</code> 
+interval-arithmetic comes bundled with a useful <code>nthRoot</code> 
 function to solve these issues</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#root-finding',
   data: [
@@ -691,40 +691,7 @@ functionPlot({
       }
     }
   ]
-})</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="text"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Advanced: sampler</h3>
-<p><code>function-plot</code> uses interval-arithmetic math by default, unfortunately some functions are 
-not implemented yet because of the underlying complexity, for this reason you can always 
-evaluate a function with <img style="width: 50px; height: 15px" src="img/mathjs_330x100.png"/>, 
-to do so make sure that you include <code>math.js</code> before<code> function-plot</code></p>
-<pre><code class="lang-html">&lt;script src=&quot;//cdnjs.cloudflare.com/ajax/libs/mathjs/1.5.2/math.min.js&quot;&gt;&lt;/script&gt;
-</code></pre>
-<p>And then set the following:</p>
-<ul>
-<li><code>sampler: 'builtIn'</code> the parser bundled with function-plot will be replaced with the one 
-in math.js</li>
-<li><code>graphType: 'polyline'</code> or <code>graphType: 'scatter'</code></li>
-</ul></div><div class="code"><pre><code class="javascript">functionPlot({
-  target: '#sampler-mathjs',
-  disableZoom: true,
-  data: [
-    {
-      fn: 'gamma(x)',
-      sampler: 'builtIn',
-      graphType: 'polyline'
-    }
-  ]
-})
-functionPlot({
-  target: '#sampler-tan-mathjs',
-  data: [
-    {
-      fn: 'tan(x)',
-      nSamples: 4000,
-      sampler: 'builtIn',
-      graphType: 'polyline'
-    }
-  ]
-})</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="sampler-mathjs"></span><span class="graph" id="sampler-tan-mathjs"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Advanced: property evaluation</h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="text"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Advanced: property evaluation</h3>
 <p>All of the examples above used a string in the property to evaluate e.g.</p>
 <pre><code> // n
  functionPlot({

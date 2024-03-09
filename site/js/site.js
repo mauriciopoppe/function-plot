@@ -362,7 +362,7 @@ function onSiteDependenciesLoaded() {
    * Plotting roots can be a challenging problem, most plotters will actually
    * analyze expression of the type $x^{\tfrac{a}{b}}$, particularly they will
    * analyze the denominator of the exponent (to plot in the negative x-axis),
-   * interval-arithmetic and math.js come bundled with a useful `nthRoot`
+   * interval-arithmetic comes bundled with a useful `nthRoot`
    * function to solve these issues
    */
   functionPlot({
@@ -964,47 +964,6 @@ function onSiteDependenciesLoaded() {
         attr: {
           'text-anchor': 'end'
         }
-      }
-    ]
-  })
-
-  /**
-   * ### Advanced: sampler
-   *
-   * `function-plot` uses interval-arithmetic math by default, unfortunately some functions are
-   * not implemented yet because of the underlying complexity, for this reason you can always
-   * evaluate a function with <img style="width: 50px; height: 15px" src="img/mathjs_330x100.png"/>,
-   * to do so make sure that you include `math.js` before` function-plot`
-   *
-   * ```html
-   * <script src="//cdnjs.cloudflare.com/ajax/libs/mathjs/1.5.2/math.min.js"></script>
-   * ```
-   *
-   * And then set the following:
-   *
-   * - `sampler: 'builtIn'` the parser bundled with function-plot will be replaced with the one
-   * in math.js
-   * - `graphType: 'polyline'` or `graphType: 'scatter'`
-   */
-  functionPlot({
-    target: '#sampler-mathjs',
-    disableZoom: true,
-    data: [
-      {
-        fn: 'gamma(x)',
-        sampler: 'builtIn',
-        graphType: 'polyline'
-      }
-    ]
-  })
-  functionPlot({
-    target: '#sampler-tan-mathjs',
-    data: [
-      {
-        fn: 'tan(x)',
-        nSamples: 4000,
-        sampler: 'builtIn',
-        graphType: 'polyline'
       }
     ]
   })
