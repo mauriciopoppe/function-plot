@@ -1,0 +1,18 @@
+each c in comments
+  .example
+    .container
+      .row
+        .col-md-6
+          .comment!= c.comment
+          - if (c.experimental)
+            .experimental
+              b Experimental Feature:
+              span it might change without any further notice
+          .code
+            pre
+              code.javascript!= c.code
+        .col-md-6.center-block.demos
+          each id in c.ids
+            span.graph(id=id)
+          - if (c.additionalDOM)
+            div!= c.additionalDOM
