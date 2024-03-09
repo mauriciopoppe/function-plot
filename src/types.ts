@@ -161,7 +161,6 @@ export interface FunctionPlotDatum {
    * The sampler to take samples from `range`, available values are `interval|builtIn`
    *
    * - **NOTE: `builtIn` should only be used when `graphType` is `polyline|scatter`**
-   * - **NOTE: when math.js is included in the webpage it will be used instead of the bundled sampler**
    */
   sampler?: 'interval' | 'builtIn' | 'asyncInterval'
 
