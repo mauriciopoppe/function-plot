@@ -21,9 +21,7 @@
   },
   "types": "./dist/index.d.ts",
   "scripts": {
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d site",
-    "html": "node site.cjs",
+    "html": "node scripts/generate-examples.cjs",
     "build": "npx rimraf dist && npm run html && npm run docs && npm run build:typescript && npm run build:webpack && npm run build:site",
     "build:webpack": "NODE_ENV=production webpack",
     "build:typescript": "tsc && cp src/samplers/*.mjs dist/samplers/",

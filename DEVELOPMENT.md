@@ -20,11 +20,14 @@ npm run test
 
 ## Deployment
 
-Deploy steps:
+Website deployment steps:
 
-- `npm run deploy`
+- `npm run build`
+- Choose a location to release to:
+  - Deploy master: `./node_modules/.bin/gh-pages --dist site --dest master`
+  - Deploy a tag: `./node_modules/.bin/gh-pages --dist site --dest <tag>`
 
 Release steps:
 
-- Do deploy steps first
+- `npm run build`
 - `np major|minor|patch`
