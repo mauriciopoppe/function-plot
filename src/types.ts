@@ -27,6 +27,19 @@ export interface FunctionPlotOptionsAxis {
    * True to invert the direction of the axis
    */
   invert?: boolean
+
+  /**
+   * The position of the axis
+   *
+   * - `sticky`: The axis will be in the center.
+   * - `left`: The axis will be positioned on the left side. (Only for the yAxis)
+   * - `bottom`: The axis will be positioned at the bottom. (Only for the xAxis)
+   *
+   * Default values:
+   * - `xAxis`: `bottom`
+   * - `yAxis`: `left`
+   */
+  position?: 'sticky' | 'left' | 'bottom'
 }
 
 export interface FunctionPlotTip {
