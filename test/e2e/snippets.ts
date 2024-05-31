@@ -206,6 +206,27 @@ const snippets = [
         ]
       })
     }
+  },
+  {
+    testName: 'should render with different postition of the axes',
+    fn: function () {
+      // prettier-ignore
+      functionPlot({
+        target: '#playground',
+        title: 'quadratic with different axes position',
+        width: 580,
+        height: 400,
+        xAxis: {
+          position: 'sticky'
+        },
+        yAxis: {
+          position: 'left'
+        },
+        data: [{
+          fn: 'x^2'
+        }]
+      })
+    }
   }
 ]
 
