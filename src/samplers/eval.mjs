@@ -41,8 +41,7 @@ function registerEvaluator(samplerName, expressionCompiler) {
    * @returns The builtIn evaluator returns a number, the interval evaluator an array
    */
   function evaluate(meta, property, variables) {
-    return getCompiledExpression(meta, property)
-      .eval(Object.assign({}, meta.scope || {}, variables))
+    return getCompiledExpression(meta, property).eval(Object.assign({}, meta.scope || {}, variables))
   }
 
   return evaluate

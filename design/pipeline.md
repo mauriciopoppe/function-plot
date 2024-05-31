@@ -18,9 +18,9 @@ functionPlot({
 There are multiple compute heavy steps that happen in the rendering pipeline:
 
 - Compile + Eval
-  - compile `fn` to a *-eval function (see [interval-arithmetic-eval](https://github.com/mauriciopoppe/interval-arithmetic-eval)
-  or [built-in-math-eval](https://github.com/mauriciopoppe/built-in-math-eval)), the evaluated function is added to the configuration object
-  which becomes.
+  - compile `fn` to a \*-eval function (see [interval-arithmetic-eval](https://github.com/mauriciopoppe/interval-arithmetic-eval)
+    or [built-in-math-eval](https://github.com/mauriciopoppe/built-in-math-eval)), the evaluated function is added to the configuration object
+    which becomes.
 
 ```
 {
@@ -44,15 +44,15 @@ There are multiple compute heavy steps that happen in the rendering pipeline:
 }
 ```
 
-  - The [above interval_ prefixed values are cached](https://github.com/mauriciopoppe/function-plot/blob/7e885aed9a7c6adf6f40823eb457d687efc08a8a/src/helpers/eval.mjs#L73) so that when `functionPlot` is invoked the compilation isn't run many times.
-  - [use `nSamples`](https://github.com/mauriciopoppe/function-plot/blob/b46e07c3281bce5b6bff00050ba3d6a16795a483/src/evaluate.ts#L40)
+- The [above interval\_ prefixed values are cached](https://github.com/mauriciopoppe/function-plot/blob/7e885aed9a7c6adf6f40823eb457d687efc08a8a/src/helpers/eval.mjs#L73) so that when `functionPlot` is invoked the compilation isn't run many times.
+- [use `nSamples`](https://github.com/mauriciopoppe/function-plot/blob/b46e07c3281bce5b6bff00050ba3d6a16795a483/src/evaluate.ts#L40)
   to create [`nSamples` equally distinct points](https://github.com/mauriciopoppe/function-plot/blob/b46e07c3281bce5b6bff00050ba3d6a16795a483/src/samplers/interval.ts#L17),
   e.g. `[x_0, x_1, ..., x_{n_samples - 1}]`
-  - In `O(n)`, iterate over all the points and [evaluate](https://github.com/mauriciopoppe/function-plot/blob/317bea18fb0298d11ecbaa3da53b824a3091ed1a/src/helpers/eval.mjs#L108) each them against the compiled function evaluator (created in the preparation stage),
-    return a data structure that encodes the result (`Array<Array<[Interval, Interval]> | null>`)
+- In `O(n)`, iterate over all the points and [evaluate](https://github.com/mauriciopoppe/function-plot/blob/317bea18fb0298d11ecbaa3da53b824a3091ed1a/src/helpers/eval.mjs#L108) each them against the compiled function evaluator (created in the preparation stage),
+  return a data structure that encodes the result (`Array<Array<[Interval, Interval]> | null>`)
 - Render
   - In `O(n)` iterate over all the results and create a [`<path d={rectanglePaint} />`](https://github.com/mauriciopoppe/function-plot/blob/b46e07c3281bce5b6bff00050ba3d6a16795a483/src/graph-types/interval.ts#L96)
-  where `rectanglePaint` is a [series of commands](https://github.com/mauriciopoppe/function-plot/blob/b46e07c3281bce5b6bff00050ba3d6a16795a483/src/graph-types/interval.ts#L68)
+    where `rectanglePaint` is a [series of commands](https://github.com/mauriciopoppe/function-plot/blob/b46e07c3281bce5b6bff00050ba3d6a16795a483/src/graph-types/interval.ts#L68)
     of the form `M <x> <y> v <width>` which move to `(x, y)` and paint a rectangle of width `width`.
 
 ## Perf stats

@@ -28,9 +28,10 @@
     "build:site": "cp dist/*function-plot.js site/js && cp dist/*function-plot.js.map site/js",
     "start": "webpack-dev-server",
     "docs": "typedoc --excludeExternals --externalPattern \"**/node_modules/**\" --out site/docs src/index.ts",
-    "test": "npm run test:jest && npm run test:types",
+    "test": "npm run test:jest && npm run test:types && npm run test:format",
     "test:jest": "NODE_OPTIONS='--experimental-vm-modules' jest",
     "test:types": "check-dts test/**",
+    "test:format": "prettier -c .",
     "perf:pipeline": "tsx ./src/perf/interval-pipeline.ts"
   },
   "engines": {
@@ -103,6 +104,7 @@
     "jest-puppeteer": "^9.0.2",
     "lodash": "^4.17.21",
     "markdown-it": "^13.0.1",
+    "prettier": "^3.2.5",
     "prismjs": "^1.29.0",
     "pug": "^3.0.2",
     "puppeteer": "^21.6.1",
