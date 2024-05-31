@@ -363,7 +363,6 @@ export class Chart extends EventEmitter.EventEmitter {
     // (so that the functions don't overflow on zoom or drag)
     const id = this.id
     const defs = this.canvas.enter.append('defs')
-
     defs
       .append('clipPath')
       .attr('id', 'function-plot-clip-' + id)
@@ -406,6 +405,7 @@ export class Chart extends EventEmitter.EventEmitter {
       .select('.x.axis')
       .attr('transform', 'translate(0,' + this.meta.height + ')')
       .call(this.meta.xAxis)
+
     this.canvas.merge(this.canvas.enter).select('.y.axis').call(this.meta.yAxis)
   }
 
@@ -632,10 +632,48 @@ export class Chart extends EventEmitter.EventEmitter {
   updateAxes() {
     const instance = this
     const canvas = instance.canvas.merge(instance.canvas.enter)
+
+    // center the axes
     canvas.select('.x.axis').call(instance.meta.xAxis)
+
+    if (this.options.xAxis.position === 'sticky') {
+      const yMin = this.meta.yScale.domain()[0]
+      const yMax = this.meta.yScale.domain()[1]
+
+      const yMid = (yMax + yMin) / 2
+
+      const yScaleFactor = this.meta.height / (yMax - yMin)
+
+      let yTranslation = yScaleFactor * yMid + this.meta.height / 2
+      yTranslation = yTranslation < 0 ? 0 : yTranslation
+      yTranslation = yTranslation > this.meta.height ? this.meta.height : yTranslation
+
+      canvas.select('.x.axis').attr('transform', 'translate(0,' + yTranslation + ')')
+
+      canvas
+        .selectAll('.x.axis path, .x.axis line')
+        .attr('transform', 'translate(0,' + (this.meta.height / 2 - yTranslation + this.meta.height / 2) + ')')
+    }
+
     canvas.select('.y.axis').call(instance.meta.yAxis)
 
-    // updates the style of the axes
+    if (this.options.yAxis.position === 'sticky') {
+      const xMin = this.meta.xScale.domain()[0]
+      const xMax = this.meta.xScale.domain()[1]
+
+      const xMid = (xMax + xMin) / 2
+
+      const xScaleFactor = this.meta.width / (xMin - xMax)
+
+      let xTranslation = xScaleFactor * xMid + this.meta.width / 2
+
+      xTranslation = xTranslation < 0 ? 0 : xTranslation
+      xTranslation = xTranslation > this.meta.width ? this.meta.width : xTranslation
+      canvas.select('.y.axis').attr('transform', 'translate(' + xTranslation + ',0)')
+
+      canvas.selectAll('.y.axis path, .y.axis line').attr('transform', 'translate(' + -xTranslation + ',0)')
+    }
+
     canvas
       .selectAll('.axis path, .axis line')
       .attr('fill', 'none')
@@ -643,7 +681,6 @@ export class Chart extends EventEmitter.EventEmitter {
       .attr('shape-rendering', 'crispedges')
       .attr('opacity', 0.1)
   }
-
   syncOptions() {
     // update the original options yDomain and xDomain, this is done so that next calls to functionPlot()
     // with the same object preserve some of the computed state
