@@ -1,76 +1,74 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head lang="en">
-	<meta charset="UTF-8">
-	<title>demo</title>
-  <style>
-    body {
-      font: 10px sans-serif;
-    }
-    .content {
-      width: 550px;
-      margin: 100px auto;
-    }
-  </style>
-</head>
-<body>
-  <div class="content">
-    <div id="playground"></div>
-    <div>
-      <button id="render-as-image">Render as image</button>
+  <head lang="en">
+    <meta charset="UTF-8" />
+    <title>demo</title>
+    <style>
+      body {
+        font: 10px sans-serif;
+      }
+      .content {
+        width: 550px;
+        margin: 100px auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="content">
+      <div id="playground"></div>
+      <div>
+        <button id="render-as-image">Render as image</button>
+      </div>
+      <img id="as-img" style="display: block" />
     </div>
-    <img id="as-img" style="display: block"></img>
-  </div>
 
-<script src="function-plot.js"></script>
+    <script src="function-plot.js"></script>
 
-<script>
-const loadImage = async url => {
-  const $img = document.createElement('img')
-  $img.src = url
-  return new Promise((resolve, reject) => {
-    $img.onload = () => resolve($img)
-    $img.onerror = reject
-  })
-}
+    <script>
+      const loadImage = async (url) => {
+        const $img = document.createElement('img')
+        $img.src = url
+        return new Promise((resolve, reject) => {
+          $img.onload = () => resolve($img)
+          $img.onerror = reject
+        })
+      }
 
-// renderToImg renders a SVG node to an img node.
-// source https://stackoverflow.com/a/74026755/3341726
-async function renderToImg() {
-  const dataHeader = 'data:image/svg+xml;charset=utf-8'
-  const serializeAsXML = e => (new XMLSerializer()).serializeToString(e)
-  const encodeAsUTF8 = s => `${dataHeader},${encodeURIComponent(s)}`
+      // renderToImg renders a SVG node to an img node.
+      // source https://stackoverflow.com/a/74026755/3341726
+      async function renderToImg() {
+        const dataHeader = 'data:image/svg+xml;charset=utf-8'
+        const serializeAsXML = (e) => new XMLSerializer().serializeToString(e)
+        const encodeAsUTF8 = (s) => `${dataHeader},${encodeURIComponent(s)}`
 
-  const svg = document.querySelector("#playground svg")
-  const svgData = encodeAsUTF8(serializeAsXML(svg))
-  const img = await loadImage(svgData)
+        const svg = document.querySelector('#playground svg')
+        const svgData = encodeAsUTF8(serializeAsXML(svg))
+        const img = await loadImage(svgData)
 
-  const canvas = document.createElement('canvas')
-  canvas.width = svg.clientWidth
-  canvas.height = svg.clientHeight
-  canvas.getContext('2d').drawImage(img, 0, 0, svg.clientWidth, svg.clientHeight)
+        const canvas = document.createElement('canvas')
+        canvas.width = svg.clientWidth
+        canvas.height = svg.clientHeight
+        canvas.getContext('2d').drawImage(img, 0, 0, svg.clientWidth, svg.clientHeight)
 
-  const dataURL = await canvas.toDataURL(`image/png`, 1.0)
-  document.querySelector('#as-img').src = dataURL
-}
+        const dataURL = await canvas.toDataURL(`image/png`, 1.0)
+        document.querySelector('#as-img').src = dataURL
+      }
 
-// initial render
-functionPlot({
-  target: '#playground',
-  data: [
-    {
-      fn: 'x^2',
-      graphType: 'polyline',
-    }
-  ]
-})
+      // initial render
+      functionPlot({
+        target: '#playground',
+        data: [
+          {
+            fn: 'x^2',
+            graphType: 'polyline'
+          }
+        ]
+      })
 
-// Button listener to trigger renderToImg
-document.querySelector('#render-as-image').addEventListener('click', async function () {
-  await renderToImg()
-})
-
-</script>
-
-</body>
+      // Button listener to trigger renderToImg
+      document.querySelector('#render-as-image').addEventListener('click', async function () {
+        await renderToImg()
+      })
+    </script>
+  </body>
 </html>

@@ -4,25 +4,28 @@ const pressed = require('key-pressed')
 const keydown = require('keydown')
 
 module.exports = function (options) {
-  options = extend({
-    key: '<shift>',
-    // true to make the brush mask visible/hidden on keydown
-    // by default the mask will be visible only when the `key`
-    // combination is pressed
-    toggle: false
-  }, options)
+  options = extend(
+    {
+      key: '<shift>',
+      // true to make the brush mask visible/hidden on keydown
+      // by default the mask will be visible only when the `key`
+      // combination is pressed
+      toggle: false
+    },
+    options
+  )
 
   const brush = d3.svg.brush()
   const kd = keydown(options.key)
   let cachedInstance
   let visible = false
 
-  function setBrushState (visible) {
+  function setBrushState(visible) {
     const brushEl = cachedInstance.canvas.selectAll('.zoom-box')
     brushEl.style('display', visible ? null : 'none')
   }
 
-  function inner (instance) {
+  function inner(instance) {
     cachedInstance = instance
     // update the brush scale with the instance scale
     let oldDisableZoom
@@ -47,30 +50,24 @@ module.exports = function (options) {
           const y = [lo[1], hi[1]]
           instance.programmaticZoom(x, y)
         }
-        d3.select(this)
-          .transition()
-          .duration(1)
-          .call(brush.clear())
-          .call(brush.event)
+        d3.select(this).transition().duration(1).call(brush.clear()).call(brush.event)
       })
     const brushEl = instance.canvas.append('g').attr('class', 'brush zoom-box')
-    brushEl
-      .call(brush)
-      .call(brush.event)
+    brushEl.call(brush).call(brush.event)
 
-    instance.canvas.selectAll('.brush .extent')
+    instance.canvas
+      .selectAll('.brush .extent')
       .attr('stroke', '#fff')
       .attr('fill-opacity', 0.125)
       .attr('shape-rendering', 'crispEdges')
 
-    instance.canvas
-      .on('mousemove.zoombox', function () {
-        // options.toggle sets the mask visibility when all the required
-        // are pressed once and it's not disabled on keyup
-        if (!options.toggle) {
-          inner.visible(pressed(options.key))
-        }
-      })
+    instance.canvas.on('mousemove.zoombox', function () {
+      // options.toggle sets the mask visibility when all the required
+      // are pressed once and it's not disabled on keyup
+      if (!options.toggle) {
+        inner.visible(pressed(options.key))
+      }
+    })
     kd.on('pressed', function () {
       inner.visible(options.toggle ? !inner.visible() : true)
     })

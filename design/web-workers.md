@@ -256,15 +256,14 @@ functionPlot({
   width: window.innerWidth,
   height: window.innerHeight,
   data: [
-    { fn: 'x^2', nSamples: window.innerWidth*5, sampler: 'interval' },
-    { fn: 'sin(x)', nSamples: window.innerWidth*5, sampler: 'interval' },
-    { fn: '1/x', nSamples: window.innerWidth*5, sampler: 'interval' },
+    { fn: 'x^2', nSamples: window.innerWidth * 5, sampler: 'interval' },
+    { fn: 'sin(x)', nSamples: window.innerWidth * 5, sampler: 'interval' },
+    { fn: '1/x', nSamples: window.innerWidth * 5, sampler: 'interval' }
   ]
 })
 ```
 
 ![render sync](https://github.com/mauriciopoppe/function-plot/assets/1616682/db33228b-4180-4a7a-8c30-5904dccb2bc6)
-
 
 **Async render**
 
@@ -275,12 +274,11 @@ functionPlot({
   width: window.innerWidth,
   height: window.innerHeight,
   data: [
-    { fn: 'x^2', nSamples: window.innerWidth*5, sampler: 'asyncInterval' },
-    { fn: 'sin(x)', nSamples: window.innerWidth*5, sampler: 'asyncInterval' },
-    { fn: '1/x', nSamples: window.innerWidth*5, sampler: 'asyncInterval' },
+    { fn: 'x^2', nSamples: window.innerWidth * 5, sampler: 'asyncInterval' },
+    { fn: 'sin(x)', nSamples: window.innerWidth * 5, sampler: 'asyncInterval' },
+    { fn: '1/x', nSamples: window.innerWidth * 5, sampler: 'asyncInterval' }
   ]
 })
 ```
 
 ![render async](https://github.com/mauriciopoppe/function-plot/assets/1616682/56432b1b-5dd4-4296-b251-68bf05cf5caf)
-

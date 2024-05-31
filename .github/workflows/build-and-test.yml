@@ -59,4 +59,3 @@ jobs:
 
       - name: Perf
         run: npm run perf:pipeline
-

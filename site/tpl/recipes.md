@@ -42,9 +42,9 @@ Given the `xDomain` values you can compute the corresponding `yDomain` values to
 the aspect ratio between the axes
 
 ```javascript
-function computeYScale (width, height, xScale) {
+function computeYScale(width, height, xScale) {
   const xDiff = xScale[1] - xScale[0]
-  const yDiff = height * xDiff / width
+  const yDiff = (height * xDiff) / width
   return [-yDiff / 2, yDiff / 2]
 }
 
@@ -61,13 +61,15 @@ functionPlot({
   yDomain: computeYScale(width, height, xScale),
 
   target: '#demo',
-  data: [{
-    fn: 'x^2',
-    derivative: {
-      fn: '2x',
-      updateOnMouseMove: true
+  data: [
+    {
+      fn: 'x^2',
+      derivative: {
+        fn: '2x',
+        updateOnMouseMove: true
+      }
     }
-  }]
+  ]
 })
 ```
 

@@ -155,7 +155,10 @@ export default function mouseTip(config: FunctionPlotTip) {
       selection.style('color', 'red')
       selection.attr('transform', 'translate(' + xScale(clampX) + ',' + yScale(clampY) + ')')
       selection.select('circle').attr('fill', computedColor)
-      selection.select('text').attr('fill', computedColor).text(config.renderer(x, y, closestIndex))
+      selection
+        .select('text')
+        .attr('fill', computedColor)
+        .text(config.renderer(x, y, closestIndex))
     } else {
       tip.hide()
     }

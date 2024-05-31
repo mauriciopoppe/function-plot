@@ -11,19 +11,11 @@
     "baseUrl": ".",
     "declaration": true,
     "paths": {
-      "*": [
-        "node_modules/*"
-      ]
+      "*": ["node_modules/*"]
     },
     "types": ["node", "jest"],
     "lib": ["es2022", "dom"]
   },
-  "include": [
-    "./src/**/*.ts",
-    "./src/**/*.js",
-    "./src/**/*.d.ts"
-  ],
-  "exclude": [
-    "src/stories/**/*"
-  ]
+  "include": ["./src/**/*.ts", "./src/**/*.js", "./src/**/*.d.ts"],
+  "exclude": ["src/stories/**/*"]
 }
