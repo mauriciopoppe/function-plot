@@ -23,11 +23,11 @@ const snippets = [
         width: 580,
         height: 400,
         disableZoom: true,
-        xAxis: {
+        x: {
           label: 'x - axis',
           domain: [-6, 6]
         },
-        yAxis: {
+        y: {
           label: 'y - axis'
         },
         data: [{
@@ -42,10 +42,10 @@ const snippets = [
       // prettier-ignore
       functionPlot({
         target: '#playground',
-        xAxis: {
+        x: {
           label: 'real'
         },
-        yAxis: {
+        y: {
           label: 'imaginary'
         },
         grid: true,
@@ -62,8 +62,8 @@ const snippets = [
       // prettier-ignore
       functionPlot({
         target: '#playground',
-        yAxis: { domain: [-1, 1] },
-        xAxis: { domain: [8, 24] },
+        y: { domain: [-1, 1] },
+        x: { domain: [8, 24] },
         data: [{
           fn: 'sin(x)'
         }]
@@ -90,7 +90,7 @@ const snippets = [
       // prettier-ignore
       functionPlot({
         target: '#playground',
-        yAxis: { domain: [-1, 9] },
+        y: { domain: [-1, 9] },
         data: [{
           fn: 'x^2'
         }],
@@ -112,7 +112,7 @@ const snippets = [
       // prettier-ignore
       functionPlot({
         target: '#playground',
-        xAxis: { domain: [-2, 12] },
+        x: { domain: [-2, 12] },
         data: [{
           fn: '3 + sin(x)',
           range: [2, 8],
@@ -126,11 +126,11 @@ const snippets = [
     fn: function () {
       functionPlot({
         target: '#playground',
-        xAxis: {
+        x: {
           type: 'log',
           domain: [0.01, 1]
         },
-        yAxis: {
+        y: {
           domain: [-100, 100]
         },
         grid: true,
@@ -208,7 +208,7 @@ const snippets = [
     }
   },
   {
-    testName: 'should render with different postition of the axes',
+    testName: 'should render with different position of the axes',
     fn: function () {
       // prettier-ignore
       functionPlot({
@@ -216,11 +216,11 @@ const snippets = [
         title: 'quadratic with different axes position',
         width: 580,
         height: 400,
-        xAxis: {
+        x: {
           position: 'sticky'
         },
-        yAxis: {
-          position: 'left'
+        y: {
+          position: 'sticky'
         },
         data: [{
           fn: 'x^2'

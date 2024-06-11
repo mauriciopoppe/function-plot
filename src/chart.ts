@@ -7,7 +7,7 @@ import { select as d3Select, pointer as d3Pointer } from 'd3-selection'
 import { interpolateRound as d3InterpolateRound } from 'd3-interpolate'
 import EventEmitter from 'events'
 
-import { FunctionPlotOptions, FunctionPlotDatum, FunctionPlotScale } from './types.js'
+import { FunctionPlotOptions, FunctionPlotDatum, FunctionPlotScale, FunctionPlotOptionsAxis } from './types.js'
 
 import annotations from './helpers/annotations.js'
 import mousetip from './tip.js'
@@ -128,7 +128,7 @@ export class Chart extends EventEmitter.EventEmitter {
     const n = Math.random()
     const letter = String.fromCharCode(Math.floor(n * 26) + 97)
     this.options = options
-    this.id = letter + n.toString(16).substr(2)
+    this.id = letter + n.toString(16).substring(2)
     this.options.id = this.id
     this.markerId = this.id + '-marker'
     Chart.cache[this.id] = this
@@ -208,13 +208,13 @@ export class Chart extends EventEmitter.EventEmitter {
       return (self.meta.height * xDiff) / self.meta.width
     }
 
-    this.options.xAxis = this.options.xAxis || {}
-    this.options.xAxis.type = this.options.xAxis.type || 'linear'
+    this.options.x = this.options.x || {}
+    this.options.x.type = this.options.x.type || 'linear'
 
-    this.options.yAxis = this.options.yAxis || {}
-    this.options.yAxis.type = this.options.yAxis.type || 'linear'
+    this.options.y = this.options.y || {}
+    this.options.y.type = this.options.y.type || 'linear'
 
-    const xDomain = (this.meta.xDomain = (function (axis) {
+    const xDomain = (this.meta.xDomain = (function (axis: FunctionPlotOptionsAxis) {
       if (axis.domain) {
         return axis.domain
       }
@@ -225,9 +225,9 @@ export class Chart extends EventEmitter.EventEmitter {
         return [1, 10]
       }
       throw Error('axis type ' + axis.type + ' unsupported')
-    })(this.options.xAxis))
+    })(this.options.x))
 
-    const yDomain = (this.meta.yDomain = (function (axis) {
+    const yDomain = (this.meta.yDomain = (function (axis: FunctionPlotOptionsAxis) {
       if (axis.domain) {
         return axis.domain
       }
@@ -238,23 +238,23 @@ export class Chart extends EventEmitter.EventEmitter {
         return [1, 10]
       }
       throw Error('axis type ' + axis.type + ' unsupported')
-    })(this.options.yAxis))
+    })(this.options.y))
 
     if (!this.meta.xScale) {
-      this.meta.xScale = getD3Scale(this.options.xAxis.type)()
+      this.meta.xScale = getD3Scale(this.options.x.type)()
     }
     this.meta.xScale
       .domain(xDomain)
       // @ts-ignore domain always returns typeof this.meta.xDomain
-      .range(this.options.xAxis.invert ? [this.meta.width, 0] : [0, this.meta.width])
+      .range(this.options.x.invert ? [this.meta.width, 0] : [0, this.meta.width])
 
     if (!this.meta.yScale) {
-      this.meta.yScale = getD3Scale(this.options.yAxis.type)()
+      this.meta.yScale = getD3Scale(this.options.y.type)()
     }
     this.meta.yScale
       .domain(yDomain)
       // @ts-ignore domain always returns typeof this.meta.yDomain
-      .range(this.options.yAxis.invert ? [0, this.meta.height] : [this.meta.height, 0])
+      .range(this.options.y.invert ? [0, this.meta.height] : [this.meta.height, 0])
 
     if (!this.meta.xAxis) {
       this.meta.xAxis = d3AxisBottom(this.meta.xScale)
@@ -421,7 +421,7 @@ export class Chart extends EventEmitter.EventEmitter {
       .merge(canvas.enter)
       .selectAll('text.x.axis-label')
       .data(function (d: FunctionPlotOptions) {
-        return [d.xAxis.label].filter(Boolean)
+        return [d.x.label].filter(Boolean)
       })
     // prettier-ignore
     const xLabelEnter = xLabel.enter().append('text')
@@ -442,7 +442,7 @@ export class Chart extends EventEmitter.EventEmitter {
       .merge(canvas.enter)
       .selectAll('text.y.axis-label')
       .data(function (d: FunctionPlotOptions) {
-        return [d.yAxis.label].filter(Boolean)
+        return [d.y.label].filter(Boolean)
       })
 
     const yLabelEnter = yLabel
@@ -490,7 +490,7 @@ export class Chart extends EventEmitter.EventEmitter {
       .attr('class', 'content')
 
     // helper line, x = 0
-    if (this.options.xAxis.type === 'linear') {
+    if (this.options.x.type === 'linear') {
       const yOrigin = content
         .merge(contentEnter)
         .selectAll(':scope > path.y.origin')
@@ -510,7 +510,7 @@ export class Chart extends EventEmitter.EventEmitter {
     }
 
     // helper line y = 0
-    if (this.options.yAxis.type === 'linear') {
+    if (this.options.y.type === 'linear') {
       const xOrigin = content
         .merge(contentEnter)
         .selectAll(':scope > path.x.origin')
@@ -636,15 +636,13 @@ export class Chart extends EventEmitter.EventEmitter {
     const instance = this
     const canvas = instance.canvas.merge(instance.canvas.enter)
 
-    // center the axes
+    // Draw the x-axis
     canvas.select('.x.axis').call(instance.meta.xAxis)
 
-    if (this.options.xAxis.position === 'sticky') {
+    if (this.options.x.position === 'sticky') {
       const yMin = this.meta.yScale.domain()[0]
       const yMax = this.meta.yScale.domain()[1]
-
       const yMid = (yMax + yMin) / 2
-
       const yScaleFactor = this.meta.height / (yMax - yMin)
 
       let yTranslation = yScaleFactor * yMid + this.meta.height / 2
@@ -658,18 +656,16 @@ export class Chart extends EventEmitter.EventEmitter {
         .attr('transform', 'translate(0,' + (this.meta.height / 2 - yTranslation + this.meta.height / 2) + ')')
     }
 
+    // Draw the y-axis
     canvas.select('.y.axis').call(instance.meta.yAxis)
 
-    if (this.options.yAxis.position === 'sticky') {
+    if (this.options.y.position === 'sticky') {
       const xMin = this.meta.xScale.domain()[0]
       const xMax = this.meta.xScale.domain()[1]
-
       const xMid = (xMax + xMin) / 2
-
       const xScaleFactor = this.meta.width / (xMin - xMax)
 
       let xTranslation = xScaleFactor * xMid + this.meta.width / 2
-
       xTranslation = xTranslation < 0 ? 0 : xTranslation
       xTranslation = xTranslation > this.meta.width ? this.meta.width : xTranslation
       canvas.select('.y.axis').attr('transform', 'translate(' + xTranslation + ',0)')
@@ -687,8 +683,8 @@ export class Chart extends EventEmitter.EventEmitter {
   syncOptions() {
     // update the original options yDomain and xDomain, this is done so that next calls to functionPlot()
     // with the same object preserve some of the computed state
-    this.options.xAxis.domain = [this.meta.xScale.domain()[0], this.meta.xScale.domain()[1]]
-    this.options.yAxis.domain = [this.meta.yScale.domain()[0], this.meta.yScale.domain()[1]]
+    this.options.x.domain = [this.meta.xScale.domain()[0], this.meta.xScale.domain()[1]]
+    this.options.y.domain = [this.meta.yScale.domain()[0], this.meta.yScale.domain()[1]]
   }
 
   getFontSize() {

@@ -6,7 +6,7 @@ const height = 100
 const nSamples = 100
 const config = {
   options: {
-    xAxis: {
+    x: {
       type: 'linear'
     }
   },

@@ -12,10 +12,17 @@
         color: black;
         font-size: 14px;
       }
+      #playground-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
     </style>
   </head>
   <body>
-    <div id="playground"></div>
+    <div id="playground-wrapper">
+      <div id="playground"></div>
+    </div>
     <script src="./function-plot.js"></script>
     <script>
       functionPlot.withWebWorkers(8)
