@@ -9,14 +9,14 @@ export type FunctionPlotScale = ScaleLinear<number, number> | ScaleLogarithmic<n
 
 export interface FunctionPlotOptionsAxis {
   /**
-   * Initial ends of the axis
-   */
-  domain?: [number, number]
-
-  /**
    * The type of axis
    */
   type?: 'linear' | 'log'
+
+  /**
+   * Initial ends of the axis
+   */
+  domain?: [number, number]
 
   /**
    * The label to display next to the axis
@@ -319,24 +319,14 @@ export interface FunctionPlotOptions {
   height?: number
 
   /**
-   * The x-axis configuration
+   * x-axis configuration
    */
-  xAxis?: FunctionPlotOptionsAxis
+  x?: FunctionPlotOptionsAxis
 
   /**
-   * The y-axis configuration
+   * y-axis configuration
    */
-  yAxis?: FunctionPlotOptionsAxis
-
-  /**
-   * The x-axis domain, internally state used to preserve the x-domain across multiple calls to function plot
-   */
-  xDomain?: [number, number]
-
-  /**
-   * The y-axis domain, internally state used to preserve the y-domain across multiple calls to function plot
-   */
-  yDomain?: [number, number]
+  y?: FunctionPlotOptionsAxis
 
   /**
    * The tip configuration

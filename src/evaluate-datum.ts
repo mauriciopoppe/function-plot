@@ -33,8 +33,8 @@ function builtInEvaluate(chart: Chart, d: FunctionPlotDatum) {
     range: getRange(chart.meta.xScale, d),
     xScale: chart.meta.xScale,
     yScale: chart.meta.yScale,
-    xAxis: chart.options.xAxis,
-    yAxis: chart.options.yAxis,
+    xAxis: chart.options.x,
+    yAxis: chart.options.y,
     nSamples: getSamples(d.nSamples, chart.meta.width)
   })
   // NOTE: it's impossible to listen for the first eval event
@@ -49,8 +49,8 @@ function intervalEvaluate(chart: Chart, d: FunctionPlotDatum) {
     range: getRange(chart.meta.xScale, d),
     xScale: chart.meta.xScale,
     yScale: chart.meta.yScale,
-    xAxis: chart.options.xAxis,
-    yAxis: chart.options.yAxis,
+    xAxis: chart.options.x,
+    yAxis: chart.options.y,
     nSamples: getSamples(d.nSamples, chart.meta.width)
   })
   // NOTE: it's impossible to listen for the first eval event
@@ -65,8 +65,8 @@ async function asyncIntervalEvaluate(chart: Chart, d: FunctionPlotDatum) {
     range: getRange(chart.meta.xScale, d),
     xScale: chart.meta.xScale,
     yScale: chart.meta.yScale,
-    xAxis: chart.options.xAxis,
-    yAxis: chart.options.yAxis,
+    xAxis: chart.options.x,
+    yAxis: chart.options.y,
     nSamples: getSamples(d.nSamples, chart.meta.width)
   })
   // NOTE: it's impossible to listen for the first eval event

@@ -23,12 +23,12 @@ functions to be evaluated</p></div><div class="code"><pre><code class="javascrip
 <li><code>title</code>: the title of the graph</li>
 <li><code>width</code>: width of the graph</li>
 <li><code>height</code>: height of the graph</li>
-<li><code>xAxis</code>:</li>
+<li><code>x</code>:</li>
 <li><code>type</code>: the type of scale for this axis, possible values <code>linear|log</code> 
 (default value: <code>'linear'</code>)</li>
 <li><code>label</code>: x axis label</li>
 <li><code>domain</code>: x axis possible values (see examples below)</li>
-<li><code>yAxis</code>: same options as <code>xAxis</code></li>
+<li><code>y</code>: same options as <code>x</code></li>
 <li><code>disableZoom</code>: true to disable translation/scaling on the graph</li>
 </ul></div><div class="code"><pre><code class="javascript">functionPlot({
   title: 'y = x * x',
@@ -36,11 +36,11 @@ functions to be evaluated</p></div><div class="code"><pre><code class="javascrip
   width: 580,
   height: 400,
   disableZoom: true,
-  xAxis: {
+  x: {
     label: 'x - axis',
     domain: [-6, 6]
   },
-  yAxis: {
+  y: {
     label: 'y - axis'
   },
   data: [
@@ -51,10 +51,10 @@ functions to be evaluated</p></div><div class="code"><pre><code class="javascrip
 })</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="quadratic-with-options"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Grid</h3>
 <p>Set <code>grid: true</code> in the options sent to function plot</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#grid',
-  xAxis: {
+  x: {
     label: 'real'
   },
-  yAxis: {
+  y: {
     label: 'imaginary'
   },
   grid: true,
@@ -72,8 +72,8 @@ $$</p>
 <p>NOTE: The origin is at the center of the graph by default so $yDiff$ is split in half and distributed 
 evenly to the $\pm y$ axis</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#domain',
-  yAxis: { domain: [-1, 1] },
-  xAxis: { domain: [8, 24] },
+  y: { domain: [-1, 1] },
+  x: { domain: [8, 24] },
   data: [
     {
       fn: 'sin(x)'
@@ -109,7 +109,7 @@ $$</p></div><div class="code"><pre><code class="javascript">functionPlot({
 <p>NOTE: either <code>x</code> or <code>y</code> need to be set on the object, setting both of them 
 will raise an exception</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#annotations',
-  yAxis: { domain: [-1, 9] },
+  y: { domain: [-1, 9] },
   data: [
     {
       fn: 'x^2'
@@ -138,7 +138,7 @@ instead of a polyline, for example we can render a <a href="http://mathworld.wol
 <li><code>closed</code>: true to render a closed path, <code>y0</code> will always be 0 and <code>y1</code> will be $fn(x)$</li>
 </ul></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#closed',
-  xAxis: { domain: [-2, 12] },
+  x: { domain: [-2, 12] },
   data: [
     {
       fn: '3 + sin(x)',
@@ -148,14 +148,14 @@ instead of a polyline, for example we can render a <a href="http://mathworld.wol
   ]
 })</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="closed"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Logarithmic scales</h3>
 <p>The type of each axis can be configured to be logarithmic by specifying the 
-type of axis to <code>log</code> inside the  <code>xAxis</code> option, note how this 
+type of axis to <code>log</code> inside the  <code>x</code> option, note how this 
 change affects the way the functions are sampled</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#logarithmic',
-  xAxis: {
+  x: {
     type: 'log',
     domain: [0.01, 1]
   },
-  yAxis: {
+  y: {
     domain: [-100, 100]
   },
   grid: true,
@@ -252,8 +252,8 @@ and $(x_1, f(x_1))$ will be computed dynamically based on the mouse abscissa</p>
 position of the mouse</li>
 </ul></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#secant',
-  yAxis: { domain: [-1, 9] },
-  xAxis: { domain: [-3, 3] },
+  y: { domain: [-1, 9] },
+  x: { domain: [-3, 3] },
   data: [
     {
       fn: 'x^2',
@@ -297,7 +297,7 @@ whose tangent will be computed</li>
 position of the mouse</li>
 </ul></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#derivative',
-  yAxis: { domain: [-1, 9] },
+  y: { domain: [-1, 9] },
   data: [
     {
       fn: 'x^2',
@@ -312,7 +312,7 @@ position of the mouse</li>
 inside the canvas (let $x_0$ be the mouse's abscissa then the tangent line to the point 
 $(x_0, f(x_0))$ is computed whenever the position of the mouse changes)</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#derivative-update',
-  yAxis: { domain: [-1, 9] },
+  y: { domain: [-1, 9] },
   data: [
     {
       fn: 'x^2',
@@ -351,13 +351,13 @@ on <code>a</code> and <code>b</code>, but when <code>b</code> fires the <code>al
 performed on <code>b</code></p></div><div class="code"><pre><code class="javascript">a = functionPlot({
   target: '#linked-a',
   height: 250,
-  xAxis: { domain: [-10, 10] },
+  x: { domain: [-10, 10] },
   data: [{ fn: 'x * x' }]
 })
 b = functionPlot({
   target: '#linked-b',
   height: 250,
-  xAxis: { domain: [-10, 10] },
+  x: { domain: [-10, 10] },
   data: [{ fn: '2 * x' }]
 })
 a.addLink(b)</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="linked-a"></span><span class="graph" id="linked-b"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Linked graphs <div class="small">Multiple</div></h3>
@@ -371,19 +371,19 @@ zoom operation, in the following example these functions are plotted:</p>
 </ul></div><div class="code"><pre><code class="javascript">a = functionPlot({
   target: '#linked-a-multiple',
   height: 250,
-  xAxis: { domain: [-10, 10] },
+  x: { domain: [-10, 10] },
   data: [{ fn: 'x * x' }]
 })
 b = functionPlot({
   target: '#linked-b-multiple',
   height: 250,
-  xAxis: { domain: [-10, 10] },
+  x: { domain: [-10, 10] },
   data: [{ fn: '2 * x' }]
 })
 c = functionPlot({
   target: '#linked-c-multiple',
   height: 250,
-  xAxis: { domain: [-10, 10] },
+  x: { domain: [-10, 10] },
   data: [{ fn: '2' }]
 })
 a.addLink(b, c)
@@ -467,8 +467,8 @@ $$</p>
 y = \sqrt{1 - x^2} \quad and \quad y = -\sqrt{1 - x^2} 
 $$</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#circle-explicit',
-  yAxis: { domain: [-1.897959183, 1.897959183] },
-  xAxis: { domain: [-3, 3] },
+  y: { domain: [-1.897959183, 1.897959183] },
+  x: { domain: [-3, 3] },
   data: [{ fn: 'sqrt(1 - x * x)' }, { fn: '-sqrt(1 - x * x)' }]
 })</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="circle-explicit"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Parametric equations</h3>
 <p>The original equation of the circle $x^2 + y^2 = 1$ can be parametrized as</p>
@@ -491,8 +491,8 @@ set in the property <code>nSamples</code></li>
 instead of rectangles generated by the interval-arithmetic sampler set 
 <code>graphType: 'polyline'</code> which uses the normal single point evaluation</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#parametric-circle',
-  yAxis: { domain: [-1.897959183, 1.897959183] },
-  xAxis: { domain: [-3, 3] },
+  y: { domain: [-1.897959183, 1.897959183] },
+  x: { domain: [-3, 3] },
   data: [
     {
       x: 'cos(t)',
@@ -509,8 +509,8 @@ x = sin(t)(e^{cos(t)} - 2cos(4t) - sin(\tfrac{t}{12})^5) \\
 y = cos(t)(e^{cos(t)} - 2cos(4t) - sin(\tfrac{t}{12})^5) 
 $$</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#butterfly-curve',
-  yAxis: { domain: [-4.428571429, 4.428571429] },
-  xAxis: { domain: [-7, 7] },
+  y: { domain: [-4.428571429, 4.428571429] },
+  x: { domain: [-7, 7] },
   data: [
     {
       x: 'sin(t) * (exp(cos(t)) - 2 cos(4t) - sin(t/12)^5)',
@@ -540,8 +540,8 @@ set in the property <code>samples</code></li>
 instead of rectangles generated by the interval-arithmetic sampler set 
 <code>graphType: 'polyline'</code> which uses the normal single point evaluation</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#polar-circle',
-  yAxis: { domain: [-1.897959183, 1.897959183] },
-  xAxis: { domain: [-3, 3] },
+  y: { domain: [-1.897959183, 1.897959183] },
+  x: { domain: [-3, 3] },
   data: [
     {
       r: 'r0 * cos(theta - gamma) + sqrt(a^2 - r0^2 * (sin(theta - gamma))^2)',
@@ -560,8 +560,8 @@ instead of rectangles generated by the interval-arithmetic sampler set
 r = 2 sin(4 \theta) 
 $$</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#polar-complex',
-  yAxis: { domain: [-1.897959183, 1.897959183] },
-  xAxis: { domain: [-3, 3] },
+  y: { domain: [-1.897959183, 1.897959183] },
+  x: { domain: [-3, 3] },
   data: [
     {
       r: '2 * sin(4 theta)',
@@ -587,8 +587,8 @@ $$</p>
 </ul>
 <p>NOTE: implicit functions can only be rendered with interval-arithmetic</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#circle-implicit',
-  yAxis: { domain: [-1.897959183, 1.897959183] },
-  xAxis: { domain: [-3, 3] },
+  y: { domain: [-1.897959183, 1.897959183] },
+  x: { domain: [-3, 3] },
   data: [
     {
       fn: 'x * x + y * y - 1',
@@ -604,7 +604,7 @@ $$</p>
 of functions, however for a finite region of the plane a finite number of functions suffice</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#implicit-complex',
   yAxis: { domain: [-3.795918366, 3.795918366] },
-  xAxis: { domain: [-6, 6] },
+  x: { domain: [-6, 6] },
   disableZoom: true,
   data: [
     {
@@ -658,7 +658,7 @@ functionPlot({
 <li><code>graphType: 'polyline'</code> to render a nice segment from <code>offset</code> to <code>offset + vector</code></li>
 </ul></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#vector',
-  xAxis: { domain: [-3, 8] },
+  x: { domain: [-3, 8] },
   grid: true,
   data: [
     {
