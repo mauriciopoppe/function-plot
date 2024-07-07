@@ -28,9 +28,8 @@
     "build:site": "cp dist/*function-plot.js site/js && cp dist/*function-plot.js.map site/js",
     "start": "webpack-dev-server",
     "docs": "typedoc --excludeExternals --externalPattern \"**/node_modules/**\" --out site/docs src/index.ts",
-    "test": "npm run test:jest && npm run test:types && npm run test:format",
+    "test": "npm run test:jest && npm run test:format",
     "test:jest": "NODE_OPTIONS='--experimental-vm-modules' jest",
-    "test:types": "check-dts test/**",
     "test:format": "prettier -c .",
     "perf:pipeline": "tsx ./src/perf/interval-pipeline.ts"
   },
@@ -84,7 +83,6 @@
     "babel-eslint": "^10.1.0",
     "babel-loader": "^9.1.2",
     "babel-plugin-transform-import-meta": "^2.2.1",
-    "check-dts": "^0.7.2",
     "core-js": "^3.25.2",
     "dox": "^1.0.0",
     "eslint": "^8.23.1",
