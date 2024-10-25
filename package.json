@@ -65,8 +65,7 @@
     "d3-shape": "^3.1.0",
     "d3-zoom": "^3.0.0",
     "events": "^3.3.0",
-    "interval-arithmetic-eval": "^0.5.1",
-    "web-worker": "^1.2.0"
+    "interval-arithmetic-eval": "^0.5.1"
   },
   "devDependencies": {
     "@babel/core": "^7.19.1",
