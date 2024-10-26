@@ -38,7 +38,7 @@ export default function functionPlot(options: FunctionPlotOptions) {
   if (!instance) {
     instance = new Chart(options)
   }
-  return instance.build()
+  return instance.plot()
 }
 
 functionPlot.globals = globals

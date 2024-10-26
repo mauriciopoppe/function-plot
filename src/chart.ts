@@ -149,9 +149,9 @@ export class Chart extends EventEmitter.EventEmitter {
    *
    * @returns Chart
    */
-  build() {
-    this.internalVars()
-    this.drawGraphWrapper()
+  plot() {
+    this.buildInternalVars()
+    this.render()
     return this
   }
 
@@ -175,7 +175,7 @@ export class Chart extends EventEmitter.EventEmitter {
     return cachedInstance
   }
 
-  internalVars() {
+  private buildInternalVars() {
     const margin = (this.meta.margin = { left: 40, right: 20, top: 20, bottom: 20 })
     // if there's a title make the top margin bigger
     if (this.options.title) {
@@ -188,7 +188,7 @@ export class Chart extends EventEmitter.EventEmitter {
     this.initializeAxes()
   }
 
-  initializeAxes() {
+  private initializeAxes() {
     const self = this
 
     const integerFormat = d3Format('~s')
@@ -274,7 +274,7 @@ export class Chart extends EventEmitter.EventEmitter {
       })
   }
 
-  drawGraphWrapper() {
+  private render() {
     const root = (this.root = d3Select(this.options.target as any)
       .selectAll('svg')
       .data([this.options]))
@@ -283,7 +283,7 @@ export class Chart extends EventEmitter.EventEmitter {
     // prettier-ignore
     this.root.enter = root.enter().append('svg')
       .attr('class', 'function-plot')
-      .attr('font-size', this.getFontSize())
+      .attr('font-size', Math.max(Math.max(this.meta.width, this.meta.height) / 50, 8))
 
     // enter + update
     root
@@ -302,16 +302,14 @@ export class Chart extends EventEmitter.EventEmitter {
     const tip = (this.tip = mousetip(Object.assign(this.options.tip || {}, { owner: this })))
     this.canvas.merge(this.canvas.enter).call(tip)
 
-    this.setUpPlugins()
-
     // draw each datum after the wrapper and plugins were set up
-    this.draw()
+    this.renderContent()
 
     // zoom helper on top
     this.buildZoomHelper()
   }
 
-  buildTitle() {
+  private buildTitle() {
     // join
     const selection = this.root
       .merge(this.root.enter)
@@ -337,7 +335,7 @@ export class Chart extends EventEmitter.EventEmitter {
     selection.exit().remove()
   }
 
-  buildLegend() {
+  private buildLegend() {
     // enter
     this.root.enter.append('text').attr('class', 'top-right-legend').attr('text-anchor', 'end')
 
@@ -349,7 +347,7 @@ export class Chart extends EventEmitter.EventEmitter {
       .attr('x', this.meta.width + this.meta.margin.left)
   }
 
-  buildCanvas() {
+  private buildCanvas() {
     // enter
     const canvas = (this.canvas = this.root
       .merge(this.root.enter)
@@ -363,7 +361,7 @@ export class Chart extends EventEmitter.EventEmitter {
     // enter + update
   }
 
-  buildClip() {
+  private buildClip() {
     // (so that the functions don't overflow on zoom or drag)
     const id = this.id
     const defs = this.canvas.enter.append('defs')
@@ -397,7 +395,7 @@ export class Chart extends EventEmitter.EventEmitter {
       .attr('fill', '#777')
   }
 
-  buildAxis() {
+  private buildAxis() {
     // axis creation
     const canvasEnter = this.canvas.enter
     canvasEnter.append('g').attr('class', 'x axis')
@@ -413,7 +411,7 @@ export class Chart extends EventEmitter.EventEmitter {
     this.canvas.merge(this.canvas.enter).select('.y.axis').call(this.meta.yAxis)
   }
 
-  buildAxisLabel() {
+  private buildAxisLabel() {
     // axis labeling
     const canvas = this.canvas
 
@@ -462,12 +460,10 @@ export class Chart extends EventEmitter.EventEmitter {
   }
 
   /**
-   * @private
-   *
-   * Draws each of the datums stored in data.options, to do a full
-   * redraw call `instance.draw()`
+   * Draws each of the datums stored in data.options only
+   * To do a full redraw call `instance.plot()`
    */
-  buildContent() {
+  private buildContent() {
     const self = this
     const canvas = this.canvas
 
@@ -570,7 +566,7 @@ export class Chart extends EventEmitter.EventEmitter {
     this.generation += 1
   }
 
-  buildZoomHelper() {
+  private buildZoomHelper() {
     // dummy rect (detects the zoom + drag)
     const self = this
 
@@ -624,15 +620,7 @@ export class Chart extends EventEmitter.EventEmitter {
       .attr('height', this.meta.height)
   }
 
-  setUpPlugins() {
-    const plugins = this.options.plugins || []
-    const self = this
-    plugins.forEach(function (plugin) {
-      plugin(self)
-    })
-  }
-
-  updateAxes() {
+  private renderAxes() {
     const instance = this
     const canvas = instance.canvas.merge(instance.canvas.enter)
 
@@ -680,27 +668,24 @@ export class Chart extends EventEmitter.EventEmitter {
       .attr('shape-rendering', 'crispedges')
       .attr('opacity', 0.1)
   }
-  syncOptions() {
+
+  private syncOptions() {
     // update the original options yDomain and xDomain, this is done so that next calls to functionPlot()
     // with the same object preserve some of the computed state
     this.options.x.domain = [this.meta.xScale.domain()[0], this.meta.xScale.domain()[1]]
     this.options.y.domain = [this.meta.yScale.domain()[0], this.meta.yScale.domain()[1]]
   }
 
-  getFontSize() {
-    return Math.max(Math.max(this.meta.width, this.meta.height) / 50, 8)
-  }
-
-  draw() {
+  private renderContent() {
     const instance = this
     instance.emit('before:draw')
     instance.syncOptions()
-    instance.updateAxes()
+    instance.renderAxes()
     instance.buildContent()
     instance.emit('after:draw')
   }
 
-  setUpEventListeners() {
+  private setUpEventListeners() {
     const self = this
 
     // before setting up the listeners, remove any listeners set on the previous instance, this happens because
@@ -781,7 +766,7 @@ export class Chart extends EventEmitter.EventEmitter {
           graph.draggable.node().__zoom = self.draggable.node().__zoom
 
           graph.emit('zoom', event)
-          graph.draw()
+          graph.renderContent()
         })
 
         // emit the position of the mouse to all the registered graphs
