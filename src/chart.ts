@@ -145,13 +145,15 @@ export class Chart extends EventEmitter.EventEmitter {
    * - scales/axes
    *
    * After this is done it does a complete redraw of all the datums,
-   * if only the datums need to be redrawn call `instance.draw()` instead
+   * if only the datums need to be redrawn call `instance.renderContent()` instead
    *
    * @returns Chart
    */
   plot() {
+    this.emit('before:plot')
     this.buildInternalVars()
     this.render()
+    this.emit('after:plot')
     return this
   }
 
@@ -302,10 +304,11 @@ export class Chart extends EventEmitter.EventEmitter {
     const tip = (this.tip = mousetip(Object.assign(this.options.tip || {}, { owner: this })))
     this.canvas.merge(this.canvas.enter).call(tip)
 
-    // draw each datum after the wrapper and plugins were set up
+    // draw each datum
     this.renderContent()
 
-    // zoom helper on top
+    // zoom helper is built last because it's the layer that detects
+    // pan and scroll events
     this.buildZoomHelper()
   }
 
@@ -676,13 +679,15 @@ export class Chart extends EventEmitter.EventEmitter {
     this.options.y.domain = [this.meta.yScale.domain()[0], this.meta.yScale.domain()[1]]
   }
 
+  // renderContent is a perf optimization to only render the content
+  // without rendering the canvas beneath it.
   private renderContent() {
     const instance = this
-    instance.emit('before:draw')
+    instance.emit('before:renderContent')
     instance.syncOptions()
     instance.renderAxes()
     instance.buildContent()
-    instance.emit('after:draw')
+    instance.emit('after:renderContent')
   }
 
   private setUpEventListeners() {
