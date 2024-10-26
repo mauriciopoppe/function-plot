@@ -1,4 +1,5 @@
-import Worker from 'web-worker'
+// import Worker from 'web-worker'
+// web-worker causes cjs-esm compatibility problems
 
 import { FunctionPlotDatum } from '../types.js'
 
