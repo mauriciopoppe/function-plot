@@ -1,6 +1,13 @@
-import Worker from 'web-worker'
-
 import { FunctionPlotDatum } from '../types.js'
+
+// Webpack is doing a transformation of the statement `new Worker(...)`
+// which means that we can't use new MyWorker() because it confuses it.
+//
+// Because the statement can't be changed, we can set global.Window and
+// override the value of it depending on the IntervalWorkerPool constructors values.
+if (typeof window === 'undefined') {
+  global.Worker = null
+}
 
 interface IntervalTask {
   d: FunctionPlotDatum
@@ -42,7 +49,7 @@ export class IntervalWorkerPool {
   private nTasks: number
   private backpressure: BackpressureStrategy
 
-  constructor(nThreads: number) {
+  constructor(nThreads: number, MyWorker: any) {
     this.nTasks = 0
     this.idleWorkers = []
     this.tasks = []
@@ -51,6 +58,13 @@ export class IntervalWorkerPool {
     this.backpressure = BackpressureStrategy.InvalidateSeenScan
     this.taskIdToIdx = new Map()
 
+    // Webpack is doing a transformation of the statement `new Worker(...)`
+    // which means that we can't use new MyWorker() because it confuses it.
+    //
+    // A workaround is to override Worker with MyWorker
+    // - In the browser MyWorker is window.Worker
+    // - In the server it's web-worker's impl for node (worker_threads)
+    Worker = MyWorker
     for (let i = 0; i < nThreads; i += 1) {
       // NOTE: new URL(...) cannot be a variable!
       // This is a requirement for the webpack worker loader
