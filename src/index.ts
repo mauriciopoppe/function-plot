@@ -14,11 +14,10 @@ registerGraphType('interval', interval)
 registerGraphType('scatter', scatter)
 registerGraphType('text', text)
 
-// Web workers initializer.
-function withWebWorkers(nWorkers = 8, publicPath = window.location.href) {
+function withWebWorkers(nWorkers = 8, WorkerConstructor = window.Worker, publicPath = window.location.href) {
   // @ts-ignore
   window.__webpack_public_path__ = publicPath
-  globals.workerPool = new IntervalWorkerPool(nWorkers)
+  globals.workerPool = new IntervalWorkerPool(nWorkers, WorkerConstructor)
 }
 
 /**

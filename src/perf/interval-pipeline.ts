@@ -5,6 +5,7 @@
 
 import { Bench } from 'tinybench'
 import { scaleLinear } from 'd3-scale'
+import Worker from 'web-worker'
 
 import globals from '../globals.mjs'
 import { IntervalWorkerPool, BackpressureStrategy } from '../samplers/interval_worker_pool.js'
@@ -111,7 +112,7 @@ async function drawPath() {
 }
 
 async function main() {
-  globals.workerPool = new IntervalWorkerPool(8)
+  globals.workerPool = new IntervalWorkerPool(8, Worker.default)
   await compileAndEval()
   await consecutiveEval()
   await drawPath()
