@@ -134,6 +134,24 @@ function onSiteDependenciesLoaded() {
   })
 
   /**
+   * ### Sticky axes
+   *
+   * Set `position: 'sticky'` on an axis to keep it centered
+   * in the screen and constrained to the viewport on pan and zoom.
+   */
+  functionPlot({
+    target: '#sticky',
+    x: {
+      position: 'sticky'
+    },
+    y: {
+      position: 'sticky'
+    },
+    grid: true,
+    data: [{ fn: 'cos(x)' }]
+  })
+
+  /**
    * ### Domain
    *
    * The domains of both axes can be changed with the following configurations:

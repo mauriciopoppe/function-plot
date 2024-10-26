@@ -59,7 +59,19 @@ functions to be evaluated</p></div><div class="code"><pre><code class="javascrip
   },
   grid: true,
   data: [{ fn: 'sqrt(1 - x * x)' }, { fn: '-sqrt(1 - x * x)' }]
-})</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="grid"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Domain</h3>
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="grid"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Sticky axes</h3>
+<p>Set <code>position: 'sticky'</code> on an axis to keep it centered 
+in the screen and constrained to the viewport on pan and zoom.</p></div><div class="code"><pre><code class="javascript">functionPlot({
+  target: '#sticky',
+  x: {
+    position: 'sticky'
+  },
+  y: {
+    position: 'sticky'
+  },
+  grid: true,
+  data: [{ fn: 'cos(x)' }]
+})</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="sticky"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Domain</h3>
 <p>The domains of both axes can be changed with the following configurations:</p>
 <ul>
 <li><code>xDomain</code>, defaults to <code>[-7, 7]</code></li>
