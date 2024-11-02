@@ -1,4 +1,4 @@
-import puppeteer from 'puppeteer'
+import puppeteer, { Page } from 'puppeteer'
 import { expect, describe, it, beforeAll } from '@jest/globals'
 import { toMatchImageSnapshot } from 'jest-image-snapshot'
 
@@ -12,18 +12,23 @@ const matchSnapshotConfig = {
   failureThresholdType: 'percent'
 }
 
+async function getPage() {
+  const browser = await puppeteer.launch({ headless: 'new' })
+  const page = await browser.newPage()
+  await page.setViewport({
+    width: 1000,
+    height: 1000,
+    deviceScaleFactor: 2
+  })
+  await page.goto('http://localhost:4444/jest-function-plot.html')
+  return page
+}
+
 describe('Function Plot', () => {
-  async function getPage() {
-    const browser = await puppeteer.launch({ headless: 'new' })
-    const page = await browser.newPage()
-    await page.setViewport({
-      width: 1000,
-      height: 1000,
-      deviceScaleFactor: 2
-    })
-    await page.goto('http://localhost:4444/jest-function-plot.html')
-    return page
-  }
+  let page: Page
+  beforeAll(async function () {
+    page = await getPage()
+  })
 
   function stripWrappingFunction(fnString: string) {
     fnString = fnString.replace(/^\s*function\s*\(\)\s*\{/, '')
@@ -33,7 +38,6 @@ describe('Function Plot', () => {
 
   snippets.forEach((snippet) => {
     it(snippet.testName, async () => {
-      const page = await getPage()
       await page.evaluate(stripWrappingFunction(snippet.fn.toString()))
       // When a function that's evaluated asynchronously runs
       // it's possible that the rendering didn't happen yet.
@@ -52,7 +56,6 @@ describe('Function Plot', () => {
   })
 
   it('update the graph using multiple renders', async () => {
-    const page = await getPage()
     const firstRender = `
       const dualRender = {
         target: '#playground',

@@ -5,6 +5,7 @@ import { infinity, color } from '../utils.mjs'
 
 import { Chart } from '../index.js'
 import { Interval, FunctionPlotDatum, FunctionPlotScale, LinearFunction } from '../types.js'
+import { IntervalSamplerResult } from '../samplers/types.js'
 
 function clampRange(minWidthHeight: number, vLo: number, vHi: number, gLo: number, gHi: number) {
   // issue 69
@@ -83,7 +84,7 @@ export default function interval(chart: Chart) {
       const el = ((plotLine as any).el = d3Select(this))
       const index = d.index
       const closed = d.closed
-      let evaluatedData
+      let evaluatedData: IntervalSamplerResult
       if (d.fnType === 'linear' && typeof (d as LinearFunction).fn === 'string' && d.sampler === 'asyncInterval') {
         evaluatedData = await asyncIntervalEvaluate(chart, d)
       } else {
@@ -92,7 +93,7 @@ export default function interval(chart: Chart) {
       const innerSelection = el.selectAll(':scope > path.line').data(evaluatedData)
 
       // the min height/width of the rects drawn by the path generator
-      const minWidthHeight = Math.max(evaluatedData[0].scaledDx, 1)
+      const minWidthHeight = Math.max((evaluatedData[0] as any).scaledDx, 1)
 
       const cls = `line line-${index}`
       const innerSelectionEnter = innerSelection.enter().append('path').attr('class', cls).attr('fill', 'none')
