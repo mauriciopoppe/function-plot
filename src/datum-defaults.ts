@@ -12,9 +12,7 @@ export default function datumDefaults(d: FunctionPlotDatum): FunctionPlotDatum {
     d.sampler = d.graphType !== 'interval' ? 'builtIn' : 'interval'
   }
 
-  // TODO: handle default fnType
-  // default `fnType` is linear
-  if (!('fnType' in d)) {
+  if (!('fnType' in d) && (d.graphType == 'polyline' || d.graphType == 'interval' || d.graphType == 'scatter')) {
     d.fnType = 'linear'
   }
 

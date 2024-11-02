@@ -93,8 +93,17 @@ export function color(data, index) {
 }
 
 /**
- * Infinity is a value that is close to Infinity but not Infinity, it can fit in a JS number.
+ * infinity is a value that is close to Infinity but not Infinity, it can fit in a JS number.
  */
 export function infinity() {
   return 9007199254740991
+}
+
+/**
+ * asserts makes an simple assertion and throws `Error(message)` if the assertion failed
+ */
+export function assert(assertion, message) {
+  if (!assertion) {
+    throw new Error(message)
+  }
 }

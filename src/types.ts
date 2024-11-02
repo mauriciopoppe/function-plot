@@ -239,7 +239,7 @@ export interface LinearDatum {
   fnType?: 'linear'
 }
 
-export type LinearFunction = LinearDatum & AbstractFunctionDatum
+export type LinearFunction = AbstractFunctionDatum & LinearDatum
 
 export interface ImplicitDatum {
   /**
@@ -250,9 +250,14 @@ export interface ImplicitDatum {
   /**
    */
   fnType: 'implicit'
+
+  /**
+   * The graphType for an implicit function is always 'interval'
+   */
+  graphType: 'interval'
 }
 
-export type ImplicitFunction = ImplicitDatum & AbstractFunctionDatum
+export type ImplicitFunction = AbstractFunctionDatum & ImplicitDatum
 
 export interface PolarDatum {
   /**
@@ -263,7 +268,7 @@ export interface PolarDatum {
   fnType: 'polar'
 }
 
-export type PolarFunction = PolarDatum & AbstractFunctionDatum
+export type PolarFunction = AbstractFunctionDatum & PolarDatum
 
 export interface ParametricDatum {
   /**
@@ -279,7 +284,7 @@ export interface ParametricDatum {
   fnType: 'parametric'
 }
 
-export type ParametricFunction = ParametricDatum & AbstractFunctionDatum
+export type ParametricFunction = AbstractFunctionDatum & ParametricDatum
 
 export interface PointDatum {
   /**
@@ -290,7 +295,7 @@ export interface PointDatum {
   fnType: 'points'
 }
 
-export type PointFunction = PointDatum & AbstractFunctionDatum
+export type PointFunction = AbstractFunctionDatum & PointDatum
 
 export interface VectorDatum {
   /**
@@ -306,7 +311,7 @@ export interface VectorDatum {
   fnType: 'vector'
 }
 
-export type VectorFunction = VectorDatum & AbstractFunctionDatum
+export type VectorFunction = AbstractFunctionDatum & VectorDatum
 
 export interface TextDatum {
   graphType: 'text'
@@ -322,7 +327,7 @@ export interface TextDatum {
   location?: [number, number]
 }
 
-export type TextFunction = TextDatum & AbstractFunctionDatum
+export type TextFunction = AbstractFunctionDatum & TextDatum
 
 export type FunctionPlotDatum =
   | AbstractFunctionDatum

@@ -13,6 +13,7 @@ import annotations from './helpers/annotations.js'
 import mousetip from './tip.js'
 import helpers from './helpers/index.js'
 import datumDefaults from './datum-defaults.js'
+import datumValidation from './datum-validation.js'
 import globals from './globals.mjs'
 
 export interface ChartMetaMargin {
@@ -156,6 +157,8 @@ export class Chart extends EventEmitter.EventEmitter {
    */
   plot() {
     this.emit('before:plot')
+    this.setDefaultOptions()
+    this.validateOptions()
     this.buildInternalVars()
     this.render()
     this.emit('after:plot')
@@ -180,6 +183,31 @@ export class Chart extends EventEmitter.EventEmitter {
       cachedInstance = (cachedNode as any).instance
     }
     return cachedInstance
+  }
+
+  private setDefaultOptions() {
+    this.options.x = this.options.x || {}
+    this.options.x.type = this.options.x.type || 'linear'
+
+    this.options.y = this.options.y || {}
+    this.options.y.type = this.options.y.type || 'linear'
+
+    for (let d of this.options.data) {
+      datumDefaults(d)
+    }
+  }
+
+  /**
+   * Validate options provides best effort runtime validation of the options.
+   */
+  private validateOptions() {
+    try {
+      for (let datum of this.options.data) {
+        datumValidation(datum)
+      }
+    } catch (e) {
+      throw new Error(`detected invalid options: ${e}`, e)
+    }
   }
 
   private buildInternalVars() {
@@ -215,13 +243,7 @@ export class Chart extends EventEmitter.EventEmitter {
       return (self.meta.height * xDiff) / self.meta.width
     }
 
-    this.options.x = this.options.x || {}
-    this.options.x.type = this.options.x.type || 'linear'
-
-    this.options.y = this.options.y || {}
-    this.options.y.type = this.options.y.type || 'linear'
-
-    const xDomain = (this.meta.xDomain = (function (axis: FunctionPlotOptionsAxis) {
+    const xDomain = (function (axis: FunctionPlotOptionsAxis): [number, number] {
       if (axis.domain) {
         return axis.domain
       }
@@ -232,9 +254,10 @@ export class Chart extends EventEmitter.EventEmitter {
         return [1, 10]
       }
       throw Error('axis type ' + axis.type + ' unsupported')
-    })(this.options.x))
+    })(this.options.x)
+    this.meta.xDomain = xDomain
 
-    const yDomain = (this.meta.yDomain = (function (axis: FunctionPlotOptionsAxis) {
+    const yDomain = (function (axis: FunctionPlotOptionsAxis): [number, number] {
       if (axis.domain) {
         return axis.domain
       }
@@ -245,7 +268,8 @@ export class Chart extends EventEmitter.EventEmitter {
         return [1, 10]
       }
       throw Error('axis type ' + axis.type + ' unsupported')
-    })(this.options.y))
+    })(this.options.y)
+    this.meta.yDomain = yDomain
 
     if (!this.meta.xScale) {
       this.meta.xScale = getD3Scale(this.options.x.type)()
@@ -544,7 +568,7 @@ export class Chart extends EventEmitter.EventEmitter {
       .selectAll(':scope > g.graph')
       .data(
         (d: FunctionPlotOptions) => {
-          return d.data.map(datumDefaults)
+          return d.data
         },
         (d: any) => {
           // The key is the function set or other value that uniquely identifies the datum.
