@@ -16,6 +16,6 @@
     "types": ["node", "jest"],
     "lib": ["es2022", "dom"]
   },
-  "include": ["./src/**/*.ts", "./src/**/*.js", "./src/**/*.d.ts"],
+  "include": ["./src/**/*.ts", "./src/**/*.js", "./src/**/*.d.ts", "./test/e2e/snippets.ts"],
   "exclude": ["src/stories/**/*"]
 }

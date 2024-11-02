@@ -1,4 +1,4 @@
-import { FunctionPlotDatum } from '../types.js'
+import { LinearFunction } from '../types.js'
 
 // Webpack is doing a transformation of the statement `new Worker(...)`
 // which means that we can't use new MyWorker() because it confuses it.
@@ -10,7 +10,7 @@ if (typeof window === 'undefined') {
 }
 
 interface IntervalTask {
-  d: FunctionPlotDatum
+  d: LinearFunction
   lo: number
   hi: number
   n: number

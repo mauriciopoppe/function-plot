@@ -1,4 +1,4 @@
-import functionPlot from '../../src'
+import functionPlot from '../../src/index.js'
 
 // snippets is a list of tests to run in:
 // - the image snapshot tests.

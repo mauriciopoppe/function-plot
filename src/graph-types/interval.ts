@@ -4,7 +4,7 @@ import { asyncIntervalEvaluate, intervalEvaluate } from '../evaluate-datum.js'
 import { infinity, color } from '../utils.mjs'
 
 import { Chart } from '../index.js'
-import { Interval, FunctionPlotDatum, FunctionPlotScale } from '../types.js'
+import { Interval, FunctionPlotDatum, FunctionPlotScale, LinearFunction } from '../types.js'
 
 function clampRange(minWidthHeight: number, vLo: number, vHi: number, gLo: number, gHi: number) {
   // issue 69
@@ -84,7 +84,7 @@ export default function interval(chart: Chart) {
       const index = d.index
       const closed = d.closed
       let evaluatedData
-      if (d.fnType === 'linear' && typeof d.fn === 'string' && d.sampler === 'asyncInterval') {
+      if (d.fnType === 'linear' && typeof (d as LinearFunction).fn === 'string' && d.sampler === 'asyncInterval') {
         evaluatedData = await asyncIntervalEvaluate(chart, d)
       } else {
         evaluatedData = intervalEvaluate(chart, d)
