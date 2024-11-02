@@ -503,12 +503,13 @@ export class Chart extends EventEmitter.EventEmitter {
       .merge(canvas.enter)
       .attr('transform', 'translate(' + this.meta.margin.left + ',' + this.meta.margin.top + ')')
 
-    const content = (this.content = canvas
+    const content = canvas
       .merge(canvas.enter)
       .selectAll(':scope > g.content')
       .data(function (d: FunctionPlotOptions) {
         return [d]
-      }))
+      })
+    this.content = content
 
     // g tag clipped to hold the data
     const contentEnter = content

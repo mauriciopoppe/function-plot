@@ -41,41 +41,46 @@ export default function annotations(options: { owner: Chart }) {
             return [[[xRange[0], 0], [xRange[1], 0]]]
           }
         })
+      // enter
+      const pathEnter = path.enter().append('path')
+      // enter + update
       path
-        .enter()
-        .append('path')
+        .merge(pathEnter)
         .attr('stroke', '#eee')
         .attr('d', line as any)
       path.exit().remove()
 
-      // enter + update
-      // - text
+      // join
       const text = selection
         .merge(enter)
         .selectAll('text')
-        .data(function (d) {
-          return [{ text: d.label || '' }]
-        })
+        .data((d) => [
+          {
+            label: d.label || '',
+            // used to determine if x or y is set.
+            xIsSet: 'x' in d
+          }
+        ])
+      // enter
+      const textEnter = text.enter().append('text')
+      // enter + update
       text
-        .enter()
-        .append('text')
+        .merge(textEnter)
+        .text((d) => d.label)
         .attr('y', function (d) {
-          return 'x' in d ? 3 : 0
+          return d.xIsSet ? 3 : 0
         })
         .attr('x', function (d) {
-          return 'x' in d ? 0 : 3
+          return d.xIsSet ? 0 : 3
         })
         .attr('dy', function (d) {
-          return 'x' in d ? 5 : -5
+          return d.xIsSet ? 5 : -5
         })
         .attr('text-anchor', function (d) {
-          return 'x' in d ? 'end' : ''
+          return d.xIsSet ? 'end' : ''
         })
         .attr('transform', function (d) {
-          return 'x' in d ? 'rotate(-90)' : ''
-        })
-        .text(function (d) {
-          return d.text
+          return d.xIsSet ? 'rotate(-90)' : ''
         })
       text.exit().remove()
 
