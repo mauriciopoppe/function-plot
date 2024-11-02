@@ -4,13 +4,13 @@ import { hsl as d3Hsl } from 'd3-color'
 import { color } from '../utils.mjs'
 
 import { Chart } from '../index.js'
-import { FunctionPlotDatum } from '../types.js'
+import { TextFunction } from '../types.js'
 
 export default function Text(chart: Chart) {
   const xScale = chart.meta.xScale
   const yScale = chart.meta.yScale
 
-  function text(selection: Selection<any, FunctionPlotDatum, any, any>) {
+  function text(selection: Selection<any, TextFunction, any, any>) {
     selection.each(function (d) {
       // Force some parameters to make it look like a vector.
       d.sampler = 'builtIn'

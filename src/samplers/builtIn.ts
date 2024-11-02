@@ -1,7 +1,7 @@
 import { linspace, sgn, infinity, clamp, space, isValidNumber } from '../utils.mjs'
 import { builtIn as evaluate } from './eval.mjs'
 
-import { FunctionPlotDatum, FunctionPlotScale } from '../types.js'
+import { FunctionPlotDatum, FunctionPlotScale, PointFunction, VectorFunction } from '../types.js'
 import { SamplerParams, SamplerFn } from './types.js'
 
 type Asymptote = {
@@ -168,11 +168,12 @@ function polar(samplerParams: SamplerParams): SamplerResult {
 }
 
 function points(samplerParams: SamplerParams): SamplerResult {
-  return [samplerParams.d.points]
+  const d: PointFunction = samplerParams.d as PointFunction
+  return [d.points]
 }
 
-function vector(sampleParams: SamplerParams): SamplerResult {
-  const d = sampleParams.d
+function vector(samplerParms: SamplerParams): SamplerResult {
+  const d: VectorFunction = samplerParms.d as VectorFunction
   d.offset = d.offset || [0, 0]
   return [[d.offset, [d.vector[0] + d.offset[0], d.vector[1] + d.offset[1]]]]
 }

@@ -6,18 +6,18 @@ import datumDefaults from '../datum-defaults.js'
 import { infinity } from '../utils.mjs'
 
 import { Chart } from '../index.js'
-import { FunctionPlotDatum } from '../types.js'
+import { LinearFunction } from '../types.js'
 
 export default function derivative(chart: Chart) {
-  const derivativeDatum = datumDefaults({
+  const derivativeDatum: LinearFunction = datumDefaults({
     isHelper: true,
     skipTip: true,
     skipBoundsCheck: true,
     nSamples: 2,
     graphType: 'polyline'
-  })
+  }) as LinearFunction
 
-  function computeLine(d: FunctionPlotDatum) {
+  function computeLine(d: LinearFunction) {
     if (!d.derivative) {
       return []
     }
@@ -32,7 +32,7 @@ export default function derivative(chart: Chart) {
     return [derivativeDatum]
   }
 
-  function checkAutoUpdate(d: FunctionPlotDatum) {
+  function checkAutoUpdate(d: LinearFunction) {
     const self = this
     if (!d.derivative) {
       return
@@ -53,7 +53,7 @@ export default function derivative(chart: Chart) {
     }
   }
 
-  const derivative = function (selection: Selection<any, FunctionPlotDatum, any, any>) {
+  const derivative = function (selection: Selection<any, LinearFunction, any, any>) {
     selection.each(function (d) {
       const el = d3Select(this)
       const data = computeLine.call(selection, d)

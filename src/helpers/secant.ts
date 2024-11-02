@@ -6,22 +6,22 @@ import { polyline } from '../graph-types/index.js'
 import { infinity } from '../utils.mjs'
 
 import { Chart } from '../index.js'
-import { FunctionPlotDatumScope, FunctionPlotDatum, FunctionPlotDatumSecant } from '../types.js'
+import { FunctionPlotDatumScope, LinearFunction, SecantDatum } from '../types.js'
 
 export default function secant(chart: Chart) {
-  const secantDefaults = datumDefaults({
+  const secantDefaults: LinearFunction = datumDefaults({
     isHelper: true,
     skipTip: true,
     skipBoundsCheck: true,
     nSamples: 2,
     graphType: 'polyline'
-  })
+  }) as LinearFunction
 
   function computeSlope(scope: FunctionPlotDatumScope) {
     scope.m = (scope.y1 - scope.y0) / (scope.x1 - scope.x0)
   }
 
-  function updateLine(d: FunctionPlotDatum, secant: FunctionPlotDatumSecant) {
+  function updateLine(d: LinearFunction, secant: SecantDatum) {
     if (!('x0' in secant)) {
       throw Error('secant must have the property `x0` defined')
     }
@@ -38,12 +38,12 @@ export default function secant(chart: Chart) {
     computeSlope(secant.scope)
   }
 
-  function setFn(d: FunctionPlotDatum, secant: FunctionPlotDatumSecant) {
+  function setFn(d: LinearFunction, secant: SecantDatum) {
     updateLine(d, secant)
     secant.fn = 'm * (x - x0) + y0'
   }
 
-  function setMouseListener(d: FunctionPlotDatum, secantObject: FunctionPlotDatumSecant) {
+  function setMouseListener(d: LinearFunction, secantObject: SecantDatum) {
     const self = this
     if (secantObject.updateOnMouseMove && !secantObject.$$mouseListener) {
       secantObject.$$mouseListener = function ({ x }: any) {
@@ -55,7 +55,7 @@ export default function secant(chart: Chart) {
     }
   }
 
-  function computeLines(d: FunctionPlotDatum) {
+  function computeLines(d: LinearFunction) {
     const self = this
     const data = []
     d.secants = d.secants || []
@@ -72,7 +72,7 @@ export default function secant(chart: Chart) {
     return data
   }
 
-  function secant(selection: Selection<any, FunctionPlotDatum, any, any>) {
+  function secant(selection: Selection<any, LinearFunction, any, any>) {
     selection.each(function (d) {
       const el = d3Select(this)
       const data = computeLines.call(selection, d)

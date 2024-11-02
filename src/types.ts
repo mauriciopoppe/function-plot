@@ -78,7 +78,7 @@ export interface FunctionPlotDatumScope {
  */
 export type Function = string | ((scope: FunctionPlotDatumScope) => any)
 
-export interface FunctionPlotDatumSecant {
+export interface SecantDatum {
   /**
    * (optional) True to update the secant line by evaluating `fn` with the current mouse position
    * (`x0` is the fixed point and `x1` is computed dynamically based on the current mouse position)
@@ -108,7 +108,7 @@ export interface FunctionPlotDatumSecant {
   $$mouseListener?: any
 }
 
-export interface FunctionPlotDatumDerivative {
+export interface DerivativeDatum {
   /**
    * True to compute the tangent line by evaluating `derivative.fn` with the current mouse position
    * (i.e. let `x0` be the abscissa of the mouse position transformed to local coordinates,
@@ -134,27 +134,7 @@ export interface FunctionPlotDatumDerivative {
   $$mouseListener?: any
 }
 
-export interface FunctionPlotDatum {
-  /**
-   * The function to render
-   */
-  fn?: Function
-
-  /**
-   * The function to render (only used for polar functions)
-   */
-  r?: Function
-
-  /**
-   * The function to render (only used for parametric functions)
-   */
-  x?: Function
-
-  /**
-   * The function to render (only used for parametric functions)
-   */
-  y?: Function
-
+export interface AbstractFunctionDatum {
   /**
    * The type of graph to render
    *
@@ -191,12 +171,12 @@ export interface FunctionPlotDatum {
   /**
    * The secants configuration
    */
-  secants?: FunctionPlotDatumSecant[]
+  secants?: SecantDatum[]
 
   /**
    * The derivative configuration
    */
-  derivative?: FunctionPlotDatumDerivative
+  derivative?: DerivativeDatum
 
   /**
    * (only if `graphType: 'polyline'` or `graphType: 'scatter'`) True to close the path,
@@ -219,7 +199,6 @@ export interface FunctionPlotDatum {
    */
   attr?: any
 
-  // polar?
   /**
    * An array with two numbers, the function will only be evaluated with values that belong to this interval
    *
@@ -229,32 +208,6 @@ export interface FunctionPlotDatum {
    */
   range?: [number, number]
 
-  /**
-   * An array of 2-number array which hold the coordinates of the points to render when `fnType: 'points'`
-   */
-  points?: Array<[number, number]>
-
-  /**
-   * An array of 2-number array which hold the coordinates of the points to render when `fnType: 'vector'`
-   */
-  vector?: [number, number]
-
-  /**
-   * Vector offset when `fnType: 'vector'`
-   */
-  offset?: [number, number]
-
-  /**
-   * An array of 2-number array for the position of the text when `fnType: 'text'`
-   */
-  location?: [number, number]
-
-  /**
-   * Used as text if `graphType: 'text'`
-   */
-  text?: string
-
-  // helper data
   /**
    * @private
    * The datum index
@@ -273,6 +226,112 @@ export interface FunctionPlotDatum {
    */
   skipBoundsCheck?: boolean
 }
+
+export interface LinearDatum {
+  /**
+   * The function to render
+   */
+  fn: Function
+
+  /**
+   */
+  fnType?: 'linear'
+}
+
+export type LinearFunction = LinearDatum & AbstractFunctionDatum
+
+export interface ImplicitDatum {
+  /**
+   * The function to render
+   */
+  fn: Function
+
+  /**
+   */
+  fnType: 'implicit'
+}
+
+export type ImplicitFunction = ImplicitDatum & AbstractFunctionDatum
+
+export interface PolarDatum {
+  /**
+   * The function to render (only used for polar functions)
+   */
+  r: Function
+
+  fnType: 'polar'
+}
+
+export type PolarFunction = PolarDatum & AbstractFunctionDatum
+
+export interface ParametricDatum {
+  /**
+   * The x-function to render (only used for parametric functions)
+   */
+  x: Function
+
+  /**
+   * The y-function to render (only used for parametric functions)
+   */
+  y: Function
+
+  fnType: 'parametric'
+}
+
+export type ParametricFunction = ParametricDatum & AbstractFunctionDatum
+
+export interface PointDatum {
+  /**
+   * An array of 2-number array which hold the coordinates of the points to render when `fnType: 'points'`
+   */
+  points: Array<[number, number]>
+
+  fnType: 'points'
+}
+
+export type PointFunction = PointDatum & AbstractFunctionDatum
+
+export interface VectorDatum {
+  /**
+   * An array of 2-number array which hold the coordinates of the points to render when `fnType: 'vector'`
+   */
+  vector: [number, number]
+
+  /**
+   * Vector offset when `fnType: 'vector'`
+   */
+  offset?: [number, number]
+
+  fnType: 'vector'
+}
+
+export type VectorFunction = VectorDatum & AbstractFunctionDatum
+
+export interface TextDatum {
+  graphType: 'text'
+
+  /**
+   * Used as text if `graphType: 'text'`
+   */
+  text: string
+
+  /**
+   * An array of 2-number array for the position of the text when `fnType: 'text'`
+   */
+  location?: [number, number]
+}
+
+export type TextFunction = TextDatum & AbstractFunctionDatum
+
+export type FunctionPlotDatum =
+  | AbstractFunctionDatum
+  | LinearFunction
+  | ImplicitFunction
+  | ParametricFunction
+  | PolarFunction
+  | VectorFunction
+  | PointFunction
+  | TextFunction
 
 export interface FunctionPlotAnnotation {
   /**
@@ -352,9 +411,4 @@ export interface FunctionPlotOptions {
    * The annotations displayed in the graph
    */
   annotations?: FunctionPlotAnnotation[]
-
-  /**
-   * Plugin configuration (WIP)
-   */
-  plugins?: any[]
 }
