@@ -41,9 +41,9 @@ export default function annotations(options: { owner: Chart }) {
             return [[[xRange[0], 0], [xRange[1], 0]]]
           }
         })
+      const pathEnter = path.enter().append('path')
       path
-        .enter()
-        .append('path')
+        .merge(pathEnter)
         .attr('stroke', '#eee')
         .attr('d', line as any)
       path.exit().remove()
@@ -61,9 +61,13 @@ export default function annotations(options: { owner: Chart }) {
             }
           ]
         })
+      const textEnter = text.enter().append('text')
+
       text
-        .enter()
-        .append('text')
+        .merge(textEnter)
+        .text(function (d) {
+          return d.text
+        })
         .attr('y', function (d) {
           return d.hasX ? 3 : 0
         })
@@ -78,9 +82,6 @@ export default function annotations(options: { owner: Chart }) {
         })
         .attr('transform', function (d) {
           return d.hasX ? 'rotate(-90)' : ''
-        })
-        .text(function (d) {
-          return d.text
         })
       text.exit().remove()
 
