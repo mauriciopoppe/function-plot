@@ -131,10 +131,10 @@ const snippets = [
           x: -1
         }, {
           x: 1,
-          text: 'x = 1'
+          label: 'x = 1'
         }, {
           y: 2,
-          text: 'y = 2'
+          label: 'y = 2'
         }]
       })
     }
@@ -391,21 +391,7 @@ const snippets = [
     fn: function () {
       const instance = functionPlot({
         target: '#playground',
-        data: [
-          {
-            graphType: 'text',
-            location: [1, 1],
-            text: 'hello world'
-          } as TextFunction,
-          {
-            graphType: 'text',
-            location: [-1, -1],
-            text: 'foo bar',
-            attr: {
-              'text-anchor': 'end'
-            }
-          } as TextFunction
-        ]
+        data: [{ fn: 'x^2' } as LinearFunction]
       })
       instance.destroy()
     }
