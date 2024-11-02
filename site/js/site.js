@@ -156,8 +156,8 @@ function onSiteDependenciesLoaded() {
    *
    * The domains of both axes can be changed with the following configurations:
    *
-   * - `xDomain`, defaults to `[-7, 7]`
-   * - `yDomain`, keeps a 1:1 aspect ratio relative to `xDomain`, by default it's computed
+   * - `x.domain`, defaults to `[-7, 7]`
+   * - `y.domain`, keeps a 1:1 aspect ratio relative to `x.domain`, by default it's computed
    * with the following formula
    *
    * $$
@@ -362,9 +362,12 @@ function onSiteDependenciesLoaded() {
       yLine: true, // dashed line parallel to x = 0
       renderer: function (x, y, index) {
         // the returning value will be shown in the tip
+        return ''
       }
     },
-    yDomain: [-1, 9],
+    y: {
+      domain: [-1, 9]
+    },
     data: [
       { fn: 'x^2' },
       {
@@ -431,19 +434,13 @@ function onSiteDependenciesLoaded() {
    */
   functionPlot({
     target: '#secant-update',
-    yDomain: [-1, 9],
+    y: { domain: [-1, 9] },
     data: [
       {
         fn: 'x^2',
         secants: [
-          {
-            x0: 2,
-            updateOnMouseMove: true
-          },
-          {
-            x0: -2,
-            updateOnMouseMove: true
-          }
+          { x0: 2, updateOnMouseMove: true },
+          { x0: -2, updateOnMouseMove: true }
         ]
       }
     ]
