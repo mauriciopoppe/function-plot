@@ -80,9 +80,14 @@ export class Chart extends EventEmitter.EventEmitter {
   static cache: Record<string, Chart> = {}
 
   private readonly id: string
+
   readonly markerId: string
-  public options: FunctionPlotOptions
+
   public meta: ChartMeta
+  /**
+   * options are the input options sent to function plot.
+   */
+  public options: FunctionPlotOptions
 
   /**
    * Array of function-plot instances linked to the events of this instance,
@@ -628,7 +633,7 @@ export class Chart extends EventEmitter.EventEmitter {
     const canvas = instance.canvas.merge(instance.canvas.enter)
 
     // Draw the x-axis
-    canvas.select('.x.axis').call(instance.meta.xAxis)
+    canvas.select('.x.axis').attr('transform', `translate(0, ${this.meta.height})`).call(instance.meta.xAxis)
 
     if (this.options.x.position === 'sticky') {
       const yMin = this.meta.yScale.domain()[0]
@@ -648,7 +653,7 @@ export class Chart extends EventEmitter.EventEmitter {
     }
 
     // Draw the y-axis
-    canvas.select('.y.axis').call(instance.meta.yAxis)
+    canvas.select('.y.axis').attr('transform', `translate(0, 0)`).call(instance.meta.yAxis)
 
     if (this.options.y.position === 'sticky') {
       const xMin = this.meta.xScale.domain()[0]
