@@ -14,6 +14,9 @@ const config = {
   testMatch: ['**/__tests__/**/*.[jt]s?(x)', '<rootDir>/{src,test}/**/?(*.)+(spec|test).[jt]s?(x)'],
   transformIgnorePatterns: ['<rootDir>/node_modules/(?!d3-\\.*|internmap)'],
   testEnvironment: 'node',
+  globals: {
+    __COMMIT_HASH__: 'unknown'
+  },
   extensionsToTreatAsEsm: ['.ts']
 }
 

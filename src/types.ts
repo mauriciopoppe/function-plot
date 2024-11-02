@@ -151,14 +151,15 @@ export interface AbstractFunctionDatum {
   fnType?: 'linear' | 'parametric' | 'implicit' | 'polar' | 'points' | 'vector'
 
   /**
-   * The sampler to take samples from `range`, available values are `interval|builtIn`
+   * The sampler to take samples from `range`, available values are `builtIn|interval|asyncInterval`
    *
    * - **NOTE: `builtIn` should only be used when `graphType` is `polyline|scatter`**
    */
   sampler?: 'interval' | 'builtIn' | 'asyncInterval'
 
   /**
-   * The number of values to be taken from `range` to evaluate the function, note that if interval-arithmetic is used the function
+   * The number of values to be taken from `range` to evaluate the function,
+   * note that if interval-arithmetic is used the function
    * will be evaluated with intervals instead of single values
    */
   nSamples?: number
@@ -316,7 +317,7 @@ export interface TextDatum {
   text: string
 
   /**
-   * An array of 2-number array for the position of the text when `fnType: 'text'`
+   * An array of 2-number array for the position of the text when `graphType: 'text'`
    */
   location?: [number, number]
 }
@@ -345,9 +346,9 @@ export interface FunctionPlotAnnotation {
   y?: number
 
   /**
-   * The text displayed next to the line
+   * The label displayed next to the line
    */
-  text?: string
+  label?: string
 }
 
 export interface FunctionPlotOptions {

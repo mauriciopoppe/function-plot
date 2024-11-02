@@ -54,30 +54,25 @@ export default function annotations(options: { owner: Chart }) {
         .merge(enter)
         .selectAll('text')
         .data(function (d) {
-          return [
-            {
-              text: d.text || '',
-              hasX: 'x' in d
-            }
-          ]
+          return [{ text: d.label || '' }]
         })
       text
         .enter()
         .append('text')
         .attr('y', function (d) {
-          return d.hasX ? 3 : 0
+          return 'x' in d ? 3 : 0
         })
         .attr('x', function (d) {
-          return d.hasX ? 0 : 3
+          return 'x' in d ? 0 : 3
         })
         .attr('dy', function (d) {
-          return d.hasX ? 5 : -5
+          return 'x' in d ? 5 : -5
         })
         .attr('text-anchor', function (d) {
-          return d.hasX ? 'end' : ''
+          return 'x' in d ? 'end' : ''
         })
         .attr('transform', function (d) {
-          return d.hasX ? 'rotate(-90)' : ''
+          return 'x' in d ? 'rotate(-90)' : ''
         })
         .text(function (d) {
           return d.text
