@@ -8,9 +8,6 @@
   <a href="https://github.com/feross/standard">
     <img src="https://img.shields.io/badge/code%20style-standard-blue" alt="js-standard-style">
   </a>
-  <a href="https://www.chromatic.com/component?appId=5f6ab5a952e6b600226e8eaa&amp;name=Examples">
-    <img src="https://camo.githubusercontent.com/4c64e07178937065fd61d9ba90de13291394dd56/68747470733a2f2f63646e2e6a7364656c6976722e6e65742f67682f73746f7279626f6f6b6a732f6272616e64406d61737465722f62616467652f62616467652d73746f7279626f6f6b2e737667" alt="storybook">
-  </a>
 </p>
 
 ---

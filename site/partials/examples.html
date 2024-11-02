@@ -74,8 +74,8 @@ in the screen and constrained to the viewport on pan and zoom.</p></div><div cla
 })</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="sticky"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Domain</h3>
 <p>The domains of both axes can be changed with the following configurations:</p>
 <ul>
-<li><code>xDomain</code>, defaults to <code>[-7, 7]</code></li>
-<li><code>yDomain</code>, keeps a 1:1 aspect ratio relative to <code>xDomain</code>, by default it's computed 
+<li><code>x.domain</code>, defaults to <code>[-7, 7]</code></li>
+<li><code>y.domain</code>, keeps a 1:1 aspect ratio relative to <code>x.domain</code>, by default it's computed 
 with the following formula</li>
 </ul>
 <p>$$ 
@@ -229,9 +229,12 @@ that holds the info of the function to render</p></div><div class="code"><pre><c
     yLine: true, // dashed line parallel to x = 0
     renderer: function (x, y, index) {
       // the returning value will be shown in the tip
+      return ''
     }
   },
-  yDomain: [-1, 9],
+  y: {
+    domain: [-1, 9]
+  },
   data: [
     { fn: 'x^2' },
     {
@@ -280,19 +283,13 @@ position of the mouse</li>
 <p>An example where <code>updateOnMouseMove</code> is set in two secant lines, each line will be computed on the 
 dynamically based on the current position of the mouse</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#secant-update',
-  yDomain: [-1, 9],
+  y: { domain: [-1, 9] },
   data: [
     {
       fn: 'x^2',
       secants: [
-        {
-          x0: 2,
-          updateOnMouseMove: true
-        },
-        {
-          x0: -2,
-          updateOnMouseMove: true
-        }
+        { x0: 2, updateOnMouseMove: true },
+        { x0: -2, updateOnMouseMove: true }
       ]
     }
   ]

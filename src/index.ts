@@ -41,6 +41,8 @@ export default function functionPlot(options: FunctionPlotOptions) {
   return instance.plot()
 }
 
+declare const __COMMIT_HASH__: string
+functionPlot.version = __COMMIT_HASH__
 functionPlot.globals = globals
 functionPlot.$eval = {
   builtIn: builtInEval,

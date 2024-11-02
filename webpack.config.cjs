@@ -1,4 +1,8 @@
 const path = require('path')
+const commitHash = require('child_process').execSync('git rev-parse --short HEAD').toString().trim()
+
+const webpack = require('webpack')
+
 const isProduction = process.env.NODE_ENV === 'production'
 
 module.exports = {
@@ -33,5 +37,10 @@ module.exports = {
   },
   stats: {
     errorDetails: true
-  }
+  },
+  plugins: [
+    new webpack.DefinePlugin({
+      __COMMIT_HASH__: JSON.stringify(commitHash)
+    })
+  ]
 }
