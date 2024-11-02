@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+</head>
+<body>
+
+<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; width: 900px; height: 700px; margin: auto; zoom: 1.3">
+  <div style="margin: 0 auto; width: 800px" id="sinus"></div>
+</div>
+
+  <script src="function-plot.js"></script>
+
+<script>
+var instance = functionPlot({
+  target: '#sinus',
+  width: 800,
+  height: 400,
+  xAxis: {domain: [-10, 10]},
+  data: [{ fn: 'sin(x)' }]
+})
+instance.on('before:mousemove', function (coordinates) {
+  var draggable = instance.draggable.node()
+  var target = instance.root.node().parentNode
+
+  // find the ancestors of target which scale their content
+  // for now assume that it's just the first ancestor of target
+  var container = target.parentNode
+  if (container.style.zoom) {
+    var scale = parseFloat(container.style.zoom)
+    var scaledWidth = instance.meta.width * scale
+    var scaledWidthDiff = scaledWidth - instance.meta.width
+    var mouse = d3.mouse(draggable)
+
+    // varies depending on the scale factor, it's not linear
+    var magicNumber = 120
+
+    var nx = mouse[0] - magicNumber
+    nx -= (nx / scaledWidth) * scaledWidthDiff
+    coordinates.x = instance.meta.xScale.invert(nx)
+  }
+})
+</script>
+
+</body>
+</html>

@@ -1,0 +1,128 @@
+<h3>Evaluate a function at some value <code>x</code></h3>
+<pre><code class="language-javascript">const y = functionPlot.$eval.builtIn(datum, fnProperty, scope)
+</code></pre>
+<p>Where <code>datum</code> is an object that has a function to be evaluated in the property <code>fnProperty</code> ,
+to eval this function we need an <code>x</code> value which is sent through the scope</p>
+<p>e.g.</p>
+<pre><code class="language-javascript">const datum = {
+  fn: 'x^2'
+}
+const scope = {
+  x: 2
+}
+const y = functionPlot.$eval.builtIn(datum, 'fn', scope)
+</code></pre>
+<p>Every element of the <code>data</code> property sent to <code>functionPlot</code> is saved on <code>instance.options.data</code>,
+if you want to get the evaluated values of all the elements here run</p>
+<pre><code class="language-javascript">const instance = functionPlot( ... )
+instance.options.data.forEach(function (datum) {
+  const datum = {
+    fn: 'x^2'
+  }
+  const scope = {
+    // a value for x
+    x: 2
+  }
+  const y = functionPlot.$eval.builtIn(datum, 'fn', scope)
+}
+</code></pre>
+<h3>Maintain aspect ratio</h3>
+<p>Given the <code>xDomain</code> values you can compute the corresponding <code>yDomain</code> values to main
+the aspect ratio between the axes</p>
+<pre><code class="language-javascript">function computeYScale (width, height, xScale) {
+  const xDiff = xScale[1] - xScale[0]
+  const yDiff = height * xDiff / width
+  return [-yDiff / 2, yDiff / 2]
+}
+
+const width = 800
+const height = 400
+
+// desired xDomain values
+const xScale = [-10, 10]
+
+functionPlot({
+  width: width,
+  height: height,
+  xDomain: xScale,
+  yDomain: computeYScale(width, height, xScale),
+
+  target: '#demo',
+  data: [{
+    fn: 'x^2',
+    derivative: {
+      fn: '2x',
+      updateOnMouseMove: true
+    }
+  }]
+})
+</code></pre>
+<h3>Changing the format of the values shown on the axes</h3>
+<pre><code class="language-javascript">const instance = functionPlot({
+  target: '#complex-plane',
+  xLabel: 'real',
+  yLabel: 'imaginary'
+})
+// old format
+const format = instance.meta.yAxis.tickFormat()
+const imaginaryFormat = function (d) {
+  // new format = old format + ' i' for imaginary
+  return format(d) + ' i'
+}
+// update format
+instance.meta.yAxis.tickFormat(imaginaryFormat)
+// redraw the graph
+instance.draw()
+</code></pre>
+<h3>React Component</h3>
+<pre><code class="language-typescript">import React, { useEffect, useRef } from 'react'
+import functionPlot, { FunctionPlotOptions } from 'function-plot'
+
+export interface FunctionPlotProps {
+  options?: FunctionPlotOptions
+}
+
+export const FunctionPlot: React.FC&lt;FunctionPlotProps&gt; = React.memo(({ options }) =&gt; {
+  const rootEl = useRef(null)
+
+  useEffect(() =&gt; {
+    try {
+      functionPlot(Object.assign({}, options, { target: rootEl.current }))
+    } catch (e) {}
+  })
+
+  return (&lt;div ref={rootEl} /&gt;)
+}, () =&gt; false))
+</code></pre>
+<h3>Styling</h3>
+<p>Selectors (sass)</p>
+<pre><code class="language-sass">.function-plot {
+  .x.axis {
+    .tick {
+      line {
+        // grid's vertical lines
+      }
+      text {
+        // x axis labels
+      }
+    }
+    path.domain {
+      // d attribute defines the graph bounds
+    }
+  }
+
+  .y.axis {
+    .tick {
+      line {
+        // grid's horizontal lines
+      }
+      text {
+        // y axis labels
+      }
+    }
+    path.domain {
+      // d attribute defines the graph bounds
+    }
+  }
+}
+</code></pre>
