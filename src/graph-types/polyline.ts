@@ -44,6 +44,36 @@ export default function polyline(chart: Chart) {
         .y0(chart.meta.yScale(0))
         .y1(y)
 
+      const vectorMarkerId = `${d.id}-vector-marker`
+      if (d.fnType === 'vector') {
+        // vector
+        const vectorInnerSelection = el.selectAll(':scope > defs').data(evaluatedData)
+        // enter
+        vectorInnerSelection
+          .enter()
+          .append('defs')
+          .append('clipPath')
+          .append('marker')
+          .attr('id', vectorMarkerId)
+          .attr('viewBox', '0 -5 10 10')
+          .attr('refX', 10)
+          .attr('markerWidth', 5)
+          .attr('markerHeight', 5)
+          .attr('orient', 'auto')
+          .append('path')
+          .attr('d', 'M0,-5L10,0L0,5L0,0')
+          .attr('stroke-width', '0px')
+          .attr('fill-opacity', 1)
+
+        // enter + update
+        vectorInnerSelection.merge(vectorInnerSelection.enter().selectAll('defs')).each(function () {
+          d3Select(this).selectAll('path').attr('fill', computedColor)
+        })
+
+        // exit
+        vectorInnerSelection.exit().remove()
+      }
+
       // join
       const innerSelection = el.selectAll(':scope > path.line').data(evaluatedData)
 
@@ -71,7 +101,7 @@ export default function polyline(chart: Chart) {
           .attr('stroke', computedColor)
           .attr('marker-end', function () {
             // special marker for vectors
-            return d.fnType === 'vector' ? 'url(#' + chart.markerId + ')' : null
+            return d.fnType === 'vector' ? `url(#${vectorMarkerId})` : null
           })
           .attr('d', pathD)
 

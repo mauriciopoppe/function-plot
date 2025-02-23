@@ -99,6 +99,15 @@ export function infinity() {
   return 9007199254740991
 }
 
+/*
+ * randomId returns a random string.
+ */
+export function randomId() {
+  const n = Math.random()
+  const letter = String.fromCharCode(Math.floor(n * 26) + 97)
+  return letter + n.toString(16).substring(2)
+}
+
 /**
  * asserts makes an simple assertion and throws `Error(message)` if the assertion failed
  */

@@ -211,6 +211,12 @@ export interface AbstractFunctionDatum {
 
   /**
    * @private
+   * The id of the graph to render, a random id is assigned during the setup.
+   */
+  id?: string
+
+  /**
+   * @private
    * The datum index
    */
   index?: number
