@@ -1,6 +1,11 @@
 import { FunctionPlotDatum } from './types.js'
+import { randomId } from './utils.mjs'
 
 export default function datumDefaults(d: FunctionPlotDatum): FunctionPlotDatum {
+  if (!('id' in d)) {
+    d.id = randomId()
+  }
+
   // default graphType uses boxes i.e. 2d intervals
   if (!('graphType' in d)) {
     d.graphType = 'interval'

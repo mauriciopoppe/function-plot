@@ -104,7 +104,7 @@
     "prettier": "^3.2.5",
     "prismjs": "^1.29.0",
     "pug": "^3.0.2",
-    "puppeteer": "^21.6.1",
+    "puppeteer": "^24.2.1",
     "standard": "^17.0.0",
     "standardx": "^7.0.0",
     "storybook": "^7.0.20",

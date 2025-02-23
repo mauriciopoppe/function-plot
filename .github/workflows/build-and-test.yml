@@ -31,11 +31,11 @@ jobs:
           node-version: 20
           cache: 'npm'
       - name: Install dependencies
-        run: npm install
+        run: npm install && sudo apt-get install chromium-browser
       - name: Test
         run: npm run test
       - name: Archive test artifacst
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test images
           path: |

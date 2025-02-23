@@ -13,7 +13,7 @@ const matchSnapshotConfig = {
 }
 
 async function getPage() {
-  const browser = await puppeteer.launch({ headless: 'new' })
+  const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] })
   const page = await browser.newPage()
   await page.setViewport({
     width: 1000,
@@ -49,7 +49,7 @@ describe('Function Plot', () => {
         })
       }
 
-      const image = await page.screenshot()
+      const image = await page.screenshot({ encoding: 'base64' })
       // @ts-ignore
       expect(image).toMatchImageSnapshot(matchSnapshotConfig)
     })
@@ -64,7 +64,7 @@ describe('Function Plot', () => {
       functionPlot(dualRender)
     `
     await page.evaluate(firstRender.toString())
-    const firstImage = await page.screenshot()
+    const firstImage = await page.screenshot({ encoding: 'base64' })
     // @ts-ignore
     expect(firstImage).toMatchImageSnapshot(matchSnapshotConfig)
 
@@ -73,7 +73,7 @@ describe('Function Plot', () => {
       functionPlot(dualRender)
     `
     await page.evaluate(secondRender.toString())
-    const secondImage = await page.screenshot()
+    const secondImage = await page.screenshot({ encoding: 'base64' })
     // @ts-ignore
     expect(secondImage).toMatchImageSnapshot(matchSnapshotConfig)
   })
