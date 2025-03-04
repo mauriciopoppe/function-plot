@@ -12,7 +12,6 @@ import { SamplerParams, IntervalSamplerResult, IntervalSamplerResultGroup, Sampl
 
 async function asyncInterval1d({
   d,
-  xAxis,
   range,
   nSamples,
   nGroups,

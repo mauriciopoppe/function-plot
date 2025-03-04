@@ -513,7 +513,7 @@ export class Chart extends EventEmitter.EventEmitter {
         .enter()
         .append('path')
         .attr('class', 'y origin')
-        .attr('stroke', 'black')
+        .attr('stroke', 'currentColor')
         .attr('opacity', 0.2)
       yOrigin.merge(yOriginEnter).attr('d', this.line)
     }
@@ -533,7 +533,7 @@ export class Chart extends EventEmitter.EventEmitter {
         .enter()
         .append('path')
         .attr('class', 'x origin')
-        .attr('stroke', 'black')
+        .attr('stroke', 'currentColor')
         .attr('opacity', 0.2)
       xOrigin.merge(xOriginEnter).attr('d', this.line)
     }
@@ -674,12 +674,7 @@ export class Chart extends EventEmitter.EventEmitter {
       canvas.selectAll('.y.axis path, .y.axis line').attr('transform', 'translate(' + -xTranslation + ',0)')
     }
 
-    canvas
-      .selectAll('.axis path, .axis line')
-      .attr('fill', 'none')
-      .attr('stroke', 'black')
-      .attr('shape-rendering', 'crispedges')
-      .attr('opacity', 0.1)
+    canvas.selectAll('.axis path, .axis line').attr('stroke', 'currentColor').attr('opacity', 0.2)
   }
 
   private syncOptions() {
