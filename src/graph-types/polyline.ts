@@ -18,6 +18,11 @@ export default function polyline(chart: Chart) {
       const yRange = chart.meta.yScale.range()
       let yMax = yRange[0]
       let yMin = yRange[1]
+
+      // Fix #342
+      // When yAxis is reversed, the yRange is inverted, i.e. yMin > yMax
+      if (yMin > yMax) [yMin, yMax] = [yMax, yMin]
+
       // workaround, clamp assuming that the bounds are finite but huge
       const diff = yMax - yMin
       yMax += diff * 1e6
