@@ -553,7 +553,11 @@ export class Chart extends EventEmitter.EventEmitter {
         },
         (d: any) => {
           // The key is the function set or other value that uniquely identifies the datum.
-          return d.fn || d.r || d.x || d.text
+          // Add the graphType to the key to handle graphType updates on the same function (#344)
+          return JSON.stringify({
+            function: d.fn || d.r || d.x || d.text,
+            graphType: d.graphType || 'interval'
+          })
         }
       )
 
