@@ -556,7 +556,7 @@ export class Chart extends EventEmitter.EventEmitter {
           // Add the graphType to the key to handle graphType updates on the same function (#344)
           return JSON.stringify({
             function: d.fn || d.r || d.x || d.text,
-            graphType: d.graphType || 'interval'
+            graphType: d.graphType
           })
         }
       )
