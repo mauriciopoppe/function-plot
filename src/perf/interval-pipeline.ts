@@ -112,7 +112,7 @@ async function drawPath() {
 }
 
 async function main() {
-  globals.workerPool = new IntervalWorkerPool(8, Worker.default)
+  globals.workerPool = new IntervalWorkerPool(8, Worker)
   await compileAndEval()
   await consecutiveEval()
   await drawPath()
