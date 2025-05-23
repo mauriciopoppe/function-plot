@@ -1,14 +1,5 @@
 import { LinearFunction } from '../types.js'
 
-// Webpack is doing a transformation of the statement `new Worker(...)`
-// which means that we can't use new MyWorker() because it confuses it.
-//
-// Because the statement can't be changed, we can set global.Window and
-// override the value of it depending on the IntervalWorkerPool constructors values.
-if (typeof window === 'undefined') {
-  global.Worker = null
-}
-
 interface IntervalTask {
   d: LinearFunction
   lo: number
@@ -61,13 +52,22 @@ export class IntervalWorkerPool {
     // Webpack is doing a transformation of the statement `new Worker(...)`
     // which means that we can't use new MyWorker() because it confuses it.
     //
-    // A workaround is to override Worker with MyWorker
+    // A workaround is to override the globally defined variable Worker with MyWorker,
+    // Worker has the following values:
+    //
+    // - In the browser it's already defined
+    // - In node it's forced to exist in global, that way it can be overridden
+    if (typeof window === 'undefined' && !('Worker' in global)) {
+      // @ts-ignore
+      global.Worker = null
+    }
+    // MyWorker takes the following values:
+    //
     // - In the browser MyWorker is window.Worker
     // - In the server it's web-worker's impl for node (worker_threads)
     Worker = MyWorker
     for (let i = 0; i < nThreads; i += 1) {
-      // NOTE: new URL(...) cannot be a variable!
-      // This is a requirement for the webpack worker loader
+      // NOTE: new URL(...) cannot be a variable! This is a requirement for the webpack worker loader.
       // @ts-ignore
       const worker = new Worker(
         // @ts-ignore
