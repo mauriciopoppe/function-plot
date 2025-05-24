@@ -14,9 +14,8 @@ export default function Scatter(chart: Chart) {
   function scatter(selection: Selection<any, FunctionPlotDatum, any, any>) {
     selection.each(function (d) {
       const index = d.index
-      const computedColor = color(d, index)
-      const evaluatedData = builtInEvaluate(chart, d)
 
+      const evaluatedData = builtInEvaluate(chart, d)
       // scatter doesn't need groups, therefore each group is
       // flattened into a single array
       const joined = []
@@ -31,6 +30,7 @@ export default function Scatter(chart: Chart) {
       const cls = `scatter scatter-${index}`
       const innerSelectionEnter = innerSelection.enter().append('circle').attr('class', cls)
 
+      const computedColor = color(d, index)
       const selection = innerSelection
         .merge(innerSelectionEnter)
         .attr('fill', d3Hsl(computedColor.toString()).brighter(1.5).formatHex())

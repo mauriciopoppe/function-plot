@@ -49,27 +49,29 @@ functions to be evaluated</p></div><div class="code"><pre><code class="javascrip
     }
   ]
 })</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="quadratic-with-options"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Grid</h3>
-<p>Set <code>grid: true</code> in the options sent to function plot</p></div><div class="code"><pre><code class="javascript">functionPlot({
+<p>Set <code>grid: true</code> in the axis objects to draw a grid.</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#grid',
   x: {
-    label: 'real'
+    label: 'real',
+    grid: true
   },
   y: {
-    label: 'imaginary'
+    label: 'imaginary',
+    grid: true
   },
-  grid: true,
   data: [{ fn: 'sqrt(1 - x * x)' }, { fn: '-sqrt(1 - x * x)' }]
 })</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="grid"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Sticky axes</h3>
 <p>Set <code>position: 'sticky'</code> on an axis to keep it centered 
 in the screen and constrained to the viewport on pan and zoom.</p></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#sticky',
   x: {
-    position: 'sticky'
+    position: 'sticky',
+    grid: true
   },
   y: {
-    position: 'sticky'
+    position: 'sticky',
+    grid: true
   },
-  grid: true,
   data: [{ fn: 'cos(x)' }]
 })</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="sticky"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Domain</h3>
 <p>The domains of both axes can be changed with the following configurations:</p>
@@ -165,12 +167,13 @@ change affects the way the functions are sampled</p></div><div class="code"><pre
   target: '#logarithmic',
   x: {
     type: 'log',
-    domain: [0.01, 1]
+    domain: [0.01, 1],
+    grid: true
   },
   y: {
-    domain: [-100, 100]
+    domain: [-100, 100],
+    grid: true
   },
-  grid: true,
   data: [
     {
       fn: '1/x * cos(1/x)',
@@ -667,8 +670,8 @@ functionPlot({
 <li><code>graphType: 'polyline'</code> to render a nice segment from <code>offset</code> to <code>offset + vector</code></li>
 </ul></div><div class="code"><pre><code class="javascript">functionPlot({
   target: '#vector',
-  x: { domain: [-3, 8] },
-  grid: true,
+  x: { domain: [-3, 8], grid: true },
+  y: { grid: true },
   data: [
     {
       vector: [2, 1],
