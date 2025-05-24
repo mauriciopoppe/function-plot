@@ -69,7 +69,7 @@ describe('Function Plot', () => {
     expect(firstImage).toMatchImageSnapshot(matchSnapshotConfig)
 
     const secondRender = `
-      dualRender.data[0].fn = 'x'
+      dualRender.data[0] = { fn: 'x' }
       functionPlot(dualRender)
     `
     await page.evaluate(secondRender.toString())

@@ -6,11 +6,11 @@ function onSiteDependenciesLoaded() {
 
   functionPlot({
     target: '#description-sample',
-    y: { domain: [-1, 9] },
+    x: { grid: true },
+    y: { domain: [-1, 9], grid: true },
     tip: {
       renderer: function () {}
     },
-    grid: true,
     data: [
       {
         fn: 'x^2',
@@ -119,17 +119,18 @@ function onSiteDependenciesLoaded() {
   /**
    * ### Grid
    *
-   * Set `grid: true` in the options sent to function plot
+   * Set `grid: true` in the axis objects to draw a grid.
    */
   functionPlot({
     target: '#grid',
     x: {
-      label: 'real'
+      label: 'real',
+      grid: true
     },
     y: {
-      label: 'imaginary'
+      label: 'imaginary',
+      grid: true
     },
-    grid: true,
     data: [{ fn: 'sqrt(1 - x * x)' }, { fn: '-sqrt(1 - x * x)' }]
   })
 
@@ -142,12 +143,13 @@ function onSiteDependenciesLoaded() {
   functionPlot({
     target: '#sticky',
     x: {
-      position: 'sticky'
+      position: 'sticky',
+      grid: true
     },
     y: {
-      position: 'sticky'
+      position: 'sticky',
+      grid: true
     },
-    grid: true,
     data: [{ fn: 'cos(x)' }]
   })
 
@@ -277,12 +279,13 @@ function onSiteDependenciesLoaded() {
     target: '#logarithmic',
     x: {
       type: 'log',
-      domain: [0.01, 1]
+      domain: [0.01, 1],
+      grid: true
     },
     y: {
-      domain: [-100, 100]
+      domain: [-100, 100],
+      grid: true
     },
-    grid: true,
     data: [
       {
         fn: '1/x * cos(1/x)',
@@ -943,8 +946,8 @@ function onSiteDependenciesLoaded() {
    */
   functionPlot({
     target: '#vector',
-    x: { domain: [-3, 8] },
-    grid: true,
+    x: { domain: [-3, 8], grid: true },
+    y: { grid: true },
     data: [
       {
         vector: [2, 1],

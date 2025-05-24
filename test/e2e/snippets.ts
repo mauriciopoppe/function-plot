@@ -55,12 +55,13 @@ const snippets = [
       functionPlot({
         target: '#playground',
         x: {
-          label: 'real'
+          label: 'real',
+          grid: true
         },
         y: {
-          label: 'imaginary'
+          label: 'imaginary',
+          grid: true
         },
-        grid: true,
         data: [
           { fn: 'sqrt(1 - x * x)' } as LinearFunction,
           { fn: '-sqrt(1 - x * x)' } as LinearFunction
@@ -161,12 +162,13 @@ const snippets = [
         target: '#playground',
         x: {
           type: 'log',
-          domain: [0.01, 1]
+          domain: [0.01, 1],
+          grid: true
         },
         y: {
-          domain: [-100, 100]
+          domain: [-100, 100],
+          grid: true
         },
-        grid: true,
         data: [
           {
             fn: '1/x * cos(1/x)',

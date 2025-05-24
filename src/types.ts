@@ -40,6 +40,11 @@ export interface FunctionPlotOptionsAxis {
    * - `yAxis`: `left`
    */
   position?: 'sticky' | 'left' | 'bottom'
+
+  /**
+   * True to display a grid.
+   */
+  grid?: boolean
 }
 
 export interface FunctionPlotTip {
@@ -403,11 +408,6 @@ export interface FunctionPlotOptions {
    * The tip configuration
    */
   tip?: FunctionPlotTip
-
-  /**
-   * True to display a grid
-   */
-  grid?: boolean
 
   /**
    * True to disable panning and zoom
