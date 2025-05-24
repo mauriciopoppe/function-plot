@@ -6,11 +6,11 @@ function onSiteDependenciesLoaded() {
 
   functionPlot({
     target: '#description-sample',
-    yAxis: { domain: [-1, 9] },
+    x: { grid: true },
+    y: { domain: [-1, 9], grid: true },
     tip: {
       renderer: function () {}
     },
-    grid: true,
     data: [
       {
         fn: 'x^2',
@@ -24,8 +24,8 @@ function onSiteDependenciesLoaded() {
 
   functionPlot({
     target: '#description-sin-exp-x-naive',
-    yAxis: { domain: [-4, 4] },
-    xAxis: { domain: [-2, 6] },
+    y: { domain: [-4, 4] },
+    x: { domain: [-2, 6] },
     tip: {
       renderer: function () {}
     },
@@ -40,8 +40,8 @@ function onSiteDependenciesLoaded() {
 
   functionPlot({
     target: '#description-sin-exp-x',
-    yAxis: { domain: [-4, 4] },
-    xAxis: { domain: [-2, 6] },
+    y: { domain: [-4, 4] },
+    x: { domain: [-2, 6] },
     tip: {
       renderer: function () {}
     },
@@ -88,12 +88,12 @@ function onSiteDependenciesLoaded() {
    * - `title`: the title of the graph
    * - `width`: width of the graph
    * - `height`: height of the graph
-   * - `xAxis`:
+   * - `x`:
    *  - `type`: the type of scale for this axis, possible values `linear|log`
    *    (default value: `'linear'`)
    *  - `label`: x axis label
    *  - `domain`: x axis possible values (see examples below)
-   * - `yAxis`: same options as `xAxis`
+   * - `y`: same options as `x`
    * - `disableZoom`: true to disable translation/scaling on the graph
    */
   functionPlot({
@@ -102,11 +102,11 @@ function onSiteDependenciesLoaded() {
     width: 580,
     height: 400,
     disableZoom: true,
-    xAxis: {
+    x: {
       label: 'x - axis',
       domain: [-6, 6]
     },
-    yAxis: {
+    y: {
       label: 'y - axis'
     },
     data: [
@@ -119,18 +119,38 @@ function onSiteDependenciesLoaded() {
   /**
    * ### Grid
    *
-   * Set `grid: true` in the options sent to function plot
+   * Set `grid: true` in the axis objects to draw a grid.
    */
   functionPlot({
     target: '#grid',
-    xAxis: {
-      label: 'real'
+    x: {
+      label: 'real',
+      grid: true
     },
-    yAxis: {
-      label: 'imaginary'
+    y: {
+      label: 'imaginary',
+      grid: true
     },
-    grid: true,
     data: [{ fn: 'sqrt(1 - x * x)' }, { fn: '-sqrt(1 - x * x)' }]
+  })
+
+  /**
+   * ### Sticky axes
+   *
+   * Set `position: 'sticky'` on an axis to keep it centered
+   * in the screen and constrained to the viewport on pan and zoom.
+   */
+  functionPlot({
+    target: '#sticky',
+    x: {
+      position: 'sticky',
+      grid: true
+    },
+    y: {
+      position: 'sticky',
+      grid: true
+    },
+    data: [{ fn: 'cos(x)' }]
   })
 
   /**
@@ -138,8 +158,8 @@ function onSiteDependenciesLoaded() {
    *
    * The domains of both axes can be changed with the following configurations:
    *
-   * - `xDomain`, defaults to `[-7, 7]`
-   * - `yDomain`, keeps a 1:1 aspect ratio relative to `xDomain`, by default it's computed
+   * - `x.domain`, defaults to `[-7, 7]`
+   * - `y.domain`, keeps a 1:1 aspect ratio relative to `x.domain`, by default it's computed
    * with the following formula
    *
    * $$
@@ -151,8 +171,8 @@ function onSiteDependenciesLoaded() {
    */
   functionPlot({
     target: '#domain',
-    yAxis: { domain: [-1, 1] },
-    xAxis: { domain: [8, 24] },
+    y: { domain: [-1, 1] },
+    x: { domain: [8, 24] },
     data: [
       {
         fn: 'sin(x)'
@@ -204,7 +224,7 @@ function onSiteDependenciesLoaded() {
    */
   functionPlot({
     target: '#annotations',
-    yAxis: { domain: [-1, 9] },
+    y: { domain: [-1, 9] },
     data: [
       {
         fn: 'x^2'
@@ -238,7 +258,7 @@ function onSiteDependenciesLoaded() {
    */
   functionPlot({
     target: '#closed',
-    xAxis: { domain: [-2, 12] },
+    x: { domain: [-2, 12] },
     data: [
       {
         fn: '3 + sin(x)',
@@ -252,19 +272,20 @@ function onSiteDependenciesLoaded() {
    * ### Logarithmic scales
    *
    * The type of each axis can be configured to be logarithmic by specifying the
-   * type of axis to `log` inside the  `xAxis` option, note how this
+   * type of axis to `log` inside the  `x` option, note how this
    * change affects the way the functions are sampled
    */
   functionPlot({
     target: '#logarithmic',
-    xAxis: {
+    x: {
       type: 'log',
-      domain: [0.01, 1]
+      domain: [0.01, 1],
+      grid: true
     },
-    yAxis: {
-      domain: [-100, 100]
+    y: {
+      domain: [-100, 100],
+      grid: true
     },
-    grid: true,
     data: [
       {
         fn: '1/x * cos(1/x)',
@@ -344,9 +365,12 @@ function onSiteDependenciesLoaded() {
       yLine: true, // dashed line parallel to x = 0
       renderer: function (x, y, index) {
         // the returning value will be shown in the tip
+        return ''
       }
     },
-    yDomain: [-1, 9],
+    y: {
+      domain: [-1, 9]
+    },
     data: [
       { fn: 'x^2' },
       {
@@ -391,8 +415,8 @@ function onSiteDependenciesLoaded() {
    */
   functionPlot({
     target: '#secant',
-    yAxis: { domain: [-1, 9] },
-    xAxis: { domain: [-3, 3] },
+    y: { domain: [-1, 9] },
+    x: { domain: [-3, 3] },
     data: [
       {
         fn: 'x^2',
@@ -413,19 +437,13 @@ function onSiteDependenciesLoaded() {
    */
   functionPlot({
     target: '#secant-update',
-    yDomain: [-1, 9],
+    y: { domain: [-1, 9] },
     data: [
       {
         fn: 'x^2',
         secants: [
-          {
-            x0: 2,
-            updateOnMouseMove: true
-          },
-          {
-            x0: -2,
-            updateOnMouseMove: true
-          }
+          { x0: 2, updateOnMouseMove: true },
+          { x0: -2, updateOnMouseMove: true }
         ]
       }
     ]
@@ -448,7 +466,7 @@ function onSiteDependenciesLoaded() {
    */
   functionPlot({
     target: '#derivative',
-    yAxis: { domain: [-1, 9] },
+    y: { domain: [-1, 9] },
     data: [
       {
         fn: 'x^2',
@@ -469,7 +487,7 @@ function onSiteDependenciesLoaded() {
    */
   functionPlot({
     target: '#derivative-update',
-    yAxis: { domain: [-1, 9] },
+    y: { domain: [-1, 9] },
     data: [
       {
         fn: 'x^2',
@@ -520,13 +538,13 @@ function onSiteDependenciesLoaded() {
   a = functionPlot({
     target: '#linked-a',
     height: 250,
-    xAxis: { domain: [-10, 10] },
+    x: { domain: [-10, 10] },
     data: [{ fn: 'x * x' }]
   })
   b = functionPlot({
     target: '#linked-b',
     height: 250,
-    xAxis: { domain: [-10, 10] },
+    x: { domain: [-10, 10] },
     data: [{ fn: '2 * x' }]
   })
   a.addLink(b)
@@ -546,19 +564,19 @@ function onSiteDependenciesLoaded() {
   a = functionPlot({
     target: '#linked-a-multiple',
     height: 250,
-    xAxis: { domain: [-10, 10] },
+    x: { domain: [-10, 10] },
     data: [{ fn: 'x * x' }]
   })
   b = functionPlot({
     target: '#linked-b-multiple',
     height: 250,
-    xAxis: { domain: [-10, 10] },
+    x: { domain: [-10, 10] },
     data: [{ fn: '2 * x' }]
   })
   c = functionPlot({
     target: '#linked-c-multiple',
     height: 250,
-    xAxis: { domain: [-10, 10] },
+    x: { domain: [-10, 10] },
     data: [{ fn: '2' }]
   })
   a.addLink(b, c)
@@ -675,8 +693,8 @@ function onSiteDependenciesLoaded() {
    */
   functionPlot({
     target: '#circle-explicit',
-    yAxis: { domain: [-1.897959183, 1.897959183] },
-    xAxis: { domain: [-3, 3] },
+    y: { domain: [-1.897959183, 1.897959183] },
+    x: { domain: [-3, 3] },
     data: [{ fn: 'sqrt(1 - x * x)' }, { fn: '-sqrt(1 - x * x)' }]
   })
 
@@ -708,8 +726,8 @@ function onSiteDependenciesLoaded() {
    */
   functionPlot({
     target: '#parametric-circle',
-    yAxis: { domain: [-1.897959183, 1.897959183] },
-    xAxis: { domain: [-3, 3] },
+    y: { domain: [-1.897959183, 1.897959183] },
+    x: { domain: [-3, 3] },
     data: [
       {
         x: 'cos(t)',
@@ -734,8 +752,8 @@ function onSiteDependenciesLoaded() {
    */
   functionPlot({
     target: '#butterfly-curve',
-    yAxis: { domain: [-4.428571429, 4.428571429] },
-    xAxis: { domain: [-7, 7] },
+    y: { domain: [-4.428571429, 4.428571429] },
+    x: { domain: [-7, 7] },
     data: [
       {
         x: 'sin(t) * (exp(cos(t)) - 2 cos(4t) - sin(t/12)^5)',
@@ -774,8 +792,8 @@ function onSiteDependenciesLoaded() {
    */
   functionPlot({
     target: '#polar-circle',
-    yAxis: { domain: [-1.897959183, 1.897959183] },
-    xAxis: { domain: [-3, 3] },
+    y: { domain: [-1.897959183, 1.897959183] },
+    x: { domain: [-3, 3] },
     data: [
       {
         r: 'r0 * cos(theta - gamma) + sqrt(a^2 - r0^2 * (sin(theta - gamma))^2)',
@@ -801,8 +819,8 @@ function onSiteDependenciesLoaded() {
    */
   functionPlot({
     target: '#polar-complex',
-    yAxis: { domain: [-1.897959183, 1.897959183] },
-    xAxis: { domain: [-3, 3] },
+    y: { domain: [-1.897959183, 1.897959183] },
+    x: { domain: [-3, 3] },
     data: [
       {
         r: '2 * sin(4 theta)',
@@ -838,8 +856,8 @@ function onSiteDependenciesLoaded() {
    */
   functionPlot({
     target: '#circle-implicit',
-    yAxis: { domain: [-1.897959183, 1.897959183] },
-    xAxis: { domain: [-3, 3] },
+    y: { domain: [-1.897959183, 1.897959183] },
+    x: { domain: [-3, 3] },
     data: [
       {
         fn: 'x * x + y * y - 1',
@@ -863,7 +881,7 @@ function onSiteDependenciesLoaded() {
   functionPlot({
     target: '#implicit-complex',
     yAxis: { domain: [-3.795918366, 3.795918366] },
-    xAxis: { domain: [-6, 6] },
+    x: { domain: [-6, 6] },
     disableZoom: true,
     data: [
       {
@@ -928,8 +946,8 @@ function onSiteDependenciesLoaded() {
    */
   functionPlot({
     target: '#vector',
-    xAxis: { domain: [-3, 8] },
-    grid: true,
+    x: { domain: [-3, 8], grid: true },
+    y: { grid: true },
     data: [
       {
         vector: [2, 1],

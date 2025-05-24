@@ -29,9 +29,9 @@ instance.options.data.forEach(function (datum) {
 <h3>Maintain aspect ratio</h3>
 <p>Given the <code>xDomain</code> values you can compute the corresponding <code>yDomain</code> values to main
 the aspect ratio between the axes</p>
-<pre><code class="language-javascript">function computeYScale (width, height, xScale) {
+<pre><code class="language-javascript">function computeYScale(width, height, xScale) {
   const xDiff = xScale[1] - xScale[0]
-  const yDiff = height * xDiff / width
+  const yDiff = (height * xDiff) / width
   return [-yDiff / 2, yDiff / 2]
 }
 
@@ -48,13 +48,15 @@ functionPlot({
   yDomain: computeYScale(width, height, xScale),
 
   target: '#demo',
-  data: [{
-    fn: 'x^2',
-    derivative: {
-      fn: '2x',
-      updateOnMouseMove: true
+  data: [
+    {
+      fn: 'x^2',
+      derivative: {
+        fn: '2x',
+        updateOnMouseMove: true
+      }
     }
-  }]
+  ]
 })
 </code></pre>
 <h3>Changing the format of the values shown on the axes</h3>
