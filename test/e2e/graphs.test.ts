@@ -45,7 +45,7 @@ describe('Function Plot', () => {
       // This adds an artificial spin only on functions that are labeled with [async]
       if (snippet.testName.indexOf('[async]') >= 0) {
         await new Promise((resolve) => {
-          setTimeout(resolve, 100)
+          setTimeout(resolve, 3000)
         })
       }
 
