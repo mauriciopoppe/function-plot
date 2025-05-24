@@ -415,6 +415,11 @@ export interface FunctionPlotOptions {
   disableZoom?: boolean
 
   /**
+   * True to display a grid.
+   */
+  grid?: boolean
+
+  /**
    * The functions to plot
    */
   data?: FunctionPlotDatum[]

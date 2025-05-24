@@ -286,11 +286,11 @@ export class Chart extends EventEmitter.EventEmitter {
     if (!this.meta.xAxis) {
       this.meta.xAxis = d3AxisBottom(this.meta.xScale)
     }
-    this.meta.xAxis.tickSize(this.options.x.grid ? -this.meta.height : 0).tickFormat(formatter)
+    this.meta.xAxis.tickSize(this.options.grid || this.options.x.grid ? -this.meta.height : 0).tickFormat(formatter)
     if (!this.meta.yAxis) {
       this.meta.yAxis = d3AxisLeft(this.meta.yScale)
     }
-    this.meta.yAxis.tickSize(this.options.y.grid ? -this.meta.width : 0).tickFormat(formatter)
+    this.meta.yAxis.tickSize(this.options.grid || this.options.y.grid ? -this.meta.width : 0).tickFormat(formatter)
 
     this.line = d3Line()
       .x(function (d) {
