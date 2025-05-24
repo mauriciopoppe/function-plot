@@ -401,8 +401,11 @@ c = functionPlot({
 a.addLink(b, c)
 b.addLink(a, c)
 c.addLink(a, b)</code></pre></div></div><div class="col-md-6 center-block demos"><span class="graph" id="linked-a-multiple"></span><span class="graph" id="linked-b-multiple"></span><span class="graph" id="linked-c-multiple"></span></div></div></div></div><div class="example"><div class="container"><div class="row"><div class="col-md-6"><div class="comment"><h3>Update</h3>
-<p>To update a graphic one needs to call <code>functionPlot</code> on the same target 
-element with <em>any</em> object that is configured properly</p></div><div class="code"><pre><code class="javascript">const options = {
+<p>To update a graph call <code>functionPlot</code> on the same target 
+element with <em>any</em> object that is configured properly.</p>
+<p>If you want to update properties of a datum (of an element of <code>data</code>), 
+make sure to <strong>recreate the entire object</strong> instead of changing properties 
+from it.</p></div><div class="code"><pre><code class="javascript">const options = {
   target: '#quadratic-update',
   data: [
     {
@@ -418,6 +421,7 @@ document.querySelector('#update').addEventListener('click', function () {
       xLine: true,
       yLine: true
     }
+    // Replace the entire object instead of changing properties from it!
     options.data[0] = {
       fn: 'x * x',
       derivative: {
@@ -430,9 +434,8 @@ document.querySelector('#update').addEventListener('click', function () {
     // update the function to be y = x
     delete options.title
     delete options.tip
-    options.data[0] = {
-      fn: 'x'
-    }
+    // Replace the entire object instead of changing properties from it!
+    options.data[0] = { fn: 'x' }
   }
   functionPlot(options)
 })
