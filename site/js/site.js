@@ -586,8 +586,12 @@ function onSiteDependenciesLoaded() {
   /**
    * ### Update
    *
-   * To update a graphic one needs to call `functionPlot` on the same target
-   * element with *any* object that is configured properly
+   * To update a graph call `functionPlot` on the same target
+   * element with *any* object that is configured properly.
+   *
+   * If you want to update properties of a datum (of an element of `data`),
+   * make sure to **recreate the entire object** instead of changing properties
+   * from it.
    *
    * @additionalDOM
    *
@@ -609,6 +613,7 @@ function onSiteDependenciesLoaded() {
         xLine: true,
         yLine: true
       }
+      // Replace the entire object instead of changing properties from it!
       options.data[0] = {
         fn: 'x * x',
         derivative: {
@@ -621,9 +626,8 @@ function onSiteDependenciesLoaded() {
       // update the function to be y = x
       delete options.title
       delete options.tip
-      options.data[0] = {
-        fn: 'x'
-      }
+      // Replace the entire object instead of changing properties from it!
+      options.data[0] = { fn: 'x' }
     }
     functionPlot(options)
   })
