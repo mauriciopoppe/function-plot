@@ -472,7 +472,7 @@ export class Chart extends EventEmitter.EventEmitter {
   }
 
   /**
-   * Draws each of the datums stored in data.options only
+   * buildContent draws each of the datums stored in data.options only.
    * To do a full redraw call `instance.plot()`
    */
   private buildContent() {
@@ -546,7 +546,7 @@ export class Chart extends EventEmitter.EventEmitter {
     // - for each datum determine the sampler to use
     const graphs = content
       .merge(contentEnter)
-      .selectAll(':scope > g.graph')
+      .selectAll('g.graph')
       .data(
         (d: FunctionPlotOptions) => {
           return d.data
@@ -685,8 +685,11 @@ export class Chart extends EventEmitter.EventEmitter {
     this.options.y.domain = [this.meta.yScale.domain()[0], this.meta.yScale.domain()[1]]
   }
 
-  // renderContent is a perf optimization to only render the content
-  // without rendering the canvas beneath it.
+  /**
+   * renderContent is a perf optimization to only render the content
+   * without rendering the canvas beneath it, when the user interacts with the canvas
+   * doing a pan or zoom, it'll call this function instead of #plot (which does a full plot).
+   */
   private renderContent() {
     const instance = this
     instance.emit('before:renderContent')
@@ -816,7 +819,7 @@ export class Chart extends EventEmitter.EventEmitter {
   }
 
   /**
-   * Removes a linked graph.
+   * Remove link removes a linked graph.
    */
   removeLink(instance: Chart) {
     const idx = this.linkedGraphs.indexOf(instance)
@@ -826,7 +829,7 @@ export class Chart extends EventEmitter.EventEmitter {
   }
 
   /**
-   * Destroys this instance of functionPlot,
+   * destroy destroys the current functionPlot instance.
    * if you added this to other instances through `addLink` make
    * sure you remove the links from the other instances to this
    * instance using `removeLink`.

@@ -2,17 +2,13 @@ import { linspace, sgn, infinity, clamp, space, isValidNumber } from '../utils.m
 import { builtIn as evaluate } from './eval.mjs'
 
 import { FunctionPlotDatum, FunctionPlotScale, PointFunction, VectorFunction } from '../types.js'
-import { SamplerParams, SamplerFn } from './types.js'
+import { SamplerParams, SamplerFn, BuiltInSamplerResult, BuiltInSamplerResultGroup } from './types.js'
 
 type Asymptote = {
   asymptote: boolean
   d0: [number, number]
   d1: [number, number]
 }
-
-type SamplerResultSingle = [number, number]
-type SamplerResultGroup = Array<SamplerResultSingle>
-type SamplerResult = Array<SamplerResultGroup>
 
 function checkAsymptote(
   d0: [number, number],
@@ -50,18 +46,18 @@ function checkAsymptote(
  * Splits the evaluated data into arrays, each array is separated by any asymptote found
  * through the process of detecting slope/sign brusque changes
  */
-function split(d: FunctionPlotDatum, data: SamplerResultGroup, yScale: FunctionPlotScale): SamplerResult {
+function split(d: FunctionPlotDatum, data: BuiltInSamplerResultGroup, yScale: FunctionPlotScale): BuiltInSamplerResult {
   if (data.length === 0) {
     // This case is possible when the function didn't render any valid points
     // e.g. when evaluating sqrt(x) with all negative values.
     return []
   }
 
-  const samplerResult: SamplerResult = []
+  const samplerResult: BuiltInSamplerResult = []
   const yMin = yScale.domain()[0] - infinity()
   const yMax = yScale.domain()[1] + infinity()
 
-  let samplerGroup: SamplerResultGroup = [data[0]]
+  let samplerGroup: BuiltInSamplerResultGroup = [data[0]]
 
   let i = 1
   let deltaX = infinity()
@@ -117,7 +113,7 @@ function split(d: FunctionPlotDatum, data: SamplerResultGroup, yScale: FunctionP
   return samplerResult
 }
 
-function linear(samplerParams: SamplerParams): SamplerResult {
+function linear(samplerParams: SamplerParams): BuiltInSamplerResult {
   const allX = space(samplerParams.xAxis, samplerParams.range, samplerParams.nSamples)
   const yDomain = samplerParams.yScale.domain()
   // const yDomainMargin = yDomain[1] - yDomain[0]
@@ -136,12 +132,12 @@ function linear(samplerParams: SamplerParams): SamplerResult {
   return splitData
 }
 
-function parametric(samplerParams: SamplerParams): SamplerResult {
+function parametric(samplerParams: SamplerParams): BuiltInSamplerResult {
   // range is mapped to canvas coordinates from the input
   // for parametric plots the range will tell the start/end points of the `t` param
   const parametricRange = samplerParams.d.range || [0, 2 * Math.PI]
   const tCoords = space(samplerParams.xAxis, parametricRange, samplerParams.nSamples)
-  const samples: SamplerResultGroup = []
+  const samples: BuiltInSamplerResultGroup = []
   for (let i = 0; i < tCoords.length; i += 1) {
     const t = tCoords[i]
     const x = evaluate(samplerParams.d, 'x', { t })
@@ -151,12 +147,12 @@ function parametric(samplerParams: SamplerParams): SamplerResult {
   return [samples]
 }
 
-function polar(samplerParams: SamplerParams): SamplerResult {
+function polar(samplerParams: SamplerParams): BuiltInSamplerResult {
   // range is mapped to canvas coordinates from the input
   // for polar plots the range will tell the start/end points of the `theta` param
   const polarRange = samplerParams.d.range || [-Math.PI, Math.PI]
   const thetaSamples = space(samplerParams.xAxis, polarRange, samplerParams.nSamples)
-  const samples: SamplerResultGroup = []
+  const samples: BuiltInSamplerResultGroup = []
   for (let i = 0; i < thetaSamples.length; i += 1) {
     const theta = thetaSamples[i]
     const r = evaluate(samplerParams.d, 'r', { theta })
@@ -167,18 +163,18 @@ function polar(samplerParams: SamplerParams): SamplerResult {
   return [samples]
 }
 
-function points(samplerParams: SamplerParams): SamplerResult {
+function points(samplerParams: SamplerParams): BuiltInSamplerResult {
   const d: PointFunction = samplerParams.d as PointFunction
   return [d.points]
 }
 
-function vector(samplerParms: SamplerParams): SamplerResult {
+function vector(samplerParms: SamplerParams): BuiltInSamplerResult {
   const d: VectorFunction = samplerParms.d as VectorFunction
   d.offset = d.offset || [0, 0]
   return [[d.offset, [d.vector[0] + d.offset[0], d.vector[1] + d.offset[1]]]]
 }
 
-const sampler: SamplerFn = function sampler(samplerParams: SamplerParams): SamplerResult {
+const sampler: SamplerFn = function sampler(samplerParams: SamplerParams): BuiltInSamplerResult {
   switch (samplerParams.d.fnType) {
     case 'linear':
       return linear(samplerParams)
