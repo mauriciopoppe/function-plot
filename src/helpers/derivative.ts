@@ -1,6 +1,6 @@
 import { select as d3Select, Selection } from 'd3-selection'
 
-import { polyline } from '../graph-types/index.js'
+import { Polyline } from '../graph-types/index.js'
 import { builtIn as builtInEvaluator } from '../samplers/eval.mjs'
 import datumDefaults from '../datum-defaults.js'
 import { infinity } from '../utils.mjs'
@@ -63,7 +63,11 @@ export default function derivative(chart: Chart) {
       const innerSelectionEnter = innerSelection.enter().append('g').attr('class', 'derivative')
 
       // enter + update
-      innerSelection.merge(innerSelectionEnter).call(polyline(chart))
+      innerSelection.merge(innerSelectionEnter).each(function (d: any) {
+        const polyline = new Polyline(d)
+        polyline.chart = chart
+        polyline.render(d3Select(this))
+      })
 
       // update
       // change the opacity of the line

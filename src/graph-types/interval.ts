@@ -3,8 +3,8 @@ import { select as d3Select, Selection } from 'd3-selection'
 import { asyncIntervalEvaluate, intervalEvaluate } from '../evaluate-datum.js'
 import { infinity, color } from '../utils.mjs'
 
-import { Chart } from '../index.js'
-import { Interval, FunctionPlotDatum, FunctionPlotScale, LinearFunction } from '../types.js'
+import { Mark } from './mark.js'
+import { Interval as TInterval, FunctionPlotDatum, FunctionPlotScale } from '../types.js'
 import { IntervalSamplerResult } from '../samplers/types.js'
 
 function clampRange(minWidthHeight: number, vLo: number, vHi: number, gLo: number, gHi: number) {
@@ -39,7 +39,7 @@ export function createPathD(
   xScale: FunctionPlotScale,
   yScale: FunctionPlotScale,
   minWidthHeight: number,
-  points: Array<[Interval, Interval]>,
+  points: Array<[TInterval, TInterval]>,
   closed: boolean
 ) {
   let path = ''
@@ -75,54 +75,67 @@ export function createPathD(
   return path
 }
 
-export default function interval(chart: Chart) {
-  const xScale = chart.meta.xScale
-  const yScale = chart.meta.yScale
+export class Interval extends Mark {
+  fn?: any
+  closed: boolean
+  fnType: string
+  sampler: string
+  range?: [number, number]
+  nSamples: number
 
-  function plotLine(selection: Selection<any, FunctionPlotDatum, any, any>) {
-    selection.each(async function (d) {
-      const el = ((plotLine as any).el = d3Select(this))
-      const index = d.index
-      const closed = d.closed
-      let evaluatedData: IntervalSamplerResult
-      if (d.fnType === 'linear' && typeof (d as LinearFunction).fn === 'string' && d.sampler === 'asyncInterval') {
-        evaluatedData = await asyncIntervalEvaluate(chart, d)
-      } else {
-        evaluatedData = intervalEvaluate(chart, d)
-      }
-      const innerSelection = el.selectAll(':scope > path.line').data(evaluatedData)
-
-      // the min height/width of the rects drawn by the path generator
-      const minWidthHeight = Math.max((evaluatedData[0] as any).scaledDx, 1)
-
-      const cls = `line line-${index}`
-      const innerSelectionEnter = innerSelection.enter().append('path').attr('class', cls).attr('fill', 'none')
-
-      // enter + update
-      const selection = innerSelection
-        .merge(innerSelectionEnter)
-        .attr('stroke-width', minWidthHeight)
-        .attr('stroke', color(d, index) as any)
-        .attr('opacity', closed ? 0.5 : 1)
-        .attr('d', function (d: Array<[Interval, Interval]>) {
-          return createPathD(xScale, yScale, minWidthHeight, d, closed)
-        })
-
-      if (d.attr) {
-        for (const k in d.attr) {
-          // If the attribute to modify is class then append the default class
-          // or otherwise the d3 selection won't work.
-          let val = d.attr[k]
-          if (k === 'class') {
-            val = `${cls} ${d.attr[k]}`
-          }
-          selection.attr(k, val)
-        }
-      }
-
-      innerSelection.exit().remove()
-    })
+  constructor(options: any) {
+    super(options)
+    this.fn = options.fn
+    this.fnType = options.fnType || 'linear'
+    this.sampler = options.sampler || 'interval'
+    this.closed = options.closed
+    this.range = options.range
+    this.nSamples = options.nSamples
   }
 
-  return plotLine
+  async render(selection: Selection<any, FunctionPlotDatum, any, any>) {
+    const index = this.index
+    const closed = this.closed
+    let evaluatedData: IntervalSamplerResult
+    if (this.fnType === 'linear' && typeof this.fn === 'string' && this.sampler === 'asyncInterval') {
+      evaluatedData = await asyncIntervalEvaluate(this.chart, this as any)
+    } else {
+      evaluatedData = intervalEvaluate(this.chart, this as any)
+    }
+    const innerSelection = selection.selectAll(':scope > path.line').data(evaluatedData)
+
+    // the min height/width of the rects drawn by the path generator
+    const minWidthHeight = Math.max((evaluatedData[0] as any).scaledDx, 1)
+
+    const cls = `line line-${index}`
+    const innerSelectionEnter = innerSelection.enter().append('path').attr('class', cls).attr('fill', 'none')
+
+    // enter + update
+    innerSelection
+      .merge(innerSelectionEnter)
+      .attr('stroke-width', minWidthHeight)
+      .attr('stroke', color(this, index) as any)
+      .attr('opacity', closed ? 0.5 : 1)
+      .attr('d', (d: Array<[TInterval, TInterval]>) => {
+        return createPathD(this.chart.meta.xScale, this.chart.meta.yScale, minWidthHeight, d, closed)
+      })
+
+    if (this.attr) {
+      for (const k in this.attr) {
+        // If the attribute to modify is class then append the default class
+        // or otherwise the d3 selection won't work.
+        let val = this.attr[k]
+        if (k === 'class') {
+          val = `${cls} ${this.attr[k]}`
+        }
+        selection.attr(k, val)
+      }
+    }
+
+    innerSelection.exit().remove()
+  }
+}
+
+export function interval(options: any) {
+  return new Interval(options)
 }
