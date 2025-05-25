@@ -5,7 +5,7 @@ import intervalArithmeticEval from 'interval-arithmetic-eval'
  * @param expressionCompiler A function which when called must return an object
  * with the form \{ eval: function \}
  */
-function registerEvaluator(samplerName, expressionCompiler) {
+function registerSampler(samplerName, expressionCompiler) {
   function getCompiledExpression(meta, property) {
     const hiddenProperty = samplerName + '_Expression_' + property
     const hiddenCompiled = samplerName + '_Compiled_' + property
@@ -57,7 +57,7 @@ function builtInExpressionCompiler(expression) {
   }
 }
 
-const builtIn = registerEvaluator('builtIn', builtInExpressionCompiler)
+const builtIn = registerSampler('builtIn', builtInExpressionCompiler)
 
 function intervalExpressionCompiler(expression) {
   if (typeof expression === 'string') {
@@ -69,6 +69,6 @@ function intervalExpressionCompiler(expression) {
   }
 }
 
-const interval = registerEvaluator('interval', intervalExpressionCompiler)
+const interval = registerSampler('interval', intervalExpressionCompiler)
 
-export { builtIn, interval, registerEvaluator }
+export { builtIn, interval, registerSampler }

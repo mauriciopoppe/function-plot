@@ -19,7 +19,6 @@ const Globals = {
   DEFAULT_ITERATIONS: null,
   TIP_X_EPS: 1,
   MAX_ITERATIONS: 0,
-  graphTypes: {},
 
   /** @type {null | any} */
   _workerPool: null,
@@ -39,12 +38,4 @@ const Globals = {
 
 Globals.MAX_ITERATIONS = Globals.DEFAULT_WIDTH * 10
 
-function registerGraphType(graphType, graphTypeBulder) {
-  if (Object.hasOwn(Globals.graphTypes, graphType)) {
-    throw new Error(`registerGraphType: graphType ${graphType} is already registered.`)
-  }
-  Globals.graphTypes[graphType] = graphTypeBulder
-}
-
-export { registerGraphType }
 export default Globals

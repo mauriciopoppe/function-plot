@@ -4,15 +4,10 @@ import { IntervalWorkerPool } from './samplers/interval_worker_pool.js'
 import { FunctionPlotOptions } from './types.js'
 import { Chart, ChartMeta, ChartMetaMargin } from './chart.js'
 
-import globals, { registerGraphType } from './globals.mjs'
-import { polyline, interval, scatter, text } from './graph-types/index.js'
-import { interval as intervalEval, builtIn as builtInEval, registerEvaluator } from './samplers/eval.mjs'
-
-// register common graphTypes on library load.
-registerGraphType('polyline', polyline)
-registerGraphType('interval', interval)
-registerGraphType('scatter', scatter)
-registerGraphType('text', text)
+import globals from './globals.mjs'
+import { interval, polyline, scatter, text } from './graph-types/index.js'
+import { Mark } from './graph-types/mark.js'
+import { interval as intervalEval, builtIn as builtInEval, registerSampler } from './samplers/eval.mjs'
 
 function withWebWorkers(nWorkers = 8, WorkerConstructor = window.Worker, publicPath = window.location.href) {
   // @ts-ignore
@@ -48,18 +43,23 @@ functionPlot.$eval = {
   builtIn: builtInEval,
   interval: intervalEval
 }
-functionPlot.graphTypes = { interval, polyline, scatter }
 functionPlot.withWebWorkers = withWebWorkers
+
+functionPlot.text = text
+functionPlot.interval = interval
+functionPlot.polyline = polyline
+functionPlot.scatter = scatter
 
 export * from './types.js'
 export { Chart, ChartMeta, ChartMetaMargin }
-export { registerGraphType, withWebWorkers }
-export { registerEvaluator }
+export { withWebWorkers }
+export { registerSampler }
+export { Mark }
 export { builtIn as EvalBuiltIn, interval as EvalInterval } from './samplers/eval.mjs'
 export {
   interval as GraphTypeInterval,
   polyline as GraphTypePolyline,
-  scatter as GraphTypeScatter
+  scatter as GraphTypeScatter,
+  text as GraphTypeText
 } from './graph-types/index.js'
 export { GraphTypePlotter, GraphTypeBuilder } from './graph-types/types.js'
-export * from './helpers/index.js'

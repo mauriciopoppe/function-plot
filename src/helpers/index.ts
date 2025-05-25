@@ -4,7 +4,7 @@ import secant from './secant.js'
 
 import { Chart } from '../index.js'
 
-export default function helpers(chart: Chart) {
+export function helpers(chart: Chart) {
   function helper(selection: Selection<any, any, any, any>) {
     selection.each(function () {
       const el = d3Select(this)

@@ -29,9 +29,10 @@
       functionPlot({
         target: '#playground',
         data: [
-          { fn: 'x^2', nSamples: 4000, sampler: 'asyncInterval' },
-          { fn: 'sin(x)', nSamples: 4000, sampler: 'asyncInterval' },
-          { fn: '1/x', nSamples: 4000, sampler: 'asyncInterval' }
+          functionPlot.interval({ fn: 'x^2' }),
+          functionPlot.scatter({ fn: 'sin(x)', nSamples: 50 }),
+          functionPlot.polyline({ fn: 'x^3' }),
+          functionPlot.text({ text: 'foo', location: [1, 2] })
         ]
       })
       // functionPlot({

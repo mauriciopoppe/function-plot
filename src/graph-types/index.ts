@@ -1,6 +1,6 @@
-import polyline from './polyline.js'
-import interval from './interval.js'
-import scatter from './scatter.js'
-import text from './text.js'
+import { Interval, interval } from './interval.js'
+import { Polyline, polyline } from './polyline.js'
+import { Scatter, scatter } from './scatter.js'
+import { Text, text } from './text.js'
 
-export { polyline, interval, scatter, text }
+export { Polyline, polyline, Scatter, scatter, Interval, interval, Text, text }

@@ -391,11 +391,25 @@ const snippets = [
   {
     testName: 'should destroy the svg node on destroy',
     fn: function () {
-      const instance = functionPlot({
+      const destroyableInstance = functionPlot({
         target: '#playground',
         data: [{ fn: 'x^2' } as LinearFunction]
       })
-      instance.destroy()
+      destroyableInstance.destroy()
+    }
+  },
+  {
+    testName: 'should render using the exported functions',
+    fn: function () {
+      functionPlot({
+        target: '#playground',
+        data: [
+          functionPlot.interval({ fn: 'x^2' }) as any,
+          functionPlot.scatter({ fn: 'sin(x)', nSamples: 50 }),
+          functionPlot.polyline({ fn: 'x^3' }),
+          functionPlot.text({ text: 'foo', location: [1, 2] })
+        ]
+      })
     }
   },
   {

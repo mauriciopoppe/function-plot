@@ -7,11 +7,14 @@ import { select as d3Select, pointer as d3Pointer } from 'd3-selection'
 import { interpolateRound as d3InterpolateRound } from 'd3-interpolate'
 import EventEmitter from 'events'
 
-import { FunctionPlotOptions, FunctionPlotDatum, FunctionPlotScale, FunctionPlotOptionsAxis } from './types.js'
+import { FunctionPlotDatum, FunctionPlotOptions, FunctionPlotScale, FunctionPlotOptionsAxis } from './types.js'
+
+import { Mark } from './graph-types/mark.js'
+import { interval, polyline, scatter, text } from './graph-types/index.js'
 
 import annotations from './helpers/annotations.js'
 import mousetip from './tip.js'
-import helpers from './helpers/index.js'
+import { helpers } from './helpers/index.js'
 import datumDefaults from './datum-defaults.js'
 import datumValidation from './datum-validation.js'
 import globals from './globals.mjs'
@@ -565,7 +568,7 @@ export class Chart extends EventEmitter.EventEmitter {
     const graphsEnter = graphs.enter().append('g').attr('class', 'graph')
 
     // enter + update
-    graphs.merge(graphsEnter).each(function (d: FunctionPlotDatum, index: number) {
+    graphs.merge(graphsEnter).each(function (d: Mark | FunctionPlotDatum, index: number) {
       // additional options needed in the graph-types/helpers
       d.index = index
 
@@ -574,7 +577,31 @@ export class Chart extends EventEmitter.EventEmitter {
       d.generation = self.generation
 
       const selection = d3Select(this)
-      selection.call(globals.graphTypes[d.graphType](self))
+
+      // To preserve compatibility with v1. Convert the plain object into a mark.
+      let mark: Mark
+      if (!(d instanceof Mark)) {
+        if (d.graphType === 'interval') {
+          mark = interval(d)
+        } else if (d.graphType === 'polyline') {
+          mark = polyline(d)
+        } else if (d.graphType === 'scatter') {
+          mark = scatter(d)
+        } else if (d.graphType === 'text') {
+          mark = text(d)
+        } else {
+          throw new Error(
+            `Cannot convert datum=${d} to be graph of type Interval, Polyline, Scatter or Text.\n` +
+              `Check that a datum is an instance of Mark or that it can converted to any graph type above.`
+          )
+        }
+      } else {
+        mark = d
+      }
+
+      mark.chart = self
+      mark.render(selection)
+
       selection.call(helpers(self))
     })
     this.generation += 1
@@ -731,8 +758,9 @@ export class Chart extends EventEmitter.EventEmitter {
         const xScaleClone = transform.rescaleX(self.meta.zoomBehavior.xScale).interpolate(d3InterpolateRound)
         const yScaleClone = transform.rescaleY(self.meta.zoomBehavior.yScale).interpolate(d3InterpolateRound)
 
-        // update the scales's metadata
-        // NOTE: setting self.meta.xScale = self.meta.zoomBehavior.xScale creates artifacts and weird lines
+        // update the scales' metadata
+        // setting self.meta.xScale = self.meta.zoomBehavior.xScale creates artifacts and weird lines
+        // so that's why the domain and range are cloned and then assigned.
         self.meta.xScale
           .domain(xScaleClone.domain())
           // @ts-ignore domain always returns typeof this.meta.yDomain

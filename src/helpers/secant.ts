@@ -2,7 +2,7 @@ import { select as d3Select, Selection } from 'd3-selection'
 
 import { builtIn as builtInEvaluator } from '../samplers/eval.mjs'
 import datumDefaults from '../datum-defaults.js'
-import { polyline } from '../graph-types/index.js'
+import { Polyline } from '../graph-types/index.js'
 import { infinity } from '../utils.mjs'
 
 import { Chart } from '../index.js'
@@ -81,7 +81,11 @@ export default function secant(chart: Chart) {
       const innerSelectionEnter = innerSelection.enter().append('g').attr('class', 'secant')
 
       // enter + update
-      innerSelection.merge(innerSelectionEnter).call(polyline(chart))
+      innerSelection.merge(innerSelectionEnter).each(function (d: any) {
+        const polyline = new Polyline(d)
+        polyline.chart = chart
+        polyline.render(d3Select(this))
+      })
 
       // change the opacity of the secants
       innerSelection.merge(innerSelectionEnter).selectAll('path').attr('opacity', 0.5)

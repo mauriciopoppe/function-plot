@@ -1,44 +1,46 @@
-import { select as d3Select, Selection } from 'd3-selection'
+import { Selection } from 'd3-selection'
 import { hsl as d3Hsl } from 'd3-color'
 
 import { color } from '../utils.mjs'
 
-import { Chart } from '../index.js'
+import { Mark } from './mark.js'
 import { TextFunction } from '../types.js'
 
-export default function Text(chart: Chart) {
-  const xScale = chart.meta.xScale
-  const yScale = chart.meta.yScale
+export class Text extends Mark {
+  location: [number, number]
+  text: ''
 
-  function text(selection: Selection<any, TextFunction, any, any>) {
-    selection.each(function (d) {
-      // Force some parameters to make it look like a vector.
-      d.sampler = 'builtIn'
-      d.fnType = 'vector'
-
-      const innerSelection = d3Select(this).selectAll(':scope > text.fn-text').data([d.location])
-      const innerSelectionEnter = innerSelection.enter().append('text').attr('class', `fn-text fn-text-${d.index}`)
-
-      const computeColor = color(d, d.index)
-
-      // enter + update
-      const selection = innerSelection
-        .merge(innerSelectionEnter)
-        .attr('fill', d3Hsl(computeColor.toString()).brighter(1.5).formatHex())
-        .attr('x', (d) => xScale(d[0]))
-        .attr('y', (d) => yScale(d[1]))
-        .text(() => d.text)
-
-      if (d.attr) {
-        for (const k in d.attr) {
-          selection.attr(k, d.attr[k])
-        }
-      }
-
-      // exit
-      innerSelection.exit().remove()
-    })
+  constructor(options: any) {
+    super(options)
+    this.location = options.location
+    this.text = options.text
   }
 
-  return text
+  render(selection: Selection<any, TextFunction, any, any>) {
+    const innerSelection = selection.selectAll('text.fn-text').data([this.location])
+    const innerSelectionEnter = innerSelection.enter().append('text').attr('class', `fn-text fn-text-${this.index}`)
+
+    const computeColor = color(this, this.index)
+
+    // enter + update
+    innerSelection
+      .merge(innerSelectionEnter)
+      .attr('fill', d3Hsl(computeColor.toString()).brighter(1.5).formatHex())
+      .attr('x', (d) => this.chart.meta.xScale(d[0]))
+      .attr('y', (d) => this.chart.meta.yScale(d[1]))
+      .text(() => this.text)
+
+    if (this.attr) {
+      for (const k in this.attr) {
+        selection.attr(k, this.attr[k])
+      }
+    }
+
+    // exit
+    innerSelection.exit().remove()
+  }
+}
+
+export function text(options: any) {
+  return new Text(options)
 }
