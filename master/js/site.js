@@ -6,8 +6,8 @@ function onSiteDependenciesLoaded() {
 
   functionPlot({
     target: '#description-sample',
-    x: { grid: true },
-    y: { domain: [-1, 9], grid: true },
+    y: { domain: [-1, 9] },
+    grid: true,
     tip: {
       renderer: function () {}
     },
@@ -119,7 +119,7 @@ function onSiteDependenciesLoaded() {
   /**
    * ### Grid
    *
-   * Set `grid: true` in the axis objects to draw a grid.
+   * Set `grid: true` in the top level object or the axis objects to draw a grid.
    */
   functionPlot({
     target: '#grid',
@@ -142,14 +142,9 @@ function onSiteDependenciesLoaded() {
    */
   functionPlot({
     target: '#sticky',
-    x: {
-      position: 'sticky',
-      grid: true
-    },
-    y: {
-      position: 'sticky',
-      grid: true
-    },
+    x: { position: 'sticky' },
+    y: { position: 'sticky' },
+    grid: true,
     data: [{ fn: 'cos(x)' }]
   })
 
@@ -279,13 +274,12 @@ function onSiteDependenciesLoaded() {
     target: '#logarithmic',
     x: {
       type: 'log',
-      domain: [0.01, 1],
-      grid: true
+      domain: [0.01, 1]
     },
     y: {
-      domain: [-100, 100],
-      grid: true
+      domain: [-100, 100]
     },
+    grid: true,
     data: [
       {
         fn: '1/x * cos(1/x)',
@@ -950,8 +944,8 @@ function onSiteDependenciesLoaded() {
    */
   functionPlot({
     target: '#vector',
-    x: { domain: [-3, 8], grid: true },
-    y: { grid: true },
+    x: { domain: [-3, 8] },
+    grid: true,
     data: [
       {
         vector: [2, 1],

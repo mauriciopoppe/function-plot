@@ -42,18 +42,13 @@
 
     upd.addEventListener('click', evt => {
       obj.data[0] = { fn: 'x', nSamples: 10, graphType: 'scatter' }
-
-      // obj.data[0].nSamples = 10
-      // obj.data[0].graphType = 'scatter'
       console.log(obj)
       functionPlot(obj)
     })
 
     redefine.addEventListener('click', evt => {
-      obj.data = [{
-          fn: 'x', nSamples: 10, graphType: 'scatter'
-      }]
-      console.log(obj)
+      obj.data = [functionPlot.text({ text: 'foo', location: [1, 2] })]
+      console.log(obj.data)
       functionPlot(obj)
     })
 
