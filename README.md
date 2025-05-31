@@ -1,6 +1,9 @@
 [![image](https://user-images.githubusercontent.com/1616682/93912098-23060300-fcb8-11ea-823f-be8dfe9c24b9.png)](http://mauriciopoppe.github.io/function-plot/)
 
 <p align="center">
+  <a href="https://mauriciopoppe.github.io/function-plot/">
+    <img src="https://img.shields.io/badge/homepage-red" alt="js-standard-style">
+  </a>
   <a href="https://npmjs.org/package/function-plot">
     <img src="https://img.shields.io/npm/v/function-plot.svg?style=flat" alt="NPM">
   </a>
@@ -18,12 +21,6 @@ utility: [y = x \* x](https://www.google.com/webhp?sourceid=chrome-instant&ion=1
 
 The library currently supports interactive line charts and scatterplots, whenever the graph scale is modified the function
 is evaluated again with the new bounds, result: infinite graphs!
-
-[![Edit function-plot](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/muddy-cdn-ibl5x?fontsize=14&hidenavigation=1&theme=light)
-
-[![image](https://user-images.githubusercontent.com/1616682/93041565-a9a84980-f601-11ea-900e-4e6809b5fa96.png)](https://observablehq.com/@mauriciopoppe/function-plot),
-
-Thanks to [@liuyao12](https://github.com/liuyao12) for the initial version of the Observable notebook, you can check his own version here https://beta.observablehq.com/@liuyao12/function-plot
 
 ## Installation
 
@@ -49,10 +46,12 @@ functionPlot({
 })
 ```
 
+[Check all the examples in the homepage](https://mauriciopoppe.github.io/function-plot/)
+
+
 ## Resources
 
-- [All examples in the homepage](https://mauriciopoppe.github.io/function-plot/)
-- [API docs](https://mauriciopoppe.github.io/function-plot/docs/functions/default-1.html)
+- [API](https://mauriciopoppe.github.io/function-plot/docs/functions/default-1.html)
 - [Want to know how it works? Read the design docs](./design/)
   - [Render pipeline](./design/pipeline.md)
   - [Web workers](./design/web-workers.md)
