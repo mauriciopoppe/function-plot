@@ -99,7 +99,7 @@ export default function mouseTip(config: FunctionPlotTip) {
   tip.move = function (coordinates: { x: number; y: number }) {
     let minDist = Infinity
     let closestIndex = -1
-    let x, y
+    let x: number, y: number
 
     const selection = tipInnerJoin.merge(tipInnerEnter)
     const meta = config.owner.meta
@@ -122,7 +122,7 @@ export default function mouseTip(config: FunctionPlotTip) {
       }
 
       const range = data[i].range || [-infinity(), infinity()]
-      let candidateY
+      let candidateY: number
       if (x0 > range[0] - globals.TIP_X_EPS && x0 < range[1] + globals.TIP_X_EPS) {
         try {
           candidateY = builtInEvaluator(data[i], 'fn', { x: x0 })

@@ -1,4 +1,4 @@
-import { select as d3Select, Selection } from 'd3-selection'
+import { Selection } from 'd3-selection'
 
 import { asyncIntervalEvaluate, intervalEvaluate } from '../evaluate-datum.js'
 import { infinity, color } from '../utils.mjs'

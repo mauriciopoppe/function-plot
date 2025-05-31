@@ -1,7 +1,5 @@
 import { ScaleLinear, ScaleLogarithmic } from 'd3-scale'
 
-import { Mark } from './graph-types/mark.js'
-
 export interface Interval {
   lo: number
   hi: number

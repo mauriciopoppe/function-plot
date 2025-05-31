@@ -8,6 +8,7 @@ import { interpolateRound as d3InterpolateRound } from 'd3-interpolate'
 import EventEmitter from 'events'
 
 import { FunctionPlotDatum, FunctionPlotOptions, FunctionPlotScale, FunctionPlotOptionsAxis } from './types.js'
+import { IntervalWorkerPool } from './samplers/interval_worker_pool.js'
 
 import { Mark } from './graph-types/mark.js'
 import { interval, polyline, scatter, text } from './graph-types/index.js'
@@ -868,4 +869,10 @@ export class Chart extends EventEmitter.EventEmitter {
       .selectAll('svg')
       .remove()
   }
+}
+
+export function withWebWorkers(nWorkers = 8, WorkerConstructor = window.Worker, publicPath = window.location.href) {
+  // @ts-ignore
+  window.__webpack_public_path__ = publicPath
+  globals.workerPool = new IntervalWorkerPool(nWorkers, WorkerConstructor)
 }
