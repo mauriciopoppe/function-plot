@@ -1,25 +1,20 @@
 import './polyfills.js'
 
-import { IntervalWorkerPool } from './samplers/interval_worker_pool.js'
 import { FunctionPlotOptions } from './types.js'
-import { Chart, ChartMeta, ChartMetaMargin } from './chart.js'
+import { Chart, ChartMeta, ChartMetaMargin, withWebWorkers } from './chart.js'
 
 import globals from './globals.mjs'
 import { interval, polyline, scatter, text } from './graph-types/index.js'
-import { Mark } from './graph-types/mark.js'
-import { interval as intervalEval, builtIn as builtInEval, registerSampler } from './samplers/eval.mjs'
+import { interval as intervalSampler, builtIn as builtInSampler } from './samplers/eval.mjs'
 
-function withWebWorkers(nWorkers = 8, WorkerConstructor = window.Worker, publicPath = window.location.href) {
-  // @ts-ignore
-  window.__webpack_public_path__ = publicPath
-  globals.workerPool = new IntervalWorkerPool(nWorkers, WorkerConstructor)
-}
+declare const __COMMIT_HASH__: string
+functionPlot.version = __COMMIT_HASH__
 
 /**
  * functionPlot is a function plotter of 2d functions.
  *
  * functionPlot creates an instance of {@link Chart} with the param options
- * and immediately calls {@link Chart#build} on it.
+ * and immediately calls {@link Chart#plot} on it.
  *
  * `options` is augmented with additional internal computed data,
  * therefore, if you want to rerender graphs it's important to reuse
@@ -36,30 +31,30 @@ export default function functionPlot(options: FunctionPlotOptions) {
   return instance.plot()
 }
 
-declare const __COMMIT_HASH__: string
-functionPlot.version = __COMMIT_HASH__
 functionPlot.globals = globals
-functionPlot.$eval = {
-  builtIn: builtInEval,
-  interval: intervalEval
-}
 functionPlot.withWebWorkers = withWebWorkers
 
-functionPlot.text = text
+functionPlot.builtInSampler = builtInSampler
+functionPlot.intervalSampler = intervalSampler
+
 functionPlot.interval = interval
 functionPlot.polyline = polyline
 functionPlot.scatter = scatter
+functionPlot.text = text
 
 export * from './types.js'
-export { Chart, ChartMeta, ChartMetaMargin }
 export { withWebWorkers }
-export { registerSampler }
-export { Mark }
-export { builtIn as EvalBuiltIn, interval as EvalInterval } from './samplers/eval.mjs'
+export { Chart, ChartMeta, ChartMetaMargin }
 export {
-  interval as GraphTypeInterval,
-  polyline as GraphTypePolyline,
-  scatter as GraphTypeScatter,
-  text as GraphTypeText
+  interval as IntervalGraph,
+  Interval,
+  polyline as PolylineGraph,
+  Polyline,
+  scatter as ScatterGraph,
+  Scatter,
+  text as TextGraph,
+  Text,
+  Mark,
+  Attr
 } from './graph-types/index.js'
-export { GraphTypePlotter, GraphTypeBuilder } from './graph-types/types.js'
+export { builtIn as BuiltInSampler, interval as IntervalSampler, registerSampler } from './samplers/eval.mjs'
