@@ -212,7 +212,7 @@ function onSiteDependenciesLoaded() {
    *
    * - `x`: x coordinate of a line parallel to the y-axis
    * - `y`: y coordinate of a line parallel to the x-axis
-   * - `text` (optional) text shown next to the parallel line
+   * - `label` (optional) text shown next to the parallel line
    *
    * NOTE: either `x` or `y` need to be set on the object, setting both of them
    * will raise an exception
@@ -231,11 +231,11 @@ function onSiteDependenciesLoaded() {
       },
       {
         x: 1,
-        text: 'x = 1'
+        label: 'x = 1'
       },
       {
         y: 2,
-        text: 'y = 2'
+        label: 'y = 2'
       }
     ]
   })
