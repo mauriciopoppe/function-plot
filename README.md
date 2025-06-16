@@ -48,7 +48,6 @@ functionPlot({
 
 [Check all the examples in the homepage](https://mauriciopoppe.github.io/function-plot/)
 
-
 ## Resources
 
 - [API](https://mauriciopoppe.github.io/function-plot/docs/functions/default-1.html)
