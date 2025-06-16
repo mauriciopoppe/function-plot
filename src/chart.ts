@@ -11,9 +11,8 @@ import { FunctionPlotDatum, FunctionPlotOptions, FunctionPlotScale, FunctionPlot
 import { IntervalWorkerPool } from './samplers/interval_worker_pool.js'
 
 import { Mark } from './graph-types/mark.js'
-import { interval, polyline, scatter, text } from './graph-types/index.js'
+import { annotation, interval, polyline, scatter, text } from './graph-types/index.js'
 
-import annotations from './helpers/annotations.js'
 import mousetip from './tip.js'
 import { helpers } from './helpers/index.js'
 import datumDefaults from './datum-defaults.js'
@@ -543,7 +542,12 @@ export class Chart extends EventEmitter.EventEmitter {
     }
 
     // annotations
-    content.merge(contentEnter).call(annotations({ owner: self }))
+    content.merge(contentEnter).each(function (d: Mark | FunctionPlotDatum) {
+      const selection = d3Select(this)
+      const ann = annotation(d)
+      ann.chart = self
+      ann.render(selection as any)
+    })
 
     // content construction
     // - join options.data to <g class='graph'> elements
