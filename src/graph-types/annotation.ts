@@ -1,7 +1,7 @@
 import { line as d3Line } from 'd3-shape'
-import { Selection } from 'd3-selection'
+import type { Selection } from 'd3-selection'
 
-import { FunctionPlotOptions } from '../types.js'
+import type { FunctionPlotOptions } from '../types.js'
 import { Mark } from '../graph-types/mark.js'
 
 const line = d3Line()

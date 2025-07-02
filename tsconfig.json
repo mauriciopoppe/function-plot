@@ -14,7 +14,8 @@
       "*": ["node_modules/*"]
     },
     "types": ["node", "jest"],
-    "lib": ["es2022", "dom"]
+    "lib": ["es2022", "dom"],
+    "verbatimModuleSyntax": true
   },
   "include": ["./src/**/*.ts", "./src/**/*.js", "./src/**/*.d.ts", "./test/e2e/snippets.ts"],
   "exclude": ["src/stories/**/*"]

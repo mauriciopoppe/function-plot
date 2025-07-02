@@ -1,5 +1,6 @@
 import { describe, expect, it } from '@jest/globals'
-import { FunctionPlotDatum } from './types.js'
+
+import type { FunctionPlotDatum } from './types.js'
 import datumDefaults from '../src/datum-defaults.js'
 
 describe('datumDefaults', () => {

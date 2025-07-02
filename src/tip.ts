@@ -1,10 +1,10 @@
 import { line as d3Line } from 'd3-shape'
-import { select as d3Select, Selection } from 'd3-selection'
+import { select as d3Select, type Selection } from 'd3-selection'
 
 import { color, clamp, infinity, isValidNumber, getterSetter } from './utils.mjs'
 import globals from './globals.mjs'
 import { builtIn as builtInEvaluator } from './samplers/eval.mjs'
-import { FunctionPlotTip } from './types.js'
+import type { FunctionPlotTip } from './types.js'
 
 export default function mouseTip(config: FunctionPlotTip) {
   config = Object.assign(

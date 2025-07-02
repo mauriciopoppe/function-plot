@@ -1,4 +1,4 @@
-import { LinearFunction } from '../types.js'
+import type { LinearFunction } from '../types.js'
 
 interface IntervalTask {
   d: LinearFunction

@@ -2,8 +2,8 @@ import globals from './globals.mjs'
 import { syncSamplerInterval, asyncSamplerInterval } from './samplers/interval.js'
 import builtIn from './samplers/builtIn.js'
 
-import { Chart } from './index.js'
-import { FunctionPlotDatum, FunctionPlotScale } from './types.js'
+import { Chart } from './chart.js'
+import type { FunctionPlotDatum, FunctionPlotScale } from './types.js'
 
 /**
  * Computes the endpoints x_lo, x_hi of the range in d.range from which the sampler will take samples.

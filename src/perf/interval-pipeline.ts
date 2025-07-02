@@ -9,7 +9,7 @@ import Worker from 'web-worker'
 
 import globals from '../globals.mjs'
 import { IntervalWorkerPool, BackpressureStrategy } from '../samplers/interval_worker_pool.js'
-import { FunctionPlotDatum, FunctionPlotOptionsAxis } from '../types.js'
+import type { FunctionPlotDatum, FunctionPlotOptionsAxis } from '../types.js'
 import { createPathD } from '../graph-types/interval.js'
 import { asyncSamplerInterval, syncSamplerInterval } from '../samplers/interval.js'
 

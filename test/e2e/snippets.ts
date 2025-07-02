@@ -1,4 +1,5 @@
-import functionPlot, {
+import functionPlot from '../../src/index.js'
+import type {
   ImplicitFunction,
   LinearFunction,
   ParametricFunction,

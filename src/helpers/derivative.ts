@@ -1,12 +1,13 @@
-import { select as d3Select, Selection } from 'd3-selection'
+import { select as d3Select } from 'd3-selection'
+import type { Selection } from 'd3-selection'
 
 import { Polyline } from '../graph-types/index.js'
 import { builtIn as builtInEvaluator } from '../samplers/eval.mjs'
 import datumDefaults from '../datum-defaults.js'
 import { infinity } from '../utils.mjs'
 
-import { Chart } from '../index.js'
-import { LinearFunction } from '../types.js'
+import { Chart } from '../chart.js'
+import type { LinearFunction } from '../types.js'
 
 export default function derivative(chart: Chart) {
   const derivativeDatum: LinearFunction = datumDefaults({

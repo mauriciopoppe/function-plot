@@ -1,11 +1,11 @@
-import { Selection } from 'd3-selection'
+import type { Selection } from 'd3-selection'
 
 import { asyncIntervalEvaluate, intervalEvaluate } from '../evaluate-datum.js'
 import { infinity, color } from '../utils.mjs'
 
 import { Mark } from './mark.js'
-import { Interval as TInterval, FunctionPlotDatum, FunctionPlotScale } from '../types.js'
-import { IntervalSamplerResult } from '../samplers/types.js'
+import type { Interval as TInterval, FunctionPlotDatum, FunctionPlotScale } from '../types.js'
+import type { IntervalSamplerResult } from '../samplers/types.js'
 
 function clampRange(minWidthHeight: number, vLo: number, vHi: number, gLo: number, gHi: number) {
   // issue 69

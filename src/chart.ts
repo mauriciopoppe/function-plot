@@ -1,13 +1,13 @@
-import { line as d3Line, Line } from 'd3-shape'
+import { line as d3Line, type Line } from 'd3-shape'
 import { format as d3Format } from 'd3-format'
 import { scaleLinear as d3ScaleLinear, scaleLog as d3ScaleLog } from 'd3-scale'
-import { axisLeft as d3AxisLeft, axisBottom as d3AxisBottom, Axis } from 'd3-axis'
+import { axisLeft as d3AxisLeft, axisBottom as d3AxisBottom, type Axis } from 'd3-axis'
 import { zoom as d3Zoom } from 'd3-zoom'
 import { select as d3Select, pointer as d3Pointer } from 'd3-selection'
 import { interpolateRound as d3InterpolateRound } from 'd3-interpolate'
 import EventEmitter from 'events'
 
-import { FunctionPlotDatum, FunctionPlotOptions, FunctionPlotScale, FunctionPlotOptionsAxis } from './types.js'
+import type { FunctionPlotDatum, FunctionPlotOptions, FunctionPlotScale, FunctionPlotOptionsAxis } from './types.js'
 import { IntervalWorkerPool } from './samplers/interval_worker_pool.js'
 
 import { Mark } from './graph-types/mark.js'

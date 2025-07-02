@@ -1,4 +1,4 @@
-import { ScaleLinear, ScaleLogarithmic } from 'd3-scale'
+import type { ScaleLinear, ScaleLogarithmic } from 'd3-scale'
 
 export interface Interval {
   lo: number

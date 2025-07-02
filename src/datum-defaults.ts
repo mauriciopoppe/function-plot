@@ -1,4 +1,4 @@
-import { FunctionPlotDatum } from './types.js'
+import type { FunctionPlotDatum } from './types.js'
 import { randomId } from './utils.mjs'
 
 export default function datumDefaults(d: FunctionPlotDatum): FunctionPlotDatum {
