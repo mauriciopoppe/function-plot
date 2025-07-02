@@ -1,4 +1,4 @@
-import { FunctionPlotDatum } from './types.js'
+import type { FunctionPlotDatum } from './types.js'
 import { assert } from './utils.mjs'
 
 export default function datumValidation(d: FunctionPlotDatum) {

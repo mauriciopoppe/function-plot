@@ -1,10 +1,10 @@
-import { Selection } from 'd3-selection'
+import type { Selection } from 'd3-selection'
 import { hsl as d3Hsl } from 'd3-color'
 
 import { color } from '../utils.mjs'
 
 import { Mark } from './mark.js'
-import { TextFunction } from '../types.js'
+import type { TextFunction } from '../types.js'
 
 export class Text extends Mark {
   location: [number, number]

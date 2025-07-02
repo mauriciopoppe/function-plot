@@ -1,4 +1,4 @@
-import { Chart } from '../index.js'
+import { Chart } from '../chart.js'
 
 export interface Attr {
   [key: string]: any

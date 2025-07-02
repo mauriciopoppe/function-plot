@@ -1,7 +1,8 @@
 import './polyfills.js'
 
-import { FunctionPlotOptions } from './types.js'
-import { Chart, ChartMeta, ChartMetaMargin, withWebWorkers } from './chart.js'
+import type { FunctionPlotOptions } from './types.js'
+import type { ChartMeta, ChartMetaMargin } from './chart.js'
+import { Chart, withWebWorkers } from './chart.js'
 
 import globals from './globals.mjs'
 import { interval, polyline, scatter, text } from './graph-types/index.js'
@@ -44,7 +45,9 @@ functionPlot.text = text
 
 export * from './types.js'
 export { withWebWorkers }
-export { Chart, ChartMeta, ChartMetaMargin }
+export { Chart }
+export type { ChartMeta, ChartMetaMargin }
+export type { Attr } from './graph-types/index.js'
 export {
   interval as IntervalGraph,
   Interval,
@@ -54,7 +57,6 @@ export {
   Scatter,
   text as TextGraph,
   Text,
-  Mark,
-  Attr
+  Mark
 } from './graph-types/index.js'
 export { builtIn as BuiltInSampler, interval as IntervalSampler, registerSampler } from './samplers/eval.mjs'

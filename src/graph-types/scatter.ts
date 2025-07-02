@@ -1,11 +1,11 @@
-import { Selection } from 'd3-selection'
+import type { Selection } from 'd3-selection'
 import { hsl as d3Hsl } from 'd3-color'
 
 import { color } from '../utils.mjs'
 import { builtInEvaluate } from '../evaluate-datum.js'
 
 import { Mark } from './mark.js'
-import { FunctionPlotDatum } from '../types.js'
+import type { FunctionPlotDatum } from '../types.js'
 
 export class Scatter extends Mark {
   fn?: any

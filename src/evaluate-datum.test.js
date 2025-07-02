@@ -1,4 +1,6 @@
 import { scaleLinear as d3ScaleLinear } from 'd3-scale'
+import { describe, expect, it } from '@jest/globals'
+
 import { builtInEvaluate, intervalEvaluate } from './evaluate-datum.js'
 
 const width = 200

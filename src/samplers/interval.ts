@@ -4,8 +4,14 @@ import { interval as evaluate } from './eval.mjs'
 import { infinity, space, interval2dTypedArray } from '../utils.mjs'
 import globals from '../globals.mjs'
 
-import { FunctionPlotDatum } from '../types.js'
-import { SamplerParams, IntervalSamplerResult, IntervalSamplerResultGroup, SamplerFn, AsyncSamplerFn } from './types.js'
+import type { FunctionPlotDatum } from '../types.js'
+import type {
+  SamplerParams,
+  IntervalSamplerResult,
+  IntervalSamplerResultGroup,
+  SamplerFn,
+  AsyncSamplerFn
+} from './types.js'
 
 // disable the use of typed arrays in interval-arithmetic to improve the performance
 ;(intervalArithmeticEval as any).policies.disableRounding()
