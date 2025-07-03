@@ -2,6 +2,7 @@ import type { Selection } from 'd3-selection'
 
 import { asyncIntervalEvaluate, intervalEvaluate } from '../evaluate-datum.js'
 import { infinity, color } from '../utils.mjs'
+import { helpers } from './helpers.js'
 
 import { Mark } from './mark.js'
 import type { Interval as TInterval, FunctionPlotDatum, FunctionPlotScale } from '../types.js'
@@ -133,6 +134,8 @@ export class Interval extends Mark {
     }
 
     innerSelection.exit().remove()
+
+    selection.call(helpers(this.chart))
   }
 }
 

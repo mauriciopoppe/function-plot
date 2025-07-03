@@ -4,6 +4,7 @@ import { line as d3Line, area as d3Area, curveLinear as d3CurveLinear } from 'd3
 
 import { color, infinity, clamp } from '../utils.mjs'
 import { builtInEvaluate } from '../evaluate-datum.js'
+import { helpers } from './helpers.js'
 
 import { Mark } from './mark.js'
 import type { FunctionPlotDatum } from '../types.js'
@@ -158,6 +159,8 @@ export class Polyline extends Mark {
 
     // exit
     innerSelection.exit().remove()
+
+    selection.call(helpers(this.chart))
   }
 }
 

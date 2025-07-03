@@ -14,7 +14,6 @@ import { Mark } from './graph-types/mark.js'
 import { annotation, interval, polyline, scatter, text } from './graph-types/index.js'
 
 import mousetip from './tip.js'
-import { helpers } from './helpers/index.js'
 import datumDefaults from './datum-defaults.js'
 import datumValidation from './datum-validation.js'
 import globals from './globals.mjs'
@@ -553,7 +552,7 @@ export class Chart extends EventEmitter.EventEmitter {
     // enter
     const annotationsEnter = annotations.enter().append('g').attr('class', 'annotations')
     // enter + update
-    annotations.merge(annotationsEnter).each(function (d: Mark | FunctionPlotDatum, index: number) {
+    annotations.merge(annotationsEnter).each(function (d: Mark | FunctionPlotDatum) {
       const selection = d3Select(this)
       const ann = annotation(d)
       ann.chart = self
@@ -617,8 +616,6 @@ export class Chart extends EventEmitter.EventEmitter {
 
       mark.chart = self
       mark.render(selection)
-
-      selection.call(helpers(self))
     })
     this.generation += 1
   }
