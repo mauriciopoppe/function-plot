@@ -5,7 +5,7 @@ import type { ChartMeta, ChartMetaMargin } from './chart.js'
 import { Chart, withWebWorkers } from './chart.js'
 
 import globals from './globals.mjs'
-import { interval, polyline, scatter, text } from './graph-types/index.js'
+import { interval, polyline, scatter, text, annotation } from './graph-types/index.js'
 import { interval as intervalSampler, builtIn as builtInSampler } from './samplers/eval.mjs'
 
 declare const __COMMIT_HASH__: string
@@ -42,6 +42,7 @@ functionPlot.interval = interval
 functionPlot.polyline = polyline
 functionPlot.scatter = scatter
 functionPlot.text = text
+functionPlot.annotation = annotation
 
 export * from './types.js'
 export { withWebWorkers }
@@ -57,6 +58,8 @@ export {
   Scatter,
   text as TextGraph,
   Text,
+  annotation as AnnotationGraph,
+  Annotation,
   Mark
 } from './graph-types/index.js'
 export { builtIn as BuiltInSampler, interval as IntervalSampler, registerSampler } from './samplers/eval.mjs'

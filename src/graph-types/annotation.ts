@@ -1,26 +1,32 @@
 import { line as d3Line } from 'd3-shape'
 import type { Selection } from 'd3-selection'
 
-import type { FunctionPlotOptions } from '../types.js'
+import type { FunctionPlotAnnotation } from '../types.js'
+
 import { Mark } from '../graph-types/mark.js'
 
-const line = d3Line()
-  .x((d) => d[0])
-  .y((d) => d[1])
-
 export class Annotation extends Mark {
+  x?: number
+  y?: number
+  label?: string
+
   constructor(options: any) {
     super(options)
+    this.x = options.x
+    this.y = options.y
+    this.label = options.label
   }
 
-  render(parentSelection: Selection<any, FunctionPlotOptions, any, any>) {
+  render(parentSelection: Selection<any, FunctionPlotAnnotation, any, any>) {
+    const self = this
+
     // join
-    const selection = parentSelection.selectAll('g.annotations').data(function (d: FunctionPlotOptions) {
-      return d.annotations || []
+    const selection = parentSelection.selectAll('g.annotation').data(function () {
+      return [self]
     })
 
     // enter
-    const enter = selection.enter().append('g').attr('class', 'annotations')
+    const enter = selection.enter().append('g').attr('class', 'annotation')
 
     const xScale = this.chart.meta.xScale
     const yScale = this.chart.meta.yScale
@@ -33,14 +39,21 @@ export class Annotation extends Mark {
     // prettier-ignore
     const path = selection.merge(enter).selectAll('path')
         .data(function (d) {
-          if ('x' in d) {
+          if (typeof d.x !== "undefined") {
             return [[[0, yRange[0]], [0, yRange[1]]]]
-          } else {
+          } else if (typeof d.y !== "undefined") {
             return [[[xRange[0], 0], [xRange[1], 0]]]
+          } else {
+            throw new Error(`Property x or y wasn't set in the annotation`)
           }
         })
     // enter
     const pathEnter = path.enter().append('path')
+
+    const line = d3Line()
+      .x((d) => d[0])
+      .y((d) => d[1])
+
     // enter + update
     path
       .merge(pathEnter)
@@ -56,7 +69,7 @@ export class Annotation extends Mark {
         {
           label: d.label || '',
           // used to determine if x or y is set.
-          xIsSet: 'x' in d
+          xIsSet: typeof d.x !== 'undefined'
         }
       ])
     // enter
@@ -85,7 +98,7 @@ export class Annotation extends Mark {
     // enter + update
     // move group
     selection.merge(enter).attr('transform', function (d) {
-      if ('x' in d) {
+      if (typeof d.x !== 'undefined') {
         return 'translate(' + xScale(d.x) + ', 0)'
       } else {
         return 'translate(0, ' + yScale(d.y) + ')'
