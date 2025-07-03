@@ -3,7 +3,7 @@ import { hsl as d3Hsl } from 'd3-color'
 
 import { color } from '../utils.mjs'
 import { builtInEvaluate } from '../evaluate-datum.js'
-
+import { helpers } from './helpers.js'
 import { Mark } from './mark.js'
 import type { FunctionPlotDatum } from '../types.js'
 
@@ -66,6 +66,8 @@ export class Scatter extends Mark {
     }
 
     innerSelection.exit().remove()
+
+    selection.call(helpers(this.chart))
   }
 }
 
