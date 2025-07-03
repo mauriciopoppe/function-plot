@@ -1,4 +1,4 @@
-function onSiteDependenciesLoaded() {
+function renderExamples() {
   const functionPlot = window.functionPlot
   let a, b, c
 

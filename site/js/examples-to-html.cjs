@@ -1,6 +1,8 @@
 /**
- * Created by mauricio on 4/9/15.
+ * Performs a build time transformation of the examples
+ * written as JavaScript
  */
+
 const fs = require('fs')
 const dox = require('dox')
 const _ = require('lodash')
@@ -12,7 +14,7 @@ const md = require('markdown-it')({
 })
 
 function renderExamples() {
-  const file = fs.readFileSync('./site/js/site.js', { encoding: 'utf-8' })
+  const file = fs.readFileSync('./site/js/examples.js', { encoding: 'utf-8' })
   const comments = dox.parseComments(file)
 
   const parsed = comments
@@ -46,16 +48,16 @@ function renderExamples() {
       return entry.ids
     })
 
-  const output = fs.createWriteStream('./site/partials/examples.html')
-  output.write(pug.compileFile('./site/tpl/examples.pug')({ comments: parsed }))
+  const output = fs.createWriteStream('./site/partials/examples.auto.html')
+  output.write(pug.compileFile('./site/partials/examples.pug')({ comments: parsed }))
   output.end()
 }
 
 function renderRecipes() {
-  const file = fs.readFileSync('./site/tpl/recipes.md', { encoding: 'utf-8' })
+  const file = fs.readFileSync('./site/partials/recipes.md', { encoding: 'utf-8' })
   const result = md.render(file)
 
-  const output = fs.createWriteStream('./site/partials/recipes.html')
+  const output = fs.createWriteStream('./site/partials/recipes.auto.html')
   output.write(result)
   output.end()
 }

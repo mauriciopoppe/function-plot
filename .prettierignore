@@ -1,4 +1,5 @@
 site/js/vendor
 site/js/plugins.js
 site/*.html
+*auto.html
 .github
