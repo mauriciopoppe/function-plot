@@ -197,53 +197,55 @@
       </div>
     </div>
 
-    <!-- includes -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script>
-      window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')
+    MathJax = {
+        tex: {
+            inlineMath: [['$', '$'], ["\\(", "\\)"]],
+            processEscapes: true,
+        },
+        svg: {
+            fontCache: 'global'
+        }
+    };
     </script>
-    <script src="js/plugins.js"></script>
+    <script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js"></script>
 
     <!-- app -->
     <script src="function-plot.js"></script>
-    <script src="js/site.js"></script>
+    <script src="js/examples.js"></script>
     <script>
-      $('#recipes').load('partials/recipes.html')
-      $('#examples').load('partials/examples.html', function () {
-        // declared in js/site.js
-        onSiteDependenciesLoaded()
-        $('pre code').each(function (i, block) {
-          hljs.highlightBlock(block)
-        })
+        async function siteRenderExamples () {
+            async function loadHtmlToId(path, target) {
+                const response = await fetch(path);
+                const body = await response.text();
+                document.querySelector(target).innerHTML = body;
+            }
 
-        $('#p-slider').on('change', function () {
-          var value = +this.value
-          $('#p-slider-value').html(value)
-        })
-      })
-    </script>
-    <script
-      type="text/javascript"
-      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
-    ></script>
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        showProcessingMessages: false,
-        messageStyle: 'none',
-        tex2jax: {
-          inlineMath: [['$','$']],
-          displayMath: [['$$','$$']],
-          processEnvironments: false
-        },
-        TeX: {
-          equationNumbers: {
-            autoNumber: "AMS"
-          }
-        },
-        'HTML-CSS': {
-          imageFont: null
+            await Promise.all([
+                loadHtmlToId("partials/recipes.auto.html", '#recipes'),
+                loadHtmlToId("partials/examples.auto.html", '#examples')
+            ])
+
+            // Render math
+            MathJax.typesetPromise()
+
+            // render examples, declared in js/examples.js
+            renderExamples()
+
+            // highlight code snippets
+            document.querySelectorAll('pre code').forEach(function (el, i) {
+                hljs.highlightBlock(el)
+            })
         }
-      });
+
+        function ready(fn) {
+            if (document.readyState !== 'loading') {
+                fn();
+            } else {
+                document.addEventListener('DOMContentLoaded', fn);
+            }
+        }
+        ready(siteRenderExamples)
     </script>
   </body>
 </html>
