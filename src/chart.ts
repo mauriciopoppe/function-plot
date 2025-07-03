@@ -542,7 +542,18 @@ export class Chart extends EventEmitter.EventEmitter {
     }
 
     // annotations
-    content.merge(contentEnter).each(function (d: Mark | FunctionPlotDatum) {
+    const annotations = content
+      .merge(contentEnter)
+      .selectAll('g.annotations')
+      .data(function (d: FunctionPlotOptions) {
+        return d.annotations || []
+      })
+    // exit
+    annotations.exit().remove()
+    // enter
+    const annotationsEnter = annotations.enter().append('g').attr('class', 'annotations')
+    // enter + update
+    annotations.merge(annotationsEnter).each(function (d: Mark | FunctionPlotDatum, index: number) {
       const selection = d3Select(this)
       const ann = annotation(d)
       ann.chart = self

@@ -142,6 +142,23 @@ const snippets = [
     }
   },
   {
+    testName: 'should render annotations as datum',
+    fn: function () {
+      functionPlot({
+        target: '#playground',
+        y: { domain: [-1, 9] },
+        data: [
+          {
+            fn: 'x^2'
+          },
+          functionPlot.annotation({ x: -1 }),
+          functionPlot.annotation({ x: 1, label: 'x = 1' }),
+          functionPlot.annotation({ y: 2, label: 'y = 2' })
+        ]
+      })
+    }
+  },
+  {
     testName: 'should render closed paths',
     fn: function () {
       // prettier-ignore

@@ -28,13 +28,27 @@
       functionPlot.withWebWorkers(8)
       functionPlot({
         target: '#playground',
+        y: { domain: [-1, 9] },
         data: [
-          functionPlot.interval({ fn: 'x^2' }),
-          functionPlot.scatter({ fn: 'sin(x)', nSamples: 50 }),
-          functionPlot.polyline({ fn: 'x^3' }),
-          functionPlot.text({ text: 'foo', location: [1, 2] })
-        ]
+          {
+            fn: 'x^2'
+          },
+          functionPlot.annotation({ x: -1 }),
+          functionPlot.annotation({ x: 1, label: 'x = 1' }),
+          functionPlot.annotation({ y: 2, label: 'y = 2' })
+        ],
       })
+
+      // functionPlot({
+      //   target: '#playground',
+      //   data: [
+      //     functionPlot.interval({ fn: 'x^2' }),
+      //     functionPlot.scatter({ fn: 'sin(x)', nSamples: 50 }),
+      //     functionPlot.polyline({ fn: 'x^3' }),
+      //     functionPlot.text({ text: 'foo', location: [1, 2] })
+      //   ]
+      // })
+
       // functionPlot({
       //   target: '#playground',
       //   data: [
