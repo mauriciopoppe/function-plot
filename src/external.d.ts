@@ -7,7 +7,7 @@ declare module 'interval-arithmetic-eval' {
   export class Interval {
     lo: number
     hi: number
-
+    constructor(lo: number | Interval, hi?: number)
     static isEmpty(n: Interval | number): boolean
     static isWhole(n: Interval | number): boolean
     static intervalsOverlap(n: Interval, r: Interval): boolean

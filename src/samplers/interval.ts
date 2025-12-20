@@ -1,6 +1,6 @@
 import intervalArithmeticEval, { Interval } from 'interval-arithmetic-eval'
 
-import { interval as evaluate } from './eval.mjs'
+import { interval as intervalEvaluate, builtIn as builtInEvaluate } from './eval.mjs'
 import { infinity, space, interval2dTypedArray } from '../utils.mjs'
 import globals from '../globals.mjs'
 
@@ -125,7 +125,7 @@ function interval1d({ d, xAxis, range, nSamples, xScale, yScale }: SamplerParams
   const samples: IntervalSamplerResultGroup = []
   for (let i = 0; i < xCoords.length - 1; i += 1) {
     const x = { lo: xCoords[i], hi: xCoords[i + 1] }
-    const y = evaluate(d, 'fn', { x })
+    const y = intervalEvaluate(d, 'fn', { x })
     if (!Interval.isEmpty(y) && !Interval.isWhole(y)) {
       samples.push([x, y])
     }
@@ -179,7 +179,7 @@ function smallRect(x: Interval, _: Interval) {
 }
 
 function quadTree(x: Interval, y: Interval, d: FunctionPlotDatum) {
-  const sample = evaluate(d, 'fn', { x, y })
+  const sample = intervalEvaluate(d, 'fn', { x, y })
   const fulfills = Interval.zeroIn(sample)
   if (!fulfills) {
     return this

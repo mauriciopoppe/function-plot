@@ -1,5 +1,5 @@
 import { linspace, sgn, infinity, clamp, space, isValidNumber } from '../utils.mjs'
-import { builtIn as evaluate } from './eval.mjs'
+import { builtIn as builtInEvaluate } from './eval.mjs'
 
 import type { FunctionPlotDatum, FunctionPlotScale, PointFunction, VectorFunction } from '../types.js'
 import type { SamplerParams, SamplerFn, BuiltInSamplerResult, BuiltInSamplerResultGroup } from './types.js'
@@ -27,7 +27,7 @@ function checkAsymptote(
   let oldY: number, oldX: number
   for (let i = 0; i < n; i += 1) {
     const x = samples[i]
-    const y = evaluate(d, 'fn', { x })
+    const y = builtInEvaluate(d, 'fn', { x })
 
     if (oldY) {
       const deltaY = y - oldY
@@ -122,7 +122,7 @@ function linear(samplerParams: SamplerParams): BuiltInSamplerResult {
   const data: Array<[number, number]> = []
   for (let i = 0; i < allX.length; i += 1) {
     const x = allX[i]
-    let y = evaluate(samplerParams.d, 'fn', { x })
+    let y = builtInEvaluate(samplerParams.d, 'fn', { x })
     if (isValidNumber(x) && isValidNumber(y)) {
       y = clamp(y, yMin, yMax)
       data.push([x, y])
@@ -140,8 +140,8 @@ function parametric(samplerParams: SamplerParams): BuiltInSamplerResult {
   const samples: BuiltInSamplerResultGroup = []
   for (let i = 0; i < tCoords.length; i += 1) {
     const t = tCoords[i]
-    const x = evaluate(samplerParams.d, 'x', { t })
-    const y = evaluate(samplerParams.d, 'y', { t })
+    const x = builtInEvaluate(samplerParams.d, 'x', { t })
+    const y = builtInEvaluate(samplerParams.d, 'y', { t })
     samples.push([x, y])
   }
   return [samples]
@@ -155,7 +155,7 @@ function polar(samplerParams: SamplerParams): BuiltInSamplerResult {
   const samples: BuiltInSamplerResultGroup = []
   for (let i = 0; i < thetaSamples.length; i += 1) {
     const theta = thetaSamples[i]
-    const r = evaluate(samplerParams.d, 'r', { theta })
+    const r = builtInEvaluate(samplerParams.d, 'r', { theta })
     const x = r * Math.cos(theta)
     const y = r * Math.sin(theta)
     samples.push([x, y])
