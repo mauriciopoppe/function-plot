@@ -9,7 +9,7 @@
   },
   "bugs": "https://github.com/mauriciopoppe/function-plot/issues",
   "homepage": "http://mauriciopoppe.github.io/function-plot/",
-  "author": "Mauricio Poppe <mauricio.poppe@gmail.com>",
+  "author": "Mauricio Poppe (https://mauriciopoppe.com)",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
