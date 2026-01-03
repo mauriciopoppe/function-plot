@@ -16,6 +16,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d site",
     "html": "node site.js",
+    "preversion": "npm run build",
     "build": "npx rimraf dist && npm run html && npm run docs && npm run build:types && npm run build:webpack && npm run build:site",
     "build:webpack": "NODE_ENV=production webpack",
     "build:types": "tsc",
