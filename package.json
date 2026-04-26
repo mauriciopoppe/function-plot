@@ -55,7 +55,7 @@
     ]
   },
   "dependencies": {
-    "built-in-math-eval": "^0.3.0",
+    "built-in-math-eval": "^0.3.2",
     "d3-axis": "^3.0.0",
     "d3-color": "^3.1.0",
     "d3-format": "^3.1.0",
@@ -65,7 +65,7 @@
     "d3-shape": "^3.1.0",
     "d3-zoom": "^3.0.0",
     "events": "^3.3.0",
-    "interval-arithmetic-eval": "^0.5.1"
+    "interval-arithmetic-eval": "^0.5.3"
   },
   "devDependencies": {
     "@babel/core": "^7.19.1",
@@ -107,7 +107,6 @@
     "puppeteer": "^24.2.1",
     "standard": "^17.0.0",
     "standardx": "^7.0.0",
-    "storybook": "^7.0.20",
     "tinybench": "^2.5.1",
     "ts-jest": "^29.1.1",
     "ts-jest-mock-import-meta": "^1.1.0",
