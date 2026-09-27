@@ -52,6 +52,9 @@ functionPlot({
 
 - [API](https://mauriciopoppe.github.io/function-plot/docs/functions/default-1.html)
 - [Want to know how it works? Read the design docs](./design/)
+  - [Design documentation index](./design/README.md)
+  - [API vision](./design/vision.md)
+  - [API refactor proposal](./design/api-refactor.md)
   - [Render pipeline](./design/pipeline.md)
   - [Web workers](./design/web-workers.md)
 
