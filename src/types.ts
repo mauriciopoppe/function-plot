@@ -42,6 +42,44 @@ export interface FunctionPlotOptionsAxis {
   position?: 'sticky' | 'left' | 'bottom'
 }
 
+export interface PolarOptions {
+  /**
+   * True to display a polar grid and its labels. Defaults to true in polar mode.
+   */
+  grid?: boolean
+
+  /**
+   * Non-negative ascending bounds for grid radii. Also seeds the initial viewport
+   * when xAxis.domain or yAxis.domain is omitted.
+   */
+  radiusDomain?: [number, number]
+
+  /**
+   * Approximate radial tick count, or explicit non-negative tick values.
+   */
+  radialTicks?: number | number[]
+
+  /**
+   * Number of equally spaced angular ticks, or explicit angles in radians.
+   */
+  angularTicks?: number | number[]
+
+  /**
+   * Unit used by the default angular tick formatter.
+   */
+  angleUnit?: 'radians' | 'degrees'
+
+  /**
+   * Formatter for radial tick labels.
+   */
+  radiusTickFormat?: (value: number) => string
+
+  /**
+   * Formatter for angular tick labels. The value is expressed using angleUnit.
+   */
+  angleTickFormat?: (value: number) => string
+}
+
 export interface FunctionPlotTip {
   /**
    * True to display a vertical line on mouseover
@@ -304,6 +342,11 @@ export interface FunctionPlotOptions {
   target: string | HTMLElement
 
   /**
+   * The coordinate system used to render the chart. Defaults to cartesian.
+   */
+  coordinateSystem?: 'cartesian' | 'polar'
+
+  /**
    * The chart title
    */
   title?: string
@@ -327,6 +370,11 @@ export interface FunctionPlotOptions {
    * The y-axis configuration
    */
   yAxis?: FunctionPlotOptionsAxis
+
+  /**
+   * Polar coordinate system configuration.
+   */
+  polar?: PolarOptions
 
   /**
    * The x-axis domain, internally state used to preserve the x-domain across multiple calls to function plot

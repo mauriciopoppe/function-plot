@@ -15,6 +15,7 @@ import mousetip from './tip'
 import helpers from './helpers'
 import datumDefaults from './datum-defaults'
 import globals from './globals'
+import { getPolarDomains, renderPolarGrid, validatePolarOptions } from './polar-grid'
 
 export interface ChartMetaMargin {
   left?: number
@@ -204,17 +205,29 @@ export class Chart extends EventEmitter.EventEmitter {
       return (self.meta.height * xDiff) / self.meta.width
     }
 
+    this.options.coordinateSystem = this.options.coordinateSystem || 'cartesian'
     this.options.xAxis = this.options.xAxis || {}
     this.options.xAxis.type = this.options.xAxis.type || 'linear'
 
     this.options.yAxis = this.options.yAxis || {}
     this.options.yAxis.type = this.options.yAxis.type || 'linear'
 
-    const xDomain = (this.meta.xDomain = (function (axis) {
+    if (this.options.coordinateSystem !== 'cartesian' && this.options.coordinateSystem !== 'polar') {
+      throw new Error(`unsupported coordinate system ${this.options.coordinateSystem}`)
+    }
+
+    if (this.options.coordinateSystem === 'polar') {
+      validatePolarOptions(this.options)
+    }
+
+    const radius = this.options.polar?.radiusDomain?.[1]
+    const radiusLimit = radius === undefined ? undefined : radius * 1.2
+    let xDomain = (this.meta.xDomain = (function (axis) {
       if (axis.domain) {
         return axis.domain
       }
       if (axis.type === 'linear') {
+        if (radiusLimit !== undefined) return [-radiusLimit, radiusLimit]
         const xLimit = 12
         return [-xLimit / 2, xLimit / 2]
       } else if (axis.type === 'log') {
@@ -223,18 +236,27 @@ export class Chart extends EventEmitter.EventEmitter {
       throw Error('axis type ' + axis.type + ' unsupported')
     })(this.options.xAxis))
 
-    const yDomain = (this.meta.yDomain = (function (axis) {
+    let yDomain = (this.meta.yDomain = (function (axis) {
       if (axis.domain) {
         return axis.domain
       }
       const yLimit = computeYScale(xDomain)
       if (axis.type === 'linear') {
+        if (radiusLimit !== undefined) return [-radiusLimit, radiusLimit]
         return [-yLimit / 2, yLimit / 2]
       } else if (axis.type === 'log') {
         return [1, 10]
       }
       throw Error('axis type ' + axis.type + ' unsupported')
     })(this.options.yAxis))
+
+    if (this.options.coordinateSystem === 'polar') {
+      const domains = getPolarDomains(xDomain, yDomain, this.meta.width, this.meta.height)
+      xDomain = domains.xDomain
+      yDomain = domains.yDomain
+      this.meta.xDomain = xDomain
+      this.meta.yDomain = yDomain
+    }
 
     if (!this.meta.xScale) {
       this.meta.xScale = getD3Scale(this.options.xAxis.type)()
@@ -255,11 +277,17 @@ export class Chart extends EventEmitter.EventEmitter {
     if (!this.meta.xAxis) {
       this.meta.xAxis = d3AxisBottom(this.meta.xScale)
     }
-    this.meta.xAxis.tickSize(this.options.grid ? -this.meta.height : 0).tickFormat(formatter)
+    this.meta.xAxis
+      .scale(this.meta.xScale)
+      .tickSize(this.options.grid ? -this.meta.height : 0)
+      .tickFormat(formatter)
     if (!this.meta.yAxis) {
       this.meta.yAxis = d3AxisLeft(this.meta.yScale)
     }
-    this.meta.yAxis.tickSize(this.options.grid ? -this.meta.width : 0).tickFormat(formatter)
+    this.meta.yAxis
+      .scale(this.meta.yScale)
+      .tickSize(this.options.grid ? -this.meta.width : 0)
+      .tickFormat(formatter)
 
     this.line = d3Line()
       .x(function (d) {
@@ -404,9 +432,14 @@ export class Chart extends EventEmitter.EventEmitter {
       .merge(this.canvas.enter)
       .select('.x.axis')
       .attr('transform', 'translate(0,' + this.meta.height + ')')
+      .style('display', this.isPolarCoordinateSystem() ? 'none' : null)
       .call(this.meta.xAxis)
 
-    this.canvas.merge(this.canvas.enter).select('.y.axis').call(this.meta.yAxis)
+    this.canvas
+      .merge(this.canvas.enter)
+      .select('.y.axis')
+      .style('display', this.isPolarCoordinateSystem() ? 'none' : null)
+      .call(this.meta.yAxis)
   }
 
   buildAxisLabel() {
@@ -417,7 +450,7 @@ export class Chart extends EventEmitter.EventEmitter {
       .merge(canvas.enter)
       .selectAll('text.x.axis-label')
       .data(function (d: FunctionPlotOptions) {
-        return [d.xAxis.label].filter(Boolean)
+        return d.coordinateSystem === 'polar' ? [] : [d.xAxis.label].filter(Boolean)
       })
     // prettier-ignore
     const xLabelEnter = xLabel.enter().append('text')
@@ -438,7 +471,7 @@ export class Chart extends EventEmitter.EventEmitter {
       .merge(canvas.enter)
       .selectAll('text.y.axis-label')
       .data(function (d: FunctionPlotOptions) {
-        return [d.yAxis.label].filter(Boolean)
+        return d.coordinateSystem === 'polar' ? [] : [d.yAxis.label].filter(Boolean)
       })
 
     const yLabelEnter = yLabel
@@ -490,12 +523,16 @@ export class Chart extends EventEmitter.EventEmitter {
       const yOrigin = content
         .merge(contentEnter)
         .selectAll(':scope > path.y.origin')
-        .data([
-          [
-            [0, this.meta.yScale.domain()[0]],
-            [0, this.meta.yScale.domain()[1]]
-          ]
-        ])
+        .data(
+          this.isPolarCoordinateSystem()
+            ? []
+            : [
+                [
+                  [0, this.meta.yScale.domain()[0]],
+                  [0, this.meta.yScale.domain()[1]]
+                ]
+              ]
+        )
       const yOriginEnter = yOrigin
         .enter()
         .append('path')
@@ -503,6 +540,7 @@ export class Chart extends EventEmitter.EventEmitter {
         .attr('stroke', 'black')
         .attr('opacity', 0.2)
       yOrigin.merge(yOriginEnter).attr('d', this.line)
+      yOrigin.exit().remove()
     }
 
     // helper line y = 0
@@ -510,12 +548,16 @@ export class Chart extends EventEmitter.EventEmitter {
       const xOrigin = content
         .merge(contentEnter)
         .selectAll(':scope > path.x.origin')
-        .data([
-          [
-            [this.meta.xScale.domain()[0], 0],
-            [this.meta.xScale.domain()[1], 0]
-          ]
-        ])
+        .data(
+          this.isPolarCoordinateSystem()
+            ? []
+            : [
+                [
+                  [this.meta.xScale.domain()[0], 0],
+                  [this.meta.xScale.domain()[1], 0]
+                ]
+              ]
+        )
       const xOriginEnter = xOrigin
         .enter()
         .append('path')
@@ -523,6 +565,7 @@ export class Chart extends EventEmitter.EventEmitter {
         .attr('stroke', 'black')
         .attr('opacity', 0.2)
       xOrigin.merge(xOriginEnter).attr('d', this.line)
+      xOrigin.exit().remove()
     }
 
     // annotations
@@ -633,6 +676,16 @@ export class Chart extends EventEmitter.EventEmitter {
     const instance = this
     const canvas = instance.canvas.merge(instance.canvas.enter)
 
+    renderPolarGrid(canvas, this.meta, this.options, 'function-plot-clip-' + this.id)
+
+    if (this.isPolarCoordinateSystem()) {
+      canvas.select('.x.axis').style('display', 'none')
+      canvas.select('.y.axis').style('display', 'none')
+      return
+    }
+
+    canvas.select('.x.axis').style('display', null)
+
     // center the axes
     canvas.select('.x.axis').call(instance.meta.xAxis)
 
@@ -656,6 +709,7 @@ export class Chart extends EventEmitter.EventEmitter {
     }
 
     canvas.select('.y.axis').call(instance.meta.yAxis)
+    canvas.select('.y.axis').style('display', null)
 
     if (this.options.yAxis.position === 'sticky') {
       const xMin = this.meta.xScale.domain()[0]
@@ -699,6 +753,10 @@ export class Chart extends EventEmitter.EventEmitter {
     instance.updateAxes()
     instance.buildContent()
     instance.emit('after:draw')
+  }
+
+  private isPolarCoordinateSystem() {
+    return this.options.coordinateSystem === 'polar'
   }
 
   setUpEventListeners() {
