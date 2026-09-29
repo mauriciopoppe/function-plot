@@ -44,9 +44,15 @@ export interface FunctionPlotOptionsAxis {
 
 export interface PolarOptions {
   /**
-   * True to display a polar grid and its labels. Defaults to true in polar mode.
+   * True to display the polar grid. Defaults to true in polar mode.
    */
   grid?: boolean
+
+  /**
+   * True to display angular labels on the outermost visible radial grid circle.
+   * Defaults to false.
+   */
+  angularLabels?: boolean
 
   /**
    * Non-negative ascending bounds for grid radii. Also seeds the initial viewport
@@ -65,7 +71,7 @@ export interface PolarOptions {
   angularTicks?: number | number[]
 
   /**
-   * Unit used by the default angular tick formatter.
+   * Unit used by the default angular tick formatter. Defaults to radians.
    */
   angleUnit?: 'radians' | 'degrees'
 

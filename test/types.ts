@@ -28,6 +28,7 @@ functionPlot({
     radiusDomain: [0, 3],
     radialTicks: 5,
     angularTicks: 12,
+    angularLabels: true,
     angleUnit: 'degrees',
     radiusTickFormat: (value) => value.toFixed(1),
     angleTickFormat: (value) => value + '°'

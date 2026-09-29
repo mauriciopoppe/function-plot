@@ -38,7 +38,7 @@ describe('Polar coordinate system', () => {
       functionPlot({
         target: '#playground',
         coordinateSystem: 'polar',
-        polar: { radiusDomain: [0, 3], radialTicks: [1, 2, 3], angularTicks: 4 },
+        polar: { radiusDomain: [0, 3], radialTicks: [1, 2, 3], angularTicks: 4, angularLabels: true },
         data: [{ r: '2 * sin(4 * theta)', fnType: 'polar', graphType: 'polyline' }]
       })
       const grid = document.querySelector('.polar-grid')
@@ -71,6 +71,88 @@ describe('Polar coordinate system', () => {
     expect(result.axesHidden).toBe(true)
     expect(result.curve).toBe(true)
     expect(result.gridBeforeContent).toBe(true)
+  })
+
+  it('places finite-grid angle labels beside the outer ring', async () => {
+    const result = await page.evaluate(() => {
+      functionPlot({
+        target: '#playground',
+        coordinateSystem: 'polar',
+        polar: { radiusDomain: [0, 1], radialTicks: [1], angularTicks: 4, angularLabels: true },
+        data: [{ r: '1', fnType: 'polar', graphType: 'polyline' }]
+      })
+      const grid = document.querySelector('.polar-grid')
+      const circle = grid.querySelector('.polar-grid-circle')
+      const zero = Array.from(grid.querySelectorAll('.polar-angle-label')).find((node) => node.textContent === '0')
+      return {
+        circleRight: Number(circle.getAttribute('cx')) + Number(circle.getAttribute('r')),
+        labelX: Number(zero.getAttribute('x')),
+        labelAnchor: zero.getAttribute('text-anchor'),
+        clippedLines: grid.querySelector('.polar-grid-lines').getAttribute('clip-path'),
+        labelsClipped: grid.getAttribute('clip-path')
+      }
+    })
+
+    expect(result.labelX).toBeCloseTo(result.circleRight)
+    expect(result.labelAnchor).toBe('start')
+    expect(result.clippedLines).toContain('function-plot-clip-')
+    expect(result.labelsClipped).toBeNull()
+  })
+
+  it('ends unbounded polar rays at the plot viewport', async () => {
+    const result = await page.evaluate(() => {
+      functionPlot({
+        target: '#playground',
+        coordinateSystem: 'polar',
+        polar: { angularTicks: [0] },
+        data: [{ r: '1', fnType: 'polar', graphType: 'polyline' }]
+      })
+      const ray = document.querySelector('.polar-grid-ray')
+      const circle = document.querySelector('.polar-grid-circle')
+      const clip = document.querySelector('.clip')
+      return {
+        rayEnd: Number(ray.getAttribute('x2')),
+        viewportWidth: Number(clip.getAttribute('width')),
+        circleExists: !!circle
+      }
+    })
+
+    expect(result.rayEnd).toBe(result.viewportWidth)
+    expect(result.circleExists).toBe(true)
+  })
+
+  it('hides angles whose rays are outside the viewport after panning', async () => {
+    const result = await page.evaluate(() => {
+      functionPlot({
+        target: '#playground',
+        coordinateSystem: 'polar',
+        polar: { angularTicks: 4, angularLabels: true },
+        xAxis: { domain: [-2, 2] },
+        yAxis: { domain: [1, 5] },
+        data: [{ r: '1', fnType: 'polar', graphType: 'polyline' }]
+      })
+      return {
+        labels: Array.from(document.querySelectorAll('.polar-angle-label')).map((node) => node.textContent),
+        rays: document.querySelectorAll('.polar-grid-ray').length
+      }
+    })
+
+    expect(result.labels).toEqual(['π/2'])
+    expect(result.rays).toBe(1)
+  })
+
+  it('hides angular labels by default', async () => {
+    const result = await page.evaluate(() => {
+      functionPlot({
+        target: '#playground',
+        coordinateSystem: 'polar',
+        polar: { radialTicks: [1, 2], angularTicks: 4 },
+        data: [{ r: '1', fnType: 'polar', graphType: 'polyline' }]
+      })
+      return document.querySelectorAll('.polar-angle-label').length
+    })
+
+    expect(result).toBe(0)
   })
 
   it('updates polar geometry after zoom and rejects logarithmic axes', async () => {

@@ -64,7 +64,7 @@ functionPlot({
   polar: {
     grid: true,
     radiusDomain: [0, 3],
-    angleUnit: 'degrees'
+    angularLabels: true
   },
   data: [
     {
@@ -78,8 +78,9 @@ functionPlot({
 
 Polar mode hides the Cartesian axes, keeps equal x/y units, and redraws the
 grid during zoom and pan. It supports linear axes only. `polar.grid` defaults
-to `true`; use `radiusDomain`, `radialTicks`, `angularTicks`, `angleUnit`, and
-the tick formatter options to control the grid and its labels.
+to `true`, while `polar.angularLabels` defaults to `false`. When enabled,
+angular labels use radians by default and appear on the outermost visible
+radial grid circle. Set `angleUnit: 'degrees'` to use degree labels.
 
 ## License
 
