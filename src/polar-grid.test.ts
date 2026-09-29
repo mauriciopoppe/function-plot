@@ -4,6 +4,8 @@ import {
   formatPolarAngle,
   getPolarAngles,
   getPolarDomains,
+  getPolarLabelLayout,
+  getPolarRayInterval,
   getPolarRadiusDomain,
   getPolarRadii,
   validatePolarOptions
@@ -28,6 +30,23 @@ describe('polar grid', () => {
   it('formats angles in radians and degrees', () => {
     expect(formatPolarAngle(Math.PI / 2, 'radians')).toBe('π/2')
     expect(formatPolarAngle(Math.PI, 'degrees')).toBe('180°')
+  })
+
+  it('uses the viewport edge for polar rays', () => {
+    expect(getPolarRayInterval([50, 50], [1, 0], 100, 100)?.[1]).toBe(50)
+    expect(getPolarRayInterval([50, 50], [Math.SQRT1_2, -Math.SQRT1_2], 100, 100)?.[1]).toBeCloseTo(70.7107)
+  })
+
+  it('only keeps ray directions that intersect the viewport', () => {
+    expect(getPolarRayInterval([50, 150], [0, -1], 100, 100)).toEqual([50, 150])
+    expect(getPolarRayInterval([50, 150], [0, 1], 100, 100)).toBeUndefined()
+  })
+
+  it('keeps labels on the outer visible ring', () => {
+    const finite = getPolarLabelLayout([50, 50], [1, 0], 20, 100, 100)
+    expect(finite.position).toEqual([70, 50])
+    expect(finite.textAnchor).toBe('start')
+    expect(getPolarLabelLayout([50, 150], [0, 1], 20, 100, 100)).toBeUndefined()
   })
 
   it.each<PolarOptions>([

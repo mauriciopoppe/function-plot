@@ -4,6 +4,7 @@ import type { FunctionPlotOptions, PolarOptions } from './types'
 import type { ChartMeta } from './chart'
 
 const TWO_PI = 2 * Math.PI
+const DEFAULT_POLAR_ANGLE_UNIT = 'radians'
 
 export function validatePolarOptions(options: FunctionPlotOptions) {
   if (options.xAxis.type !== 'linear' || options.yAxis.type !== 'linear') {
@@ -100,30 +101,44 @@ export function formatPolarAngle(angle: number, unit: 'radians' | 'degrees') {
   return Number(angle.toFixed(3)).toString()
 }
 
-function getLabelPosition(
+export function getPolarRayInterval(
+  center: [number, number],
+  direction: [number, number],
+  width: number,
+  height: number
+) {
+  let minimum = -Infinity
+  let maximum = Infinity
+  for (const [origin, delta, extent] of [
+    [center[0], direction[0], width],
+    [center[1], direction[1], height]
+  ]) {
+    if (Math.abs(delta) < 1e-10) {
+      if (origin < 0 || origin > extent) return undefined
+      continue
+    }
+    const first = (0 - origin) / delta
+    const second = (extent - origin) / delta
+    minimum = Math.max(minimum, Math.min(first, second))
+    maximum = Math.min(maximum, Math.max(first, second))
+  }
+  const start = Math.max(0, minimum)
+  return maximum > start ? [start, maximum] : undefined
+}
+
+export function getPolarLabelLayout(
   center: [number, number],
   direction: [number, number],
   radius: number,
   width: number,
   height: number
 ) {
-  let minimum = 0
-  let maximum = radius + 18
-  const padding = 22
-  for (const [origin, delta, extent] of [
-    [center[0], direction[0], width],
-    [center[1], direction[1], height]
-  ]) {
-    if (Math.abs(delta) < 1e-10) {
-      if (origin < padding || origin > extent - padding) return undefined
-    } else {
-      const first = (padding - origin) / delta
-      const second = (extent - padding - origin) / delta
-      minimum = Math.max(minimum, Math.min(first, second))
-      maximum = Math.min(maximum, Math.max(first, second))
-    }
-  }
-  return maximum > minimum ? [center[0] + direction[0] * maximum, center[1] + direction[1] * maximum] : undefined
+  const interval = getPolarRayInterval(center, direction, width, height)
+  if (!interval || radius < interval[0]) return undefined
+  const labelRadius = Math.min(radius, interval[1])
+  const position: [number, number] = [center[0] + direction[0] * labelRadius, center[1] + direction[1] * labelRadius]
+  const textAnchor = direction[0] > 1e-10 ? 'start' : direction[0] < -1e-10 ? 'end' : 'middle'
+  return { position, textAnchor }
 }
 
 export function renderPolarGrid(canvas: any, meta: ChartMeta, options: FunctionPlotOptions, clipId: string) {
@@ -134,24 +149,32 @@ export function renderPolarGrid(canvas: any, meta: ChartMeta, options: FunctionP
 
   const grid = selection
     .merge(selection.enter().insert('g', '.content, .zoom-and-drag').attr('class', 'polar-grid'))
-    .attr('clip-path', 'url(#' + clipId + ')')
+    .attr('clip-path', null)
     .attr('pointer-events', 'none')
+  const clippedGrid = grid.selectAll(':scope > g.polar-grid-lines').data([0])
+  const clippedGridEnter = clippedGrid.enter().append('g').attr('class', 'polar-grid-lines')
+  const lines = clippedGrid.merge(clippedGridEnter).attr('clip-path', 'url(#' + clipId + ')')
   const polar = options.polar || {}
   const xScale = meta.xScale
   const yScale = meta.yScale
   const visibleDomain = getPolarRadiusDomain(xScale.domain(), yScale.domain())
   const radii = getPolarRadii(polar, visibleDomain)
   const angles = getPolarAngles(polar)
-  const radius = Math.min(
-    polar.radiusDomain?.[1] === undefined ? visibleDomain[1] : polar.radiusDomain[1],
-    visibleDomain[1]
-  )
+  const radius = polar.radiusDomain?.[1] === undefined ? undefined : Math.min(polar.radiusDomain[1], visibleDomain[1])
   const center: [number, number] = [xScale(0), yScale(0)]
   const xUnit = xScale(1) - center[0]
   const yUnit = yScale(1) - center[1]
   const pixelsPerUnit = Math.abs(xUnit)
+  const getRayGeometry = (angle: number) => {
+    const direction: [number, number] = [Math.cos(angle) * Math.sign(xUnit), Math.sin(angle) * Math.sign(yUnit)]
+    const interval = getPolarRayInterval(center, direction, meta.width, meta.height)
+    if (!interval) return undefined
+    const rayLength = radius === undefined ? interval[1] : Math.min(radius * pixelsPerUnit, interval[1])
+    return rayLength > interval[0] ? { direction, rayLength } : undefined
+  }
+  const visibleAngles = angles.filter((angle) => getRayGeometry(angle))
 
-  const circles = grid.selectAll('circle.polar-grid-circle').data(radii, (value: number) => value)
+  const circles = lines.selectAll('circle.polar-grid-circle').data(radii, (value: number) => value)
   circles.exit().remove()
   circles
     .merge(circles.enter().append('circle').attr('class', 'polar-grid-circle'))
@@ -162,14 +185,20 @@ export function renderPolarGrid(canvas: any, meta: ChartMeta, options: FunctionP
     .attr('stroke', 'currentColor')
     .attr('opacity', 0.2)
 
-  const rays = grid.selectAll('line.polar-grid-ray').data(angles, (value: number) => value)
+  const rays = lines.selectAll('line.polar-grid-ray').data(visibleAngles, (value: number) => value)
   rays.exit().remove()
   rays
     .merge(rays.enter().append('line').attr('class', 'polar-grid-ray'))
     .attr('x1', center[0])
     .attr('y1', center[1])
-    .attr('x2', (angle: number) => xScale(radius * Math.cos(angle)))
-    .attr('y2', (angle: number) => yScale(radius * Math.sin(angle)))
+    .attr('x2', (angle: number) => {
+      const ray = getRayGeometry(angle)
+      return center[0] + ray.direction[0] * ray.rayLength
+    })
+    .attr('y2', (angle: number) => {
+      const ray = getRayGeometry(angle)
+      return center[1] + ray.direction[1] * ray.rayLength
+    })
     .attr('stroke', 'currentColor')
     .attr('opacity', 0.2)
 
@@ -185,24 +214,32 @@ export function renderPolarGrid(canvas: any, meta: ChartMeta, options: FunctionP
     .attr('opacity', 0.6)
     .text(polar.radiusTickFormat || d3Format('~g'))
 
-  const labels = angles.reduce((result: any[], angle: number) => {
-    const direction: [number, number] = [Math.cos(angle) * Math.sign(xUnit), Math.sin(angle) * Math.sign(yUnit)]
-    const position = getLabelPosition(center, direction, radius * pixelsPerUnit, meta.width, meta.height)
-    if (position) result.push({ angle, position })
-    return result
-  }, [])
+  const labels =
+    polar.angularLabels && radii.length
+      ? visibleAngles.reduce((result: any[], angle: number) => {
+          const direction: [number, number] = [Math.cos(angle) * Math.sign(xUnit), Math.sin(angle) * Math.sign(yUnit)]
+          const interval = getPolarRayInterval(center, direction, meta.width, meta.height)
+          const labelRadius = interval ? radii.filter((value) => value * pixelsPerUnit <= interval[1]).pop() : undefined
+          const layout =
+            labelRadius === undefined
+              ? undefined
+              : getPolarLabelLayout(center, direction, labelRadius * pixelsPerUnit, meta.width, meta.height)
+          if (layout) result.push({ angle, ...layout })
+          return result
+        }, [])
+      : []
   const angleLabels = grid.selectAll('text.polar-angle-label').data(labels, (value: any) => value.angle)
   angleLabels.exit().remove()
   angleLabels
     .merge(angleLabels.enter().append('text').attr('class', 'polar-angle-label'))
     .attr('x', (value: any) => value.position[0])
     .attr('y', (value: any) => value.position[1])
-    .attr('text-anchor', 'middle')
-    .attr('dy', '0.35em')
+    .attr('text-anchor', (value: any) => value.textAnchor)
+    .attr('dominant-baseline', 'middle')
     .attr('fill', 'currentColor')
     .attr('opacity', 0.6)
     .text((value: any) => {
-      const unit = polar.angleUnit || 'radians'
+      const unit = polar.angleUnit || DEFAULT_POLAR_ANGLE_UNIT
       const angle = unit === 'degrees' ? (value.angle * 180) / Math.PI : value.angle
       return polar.angleTickFormat ? polar.angleTickFormat(angle) : formatPolarAngle(value.angle, unit)
     })
