@@ -6,6 +6,7 @@ import type { ChartMeta } from './chart'
 const TWO_PI = 2 * Math.PI
 const DEFAULT_POLAR_ANGLE_UNIT = 'radians'
 
+/** Reject domains, ticks and axis types that cannot define a polar grid. */
 export function validatePolarOptions(options: FunctionPlotOptions) {
   if (options.xAxis.type !== 'linear' || options.yAxis.type !== 'linear') {
     throw new Error('polar coordinate system only supports linear axes')
@@ -39,6 +40,7 @@ export function validatePolarOptions(options: FunctionPlotOptions) {
   }
 }
 
+/** Expand the narrower domain around its center so both axes use the same units per pixel. */
 export function getPolarDomains(xDomain: number[], yDomain: number[], width: number, height: number) {
   const unitsPerPixel = Math.max((xDomain[1] - xDomain[0]) / width, (yDomain[1] - yDomain[0]) / height)
   const xCenter = (xDomain[0] + xDomain[1]) / 2
@@ -49,6 +51,7 @@ export function getPolarDomains(xDomain: number[], yDomain: number[], width: num
   }
 }
 
+/** Find the nearest and farthest distances from the origin to a rectangular viewport. */
 export function getPolarRadiusDomain(xDomain: number[], yDomain: number[]): [number, number] {
   const xMin = Math.min(...xDomain)
   const xMax = Math.max(...xDomain)
@@ -62,6 +65,7 @@ export function getPolarRadiusDomain(xDomain: number[], yDomain: number[]): [num
   ]
 }
 
+/** Select radial ticks inside both the configured domain and the visible radius range. */
 export function getPolarRadii(polar: PolarOptions, visibleDomain: [number, number]) {
   const radiusDomain = polar.radiusDomain || visibleDomain
   const minimum = Math.max(radiusDomain[0], visibleDomain[0])
@@ -77,6 +81,7 @@ export function getPolarRadii(polar: PolarOptions, visibleDomain: [number, numbe
     .sort((first, second) => first - second)
 }
 
+/** Normalize explicit angles or distribute a tick count over one revolution. */
 export function getPolarAngles(polar: PolarOptions) {
   if (Array.isArray(polar.angularTicks)) {
     const normalized = polar.angularTicks.map((angle) => ((angle % TWO_PI) + TWO_PI) % TWO_PI)
@@ -88,6 +93,7 @@ export function getPolarAngles(polar: PolarOptions) {
   return Array.from({ length: count }, (_, index) => (index * TWO_PI) / count)
 }
 
+/** Format common multiples of pi as fractions, falling back to decimal radians. */
 export function formatPolarAngle(angle: number, unit: 'radians' | 'degrees') {
   if (unit === 'degrees') return `${Number(((angle * 180) / Math.PI).toFixed(2))}°`
   for (const denominator of [1, 2, 3, 4, 6, 8, 12, 16]) {
@@ -101,6 +107,17 @@ export function formatPolarAngle(angle: number, unit: 'radians' | 'degrees') {
   return Number(angle.toFixed(3)).toString()
 }
 
+/**
+ * Intersect a ray from center with the viewport rectangle. For each axis,
+ * solve 0 <= center + direction * distance <= extent, then intersect the two
+ * distance intervals with distance >= 0.
+ *
+ *       +---------+  viewport
+ *       |    /    |
+ *       |   /     |  ray enters at start and leaves at end
+ *       +--/------+
+ *         center
+ */
 export function getPolarRayInterval(
   center: [number, number],
   direction: [number, number],
@@ -126,6 +143,7 @@ export function getPolarRayInterval(
   return maximum > start ? [start, maximum] : undefined
 }
 
+/** Place a label on its visible radial tick, anchored away from the ray. */
 export function getPolarLabelLayout(
   center: [number, number],
   direction: [number, number],
@@ -141,12 +159,16 @@ export function getPolarLabelLayout(
   return { position, textAnchor }
 }
 
+/** Render clipped circles/rays and unclipped radial/angular labels. */
 export function renderPolarGrid(canvas: any, meta: ChartMeta, options: FunctionPlotOptions, clipId: string) {
   const enabled = options.coordinateSystem === 'polar' && options.polar?.grid !== false
-  const selection = canvas.selectAll('g.polar-grid').data(enabled ? [options.polar || {}] : [])
-  selection.exit().remove()
-  if (!enabled) return
+  if (!enabled) {
+    canvas.selectAll('g.polar-grid').remove()
+    return
+  }
 
+  // Join the grid before plotted content; only the lines need the plot clip.
+  const selection = canvas.selectAll('g.polar-grid').data([options.polar || {}])
   const grid = selection
     .merge(selection.enter().insert('g', '.content, .zoom-and-drag').attr('class', 'polar-grid'))
     .attr('clip-path', null)
@@ -160,12 +182,12 @@ export function renderPolarGrid(canvas: any, meta: ChartMeta, options: FunctionP
   const visibleDomain = getPolarRadiusDomain(xScale.domain(), yScale.domain())
   const radii = getPolarRadii(polar, visibleDomain)
   const angles = getPolarAngles(polar)
-  const radius = polar.radiusDomain?.[1] === undefined ? undefined : Math.min(polar.radiusDomain[1], visibleDomain[1])
   const center: [number, number] = [xScale(0), yScale(0)]
   const xUnit = xScale(1) - center[0]
   const yUnit = yScale(1) - center[1]
   const pixelsPerUnit = Math.abs(xUnit)
   const getRayGeometry = (angle: number) => {
+    const radius = polar.radiusDomain?.[1] === undefined ? undefined : Math.min(polar.radiusDomain[1], visibleDomain[1])
     const direction: [number, number] = [Math.cos(angle) * Math.sign(xUnit), Math.sin(angle) * Math.sign(yUnit)]
     const interval = getPolarRayInterval(center, direction, meta.width, meta.height)
     if (!interval) return undefined
@@ -174,6 +196,7 @@ export function renderPolarGrid(canvas: any, meta: ChartMeta, options: FunctionP
   }
   const visibleAngles = angles.filter((angle) => getRayGeometry(angle))
 
+  // Circle and ray joins stay inside the clipped grid group.
   const circles = lines.selectAll('circle.polar-grid-circle').data(radii, (value: number) => value)
   circles.exit().remove()
   circles
@@ -202,6 +225,7 @@ export function renderPolarGrid(canvas: any, meta: ChartMeta, options: FunctionP
     .attr('stroke', 'currentColor')
     .attr('opacity', 0.2)
 
+  // Labels join the outer group so their text can extend beyond the plot clip.
   const radiusLabels = grid.selectAll('text.polar-radius-label').data(radii, (value: number) => value)
   radiusLabels.exit().remove()
   radiusLabels

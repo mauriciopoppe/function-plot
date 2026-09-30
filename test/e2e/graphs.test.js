@@ -82,6 +82,27 @@ functionPlot({
     expect(image).toMatchImageSnapshot(matchSnapshotConfig)
   })
 
+  it('should render a polar grid', async () => {
+    await page.evaluate(`
+functionPlot({
+  target: '#playground',
+  coordinateSystem: 'polar',
+  polar: {
+    radiusDomain: [0, 3],
+    angularTicks: 8,
+    angularLabels: true
+  },
+  data: [{
+    r: '2 * sin(4 * theta)',
+    fnType: 'polar',
+    graphType: 'polyline'
+  }]
+})
+    `)
+    const image = await page.screenshot()
+    expect(image).toMatchImageSnapshot(matchSnapshotConfig)
+  })
+
   it('should render distinct domains', async () => {
     await page.evaluate(`
 functionPlot({
