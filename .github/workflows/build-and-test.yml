@@ -2,8 +2,13 @@ name: Build and Test
 
 on:
   push:
+    branches:
+      - main
+      - 1.x
   pull_request:
-    types: [opened, reopened, synchronize]
+    branches:
+      - main
+      - 1.x
 
 jobs:
   build:
@@ -14,10 +19,13 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v3.1.1
+      - uses: actions/setup-node@v7
+        with:
+          node-version: lts/*
+          cache: npm
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Build
         run: npm run build
@@ -30,16 +38,19 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v3.1.1
+      - uses: actions/setup-node@v7
+        with:
+          node-version: lts/*
+          cache: npm
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Test
         run: npm run test
 
       - name: Archive test artifacst
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test images
           path: |

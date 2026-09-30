@@ -14,7 +14,10 @@ describe('Function Plot', () => {
   let page
 
   beforeAll(async () => {
-    browser = await puppeteer.launch({ headless: 'new' })
+    browser = await puppeteer.launch({
+      headless: 'new',
+      args: ['--no-sandbox', '--disable-setuid-sandbox']
+    })
     page = await browser.newPage()
     await page.setViewport({
       width: 1000,
