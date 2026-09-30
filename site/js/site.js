@@ -811,6 +811,30 @@ $(document).on('markupLoaded', function () {
   })
 
   /**
+   * ### Polar coordinate grid
+   *
+   * Polar equations use Cartesian axes by default. Set `coordinateSystem: 'polar'`
+   * to draw a polar grid with equal x/y units instead. `polar.grid` defaults to
+   * `true`, while angular labels are opt-in with `polar.angularLabels: true`.
+   * Labels use radians by default; `angleUnit: 'degrees'` changes their format.
+   */
+  functionPlot({
+    target: '#polar-grid',
+    coordinateSystem: 'polar',
+    polar: {
+      radiusDomain: [0, 3],
+      angularLabels: true
+    },
+    data: [
+      {
+        r: '2 * sin(4 * theta)',
+        fnType: 'polar',
+        graphType: 'polyline'
+      }
+    ]
+  })
+
+  /**
    * ### Implicit functions
    *
    * The equation of a circle of radius 1 $x^2 + y^2 = 1$ expressed in an explicit way is:

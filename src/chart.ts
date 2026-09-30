@@ -53,6 +53,64 @@ function getD3Scale(type: 'linear' | 'log') {
   return d3ScaleLog
 }
 
+/** Compute the initial domains and preserve equal units per pixel for polar plots. */
+function getDomains(
+  options: FunctionPlotOptions,
+  width: number,
+  height: number
+): {
+  xDomain: number[]
+  yDomain: number[]
+} {
+  const computeYDomainSize = (xDomain: number[]) => {
+    const xSize = xDomain[1] - xDomain[0]
+    return (height * xSize) / width
+  }
+
+  const radius = options.coordinateSystem === 'polar' ? options.polar?.radiusDomain?.[1] : undefined
+  const radiusLimit = radius === undefined ? undefined : radius * 1.2
+
+  const xDomain = (() => {
+    if (options.xAxis.domain) {
+      return options.xAxis.domain
+    }
+
+    if (options.xAxis.type === 'log') {
+      return [1, 10]
+    }
+
+    if (options.xAxis.type === 'linear') {
+      return radiusLimit === undefined ? [-6, 6] : [-radiusLimit, radiusLimit]
+    }
+
+    throw new Error(`axis type ${options.xAxis.type} unsupported`)
+  })()
+
+  const yDomain = (() => {
+    if (options.yAxis.domain) {
+      return options.yAxis.domain
+    }
+
+    if (options.yAxis.type === 'log') {
+      return [1, 10]
+    }
+
+    if (options.yAxis.type === 'linear') {
+      if (radiusLimit !== undefined) return [-radiusLimit, radiusLimit]
+      const ySize = computeYDomainSize(xDomain)
+      return [-ySize / 2, ySize / 2]
+    }
+
+    throw new Error(`axis type ${options.yAxis.type} unsupported`)
+  })()
+
+  if (options.coordinateSystem === 'polar') {
+    return getPolarDomains(xDomain, yDomain, width, height)
+  }
+
+  return { xDomain, yDomain }
+}
+
 /**
  * An instance can subscribe to any of the following events by doing `instance.on([eventName], callback)`,
  * events can be triggered by doing `instance.emit([eventName][, params])`
@@ -173,9 +231,11 @@ export class Chart extends EventEmitter.EventEmitter {
   }
 
   internalVars() {
-    const margin = (this.meta.margin = { left: 40, right: 20, top: 20, bottom: 20 })
+    const margin = (this.meta.margin = this.isPolarCoordinateSystem()
+      ? { left: 0, right: 0, top: 0, bottom: 0 }
+      : { left: 40, right: 20, top: 20, bottom: 20 })
     // if there's a title make the top margin bigger
-    if (this.options.title) {
+    if (this.options.title && !this.isPolarCoordinateSystem()) {
       this.meta.margin.top = 40
     }
     // inner width/height
@@ -199,12 +259,6 @@ export class Chart extends EventEmitter.EventEmitter {
       }
     }
 
-    function computeYScale(xScale: number[]) {
-      // assumes that xScale is a linear scale
-      const xDiff = xScale[1] - xScale[0]
-      return (self.meta.height * xDiff) / self.meta.width
-    }
-
     this.options.coordinateSystem = this.options.coordinateSystem || 'cartesian'
     this.options.xAxis = this.options.xAxis || {}
     this.options.xAxis.type = this.options.xAxis.type || 'linear'
@@ -220,43 +274,9 @@ export class Chart extends EventEmitter.EventEmitter {
       validatePolarOptions(this.options)
     }
 
-    const radius = this.options.polar?.radiusDomain?.[1]
-    const radiusLimit = radius === undefined ? undefined : radius * 1.2
-    let xDomain = (this.meta.xDomain = (function (axis) {
-      if (axis.domain) {
-        return axis.domain
-      }
-      if (axis.type === 'linear') {
-        if (radiusLimit !== undefined) return [-radiusLimit, radiusLimit]
-        const xLimit = 12
-        return [-xLimit / 2, xLimit / 2]
-      } else if (axis.type === 'log') {
-        return [1, 10]
-      }
-      throw Error('axis type ' + axis.type + ' unsupported')
-    })(this.options.xAxis))
-
-    let yDomain = (this.meta.yDomain = (function (axis) {
-      if (axis.domain) {
-        return axis.domain
-      }
-      const yLimit = computeYScale(xDomain)
-      if (axis.type === 'linear') {
-        if (radiusLimit !== undefined) return [-radiusLimit, radiusLimit]
-        return [-yLimit / 2, yLimit / 2]
-      } else if (axis.type === 'log') {
-        return [1, 10]
-      }
-      throw Error('axis type ' + axis.type + ' unsupported')
-    })(this.options.yAxis))
-
-    if (this.options.coordinateSystem === 'polar') {
-      const domains = getPolarDomains(xDomain, yDomain, this.meta.width, this.meta.height)
-      xDomain = domains.xDomain
-      yDomain = domains.yDomain
-      this.meta.xDomain = xDomain
-      this.meta.yDomain = yDomain
-    }
+    const { xDomain, yDomain } = getDomains(this.options, this.meta.width, this.meta.height)
+    this.meta.xDomain = xDomain
+    this.meta.yDomain = yDomain
 
     if (!this.meta.xScale) {
       this.meta.xScale = getD3Scale(this.options.xAxis.type)()
@@ -445,12 +465,13 @@ export class Chart extends EventEmitter.EventEmitter {
   buildAxisLabel() {
     // axis labeling
     const canvas = this.canvas
+    const self = this
 
     const xLabel = canvas
       .merge(canvas.enter)
       .selectAll('text.x.axis-label')
       .data(function (d: FunctionPlotOptions) {
-        return d.coordinateSystem === 'polar' ? [] : [d.xAxis.label].filter(Boolean)
+        return self.isPolarCoordinateSystem() ? [] : [d.xAxis.label].filter(Boolean)
       })
     // prettier-ignore
     const xLabelEnter = xLabel.enter().append('text')
@@ -471,7 +492,7 @@ export class Chart extends EventEmitter.EventEmitter {
       .merge(canvas.enter)
       .selectAll('text.y.axis-label')
       .data(function (d: FunctionPlotOptions) {
-        return d.coordinateSystem === 'polar' ? [] : [d.yAxis.label].filter(Boolean)
+        return self.isPolarCoordinateSystem() ? [] : [d.yAxis.label].filter(Boolean)
       })
 
     const yLabelEnter = yLabel

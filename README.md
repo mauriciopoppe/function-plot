@@ -54,34 +54,6 @@ functionPlot({
 
 [`Check the available options in the docs`](https://mauriciopoppe.github.io/function-plot/docs/functions/default-1.html)
 
-Polar functions use Cartesian coordinates by default. To display a polar grid,
-opt into the polar coordinate system:
-
-```javascript
-functionPlot({
-  target: '#root',
-  coordinateSystem: 'polar',
-  polar: {
-    grid: true,
-    radiusDomain: [0, 3],
-    angularLabels: true
-  },
-  data: [
-    {
-      r: '2 * sin(4 * theta)',
-      fnType: 'polar',
-      graphType: 'polyline'
-    }
-  ]
-})
-```
-
-Polar mode hides the Cartesian axes, keeps equal x/y units, and redraws the
-grid during zoom and pan. It supports linear axes only. `polar.grid` defaults
-to `true`, while `polar.angularLabels` defaults to `false`. When enabled,
-angular labels use radians by default and appear on the outermost visible
-radial grid circle. Set `angleUnit: 'degrees'` to use degree labels.
-
 ## License
 
 2015-2023 MIT © Mauricio Poppe
