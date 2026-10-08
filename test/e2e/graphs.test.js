@@ -102,7 +102,7 @@ functionPlot({
   }]
 })
     `)
-    const image = await page.screenshot()
+    const image = Buffer.from(await page.screenshot())
     expect(image).toMatchImageSnapshot(matchSnapshotConfig)
   })
 
