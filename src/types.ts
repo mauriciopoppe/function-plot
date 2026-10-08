@@ -62,6 +62,7 @@ export interface PolarOptions {
 
   /**
    * Approximate radial tick count, or explicit non-negative tick values.
+   * When omitted, the count adapts to the available pixel space.
    */
   radialTicks?: number | number[]
 

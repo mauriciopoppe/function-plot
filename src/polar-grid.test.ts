@@ -27,6 +27,16 @@ describe('polar grid', () => {
     expect(getPolarAngles({ angularTicks: [0, 2 * Math.PI, -Math.PI, Math.PI] })).toEqual([0, Math.PI])
   })
 
+  it('adjusts automatic radial ticks to the available pixels', () => {
+    expect(getPolarRadii({}, [0, 3], 50)).toEqual([1, 2, 3])
+    expect(getPolarRadii({}, [0, 3], 100)).toEqual([0.5, 1, 1.5, 2, 2.5, 3])
+  })
+
+  it('preserves explicit radial ticks regardless of the available pixels', () => {
+    expect(getPolarRadii({ radialTicks: 5 }, [0, 3], 50)).toEqual([0.5, 1, 1.5, 2, 2.5, 3])
+    expect(getPolarRadii({ radialTicks: [0.5, 1, 2, 3] }, [0, 3], 50)).toEqual([0.5, 1, 2, 3])
+  })
+
   it('formats angles in radians and degrees', () => {
     expect(formatPolarAngle(Math.PI / 2, 'radians')).toBe('π/2')
     expect(formatPolarAngle(Math.PI, 'degrees')).toBe('180°')
@@ -43,10 +53,10 @@ describe('polar grid', () => {
   })
 
   it('keeps labels on the outer visible ring', () => {
-    const finite = getPolarLabelLayout([50, 50], [1, 0], 20, 100, 100)
+    const finite = getPolarLabelLayout([50, 50], [1, 0], [10, 20, 60], 100, 100)
     expect(finite.position).toEqual([70, 50])
     expect(finite.textAnchor).toBe('start')
-    expect(getPolarLabelLayout([50, 150], [0, 1], 20, 100, 100)).toBeUndefined()
+    expect(getPolarLabelLayout([50, 150], [0, 1], [20], 100, 100)).toBeUndefined()
   })
 
   it.each<PolarOptions>([

@@ -1,5 +1,6 @@
 import { format as d3Format } from 'd3-format'
 import { scaleLinear as d3ScaleLinear } from 'd3-scale'
+import { select as d3Select } from 'd3-selection'
 import type { FunctionPlotOptions, PolarOptions } from './types'
 import type { ChartMeta } from './chart'
 
@@ -65,17 +66,26 @@ export function getPolarRadiusDomain(xDomain: number[], yDomain: number[]): [num
   ]
 }
 
-/** Select radial ticks inside both the configured domain and the visible radius range. */
-export function getPolarRadii(polar: PolarOptions, visibleDomain: [number, number]) {
+/**
+ * Select radial ticks inside the configured and visible radius bounds.
+ * Automatic ticks target roughly 50 pixels of spacing; explicit ticks take precedence.
+ */
+export function getPolarRadii(polar: PolarOptions, visibleDomain: [number, number], pixelsPerUnit?: number) {
   const radiusDomain = polar.radiusDomain || visibleDomain
   const minimum = Math.max(radiusDomain[0], visibleDomain[0])
   const maximum = Math.min(radiusDomain[1], visibleDomain[1])
   if (minimum > maximum) return []
-  const values: number[] = Array.isArray(polar.radialTicks)
-    ? polar.radialTicks
-    : d3ScaleLinear()
-        .domain([minimum, maximum])
-        .ticks(polar.radialTicks || 5)
+  let values: number[]
+  if (Array.isArray(polar.radialTicks)) {
+    values = polar.radialTicks
+  } else {
+    let tickCount = polar.radialTicks || 5
+    if (polar.radialTicks === undefined && pixelsPerUnit !== undefined) {
+      const pixelRange = (maximum - minimum) * pixelsPerUnit
+      tickCount = Math.max(1, Math.round(pixelRange / 50))
+    }
+    values = d3ScaleLinear().domain([minimum, maximum]).ticks(tickCount)
+  }
   return Array.from(new Set(values))
     .filter((value) => value > 0 && value >= minimum && value <= maximum)
     .sort((first, second) => first - second)
@@ -143,24 +153,25 @@ export function getPolarRayInterval(
   return maximum > start ? [start, maximum] : undefined
 }
 
-/** Place a label on its visible radial tick, anchored away from the ray. */
+/** Select the outermost visible ring from ascending pixel radii and anchor its label away from the ray. */
 export function getPolarLabelLayout(
   center: [number, number],
   direction: [number, number],
-  radius: number,
+  radii: number[],
   width: number,
   height: number
 ) {
   const interval = getPolarRayInterval(center, direction, width, height)
-  if (!interval || radius < interval[0]) return undefined
-  const labelRadius = Math.min(radius, interval[1])
-  const position: [number, number] = [center[0] + direction[0] * labelRadius, center[1] + direction[1] * labelRadius]
+  if (!interval) return undefined
+  const radius = radii.filter((value) => value >= interval[0] && value <= interval[1]).pop()
+  if (radius === undefined) return undefined
+  const position: [number, number] = [center[0] + direction[0] * radius, center[1] + direction[1] * radius]
   const textAnchor = direction[0] > 1e-10 ? 'start' : direction[0] < -1e-10 ? 'end' : 'middle'
   return { position, textAnchor }
 }
 
-/** Render clipped circles/rays and unclipped radial/angular labels. */
-export function renderPolarGrid(canvas: any, meta: ChartMeta, options: FunctionPlotOptions, clipId: string) {
+/** Render clipped circles/rays, with angular labels fitted inside the SVG viewport. */
+export function renderPolarGrid(canvas: any, meta: ChartMeta, options: FunctionPlotOptions) {
   const enabled = options.coordinateSystem === 'polar' && options.polar?.grid !== false
   if (!enabled) {
     canvas.selectAll('g.polar-grid').remove()
@@ -175,17 +186,19 @@ export function renderPolarGrid(canvas: any, meta: ChartMeta, options: FunctionP
     .attr('pointer-events', 'none')
   const clippedGrid = grid.selectAll(':scope > g.polar-grid-lines').data([0])
   const clippedGridEnter = clippedGrid.enter().append('g').attr('class', 'polar-grid-lines')
+  // Reuse the SVG's plot clip, which can outlive the Chart instance that created it.
+  const clipId = canvas.select('clipPath[id]').attr('id')
   const lines = clippedGrid.merge(clippedGridEnter).attr('clip-path', 'url(#' + clipId + ')')
   const polar = options.polar || {}
   const xScale = meta.xScale
   const yScale = meta.yScale
   const visibleDomain = getPolarRadiusDomain(xScale.domain(), yScale.domain())
-  const radii = getPolarRadii(polar, visibleDomain)
-  const angles = getPolarAngles(polar)
   const center: [number, number] = [xScale(0), yScale(0)]
   const xUnit = xScale(1) - center[0]
   const yUnit = yScale(1) - center[1]
   const pixelsPerUnit = Math.abs(xUnit)
+  const radii = getPolarRadii(polar, visibleDomain, pixelsPerUnit)
+  const angles = getPolarAngles(polar)
   const getRayGeometry = (angle: number) => {
     const radius = polar.radiusDomain?.[1] === undefined ? undefined : Math.min(polar.radiusDomain[1], visibleDomain[1])
     const direction: [number, number] = [Math.cos(angle) * Math.sign(xUnit), Math.sin(angle) * Math.sign(yUnit)]
@@ -232,39 +245,43 @@ export function renderPolarGrid(canvas: any, meta: ChartMeta, options: FunctionP
     .merge(radiusLabels.enter().append('text').attr('class', 'polar-radius-label'))
     .attr('x', (value: number) => xScale(value))
     .attr('y', center[1])
-    .attr('dx', 4)
-    .attr('dy', -5)
+    .attr('text-anchor', 'middle')
+    .attr('dy', '-0.8em')
     .attr('fill', 'currentColor')
-    .attr('opacity', 0.6)
     .text(polar.radiusTickFormat || d3Format('~g'))
 
-  const labels =
-    polar.angularLabels && radii.length
-      ? visibleAngles.reduce((result: any[], angle: number) => {
-          const direction: [number, number] = [Math.cos(angle) * Math.sign(xUnit), Math.sin(angle) * Math.sign(yUnit)]
-          const interval = getPolarRayInterval(center, direction, meta.width, meta.height)
-          const labelRadius = interval ? radii.filter((value) => value * pixelsPerUnit <= interval[1]).pop() : undefined
-          const layout =
-            labelRadius === undefined
-              ? undefined
-              : getPolarLabelLayout(center, direction, labelRadius * pixelsPerUnit, meta.width, meta.height)
-          if (layout) result.push({ angle, ...layout })
-          return result
-        }, [])
-      : []
+  const labels: any[] = []
+  if (polar.angularLabels && radii.length) {
+    const pixelRadii = radii.map((value) => value * pixelsPerUnit)
+    for (const angle of visibleAngles) {
+      const direction: [number, number] = [Math.cos(angle) * Math.sign(xUnit), Math.sin(angle) * Math.sign(yUnit)]
+      const layout = getPolarLabelLayout(center, direction, pixelRadii, meta.width, meta.height)
+      if (layout) labels.push({ angle, direction, ...layout })
+    }
+  }
   const angleLabels = grid.selectAll('text.polar-angle-label').data(labels, (value: any) => value.angle)
   angleLabels.exit().remove()
   angleLabels
     .merge(angleLabels.enter().append('text').attr('class', 'polar-angle-label'))
     .attr('x', (value: any) => value.position[0])
     .attr('y', (value: any) => value.position[1])
+    .attr('dx', (value: any) => value.direction[0] * 8)
+    .attr('dy', (value: any) => value.direction[1] * 8)
     .attr('text-anchor', (value: any) => value.textAnchor)
     .attr('dominant-baseline', 'middle')
     .attr('fill', 'currentColor')
-    .attr('opacity', 0.6)
     .text((value: any) => {
       const unit = polar.angleUnit || DEFAULT_POLAR_ANGLE_UNIT
       const angle = unit === 'degrees' ? (value.angle * 180) / Math.PI : value.angle
       return polar.angleTickFormat ? polar.angleTickFormat(angle) : formatPolarAngle(value.angle, unit)
+    })
+    .each(function (this: SVGTextElement, value: any) {
+      // Keep the chosen ring anchor, adjusting only text that crosses the SVG viewport.
+      const bounds = this.getBBox()
+      const dx = Math.max(0, -bounds.x) - Math.max(0, bounds.x + bounds.width - meta.width)
+      const dy = Math.max(0, -bounds.y) - Math.max(0, bounds.y + bounds.height - meta.height)
+      d3Select(this)
+        .attr('dx', value.direction[0] * 8 + dx)
+        .attr('dy', value.direction[1] * 8 + dy)
     })
 }
