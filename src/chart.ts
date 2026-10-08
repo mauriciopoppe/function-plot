@@ -2,7 +2,7 @@ import { line as d3Line, Line } from 'd3-shape'
 import { format as d3Format } from 'd3-format'
 import { scaleLinear as d3ScaleLinear, scaleLog as d3ScaleLog } from 'd3-scale'
 import { axisLeft as d3AxisLeft, axisBottom as d3AxisBottom, Axis } from 'd3-axis'
-import { zoom as d3Zoom } from 'd3-zoom'
+import { zoom as d3Zoom, zoomIdentity as d3ZoomIdentity } from 'd3-zoom'
 // @ts-ignore
 import { select as d3Select, pointer as d3Pointer } from 'd3-selection'
 import { interpolateRound as d3InterpolateRound } from 'd3-interpolate'
@@ -152,6 +152,8 @@ export class Chart extends EventEmitter.EventEmitter {
    */
   private linkedGraphs: Array<Chart>
   private line: Line<[number, number]>
+  // Keep the rendered mode separately because callers can mutate and reuse options.
+  private wasPolarCoordinateSystem = false
 
   /**
    * `svg` element that holds the graph (canvas + title + axes)
@@ -367,10 +369,11 @@ export class Chart extends EventEmitter.EventEmitter {
     // enter
     const selectionEnter = selection.enter().append('text')
 
+    // Polar plots have no top margin, so the title sits inside the SVG viewport.
     selectionEnter
       .merge(selection)
       .attr('class', 'title')
-      .attr('y', this.meta.margin.top / 2)
+      .attr('y', this.isPolarCoordinateSystem() ? 20 : this.meta.margin.top / 2)
       .attr('x', this.meta.margin.left + this.meta.width / 2)
       .attr('font-size', 25)
       .attr('text-anchor', 'middle')
@@ -385,12 +388,13 @@ export class Chart extends EventEmitter.EventEmitter {
     // enter
     this.root.enter.append('text').attr('class', 'top-right-legend').attr('text-anchor', 'end')
 
-    // update + enter
+    // Polar legends use an inset and hanging baseline to stay inside the zero-margin viewport.
     this.root
       .merge(this.root.enter)
       .select('.top-right-legend')
-      .attr('y', this.meta.margin.top / 2)
-      .attr('x', this.meta.width + this.meta.margin.left)
+      .attr('y', this.isPolarCoordinateSystem() ? 8 : this.meta.margin.top / 2)
+      .attr('x', this.meta.width + this.meta.margin.left - (this.isPolarCoordinateSystem() ? 8 : 0))
+      .attr('dominant-baseline', this.isPolarCoordinateSystem() ? 'hanging' : null)
   }
 
   buildCanvas() {
@@ -633,20 +637,23 @@ export class Chart extends EventEmitter.EventEmitter {
       this.meta.zoomBehavior = d3Zoom().on('zoom', function onZoom(ev) {
         self.getEmitInstance().emit('all:zoom', ev)
       })
-      // the zoom behavior must work with a copy of the scale, the zoom behavior has its own state and assumes
-      // that its updating the original scale!
-      // things that failed when I tried rescaleX(self.meta.xScale), the state of self.meta.xScale was a multiplied
-      // for zoom/mousemove operations
-      //
-      // this copy should only be created once when the application starts
-      self.meta.zoomBehavior.xScale = self.meta.xScale.copy()
-      self.meta.zoomBehavior.yScale = self.meta.yScale.copy()
     }
 
-    // in the case where the original scale domains were updated (because of a change in the size of the canvas)
-    // update the range only but not the domain, the domain is going to be updated
-    self.meta.zoomBehavior.xScale.range(self.meta.xScale.range())
-    self.meta.zoomBehavior.yScale.range(self.meta.yScale.range())
+    if (this.isPolarCoordinateSystem() || this.getEmitInstance().wasPolarCoordinateSystem) {
+      // Rebase polar rebuilds and transitions out of the zero-margin polar canvas.
+      // Undo the current transform so its next application reproduces the rebuilt domains,
+      // preserving zoom and pan even when another Chart instance reuses the SVG.
+      const transform = (this.getDraggableNode() as any)?.__zoom || d3ZoomIdentity
+      const inverseTransform = d3ZoomIdentity.scale(1 / transform.k).translate(-transform.x, -transform.y)
+      self.meta.zoomBehavior.xScale = inverseTransform.rescaleX(self.meta.xScale)
+      self.meta.zoomBehavior.yScale = inverseTransform.rescaleY(self.meta.yScale)
+    } else {
+      // Cartesian plots keep their initial zoom baseline; only pixel ranges change on rebuild.
+      self.meta.zoomBehavior.xScale = self.meta.zoomBehavior.xScale || self.meta.xScale.copy()
+      self.meta.zoomBehavior.yScale = self.meta.zoomBehavior.yScale || self.meta.yScale.copy()
+      self.meta.zoomBehavior.xScale.range(self.meta.xScale.range())
+      self.meta.zoomBehavior.yScale.range(self.meta.yScale.range())
+    }
 
     // enter
     this.canvas.enter
@@ -677,6 +684,7 @@ export class Chart extends EventEmitter.EventEmitter {
       })
       .attr('width', this.meta.width)
       .attr('height', this.meta.height)
+    this.wasPolarCoordinateSystem = this.isPolarCoordinateSystem()
   }
 
   setUpPlugins() {
@@ -697,7 +705,7 @@ export class Chart extends EventEmitter.EventEmitter {
     const instance = this
     const canvas = instance.canvas.merge(instance.canvas.enter)
 
-    renderPolarGrid(canvas, this.meta, this.options, 'function-plot-clip-' + this.id)
+    renderPolarGrid(canvas, this.meta, this.options)
 
     if (this.isPolarCoordinateSystem()) {
       canvas.select('.x.axis').style('display', 'none')
