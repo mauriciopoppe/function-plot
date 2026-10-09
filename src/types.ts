@@ -344,6 +344,12 @@ export interface FunctionPlotOptions {
   id?: string
 
   /**
+   * @private
+   * Last rendered coordinate system, preserved when callers mutate options.
+   */
+  lastCoordinateSystem?: 'cartesian' | 'polar'
+
+  /**
    * A css selector or DOM node of the parent element that will contain the graph
    */
   target: string | HTMLElement

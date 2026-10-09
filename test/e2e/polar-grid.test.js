@@ -259,7 +259,18 @@ describe('Polar coordinate system', () => {
       const previous = await scaleState()
       await page.evaluate(
         (mode, reuseOptions) => {
-          const options = reuseOptions ? window.polarOptions : Object.assign({}, window.polarOptions, { id: undefined })
+          const previous = window.polarOptions
+          // New options omit internal metadata while reusing the previous SVG.
+          const options = reuseOptions
+            ? previous
+            : {
+                target: previous.target,
+                width: previous.width,
+                height: previous.height,
+                xAxis: previous.xAxis,
+                yAxis: previous.yAxis,
+                data: previous.data
+              }
           options.coordinateSystem = mode
           window.polarOptions = options
           window.polarChart = functionPlot(options)

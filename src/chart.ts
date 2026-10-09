@@ -152,8 +152,6 @@ export class Chart extends EventEmitter.EventEmitter {
    */
   private linkedGraphs: Array<Chart>
   private line: Line<[number, number]>
-  // Keep the rendered mode separately because callers can mutate and reuse options.
-  private wasPolarCoordinateSystem = false
 
   /**
    * `svg` element that holds the graph (canvas + title + axes)
@@ -639,7 +637,7 @@ export class Chart extends EventEmitter.EventEmitter {
       })
     }
 
-    if (this.isPolarCoordinateSystem() || this.getEmitInstance().wasPolarCoordinateSystem) {
+    if (this.isPolarCoordinateSystem() || this.getEmitInstance().options.lastCoordinateSystem === 'polar') {
       // Rebase polar rebuilds and transitions out of the zero-margin polar canvas.
       // Undo the current transform so its next application reproduces the rebuilt domains,
       // preserving zoom and pan even when another Chart instance reuses the SVG.
@@ -684,7 +682,7 @@ export class Chart extends EventEmitter.EventEmitter {
       })
       .attr('width', this.meta.width)
       .attr('height', this.meta.height)
-    this.wasPolarCoordinateSystem = this.isPolarCoordinateSystem()
+    this.options.lastCoordinateSystem = this.options.coordinateSystem
   }
 
   setUpPlugins() {
