@@ -23,6 +23,7 @@
     "src/**/*"
   ],
   "exclude": [
-    "src/stories/**/*"
+    "src/stories/**/*",
+    "src/**/*.test.ts"
   ]
 }
