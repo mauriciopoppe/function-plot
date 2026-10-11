@@ -1,8 +1,8 @@
-function onSiteDependenciesLoaded() {
-  const functionPlot = window.functionPlot
-  let a, b, c
-
-  functionPlot.withWebWorkers(8)
+'use strict'
+$(document).on('markupLoaded', function () {
+  var functionPlot = window.functionPlot
+  var a, b, c
+  var f, fp
 
   functionPlot({
     target: '#description-sample',
@@ -47,9 +47,7 @@ function onSiteDependenciesLoaded() {
     },
     data: [
       {
-        fn: 'sin(exp(x))',
-        nSamples: 5000,
-        sampler: 'asyncInterval'
+        fn: 'sin(exp(x))'
       }
     ]
   })
@@ -255,7 +253,7 @@ function onSiteDependenciesLoaded() {
    * type of axis to `log` inside the  `xAxis` option, note how this
    * change affects the way the functions are sampled
    */
-  functionPlot({
+  var instance = functionPlot({
     target: '#logarithmic',
     xAxis: {
       type: 'log',
@@ -575,7 +573,7 @@ function onSiteDependenciesLoaded() {
    *
    *    <button id="update" class="btn btn-primary">Update</button>
    */
-  const options = {
+  var options = {
     target: '#quadratic-update',
     data: [
       {
@@ -583,7 +581,7 @@ function onSiteDependenciesLoaded() {
       }
     ]
   }
-  document.querySelector('#update').addEventListener('click', function () {
+  $('#update').click(function () {
     if (!options.title) {
       // add a title, a tip and change the function to y = x * x
       options.title = 'hello world'
@@ -806,6 +804,30 @@ function onSiteDependenciesLoaded() {
     data: [
       {
         r: '2 * sin(4 theta)',
+        fnType: 'polar',
+        graphType: 'polyline'
+      }
+    ]
+  })
+
+  /**
+   * ### Polar coordinate grid
+   *
+   * Polar equations use Cartesian axes by default. Set `coordinateSystem: 'polar'`
+   * to draw a polar grid with equal x/y units instead. `polar.grid` defaults to
+   * `true`, while angular labels are opt-in with `polar.angularLabels: true`.
+   * Labels use radians by default; `angleUnit: 'degrees'` changes their format.
+   */
+  functionPlot({
+    target: '#polar-grid',
+    coordinateSystem: 'polar',
+    polar: {
+      radiusDomain: [0, 3],
+      angularLabels: true
+    },
+    data: [
+      {
+        r: '2 * sin(4 * theta)',
         fnType: 'polar',
         graphType: 'polyline'
       }
@@ -1080,4 +1102,17 @@ function onSiteDependenciesLoaded() {
       }
     ]
   })
-}
+})
+
+$('#recipes').load('partials/recipes.html')
+$('#examples').load('partials/examples.html', function () {
+  $(document).trigger('markupLoaded')
+  $('pre code').each(function (i, block) {
+    hljs.highlightBlock(block)
+  })
+
+  $('#p-slider').on('change', function () {
+    var value = +this.value
+    $('#p-slider-value').html(value)
+  })
+})

@@ -15,37 +15,44 @@ body, text {
 </head>
 <body>
   <div id="playground"></div>
-  <script src="./function-plot.js"></script>
+  <script src="function-plot.js"></script>
 <script>
-functionPlot.withWebWorkers(8)
-// functionPlot({
-//   target: '#playground',
-//   width: window.innerWidth,
-//   height: window.innerHeight,
-//   data: [
-//     { fn: 'x^2', nSamples: 4000, sampler: 'asyncInterval' },
-//     { fn: 'sin(x)', nSamples: 4000, sampler: 'asyncInterval' },
-//     { fn: '1/x', nSamples: 4000, sampler: 'asyncInterval' },
-//   ]
-// })
+(function () {
+functionPlot({
+  target: '#playground',
+  xAxis: {
+    type: 'log',
+    domain: [0.01, 1]
+  },
+  yAxis: {
+    domain: [-100, 100]
+  },
+  grid: true,
+  data: [{
+    fn: '1/x * cos(1/x)',
+    // to make it look like a definite integral
+    closed: true
+  }]
+})
 functionPlot({
   target: '#playground',
   data: [
     {
-      fn: '-sqrt(-x)',
-      nSamples: 100,
-      graphType: 'scatter'
+      graphType: "text",
+      location: [1, 1],
+      text: "hello world"
     },
     {
-      fn: 'sqrt(x)',
-      graphType: 'polyline'
+      graphType: "text",
+      location: [-1, -1],
+      text: "foo bar",
+      attr: {
+        'text-anchor': 'end'
+      }
     },
-    {
-      fn: 'x^2',
-      graphType: 'interval'
-    }
   ]
 })
+})()
 </script>
 </body>
 </html>
