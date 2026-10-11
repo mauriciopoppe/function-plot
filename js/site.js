@@ -132,6 +132,30 @@ $(document).on('markupLoaded', function () {
   })
 
   /**
+   * ### Polar coordinate grid
+   *
+   * Polar equations use Cartesian axes by default. Set `coordinateSystem: 'polar'`
+   * to draw a polar grid with equal x/y units instead. `polar.grid` defaults to
+   * `true`, while angular labels are opt-in with `polar.angularLabels: true`.
+   * Labels use radians by default; `angleUnit: 'degrees'` changes their format.
+   */
+  functionPlot({
+    target: '#polar-grid',
+    coordinateSystem: 'polar',
+    polar: {
+      radiusDomain: [0, 3],
+      angularLabels: true
+    },
+    data: [
+      {
+        r: '2 * sin(4 * theta)',
+        fnType: 'polar',
+        graphType: 'polyline'
+      }
+    ]
+  })
+
+  /**
    * ### Domain
    *
    * The domains of both axes can be changed with the following configurations:
@@ -772,6 +796,11 @@ $(document).on('markupLoaded', function () {
    */
   functionPlot({
     target: '#polar-circle',
+    coordinateSystem: 'polar',
+    polar: {
+      radiusDomain: [0, 3],
+      angularLabels: true
+    },
     yAxis: { domain: [-1.897959183, 1.897959183] },
     xAxis: { domain: [-3, 3] },
     data: [
@@ -782,52 +811,6 @@ $(document).on('markupLoaded', function () {
           r0: 0,
           gamma: 0
         },
-        fnType: 'polar',
-        graphType: 'polyline'
-      }
-    ]
-  })
-
-  /**
-   * ### Polar equations <br /> <div class="small">Polar rose</div>
-   *
-   * Rendering the equation of the polar rose
-   *
-   * $$
-   * r = 2 sin(4 \theta)
-   * $$
-   */
-  functionPlot({
-    target: '#polar-complex',
-    yAxis: { domain: [-1.897959183, 1.897959183] },
-    xAxis: { domain: [-3, 3] },
-    data: [
-      {
-        r: '2 * sin(4 theta)',
-        fnType: 'polar',
-        graphType: 'polyline'
-      }
-    ]
-  })
-
-  /**
-   * ### Polar coordinate grid
-   *
-   * Polar equations use Cartesian axes by default. Set `coordinateSystem: 'polar'`
-   * to draw a polar grid with equal x/y units instead. `polar.grid` defaults to
-   * `true`, while angular labels are opt-in with `polar.angularLabels: true`.
-   * Labels use radians by default; `angleUnit: 'degrees'` changes their format.
-   */
-  functionPlot({
-    target: '#polar-grid',
-    coordinateSystem: 'polar',
-    polar: {
-      radiusDomain: [0, 3],
-      angularLabels: true
-    },
-    data: [
-      {
-        r: '2 * sin(4 * theta)',
         fnType: 'polar',
         graphType: 'polyline'
       }
