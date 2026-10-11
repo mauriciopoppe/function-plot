@@ -5,10 +5,12 @@ on:
     branches:
       - main
       - 1.x
+      - release-1.26
   pull_request:
     branches:
       - main
       - 1.x
+      - release-1.26
 
 jobs:
   build:
